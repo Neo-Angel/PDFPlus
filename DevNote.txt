@@ -1,0 +1,12 @@
+
+
+
+
+To Do List
+==========
+
+- PPGState 인스턴스들을 PPT~ 클래스들로 객체화 하기
+
+- Inline Image 세부사항 구현하기.
+
+- Trailer->_dict->_dict : PPTDictionary 랑 map <int, PPToken *> 이랑 똑같이 _dict... 헷갈림.

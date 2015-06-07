@@ -1,0 +1,333 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		420C9F2C19C1C585000F6B35 /* PPDocument.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 420C9F2A19C1C585000F6B35 /* PPDocument.cpp */; };
+		420C9F2D19C1C585000F6B35 /* PPDocument.h in Headers */ = {isa = PBXBuildFile; fileRef = 420C9F2B19C1C585000F6B35 /* PPDocument.h */; };
+		420C9F3019C1C5A1000F6B35 /* PPPage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 420C9F2E19C1C5A1000F6B35 /* PPPage.cpp */; };
+		420C9F3119C1C5A1000F6B35 /* PPPage.h in Headers */ = {isa = PBXBuildFile; fileRef = 420C9F2F19C1C5A1000F6B35 /* PPPage.h */; };
+		420C9F3419C1C5AF000F6B35 /* PPElement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 420C9F3219C1C5AF000F6B35 /* PPElement.cpp */; };
+		420C9F3519C1C5AF000F6B35 /* PPElement.h in Headers */ = {isa = PBXBuildFile; fileRef = 420C9F3319C1C5AF000F6B35 /* PPElement.h */; };
+		420C9F3819C1C713000F6B35 /* PPBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 420C9F3619C1C713000F6B35 /* PPBase.cpp */; };
+		420C9F3919C1C713000F6B35 /* PPBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 420C9F3719C1C713000F6B35 /* PPBase.h */; };
+		420C9F4819C1D11F000F6B35 /* PPToken.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 420C9F4619C1D11F000F6B35 /* PPToken.cpp */; };
+		420C9F4919C1D11F000F6B35 /* PPToken.h in Headers */ = {isa = PBXBuildFile; fileRef = 420C9F4719C1D11F000F6B35 /* PPToken.h */; };
+		420C9F5119C4B7CC000F6B35 /* PPParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 420C9F4F19C4B7CC000F6B35 /* PPParser.cpp */; };
+		420C9F5219C4B7CC000F6B35 /* PPParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 420C9F5019C4B7CC000F6B35 /* PPParser.h */; };
+		4249C64A19FE9D1D00892AFA /* libz.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4249C64919FE9D1D00892AFA /* libz.a */; };
+		4249C64D19FE9D5700892AFA /* zlib.h in Headers */ = {isa = PBXBuildFile; fileRef = 4249C64C19FE9D5700892AFA /* zlib.h */; };
+		428EC8CE1A0F8B7D003AD285 /* PPTStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 428EC8CC1A0F8B7D003AD285 /* PPTStream.cpp */; };
+		428EC8CF1A0F8B7D003AD285 /* PPTStream.h in Headers */ = {isa = PBXBuildFile; fileRef = 428EC8CD1A0F8B7D003AD285 /* PPTStream.h */; };
+		42D6619E1A1124EB00E1D653 /* PPCommandParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 42D6619C1A1124EB00E1D653 /* PPCommandParser.cpp */; };
+		42D6619F1A1124EB00E1D653 /* PPCommandParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 42D6619D1A1124EB00E1D653 /* PPCommandParser.h */; };
+		42E3B7A319F3FF3A004A57DB /* PPCoord.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 42E3B7A119F3FF3A004A57DB /* PPCoord.cpp */; };
+		42E3B7A419F3FF3A004A57DB /* PPCoord.h in Headers */ = {isa = PBXBuildFile; fileRef = 42E3B7A219F3FF3A004A57DB /* PPCoord.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		420C9F1D19C1C520000F6B35 /* libPDFPlusLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPDFPlusLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		420C9F2A19C1C585000F6B35 /* PPDocument.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PPDocument.cpp; sourceTree = "<group>"; };
+		420C9F2B19C1C585000F6B35 /* PPDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPDocument.h; sourceTree = "<group>"; };
+		420C9F2E19C1C5A1000F6B35 /* PPPage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PPPage.cpp; sourceTree = "<group>"; };
+		420C9F2F19C1C5A1000F6B35 /* PPPage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPPage.h; sourceTree = "<group>"; };
+		420C9F3219C1C5AF000F6B35 /* PPElement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = PPElement.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
+		420C9F3319C1C5AF000F6B35 /* PPElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPElement.h; sourceTree = "<group>"; };
+		420C9F3619C1C713000F6B35 /* PPBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PPBase.cpp; sourceTree = "<group>"; };
+		420C9F3719C1C713000F6B35 /* PPBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPBase.h; sourceTree = "<group>"; };
+		420C9F4619C1D11F000F6B35 /* PPToken.cpp */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PPToken.cpp; sourceTree = "<group>"; };
+		420C9F4719C1D11F000F6B35 /* PPToken.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPToken.h; sourceTree = "<group>"; };
+		420C9F4A19C3225B000F6B35 /* PPDefines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PPDefines.h; sourceTree = "<group>"; };
+		420C9F4F19C4B7CC000F6B35 /* PPParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PPParser.cpp; sourceTree = "<group>"; };
+		420C9F5019C4B7CC000F6B35 /* PPParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPParser.h; sourceTree = "<group>"; };
+		4249C64919FE9D1D00892AFA /* libz.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libz.a; path = "zlib-1.2.8/libz.a"; sourceTree = "<group>"; };
+		4249C64C19FE9D5700892AFA /* zlib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = zlib.h; path = "zlib-1.2.8/zlib.h"; sourceTree = "<group>"; };
+		428EC8CC1A0F8B7D003AD285 /* PPTStream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PPTStream.cpp; sourceTree = "<group>"; };
+		428EC8CD1A0F8B7D003AD285 /* PPTStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPTStream.h; sourceTree = "<group>"; };
+		42D6619C1A1124EB00E1D653 /* PPCommandParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = PPCommandParser.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
+		42D6619D1A1124EB00E1D653 /* PPCommandParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = PPCommandParser.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		42D661A01A162E5500E1D653 /* PDFPlus.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PDFPlus.h; sourceTree = "<group>"; };
+		42DD145A1A4E964700DAE75C /* DevNote.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = DevNote.txt; sourceTree = "<group>"; };
+		42E3B7A119F3FF3A004A57DB /* PPCoord.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PPCoord.cpp; sourceTree = "<group>"; };
+		42E3B7A219F3FF3A004A57DB /* PPCoord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPCoord.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		420C9F1A19C1C520000F6B35 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4249C64A19FE9D1D00892AFA /* libz.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		420C9F1419C1C520000F6B35 = {
+			isa = PBXGroup;
+			children = (
+				42DD145A1A4E964700DAE75C /* DevNote.txt */,
+				42D661A01A162E5500E1D653 /* PDFPlus.h */,
+				4249C64B19FE9D3600892AFA /* zlib */,
+				42E3B7A119F3FF3A004A57DB /* PPCoord.cpp */,
+				42E3B7A219F3FF3A004A57DB /* PPCoord.h */,
+				420C9F4A19C3225B000F6B35 /* PPDefines.h */,
+				420C9F3619C1C713000F6B35 /* PPBase.cpp */,
+				420C9F3719C1C713000F6B35 /* PPBase.h */,
+				420C9F2E19C1C5A1000F6B35 /* PPPage.cpp */,
+				420C9F2F19C1C5A1000F6B35 /* PPPage.h */,
+				420C9F4F19C4B7CC000F6B35 /* PPParser.cpp */,
+				420C9F5019C4B7CC000F6B35 /* PPParser.h */,
+				420C9F2A19C1C585000F6B35 /* PPDocument.cpp */,
+				420C9F2B19C1C585000F6B35 /* PPDocument.h */,
+				420C9F3219C1C5AF000F6B35 /* PPElement.cpp */,
+				420C9F3319C1C5AF000F6B35 /* PPElement.h */,
+				420C9F4619C1D11F000F6B35 /* PPToken.cpp */,
+				420C9F4719C1D11F000F6B35 /* PPToken.h */,
+				428EC8CC1A0F8B7D003AD285 /* PPTStream.cpp */,
+				428EC8CD1A0F8B7D003AD285 /* PPTStream.h */,
+				42D6619C1A1124EB00E1D653 /* PPCommandParser.cpp */,
+				42D6619D1A1124EB00E1D653 /* PPCommandParser.h */,
+				420C9F1E19C1C520000F6B35 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		420C9F1E19C1C520000F6B35 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				420C9F1D19C1C520000F6B35 /* libPDFPlusLib.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		4249C64B19FE9D3600892AFA /* zlib */ = {
+			isa = PBXGroup;
+			children = (
+				4249C64C19FE9D5700892AFA /* zlib.h */,
+				4249C64919FE9D1D00892AFA /* libz.a */,
+			);
+			name = zlib;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		420C9F1B19C1C520000F6B35 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				42E3B7A419F3FF3A004A57DB /* PPCoord.h in Headers */,
+				428EC8CF1A0F8B7D003AD285 /* PPTStream.h in Headers */,
+				42D6619F1A1124EB00E1D653 /* PPCommandParser.h in Headers */,
+				420C9F3519C1C5AF000F6B35 /* PPElement.h in Headers */,
+				420C9F2D19C1C585000F6B35 /* PPDocument.h in Headers */,
+				420C9F3119C1C5A1000F6B35 /* PPPage.h in Headers */,
+				420C9F5219C4B7CC000F6B35 /* PPParser.h in Headers */,
+				4249C64D19FE9D5700892AFA /* zlib.h in Headers */,
+				420C9F3919C1C713000F6B35 /* PPBase.h in Headers */,
+				420C9F4919C1D11F000F6B35 /* PPToken.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		420C9F1C19C1C520000F6B35 /* PDFPlusLib */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 420C9F2119C1C520000F6B35 /* Build configuration list for PBXNativeTarget "PDFPlusLib" */;
+			buildPhases = (
+				420C9F1919C1C520000F6B35 /* Sources */,
+				420C9F1A19C1C520000F6B35 /* Frameworks */,
+				420C9F1B19C1C520000F6B35 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PDFPlusLib;
+			productName = PDFPlusLib;
+			productReference = 420C9F1D19C1C520000F6B35 /* libPDFPlusLib.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		420C9F1519C1C520000F6B35 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0610;
+				ORGANIZATIONNAME = Soluwin;
+			};
+			buildConfigurationList = 420C9F1819C1C520000F6B35 /* Build configuration list for PBXProject "PDFPlusLib" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 420C9F1419C1C520000F6B35;
+			productRefGroup = 420C9F1E19C1C520000F6B35 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				420C9F1C19C1C520000F6B35 /* PDFPlusLib */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		420C9F1919C1C520000F6B35 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				420C9F3819C1C713000F6B35 /* PPBase.cpp in Sources */,
+				420C9F4819C1D11F000F6B35 /* PPToken.cpp in Sources */,
+				42D6619E1A1124EB00E1D653 /* PPCommandParser.cpp in Sources */,
+				420C9F3419C1C5AF000F6B35 /* PPElement.cpp in Sources */,
+				420C9F3019C1C5A1000F6B35 /* PPPage.cpp in Sources */,
+				420C9F5119C4B7CC000F6B35 /* PPParser.cpp in Sources */,
+				420C9F2C19C1C585000F6B35 /* PPDocument.cpp in Sources */,
+				428EC8CE1A0F8B7D003AD285 /* PPTStream.cpp in Sources */,
+				42E3B7A319F3FF3A004A57DB /* PPCoord.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		420C9F1F19C1C520000F6B35 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		420C9F2019C1C520000F6B35 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		420C9F2219C1C520000F6B35 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = lib;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"zlib-1.2.8",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/zlib-1.2.8",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		420C9F2319C1C520000F6B35 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = lib;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"zlib-1.2.8",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/zlib-1.2.8",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		420C9F1819C1C520000F6B35 /* Build configuration list for PBXProject "PDFPlusLib" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				420C9F1F19C1C520000F6B35 /* Debug */,
+				420C9F2019C1C520000F6B35 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		420C9F2119C1C520000F6B35 /* Build configuration list for PBXNativeTarget "PDFPlusLib" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				420C9F2219C1C520000F6B35 /* Debug */,
+				420C9F2319C1C520000F6B35 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 420C9F1519C1C520000F6B35 /* Project object */;
+}
