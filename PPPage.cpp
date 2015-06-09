@@ -13,6 +13,7 @@
 #include "PPDocument.h"
 #include "PPTStream.h"
 #include "PPContext.h"
+#include "PPTNumber.h"
 
 string tapStr(int cnt);
 

@@ -17,8 +17,8 @@
 #include "PPDocument.h"
 #include "PPToken.h"
 #include "PPTStream.h"
-
-
+#include "PPTNumber.h"
+#include "PPTString.h"
 
 
 PPDocument::PPDocument(string filepath)

@@ -16,7 +16,9 @@
 #include <memory>
 #include "PPBase.h"
 
+
 class PPParser;
+
 
 using namespace std;
 
@@ -63,7 +65,10 @@ static const char	*PPKN_PARENT = "Parent";
 static const char *PPVN_CREATOR = "PDFPlus";
 static const char *PPVN_CATALOG = "Catalog";
 
-
+void PPwstrToUtf8(string& dest, const wstring& src);
+string PPwstrToUtf8(const wstring& str);
+void stringToWString(wstring &wstr, string &str);
+void PPstringToUTF8String(string &utf8str, string &str);
 
 ///////////////////////////////////////// PPToken
 class PPToken : public PPBase {
@@ -83,73 +88,6 @@ public:
 /////////////////////////////////////////
 
 
-/////////////////////////////////////////// PPTObject
-//class PPTObject : public PPToken {
-//public:
-//    PPToken(PPParser *parser);
-//};
-///////////////////////////////////////////
-
-
-///////////////////////////////////////// PPTComments
-class PPTComment : public PPToken {
-    string *_comment;
-    
-public:
-    PPTComment(PPParser *parser, string *str);
-    ~PPTComment();
-    string xmlString(int level);
-    string pdfString();
-};
-/////////////////////////////////////////
-
-
-///////////////////////////////////////// PPTBool
-class PPTBool : public PPToken {
-    bool _bool;
-public:
-    PPTBool(PPParser *parser, string &str);
-    string xmlString(int level);
-    string pdfString();
-
-};
-/////////////////////////////////////////
-
-
-///////////////////////////////////////// PPTNumber
-class PPTNumber : public PPToken {
-    string *_numstr;
-    double _number;
-    
-public:
-    PPTNumber(PPParser *parser, string *str);
-    PPTNumber(PPParser *parser, int num);
-	PPTNumber(PPParser *parser, float num);
-    ~PPTNumber();
-    float floatValue();
-    long long longlongValue();
-    long longValue();
-	int intValue();
-    string stringValue();
-    string pdfString() {return stringValue();}
-    string xmlString(int level);
-    inline const char *classType(){return PPTN_NUMBER;};
-};
-/////////////////////////////////////////
-
-
-///////////////////////////////////////// PPTString
-class PPTString : public PPToken {
-public:
-    string *_string;
-    PPTString(PPParser *parser, string *str);
-    ~PPTString();
-    string xmlString(int level);
-    string utf8String();
-    inline const char *classType(){return PPTN_STRING;};
-    string pdfString();
-};
-/////////////////////////////////////////
 
 ///////////////////////////////////////// PPTName
 class PPTName : public PPToken {
@@ -181,7 +119,7 @@ public:
     inline const char *classType() {return PPTN_ARRAY;}
     string pdfString();
 	void AddToken(PPToken *token) {_array.push_back(token);}
-	void AddToken(int num) {AddToken((PPToken *)new PPTNumber(_parser, num));}
+	void AddToken(int num);
 
 };
 /////////////////////////////////////////

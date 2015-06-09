@@ -40,6 +40,16 @@ public:
     virtual void getline(char *buf, size_t size) = 0;
 };
 
+class PPTBool;
+class PPTNumber;
+class PPTString;
+class PPTArray;
+class PPTDictionary;
+class PPTStream;
+class PPTIndirectObj;
+
+
+class PPTComment;
 
 class PPParser : PPBase {
 protected:

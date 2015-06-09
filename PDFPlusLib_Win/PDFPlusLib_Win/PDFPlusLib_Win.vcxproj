@@ -101,8 +101,12 @@
     <ClInclude Include="..\..\PPParser.h" />
     <ClInclude Include="..\..\PPPath.h" />
     <ClInclude Include="..\..\PPPathItem.h" />
+    <ClInclude Include="..\..\PPTBool.h" />
+    <ClInclude Include="..\..\PPTComment.h" />
+    <ClInclude Include="..\..\PPTNumber.h" />
     <ClInclude Include="..\..\PPToken.h" />
     <ClInclude Include="..\..\PPTStream.h" />
+    <ClInclude Include="..\..\PPTString.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
@@ -125,8 +129,12 @@
     <ClCompile Include="..\..\PPParser.cpp" />
     <ClCompile Include="..\..\PPPath.cpp" />
     <ClCompile Include="..\..\PPPathItem.cpp" />
+    <ClCompile Include="..\..\PPTBool.cpp" />
+    <ClCompile Include="..\..\PPTComment.cpp" />
+    <ClCompile Include="..\..\PPTNumber.cpp" />
     <ClCompile Include="..\..\PPToken.cpp" />
     <ClCompile Include="..\..\PPTStream.cpp" />
+    <ClCompile Include="..\..\PPTString.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

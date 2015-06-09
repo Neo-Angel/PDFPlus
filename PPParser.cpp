@@ -12,6 +12,10 @@
 #include "PPParser.h"
 #include "PPToken.h"
 #include "PPTStream.h"
+#include "PPTComment.h"
+#include "PPTBool.h"
+#include "PPTNumber.h"
+#include "PPTString.h"
 
 const char *delimiters = "()<>[]{}/%";
 const char *numberchrs = "0123456789+-.";

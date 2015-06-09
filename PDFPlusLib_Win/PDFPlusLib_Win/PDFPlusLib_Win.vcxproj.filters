@@ -16,6 +16,9 @@
     <Filter Include="소스 파일\Element">
       <UniqueIdentifier>{c2614ce7-291e-4e55-89f6-67e992770453}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Token">
+      <UniqueIdentifier>{ca621328-c3bb-4448-b040-6d9f25ee2bd5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -54,12 +57,6 @@
     <ClInclude Include="..\..\PPParser.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\PPToken.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\PPTStream.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\PPFormBase.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
@@ -96,6 +93,24 @@
     <ClInclude Include="..\..\PPContext.h">
       <Filter>소스 파일\Element</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\PPToken.h">
+      <Filter>소스 파일\Token</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\PPTStream.h">
+      <Filter>소스 파일\Token</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\PPTComment.h">
+      <Filter>소스 파일\Token</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\PPTBool.h">
+      <Filter>소스 파일\Token</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\PPTNumber.h">
+      <Filter>소스 파일\Token</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\PPTString.h">
+      <Filter>소스 파일\Token</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -117,12 +132,6 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="..\..\PPParser.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\PPToken.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\PPTStream.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="..\..\PPFormBase.cpp">
@@ -160,6 +169,24 @@
     </ClCompile>
     <ClCompile Include="..\..\PPContext.cpp">
       <Filter>소스 파일\Element</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\PPToken.cpp">
+      <Filter>소스 파일\Token</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\PPTStream.cpp">
+      <Filter>소스 파일\Token</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\PPTComment.cpp">
+      <Filter>소스 파일\Token</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\PPTBool.cpp">
+      <Filter>소스 파일\Token</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\PPTNumber.cpp">
+      <Filter>소스 파일\Token</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\PPTString.cpp">
+      <Filter>소스 파일\Token</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

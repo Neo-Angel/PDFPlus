@@ -13,11 +13,13 @@
 #include "PPParser.h"
 #include "PPTStream.h"
 
+#include "PPTNumber.h"
 
 
 
 
-void PPwstrToUtf8(string& dest, const wstring& src){
+void PPwstrToUtf8(string& dest, const wstring& src)
+{
     dest.clear();
     for (size_t i = 0; i < src.size(); i++){
         wchar_t w = src[i]; //wchar_t w = src[i];
@@ -47,7 +49,8 @@ void PPwstrToUtf8(string& dest, const wstring& src){
     }
 }
 
-string PPwstrToUtf8(const wstring& str){
+string PPwstrToUtf8(const wstring& str)
+{
     string result;
     PPwstrToUtf8(result, str);
     return result;
@@ -135,161 +138,6 @@ string toNomalASCIIString(string src_str)
     return retstr;
 }
 
-//  ////////////////////////////////// PPTComment
-PPTComment::PPTComment(PPParser *parser, string *str) : PPToken(parser)
-{
-    _comment = str;
-}
-
-PPTComment::~PPTComment()
-{
-    delete _comment;
-}
-
-string PPTComment::xmlString(int level)
-{
-    string retstr;
-    //    retstr += tapStr(level) + "<String><![CDATA[" +*_string + "]]></String>\xa";
-//    string nom_str = toNomalASCIIString(*_comment);
-    
-    wstring wstr;
-    stringToWString(wstr, *_comment);
-    string utf8_str = PPwstrToUtf8(wstr);
-    
-    retstr += tapStr(level) + "<Comment>" +utf8_str + "</Comment>\xa";
-    //    retstr += tapStr(level) + "<String>" +"*_string" + "</String>\xa";
-    return retstr;
-}
-
-string PPTComment::pdfString()
-{
-    string retstr = "%";
-    retstr += *_comment;
-    return retstr;
-    
-}
-//  ////////////////////////////////// PPTBool
-string boolStr(bool flag)
-{
-    if (flag) {
-        return "true";
-    }
-    return "false";
-}
-
-PPTBool::PPTBool(PPParser *parser, string &str):PPToken(parser)
-{
-    _bool = (str.compare("true") == 0);
-}
-
-string PPTBool::xmlString(int level)
-{
-    string retstr;
-    retstr += tapStr(level) + "<Bool>" + boolStr(_bool) + "</Bool>\xa";
-    return retstr;
-}
-
-string PPTBool::pdfString()
-{
-    return boolStr(_bool);
-}
-
-
-// PPTNumber //////////////////////////////////
-PPTNumber::PPTNumber(PPParser *parser, string *str):PPToken(parser)
-{
-    _numstr = str;
-    _number = stod(*str);
-}
-
-PPTNumber::PPTNumber(PPParser *parser, int num)
-{
-    _numstr = newStringFromInt(num);
-    _number = (double)num;
-}
-
-PPTNumber::PPTNumber(PPParser *parser, float num)
-{
-    _numstr = newStringFromFloat(num);
-    _number = (double)num;
-}
-PPTNumber::~PPTNumber()
-{
-    delete _numstr;
-}
-
-string PPTNumber::stringValue()
-{
-    return *_numstr;
-    //
-    //    ostringstream ostr;
-    //    ostr << _number;
-    //    string retstr = ostr.str();
-    //    return retstr;
-}
-
-float PPTNumber::floatValue()
-{
-    return (float)_number;
-}
-
-int PPTNumber::intValue()
-{
-    return (int)_number;
-}
-
-long long PPTNumber::longlongValue()
-{
-    return (long long)_number;
-}
-
-long PPTNumber::longValue()
-{
-    return (long)_number;
-}
-
-string PPTNumber::xmlString(int level)
-{
-    string retstr;
-    retstr += tapStr(level) + "<Number>" +stringValue() + "</Number>\xa";
-    return retstr;
-}
-
-//  ////////////////////////////////// PPTString
-
-PPTString::PPTString(PPParser *parser, string *str):PPToken(parser)
-{
-    _string = str;
-}
-
-PPTString::~PPTString()
-{
-    delete _string;
-}
-
-string PPTString::utf8String()
-{
-    string retstr;
-    PPstringToUTF8String(retstr, *_string);
-    return retstr;
-}
-
-string PPTString::xmlString(int level)
-{
-    string retstr;
-    wstring wstr;
-    stringToWString(wstr, *_string);
-    string utf8_str = PPwstrToUtf8(wstr);
-    retstr += tapStr(level) + "<String><![CDATA[" + utf8_str + "]]></String>\xa";
-    return retstr;
-}
-string PPTString::pdfString()
-{
-    string retstr = "(";
-    retstr += *_string;
-    retstr += ")";
-    return retstr;
-}
 
 
 // PPTName //////////////////////////////////
@@ -385,6 +233,11 @@ string PPTArray::pdfString()
     return retstr;
 }
 
+
+void PPTArray::AddToken(int num) 
+{
+	AddToken((PPToken *)new PPTNumber(_parser, num));
+}
 
 // PPTDictionary //////////////////////////////////
 

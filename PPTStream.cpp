@@ -14,6 +14,7 @@
 #include <assert.h>
 #include "PPTStream.h"
 #include "zlib.h"
+#include "PPTNumber.h"
 
 string tapStr(int cnt);
 
