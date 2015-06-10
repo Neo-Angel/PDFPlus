@@ -11,8 +11,8 @@
 
 #include <stdio.h>
 
-#include "PPToken.h"
-#include "PPParser.h"
+#include <PPToken.h>
+#include <PPParser.h>
 
 ///////////////////////////////////////// PPTStream
 class PPTStream : public PPToken, public PPParserSource {

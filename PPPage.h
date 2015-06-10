@@ -69,10 +69,7 @@ protected:
 	void setRectForKey(PPRect rect, string key);
 
 public:
-	PPPage(PPPage *page){
-		_document = page->_document;
-		_pageDict = (PPTDictionary *)page->_pageDict->Copy();
-	}
+	PPPage(PPPage *page);
     PPPage(PPDocument *doc);
     void loadDictionary(PPTDictionary *page_dict);
 	void WriteDictionary(PPTDictionary *page_dict);

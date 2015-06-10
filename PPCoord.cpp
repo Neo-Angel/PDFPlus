@@ -11,6 +11,7 @@
 #include "PPCoord.h"
 #include "PPToken.h"
 #include "PPTNumber.h"
+#include "PPTArray.h"
 
 PPPoint::PPPoint()
 {

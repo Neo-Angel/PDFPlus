@@ -43,10 +43,12 @@ public:
 class PPTBool;
 class PPTNumber;
 class PPTString;
+class PPTName;
 class PPTArray;
 class PPTDictionary;
 class PPTStream;
 class PPTIndirectObj;
+class PPTIndirectRef;
 
 
 class PPTComment;

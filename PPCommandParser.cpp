@@ -14,6 +14,7 @@
 #include "PPPath.h"
 #include "PPTNumber.h"
 #include "PPTString.h"
+#include "PPTName.h"
 
 #define PP_NUM_OF_OPS           73
 

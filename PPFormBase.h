@@ -5,7 +5,7 @@
 
 #include <PPBase.h>
 #include <PPCommandParser.h>
-
+#include <PPTIndirectObj.h>
 //
 //      PPEFormBase
 //

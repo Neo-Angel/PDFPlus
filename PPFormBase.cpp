@@ -23,6 +23,10 @@
 #include "PPEEndMarkedContent.h"
 #include "PPEShading.h"
 
+#include "PPTName.h"
+#include "PPTDictionary.h"
+#include "PPTIndirectRef.h"
+
 // =========================================================== PPContext - E
 //
 //  FormBase

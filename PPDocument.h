@@ -31,6 +31,8 @@ typedef enum {
 } PPDocumentState;
 
 class PPParser;
+class PPTTrailer;
+class PPTXRef;
 
 class PPDocument : PPParserSource {
     

@@ -16,6 +16,13 @@
 #include "PPTBool.h"
 #include "PPTNumber.h"
 #include "PPTString.h"
+#include "PPTName.h"
+#include "PPTArray.h"
+#include "PPTDictionary.h"
+#include "PPTNull.h"
+#include "PPTIndirectObj.h"
+#include "PPTXRef.h"
+#include "PPTTrailer.h"
 
 const char *delimiters = "()<>[]{}/%";
 const char *numberchrs = "0123456789+-.";

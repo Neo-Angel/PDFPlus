@@ -19,7 +19,12 @@
 #include "PPTStream.h"
 #include "PPTNumber.h"
 #include "PPTString.h"
-
+#include "PPTName.h"
+#include "PPTArray.h"
+#include "PPTDictionary.h"
+#include "PPTIndirectRef.h"
+#include "PPTXRef.h"
+#include "PPTTrailer.h"
 
 PPDocument::PPDocument(string filepath)
 {

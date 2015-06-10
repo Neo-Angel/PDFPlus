@@ -101,12 +101,20 @@
     <ClInclude Include="..\..\PPParser.h" />
     <ClInclude Include="..\..\PPPath.h" />
     <ClInclude Include="..\..\PPPathItem.h" />
+    <ClInclude Include="..\..\PPTArray.h" />
     <ClInclude Include="..\..\PPTBool.h" />
     <ClInclude Include="..\..\PPTComment.h" />
+    <ClInclude Include="..\..\PPTDictionary.h" />
+    <ClInclude Include="..\..\PPTIndirectObj.h" />
+    <ClInclude Include="..\..\PPTIndirectRef.h" />
+    <ClInclude Include="..\..\PPTName.h" />
+    <ClInclude Include="..\..\PPTNull.h" />
     <ClInclude Include="..\..\PPTNumber.h" />
     <ClInclude Include="..\..\PPToken.h" />
     <ClInclude Include="..\..\PPTStream.h" />
     <ClInclude Include="..\..\PPTString.h" />
+    <ClInclude Include="..\..\PPTTrailer.h" />
+    <ClInclude Include="..\..\PPTXRef.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
@@ -129,12 +137,20 @@
     <ClCompile Include="..\..\PPParser.cpp" />
     <ClCompile Include="..\..\PPPath.cpp" />
     <ClCompile Include="..\..\PPPathItem.cpp" />
+    <ClCompile Include="..\..\PPTArray.cpp" />
     <ClCompile Include="..\..\PPTBool.cpp" />
     <ClCompile Include="..\..\PPTComment.cpp" />
+    <ClCompile Include="..\..\PPTDictionary.cpp" />
+    <ClCompile Include="..\..\PPTIndirectObj.cpp" />
+    <ClCompile Include="..\..\PPTIndirectRef.cpp" />
+    <ClCompile Include="..\..\PPTName.cpp" />
+    <ClCompile Include="..\..\PPTNull.cpp" />
     <ClCompile Include="..\..\PPTNumber.cpp" />
     <ClCompile Include="..\..\PPToken.cpp" />
     <ClCompile Include="..\..\PPTStream.cpp" />
     <ClCompile Include="..\..\PPTString.cpp" />
+    <ClCompile Include="..\..\PPTTrailer.cpp" />
+    <ClCompile Include="..\..\PPTXRef.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

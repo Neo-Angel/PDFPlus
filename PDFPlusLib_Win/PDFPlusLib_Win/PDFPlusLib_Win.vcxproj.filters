@@ -111,6 +111,30 @@
     <ClInclude Include="..\..\PPTString.h">
       <Filter>소스 파일\Token</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\PPTName.h">
+      <Filter>소스 파일\Token</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\PPTArray.h">
+      <Filter>소스 파일\Token</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\PPTDictionary.h">
+      <Filter>소스 파일\Token</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\PPTNull.h">
+      <Filter>소스 파일\Token</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\PPTIndirectObj.h">
+      <Filter>소스 파일\Token</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\PPTIndirectRef.h">
+      <Filter>소스 파일\Token</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\PPTXRef.h">
+      <Filter>소스 파일\Token</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\PPTTrailer.h">
+      <Filter>소스 파일\Token</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -186,6 +210,30 @@
       <Filter>소스 파일\Token</Filter>
     </ClCompile>
     <ClCompile Include="..\..\PPTString.cpp">
+      <Filter>소스 파일\Token</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\PPTName.cpp">
+      <Filter>소스 파일\Token</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\PPTArray.cpp">
+      <Filter>소스 파일\Token</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\PPTDictionary.cpp">
+      <Filter>소스 파일\Token</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\PPTNull.cpp">
+      <Filter>소스 파일\Token</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\PPTIndirectObj.cpp">
+      <Filter>소스 파일\Token</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\PPTIndirectRef.cpp">
+      <Filter>소스 파일\Token</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\PPTXRef.cpp">
+      <Filter>소스 파일\Token</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\PPTTrailer.cpp">
       <Filter>소스 파일\Token</Filter>
     </ClCompile>
   </ItemGroup>

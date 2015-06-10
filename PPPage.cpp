@@ -14,6 +14,9 @@
 #include "PPTStream.h"
 #include "PPContext.h"
 #include "PPTNumber.h"
+#include "PPTArray.h"
+#include "PPTDictionary.h"
+#include "PPTIndirectRef.h"
 
 string tapStr(int cnt);
 
@@ -24,7 +27,11 @@ PPPage::PPPage(PPDocument *doc)  // this invokes PPFormBase() (default)construct
 	_context = new PPContext;
 }
 
-
+PPPage::PPPage(PPPage *page)
+{
+	_document = page->_document;
+	_pageDict = (PPTDictionary *)page->_pageDict->Copy();
+}
 
 void PPPage::loadDictionary(PPTDictionary *page_dict)
 {
