@@ -1,5 +1,5 @@
 
-
+#include <sstream>
 #include "PPEInlineImage.h"
 
 

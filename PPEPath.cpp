@@ -2,6 +2,7 @@
 #include <sstream>
 #include "PPEPath.h"
 #include "PPGState.h"
+#include "PPPathItem.h"
 
 
 class PPContext;

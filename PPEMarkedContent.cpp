@@ -1,7 +1,8 @@
 
-
+#include <sstream>
 #include "PPEMarkedContent.h"
-
+#include "PPTName.h"
+#include "PPTDictionary.h"
 
 
 

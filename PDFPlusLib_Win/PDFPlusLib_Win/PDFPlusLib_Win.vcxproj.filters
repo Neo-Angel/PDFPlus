@@ -135,6 +135,24 @@
     <ClInclude Include="..\..\PPTTrailer.h">
       <Filter>소스 파일\Token</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\PPEImage.h">
+      <Filter>소스 파일\Element</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\PPEInlineImage.h">
+      <Filter>소스 파일\Element</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\PPEMarkedContent.h">
+      <Filter>소스 파일\Element</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\PPEPath.h">
+      <Filter>소스 파일\Element</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\PPEShading.h">
+      <Filter>소스 파일\Element</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\PPEText.h">
+      <Filter>소스 파일\Element</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -235,6 +253,24 @@
     </ClCompile>
     <ClCompile Include="..\..\PPTTrailer.cpp">
       <Filter>소스 파일\Token</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\PPEImage.cpp">
+      <Filter>소스 파일\Element</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\PPEInlineImage.cpp">
+      <Filter>소스 파일\Element</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\PPEMarkedContent.cpp">
+      <Filter>소스 파일\Element</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\PPEPath.cpp">
+      <Filter>소스 파일\Element</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\PPEShading.cpp">
+      <Filter>소스 파일\Element</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\PPEText.cpp">
+      <Filter>소스 파일\Element</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

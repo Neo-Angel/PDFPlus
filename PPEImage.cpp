@@ -1,9 +1,9 @@
 
-
+#include <sstream>
 #include "PPEImage.h"
-
 #include "PPTStream.h"
-
+#include "PPTName.h"
+#include "PPTDictionary.h"
 
 //  Image
 //

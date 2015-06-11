@@ -93,7 +93,13 @@
     <ClInclude Include="..\..\PPEForm.h" />
     <ClInclude Include="..\..\PPEGRestore.h" />
     <ClInclude Include="..\..\PPEGSave.h" />
+    <ClInclude Include="..\..\PPEImage.h" />
+    <ClInclude Include="..\..\PPEInlineImage.h" />
     <ClInclude Include="..\..\PPElement.h" />
+    <ClInclude Include="..\..\PPEMarkedContent.h" />
+    <ClInclude Include="..\..\PPEPath.h" />
+    <ClInclude Include="..\..\PPEShading.h" />
+    <ClInclude Include="..\..\PPEText.h" />
     <ClInclude Include="..\..\PPFormBase.h" />
     <ClInclude Include="..\..\PPGState.h" />
     <ClInclude Include="..\..\PPMatrix.h" />
@@ -129,7 +135,13 @@
     <ClCompile Include="..\..\PPEForm.cpp" />
     <ClCompile Include="..\..\PPEGRestore.cpp" />
     <ClCompile Include="..\..\PPEGSave.cpp" />
+    <ClCompile Include="..\..\PPEImage.cpp" />
+    <ClCompile Include="..\..\PPEInlineImage.cpp" />
     <ClCompile Include="..\..\PPElement.cpp" />
+    <ClCompile Include="..\..\PPEMarkedContent.cpp" />
+    <ClCompile Include="..\..\PPEPath.cpp" />
+    <ClCompile Include="..\..\PPEShading.cpp" />
+    <ClCompile Include="..\..\PPEText.cpp" />
     <ClCompile Include="..\..\PPFormBase.cpp" />
     <ClCompile Include="..\..\PPGState.cpp" />
     <ClCompile Include="..\..\PPMatrix.cpp" />
