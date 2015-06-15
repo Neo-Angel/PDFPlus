@@ -97,9 +97,11 @@ void PPPage::WriteDictionary(PPTDictionary *page_dict)
 	PPTDictionary *rcs_dict = new PPTDictionary(&_document->_parser);
 	_document->SetRefTokenForKey(page_dict, rcs_dict, PPKN_RESOURCES);
 	PPTDictionary *stream_dict = new PPTDictionary(&_document->_parser);
-	PPTIndirectObj *stream_obj = _document->SetRefTokenForKey(stream_dict, rcs_dict, PPKN_CONTENTS);
+//	PPTIndirectObj *stream_obj = _document->SetRefTokenForKey(stream_dict, rcs_dict, PPKN_CONTENTS);
+	PPTIndirectObj *stream_obj = _document->SetRefTokenForKey(page_dict, stream_dict, PPKN_CONTENTS);
 	PPTStream *contents = new PPTStream(&_document->_parser);
-	stream_obj->_array.push_back(contents);
+	contents->_dict = stream_dict;
+	stream_obj->AddObj(contents);
 }
 
 PPRect PPPage::rectForKey(string key)

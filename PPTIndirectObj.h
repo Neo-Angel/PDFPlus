@@ -13,12 +13,16 @@ class PPTIndirectRef;
 class PPTDictionary;
 
 class PPTIndirectObj : public PPToken {
+
+private:
+
 public:
     int _objNum;
     int _genNum;
 //    unsigned long long _filept;
-    vector <PPToken *> _array;
-    vector <PPTIndirectRef *> _ref_list;
+    
+	vector <PPToken *> _array;
+	vector <PPTIndirectRef *> _ref_list;
 
     
     PPTIndirectObj(PPParser *parser, vector<PPToken *> token_list, int num1, int num2);
@@ -33,6 +37,7 @@ public:
     bool isStream();
     inline const char *classType(){return PPTN_INDIRECTOBJ;};
     PPTDictionary *firstDictionary();
+	void AddObj(PPToken *obj);
     PPTStream *stream();
     
     void addRefObj(PPTIndirectRef *ref);

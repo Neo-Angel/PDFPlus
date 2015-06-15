@@ -135,6 +135,10 @@ public:
 
 	// Utils
 	PPTIndirectObj *SetRefTokenForKey(PPTDictionary *dict, PPToken *token, string key);
+	PPTDictionary *RootDict();
+	PPTArray *PageArray();
+	void AddPage(PPPage *page, PPTArray *page_array);
+	void PushObj(PPTIndirectObj *obj, int obj_num);
 };
 
 #endif /* defined(__PDFPlusLib__PPDocument__) */

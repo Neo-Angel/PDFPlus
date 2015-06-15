@@ -77,6 +77,10 @@ PPTDictionary *PPTIndirectObj::firstDictionary()
     return (PPTDictionary *)token;
 }
 
+void PPTIndirectObj::AddObj(PPToken *obj)
+{
+	_array.push_back(obj);
+}
 PPTStream *PPTIndirectObj::stream()
 {
     if (_array.size() != 2) {

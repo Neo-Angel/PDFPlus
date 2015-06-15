@@ -39,9 +39,9 @@ void PPTDictionary::SetTokenAndKey(string name, string key)
 PPTIndirectObj *PPTDictionary::SetRefTokenAndKey(PPToken *token, string key, int obj_num)
 {
 	PPTIndirectRef *ref = new PPTIndirectRef(_parser, obj_num, 0);
-	SetTokenAndKey(token, key);
+	SetTokenAndKey(ref, key);
 	PPTIndirectObj *obj = new PPTIndirectObj(_parser, obj_num, 0);
-	obj->_array.push_back(token);
+	obj->AddObj(token);
 	return obj;
 }
 

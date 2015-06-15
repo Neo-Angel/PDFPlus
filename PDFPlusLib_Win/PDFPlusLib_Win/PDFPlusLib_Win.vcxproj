@@ -90,6 +90,8 @@
     <ClInclude Include="..\..\PPDash.h" />
     <ClInclude Include="..\..\PPDefines.h" />
     <ClInclude Include="..\..\PPDocument.h" />
+    <ClInclude Include="..\..\PPEBeginMarkedContent.h" />
+    <ClInclude Include="..\..\PPEEndMarkedContent.h" />
     <ClInclude Include="..\..\PPEForm.h" />
     <ClInclude Include="..\..\PPEGRestore.h" />
     <ClInclude Include="..\..\PPEGSave.h" />
@@ -132,6 +134,8 @@
     <ClCompile Include="..\..\PPCoord.cpp" />
     <ClCompile Include="..\..\PPDash.cpp" />
     <ClCompile Include="..\..\PPDocument.cpp" />
+    <ClCompile Include="..\..\PPEBeginMarkedContent.cpp" />
+    <ClCompile Include="..\..\PPEEndMakedContent.cpp" />
     <ClCompile Include="..\..\PPEForm.cpp" />
     <ClCompile Include="..\..\PPEGRestore.cpp" />
     <ClCompile Include="..\..\PPEGSave.cpp" />

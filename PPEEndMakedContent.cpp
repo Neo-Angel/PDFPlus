@@ -1,5 +1,6 @@
 
 
+#include <sstream>
 #include "PPEEndMarkedContent.h"
 
 

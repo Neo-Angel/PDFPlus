@@ -153,6 +153,12 @@
     <ClInclude Include="..\..\PPEText.h">
       <Filter>소스 파일\Element</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\PPEBeginMarkedContent.h">
+      <Filter>소스 파일\Element</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\PPEEndMarkedContent.h">
+      <Filter>소스 파일\Element</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -270,6 +276,12 @@
       <Filter>소스 파일\Element</Filter>
     </ClCompile>
     <ClCompile Include="..\..\PPEText.cpp">
+      <Filter>소스 파일\Element</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\PPEBeginMarkedContent.cpp">
+      <Filter>소스 파일\Element</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\PPEEndMakedContent.cpp">
       <Filter>소스 파일\Element</Filter>
     </ClCompile>
   </ItemGroup>

@@ -32,16 +32,24 @@
 //  FormBase
 //
 ///////////////////////////////////////////////////////
+
+PPFormBase::PPFormBase():_graphicParser((vector <PPToken *> *)&_commands)
+{
+	_cur_element_idx = 0;
+	_indirObj = NULL;
+	_resourceDict = NULL;
+}
+
 PPFormBase::PPFormBase(PPFormBase *form_base):_graphicParser((vector <PPToken *> *)&_commands)
 {
 	_cur_element_idx = 0; // size_t 
 
-	_indirObj; // = (PPTIndirectObj *)form_base->_indirObj->Copy(); //PPTIndirectObj *
+	_indirObj = NULL; // = (PPTIndirectObj *)form_base->_indirObj->Copy(); //PPTIndirectObj *
     // _document; // PPDocument * : this set when this added to document
-    _resourceDict ; //PPTDictionary *
-    _commands; // vector <PPTCommand *>
-    _graphicParser; // PPCommandParser
-    _elements; // vector <PPElement *> 
+    _resourceDict = NULL; //PPTDictionary *
+//    _commands; // vector <PPTCommand *>
+//    _graphicParser; // PPCommandParser
+//    _elements; // vector <PPElement *> 
 
 }
 
@@ -270,7 +278,7 @@ PPTStream *PPFormBase::BuildStream()
 
 PPElement *PPFormBase::next()
 {
-	if (_cur_element_idx < _elements.size()-1) {
+	if (_elements.size() > 0 && _cur_element_idx < _elements.size()-1) {
 		return _elements[ _cur_element_idx++];
 	}
 	return NULL;

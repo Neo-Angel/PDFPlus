@@ -69,7 +69,7 @@ public:
     vector <PPElement *> _elements;
     
 public:
-    PPFormBase():_graphicParser((vector <PPToken *> *)&_commands){_cur_element_idx = 0;}
+    PPFormBase();
 	PPFormBase(PPFormBase *form_base);
 	PPFormBase(PPTIndirectObj *indir);
 
