@@ -12,6 +12,10 @@
 //      PPEImage
 //
 ///////////////////////////////////////////////////////////////
+class PPTName;
+class PPTDictionary;
+class PPTStream;
+
 class PPEImage : public PPElement {
 public:
     PPTName *_name;
@@ -19,8 +23,8 @@ public:
     PPTStream *_stream;
     
 public:
-    PPEImage(PPTDictionary *dict, PPContext *gcontext) : PPElement(gcontext){_dict = dict;}
-	PPEImage(){}
+    PPEImage(PPTDictionary *dict, PPContext *gcontext);
+	PPEImage();
 	PPBase *Create(){return new PPEImage;}
 
 	void CopyMembers(PPBase *);

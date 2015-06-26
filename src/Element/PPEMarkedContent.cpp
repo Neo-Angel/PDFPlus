@@ -21,8 +21,10 @@ void PPEMarkedContent::CopyMembers(PPBase *obj)
 
 void PPEMarkedContent::SetParser(PPParser *parser)
 {
-	_property->_parser = parser;
-	_tag->_parser = parser;
+	if(_property)
+		_property->_parser = parser;
+	if(_tag)
+		_tag->_parser = parser;
 }
 
 string PPEMarkedContent::makeCommandString()

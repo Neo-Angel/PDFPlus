@@ -5,6 +5,7 @@
 #include "PPTArray.h"
 #include "PPTIndirectObj.h"
 #include "PPTIndirectRef.h"
+#include "PPTNumber.h"
 
 // PPTDictionary //////////////////////////////////
 
@@ -36,11 +37,18 @@ void PPTDictionary::SetTokenAndKey(string name, string key)
 	setTokenAndKey(name_obj, key);
 }
 
+void PPTDictionary::SetTokenAndKey(int num, string key)
+{
+	PPTNumber *num_obj = new PPTNumber(_parser, num);
+	SetTokenAndKey(num_obj, key);
+}
+
 PPTIndirectObj *PPTDictionary::SetRefTokenAndKey(PPToken *token, string key, int obj_num)
 {
 	PPTIndirectRef *ref = new PPTIndirectRef(_parser, obj_num, 0);
 	SetTokenAndKey(ref, key);
 	PPTIndirectObj *obj = new PPTIndirectObj(_parser, obj_num, 0);
+	obj->addRefObj(ref);
 	obj->AddObj(token);
 	return obj;
 }
@@ -56,7 +64,8 @@ PPToken *PPTDictionary::objectForKey(string &keyname)
 
 PPToken *PPTDictionary::objectForKey(const char *keyname)
 {
-    PPToken *ret_token = _dict[keyname];
+	string key(keyname);
+    PPToken *ret_token = _dict[key];
     if (ret_token == NULL) {
         _dict.erase(keyname);
     }

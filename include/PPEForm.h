@@ -11,6 +11,8 @@
 ///////////////////////////////////////////////////////////////
 class PPPage;
 class PPDocument;
+class PPTName;
+class PPTDictionary;
 
 class PPEForm : public PPElement {  // , public PPFormBase {
 public:

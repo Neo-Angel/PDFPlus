@@ -22,6 +22,7 @@ public:
     void setTokenAndKey(PPToken *token, string key);
 	void SetTokenAndKey(PPToken *token, string key){setTokenAndKey(token, key);}
 	void SetTokenAndKey(string name, string key);
+	void SetTokenAndKey(int num, string key);
 	PPTIndirectObj *SetRefTokenAndKey(PPToken *token, string key, int obj_num);
     PPToken *objectForKey(string &keyname);
     PPToken *objectForKey(const char *keyname);

@@ -27,7 +27,8 @@ void PPEInlineImage::SetParser(PPParser *parser)
     map <string, PPToken *>::iterator it_dict;
 	for(it_dict = _dict.begin(); it_dict != _dict.end(); it_dict++) {
         PPToken *token = it_dict->second;
-		token->_parser = parser;
+		if(token)
+			token->_parser = parser;
     }
 }
 

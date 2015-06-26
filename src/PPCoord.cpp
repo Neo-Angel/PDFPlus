@@ -133,7 +133,7 @@ PPRect rectFromArray(PPTArray *array)
     return ret;
 }
 
-void setRectToArray(PPRect rect, PPTArray *array)
+void SetRectToArray(PPRect rect, PPTArray *array)
 {
 	PPTNumber *num;
 	num = new PPTNumber(array->_parser, rect.x1());

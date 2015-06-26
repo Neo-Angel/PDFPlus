@@ -107,7 +107,7 @@ public:
 class PPTArray;
 
 PPRect rectFromArray(PPTArray *array);
-void setRectToArray(PPRect rect, PPTArray *array);
+void SetRectToArray(PPRect rect, PPTArray *array);
 
 
 #endif /* defined(__PDFPlusLib__PPCoord__) */

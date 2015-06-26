@@ -14,12 +14,19 @@
 #include <PPToken.h>
 #include <PPParser.h>
 
+
+
+// VC에서는 타입이 미리 정의되어있지 않으면 인스탄스 베리어블로 선언되어 있어도
+// 값이 할당되지 않음.
+class PPTDictionary;
+
 ///////////////////////////////////////// PPTStream
 class PPTStream : public PPToken, public PPParserSource {
 public:
     unsigned long _index;
     char *_streamData;
     unsigned long _streamSize;
+	string _filterName;
     unsigned long _next;
 
     bool _decoded;
@@ -29,6 +36,7 @@ public:
     PPTStream(PPParser *parser);
     PPTStream(PPParser *parser, unsigned long length);
     ~PPTStream();
+	void SetDictionary(PPTDictionary *dict);
     void appendData(char *data, unsigned long length);
     inline char *getBuffer() { return _streamData;}
     string xmlString(int indent);

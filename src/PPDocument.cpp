@@ -25,6 +25,8 @@
 #include "PPTIndirectRef.h"
 #include "PPTXRef.h"
 #include "PPTTrailer.h"
+#include "PPTComment.h"
+#include "PPPage.h"
 
 PPDocument::PPDocument(string filepath)
 {
@@ -53,6 +55,7 @@ PPDocument::PPDocument(string filepath)
 	// 읽어들인 토큰들을 가지고 도큐먼트를 구성한다.
 	// 도큐먼트는 Document > Page(s) > Element(s) 구조가 된다. 
     buildDocument();
+	buildElements();
 }
 
 PPDocument::PPDocument()
@@ -73,7 +76,7 @@ PPDocument::PPDocument()
     _subject = NULL;
     _title =  NULL;
 	_state = PPDS_None;
-    buildPDF();
+    PreBuildPDF();
 }
 PPDocument::~PPDocument()
 {
@@ -162,39 +165,70 @@ PPTDictionary *PPDocument::RootDict()
 	return root_dict;
 }
 
-PPTArray *PPDocument::PageArray()
+
+PPTDictionary *PPDocument::PagesDictionary()
 {
 	PPTDictionary *root_dict = RootDict();
 
     PPTIndirectObj *pages = (PPTIndirectObj *)root_dict->indirectObjectForKey("Pages");
     PPTDictionary *pages_dict = pages->firstDictionary();
+	return pages_dict;
+}
+
+PPTArray *PPDocument::PageArray()
+{
+    PPTDictionary *pages_dict = PagesDictionary();
 
     PPTArray *page_list = (PPTArray *)pages_dict->objectForKey("Kids");
 	return page_list;
 }
 
-
-void PPDocument::AddPage(PPPage *page, PPTArray *page_array)
+void PPDocument::SetPageCount(int cnt)
 {
-		PPTIndirectRef *page_ref = new PPTIndirectRef(&_parser, ++_objNumber, 0);
-		page_array->AddToken(page_ref);
-		PPTIndirectObj *page_obj = new PPTIndirectObj(&_parser, _objNumber, 0);
-		PushObj(page_obj, _objNumber);
-		PPTDictionary *page_dict = new PPTDictionary(&_parser);
-		page_obj->AddObj(page_dict);
-		page->WriteDictionary(page_dict);
+	PPTDictionary *pages_dict = PagesDictionary();
+	PPTNumber *number = new PPTNumber(&_parser, cnt);
+
+	pages_dict->SetTokenAndKey(number, "Count");
+}
+
+void PPDocument::AddPage(PPPage *page)
+{
+	PPTArray *page_array = PageArray();
+	PPTIndirectRef *page_ref = new PPTIndirectRef(&_parser, ++_objNumber, 0);
+	page_array->AddToken(page_ref);
+
+	SetPageCount(page_array->_array.size());
+
+	PPTIndirectObj *page_obj = new PPTIndirectObj(&_parser, _objNumber, 0);
+	page_obj->addRefObj(page_ref);
+	PushObj(page_obj, _objNumber);
+	PPTDictionary *page_dict = new PPTDictionary(&_parser);
+	page_obj->AddObj(page_dict);
+
+	PPTDictionary *root_dict = RootDict();
+	PPTIndirectObj *pages = (PPTIndirectObj *)root_dict->indirectObjectForKey("Pages");
+	PPTIndirectRef *parent_ref = new PPTIndirectRef(&_parser, pages->_objNum, 0);
+	page_dict->SetTokenAndKey(parent_ref, "Parent");
+
+	page->WriteDictionary(page_dict);
 }
 
 // for generating
 PPPage *PPDocument::newPage(PPRect &rect)
 {
 	PPPage *page = new PPPage(this);
+
+	// AddPage() 에서 page->_pageDict가 지정된단. 
+	// 그래야 page->SetMediaBox() 가 제대로 동작한다.
+	AddPage(page);
+
 	page->SetMediaBox(rect);
 	page->SetCropBox(rect);
+	page->SetArtBox(rect);
+	page->SetBleedBox(rect);
+	page->SetTrimBox(rect);
 	_pages.push_back(page);
 
-	PPTArray *page_array = PageArray();
-	AddPage(page, page_array);
 	return page;
 }
 
@@ -225,12 +259,12 @@ void PPDocument::loadPages(PPTDictionary *pages_dict)
     }
 }
 
-void PPDocument::WritePages(PPTArray *page_list)
+void PPDocument::WriteLoadedPages()
 {
 	size_t i, icnt = _pages.size();
 	for(i=0;i<icnt;i++) {
 		PPPage *page = _pages.at(i);
-		AddPage(page, page_list);
+		AddPage(page);
 	}
 }
 
@@ -326,16 +360,26 @@ void PPDocument::PushObj(PPTIndirectObj *obj, int obj_num)
 	_parser._objDict[obj_num] = obj;
 }
 
-int PPDocument::buildPDF()
+int PPDocument::PreBuildPDF()
 {
 	_objNumber = 1;
 	_tokens.clear();
+
+	string *ver_str = new string("PDF-1.4");
+	PPTComment *verstr = new PPTComment(&_parser, ver_str);
+	_tokens.push_back(verstr);
+
+	string *test_tstr = new string("Test PDF");
+	PPTComment *teststr = new PPTComment(&_parser, test_tstr);
+	_tokens.push_back(teststr);
+
 	_trailer = new PPTTrailer(&_parser);
 //	PPTDictionary *dict = new PPTDictionary(&_parser);
 
 	PPTIndirectRef *root_ref = new PPTIndirectRef(&_parser,++_objNumber, 0);
 	_trailer->getDictionary()->setTokenAndKey(root_ref, PPKN_ROOT);
 	PPTIndirectObj *root_obj = new PPTIndirectObj(&_parser, _objNumber, 0);
+	root_obj->addRefObj(root_ref);
 	PushObj(root_obj, _objNumber);
 	// -- RootDict
 		PPTDictionary *root_dict = new PPTDictionary(&_parser);
@@ -345,12 +389,13 @@ int PPDocument::buildPDF()
 		PPTIndirectRef *pages_ref = new PPTIndirectRef(&_parser,++_objNumber, 0);
 		root_dict->setTokenAndKey(pages_ref, PPKN_PAGES);
 		PPTIndirectObj *pages_obj = new PPTIndirectObj(&_parser, _objNumber, 0);
+		pages_obj->addRefObj(pages_ref);
 		PushObj(pages_obj, _objNumber);
 			PPTDictionary *pages_dict = new PPTDictionary(&_parser);
 			PPTArray *page_list = new PPTArray(&_parser);
 			pages_dict->SetTokenAndKey(page_list, PPKN_KIDS);
-			WritePages(page_list);
-
+			WriteLoadedPages();
+			pages_dict->SetTokenAndKey("Pages", "Type");
 
 			pages_obj->AddObj(pages_dict);
 		root_obj->AddObj(root_dict);
@@ -360,6 +405,7 @@ int PPDocument::buildPDF()
 	PPTIndirectRef *info_ref = new PPTIndirectRef(&_parser,++_objNumber, 0);
 	_trailer->getDictionary()->setTokenAndKey(info_ref, PPKN_INFO);
 	PPTIndirectObj *info_obj = new PPTIndirectObj(&_parser, _objNumber, 0);
+	info_obj->addRefObj(info_ref);
 	PushObj(info_obj, _objNumber);
 
 	//  --  InfoDict
@@ -372,6 +418,16 @@ int PPDocument::buildPDF()
 
 	_tokens.push_back(_trailer);
 	_state = PPDS_Built_Document;
+	return 0;
+}
+
+int PPDocument::PostBuildPDF()
+{
+	int i, icnt = _pages.size();
+	for(i=0;i<icnt;i++) {
+		PPPage *page = _pages[i];
+		page->BuildPDF();
+	}
 	return 0;
 }
 
@@ -717,6 +773,7 @@ int PPDocument::write(char *out_path)
     std::filebuf fb;
 	fb.open (out_path, std::ios::out | std::ios::binary);
     std::ostream os(&fb);
+	PostBuildPDF();
     resortObjNum();
     _parser._objDict.clear(); // 
     _parser._filePtDict.clear();
@@ -738,14 +795,17 @@ int PPDocument::write(char *out_path)
                     if(type && *type->_name == "Catalog") {
                             PPTIndirectRef *indir_ref = new PPTIndirectRef(&_parser, indir_obj->_objNum, indir_obj->_genNum);
                             master_trailer->setRootObject(indir_ref);
+							indir_obj->addRefObj(indir_ref);
                     }
                     else {
                         PPTString *cdate = (PPTString *)dict->objectForKey("CreationDate");
                         PPTString *mdate = (PPTString *)dict->objectForKey("ModDate");
                         PPTString *producer = (PPTString *)dict->objectForKey("Producer");
-                        if(cdate || mdate || producer) {
+						PPTString *creator = (PPTString *)dict->objectForKey("Creator");
+                        if(cdate || mdate || producer || creator) {
                             PPTIndirectRef *indir_ref = new PPTIndirectRef(&_parser, indir_obj->_objNum, indir_obj->_genNum);
                             master_trailer->setInfoObject(indir_ref);
+							indir_obj->addRefObj(indir_ref);
                         }
                     }
                 }
@@ -755,11 +815,13 @@ int PPDocument::write(char *out_path)
         }
     }
     unsigned long long xref_pos = writeXRefs(os);
+
 //    icnt = trailers.size();
 //    for (i=0; i<icnt; i++) {
 //        PPTTrailer *trailer = trailers[i];
 //        master_trailer->merge(trailer);
 //    }
+
     master_trailer->build();
     master_trailer->_startxref = xref_pos;
     master_trailer->write(os);

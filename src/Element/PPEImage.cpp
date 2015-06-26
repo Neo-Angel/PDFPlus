@@ -8,6 +8,21 @@
 //  Image
 //
 ///////////////////////////////////////////////////////
+
+PPEImage::PPEImage(PPTDictionary *dict, PPContext *gcontext) : PPElement(gcontext)
+{
+	_name = NULL;
+	_dict = dict;
+	_stream = NULL;
+}
+
+PPEImage::PPEImage()
+{
+	_name = NULL;
+	_dict = NULL;
+	_stream = NULL;
+}
+
 void PPEImage::CopyMembers(PPBase *obj)
 {
 	PPBase::CopyMembers(obj);
@@ -20,16 +35,20 @@ void PPEImage::CopyMembers(PPBase *obj)
 
 void PPEImage::SetParser(PPParser *parser) 
 {
-	_name->_parser = parser;
-	_dict->_parser = parser;
-	_stream->_parser = parser;
+	if(_name)
+		_name->_parser = parser;
+	if(_dict)
+		_dict->_parser = parser;
+	if(_stream)
+		_stream->_parser = parser;
 }
 
 
 string PPEImage::makeCommandString()
 {
     string retstr;
-    retstr = _name->pdfString() + " Do\xa";
+	if(_name)
+		retstr = _name->pdfString() + " Do\xa";
     return retstr;
 }
 

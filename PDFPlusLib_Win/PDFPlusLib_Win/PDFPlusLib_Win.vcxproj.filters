@@ -19,10 +19,18 @@
     <Filter Include="소스 파일\Token">
       <UniqueIdentifier>{ca621328-c3bb-4448-b040-6d9f25ee2bd5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Element\Graphic">
+      <UniqueIdentifier>{92ce6c74-376e-4274-82b4-bf4caa4ad3de}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ReadMe.txt" />
     <None Include="PDFPlus.txt">
+      <Filter>리소스 파일</Filter>
+    </None>
+    <None Include="ReadMe.txt">
+      <Filter>리소스 파일</Filter>
+    </None>
+    <None Include="..\..\LICENSE">
       <Filter>리소스 파일</Filter>
     </None>
   </ItemGroup>
@@ -33,256 +41,256 @@
     <ClInclude Include="targetver.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\PDFPlus.h">
+    <ClInclude Include="..\..\include\PPCoord.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\PPBase.h">
+    <ClInclude Include="..\..\include\PPDefines.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\PPCommandParser.h">
+    <ClInclude Include="..\..\include\PPDocument.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\PPCoord.h">
+    <ClInclude Include="..\..\include\PPFormBase.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\PPDefines.h">
+    <ClInclude Include="..\..\include\PPPage.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\PPDocument.h">
+    <ClInclude Include="..\..\include\PPParser.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\PPPage.h">
+    <ClInclude Include="..\..\include\PDFPlus.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\PPParser.h">
+    <ClInclude Include="..\..\include\PPBase.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\PPFormBase.h">
+    <ClInclude Include="..\..\include\PPCommandParser.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\PPElement.h">
-      <Filter>소스 파일\Element</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\PPColor.h">
-      <Filter>소스 파일\Element</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\PPMatrix.h">
-      <Filter>소스 파일\Element</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\PPDash.h">
-      <Filter>소스 파일\Element</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\PPGState.h">
-      <Filter>소스 파일\Element</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\PPPath.h">
-      <Filter>소스 파일\Element</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\PPPathItem.h">
-      <Filter>소스 파일\Element</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\PPEGRestore.h">
-      <Filter>소스 파일\Element</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\PPEGSave.h">
-      <Filter>소스 파일\Element</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\PPEForm.h">
-      <Filter>소스 파일\Element</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\PPContext.h">
-      <Filter>소스 파일\Element</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\PPToken.h">
+    <ClInclude Include="..\..\include\PPTArray.h">
       <Filter>소스 파일\Token</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\PPTStream.h">
+    <ClInclude Include="..\..\include\PPTBool.h">
       <Filter>소스 파일\Token</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\PPTComment.h">
+    <ClInclude Include="..\..\include\PPTComment.h">
       <Filter>소스 파일\Token</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\PPTBool.h">
+    <ClInclude Include="..\..\include\PPTDictionary.h">
       <Filter>소스 파일\Token</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\PPTNumber.h">
+    <ClInclude Include="..\..\include\PPTIndirectObj.h">
       <Filter>소스 파일\Token</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\PPTString.h">
+    <ClInclude Include="..\..\include\PPTIndirectRef.h">
       <Filter>소스 파일\Token</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\PPTName.h">
+    <ClInclude Include="..\..\include\PPTName.h">
       <Filter>소스 파일\Token</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\PPTArray.h">
+    <ClInclude Include="..\..\include\PPTNull.h">
       <Filter>소스 파일\Token</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\PPTDictionary.h">
+    <ClInclude Include="..\..\include\PPTNumber.h">
       <Filter>소스 파일\Token</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\PPTNull.h">
+    <ClInclude Include="..\..\include\PPToken.h">
       <Filter>소스 파일\Token</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\PPTIndirectObj.h">
+    <ClInclude Include="..\..\include\PPTStream.h">
       <Filter>소스 파일\Token</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\PPTIndirectRef.h">
+    <ClInclude Include="..\..\include\PPTString.h">
       <Filter>소스 파일\Token</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\PPTXRef.h">
+    <ClInclude Include="..\..\include\PPTTrailer.h">
       <Filter>소스 파일\Token</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\PPTTrailer.h">
+    <ClInclude Include="..\..\include\PPTXRef.h">
       <Filter>소스 파일\Token</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\PPEImage.h">
+    <ClInclude Include="..\..\include\PPElement.h">
       <Filter>소스 파일\Element</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\PPEInlineImage.h">
+    <ClInclude Include="..\..\include\PPEMarkedContent.h">
       <Filter>소스 파일\Element</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\PPEMarkedContent.h">
+    <ClInclude Include="..\..\include\PPEPath.h">
       <Filter>소스 파일\Element</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\PPEPath.h">
+    <ClInclude Include="..\..\include\PPEShading.h">
       <Filter>소스 파일\Element</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\PPEShading.h">
+    <ClInclude Include="..\..\include\PPEText.h">
       <Filter>소스 파일\Element</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\PPEText.h">
+    <ClInclude Include="..\..\include\PPEBeginMarkedContent.h">
       <Filter>소스 파일\Element</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\PPEBeginMarkedContent.h">
+    <ClInclude Include="..\..\include\PPEEndMarkedContent.h">
       <Filter>소스 파일\Element</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\PPEEndMarkedContent.h">
+    <ClInclude Include="..\..\include\PPEForm.h">
       <Filter>소스 파일\Element</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\PPEGRestore.h">
+      <Filter>소스 파일\Element</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\PPEGSave.h">
+      <Filter>소스 파일\Element</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\PPEImage.h">
+      <Filter>소스 파일\Element</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\PPEInlineImage.h">
+      <Filter>소스 파일\Element</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\PPColor.h">
+      <Filter>소스 파일\Element\Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\PPContext.h">
+      <Filter>소스 파일\Element\Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\PPDash.h">
+      <Filter>소스 파일\Element\Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\PPPathItem.h">
+      <Filter>소스 파일\Element\Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\PPGState.h">
+      <Filter>소스 파일\Element\Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\PPMatrix.h">
+      <Filter>소스 파일\Element\Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\PPPath.h">
+      <Filter>소스 파일\Element\Graphic</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\PPBase.cpp">
+    <ClCompile Include="..\..\src\PPBase.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\PPCommandParser.cpp">
+    <ClCompile Include="..\..\src\PPCommandParser.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\PPCoord.cpp">
+    <ClCompile Include="..\..\src\PPParser.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\PPDocument.cpp">
+    <ClCompile Include="..\..\src\PPCoord.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\PPPage.cpp">
+    <ClCompile Include="..\..\src\PPDocument.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\PPParser.cpp">
+    <ClCompile Include="..\..\src\PPFormBase.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\PPFormBase.cpp">
+    <ClCompile Include="..\..\src\PPPage.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\PPElement.cpp">
-      <Filter>소스 파일\Element</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\PPColor.cpp">
-      <Filter>소스 파일\Element</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\PPMatrix.cpp">
-      <Filter>소스 파일\Element</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\PPDash.cpp">
-      <Filter>소스 파일\Element</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\PPGState.cpp">
-      <Filter>소스 파일\Element</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\PPPath.cpp">
-      <Filter>소스 파일\Element</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\PPPathItem.cpp">
-      <Filter>소스 파일\Element</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\PPEGRestore.cpp">
-      <Filter>소스 파일\Element</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\PPEGSave.cpp">
-      <Filter>소스 파일\Element</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\PPEForm.cpp">
-      <Filter>소스 파일\Element</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\PPContext.cpp">
-      <Filter>소스 파일\Element</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\PPToken.cpp">
+    <ClCompile Include="..\..\src\Token\PPTArray.cpp">
       <Filter>소스 파일\Token</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\PPTStream.cpp">
+    <ClCompile Include="..\..\src\Token\PPTBool.cpp">
       <Filter>소스 파일\Token</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\PPTComment.cpp">
+    <ClCompile Include="..\..\src\Token\PPTComment.cpp">
       <Filter>소스 파일\Token</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\PPTBool.cpp">
+    <ClCompile Include="..\..\src\Token\PPTDictionary.cpp">
       <Filter>소스 파일\Token</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\PPTNumber.cpp">
+    <ClCompile Include="..\..\src\Token\PPTIndirectObj.cpp">
       <Filter>소스 파일\Token</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\PPTString.cpp">
+    <ClCompile Include="..\..\src\Token\PPTIndirectRef.cpp">
       <Filter>소스 파일\Token</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\PPTName.cpp">
+    <ClCompile Include="..\..\src\Token\PPTName.cpp">
       <Filter>소스 파일\Token</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\PPTArray.cpp">
+    <ClCompile Include="..\..\src\Token\PPTNull.cpp">
       <Filter>소스 파일\Token</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\PPTDictionary.cpp">
+    <ClCompile Include="..\..\src\Token\PPTNumber.cpp">
       <Filter>소스 파일\Token</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\PPTNull.cpp">
+    <ClCompile Include="..\..\src\Token\PPToken.cpp">
       <Filter>소스 파일\Token</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\PPTIndirectObj.cpp">
+    <ClCompile Include="..\..\src\Token\PPTStream.cpp">
       <Filter>소스 파일\Token</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\PPTIndirectRef.cpp">
+    <ClCompile Include="..\..\src\Token\PPTString.cpp">
       <Filter>소스 파일\Token</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\PPTXRef.cpp">
+    <ClCompile Include="..\..\src\Token\PPTTrailer.cpp">
       <Filter>소스 파일\Token</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\PPTTrailer.cpp">
+    <ClCompile Include="..\..\src\Token\PPTXRef.cpp">
       <Filter>소스 파일\Token</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\PPEImage.cpp">
+    <ClCompile Include="..\..\src\Element\PPEBeginMarkedContent.cpp">
       <Filter>소스 파일\Element</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\PPEInlineImage.cpp">
+    <ClCompile Include="..\..\src\Element\PPEEndMakedContent.cpp">
       <Filter>소스 파일\Element</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\PPEMarkedContent.cpp">
+    <ClCompile Include="..\..\src\Element\PPEForm.cpp">
       <Filter>소스 파일\Element</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\PPEPath.cpp">
+    <ClCompile Include="..\..\src\Element\PPEGRestore.cpp">
       <Filter>소스 파일\Element</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\PPEShading.cpp">
+    <ClCompile Include="..\..\src\Element\PPEGSave.cpp">
       <Filter>소스 파일\Element</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\PPEText.cpp">
+    <ClCompile Include="..\..\src\Element\PPEImage.cpp">
       <Filter>소스 파일\Element</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\PPEBeginMarkedContent.cpp">
+    <ClCompile Include="..\..\src\Element\PPEInlineImage.cpp">
       <Filter>소스 파일\Element</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\PPEEndMakedContent.cpp">
+    <ClCompile Include="..\..\src\Element\PPElement.cpp">
       <Filter>소스 파일\Element</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Element\PPEMarkedContent.cpp">
+      <Filter>소스 파일\Element</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Element\PPEPath.cpp">
+      <Filter>소스 파일\Element</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Element\PPEShading.cpp">
+      <Filter>소스 파일\Element</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Element\PPEText.cpp">
+      <Filter>소스 파일\Element</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Element\Graphic\PPColor.cpp">
+      <Filter>소스 파일\Element\Graphic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Element\Graphic\PPContext.cpp">
+      <Filter>소스 파일\Element\Graphic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Element\Graphic\PPDash.cpp">
+      <Filter>소스 파일\Element\Graphic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Element\Graphic\PPGState.cpp">
+      <Filter>소스 파일\Element\Graphic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Element\Graphic\PPMatrix.cpp">
+      <Filter>소스 파일\Element\Graphic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Element\Graphic\PPPath.cpp">
+      <Filter>소스 파일\Element\Graphic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Element\Graphic\PPPathItem.cpp">
+      <Filter>소스 파일\Element\Graphic</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

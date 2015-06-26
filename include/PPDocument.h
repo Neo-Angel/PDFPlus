@@ -74,7 +74,7 @@ public:  //protected:
 public:
 	void readPage(PPTDictionary *page_dict);
     void loadPages(PPTDictionary *pages);
-	void WritePages(PPTArray *page_list);
+	void WriteLoadedPages();
     string xobjectsXMLString(int level);
     string fontsXMLString(int level);
     
@@ -87,7 +87,8 @@ public:
     int buildDocument();
     int buildElements();
 
-	int buildPDF();
+	int PreBuildPDF();
+	int PostBuildPDF();
 
 	bool open(string filepath);
     bool isOpened();
@@ -136,8 +137,13 @@ public:
 	// Utils
 	PPTIndirectObj *SetRefTokenForKey(PPTDictionary *dict, PPToken *token, string key);
 	PPTDictionary *RootDict();
+
+	// Page Handling
+	PPTDictionary *PagesDictionary();
 	PPTArray *PageArray();
-	void AddPage(PPPage *page, PPTArray *page_array);
+	void SetPageCount(int cnt);
+	void AddPage(PPPage *page);
+
 	void PushObj(PPTIndirectObj *obj, int obj_num);
 };
 

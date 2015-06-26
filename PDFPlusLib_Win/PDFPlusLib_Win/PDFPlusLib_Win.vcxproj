@@ -49,7 +49,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Work\PDFPlus\Lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Work\PDFPlus\Lib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4819</DisableSpecificWarnings>
     </ClCompile>
     <Link>
@@ -77,96 +77,97 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include="..\..\LICENSE" />
     <None Include="PDFPlus.txt" />
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\PDFPlus.h" />
-    <ClInclude Include="..\..\PPBase.h" />
-    <ClInclude Include="..\..\PPColor.h" />
-    <ClInclude Include="..\..\PPCommandParser.h" />
-    <ClInclude Include="..\..\PPContext.h" />
-    <ClInclude Include="..\..\PPCoord.h" />
-    <ClInclude Include="..\..\PPDash.h" />
-    <ClInclude Include="..\..\PPDefines.h" />
-    <ClInclude Include="..\..\PPDocument.h" />
-    <ClInclude Include="..\..\PPEBeginMarkedContent.h" />
-    <ClInclude Include="..\..\PPEEndMarkedContent.h" />
-    <ClInclude Include="..\..\PPEForm.h" />
-    <ClInclude Include="..\..\PPEGRestore.h" />
-    <ClInclude Include="..\..\PPEGSave.h" />
-    <ClInclude Include="..\..\PPEImage.h" />
-    <ClInclude Include="..\..\PPEInlineImage.h" />
-    <ClInclude Include="..\..\PPElement.h" />
-    <ClInclude Include="..\..\PPEMarkedContent.h" />
-    <ClInclude Include="..\..\PPEPath.h" />
-    <ClInclude Include="..\..\PPEShading.h" />
-    <ClInclude Include="..\..\PPEText.h" />
-    <ClInclude Include="..\..\PPFormBase.h" />
-    <ClInclude Include="..\..\PPGState.h" />
-    <ClInclude Include="..\..\PPMatrix.h" />
-    <ClInclude Include="..\..\PPPage.h" />
-    <ClInclude Include="..\..\PPParser.h" />
-    <ClInclude Include="..\..\PPPath.h" />
-    <ClInclude Include="..\..\PPPathItem.h" />
-    <ClInclude Include="..\..\PPTArray.h" />
-    <ClInclude Include="..\..\PPTBool.h" />
-    <ClInclude Include="..\..\PPTComment.h" />
-    <ClInclude Include="..\..\PPTDictionary.h" />
-    <ClInclude Include="..\..\PPTIndirectObj.h" />
-    <ClInclude Include="..\..\PPTIndirectRef.h" />
-    <ClInclude Include="..\..\PPTName.h" />
-    <ClInclude Include="..\..\PPTNull.h" />
-    <ClInclude Include="..\..\PPTNumber.h" />
-    <ClInclude Include="..\..\PPToken.h" />
-    <ClInclude Include="..\..\PPTStream.h" />
-    <ClInclude Include="..\..\PPTString.h" />
-    <ClInclude Include="..\..\PPTTrailer.h" />
-    <ClInclude Include="..\..\PPTXRef.h" />
+    <ClInclude Include="..\..\include\PDFPlus.h" />
+    <ClInclude Include="..\..\include\PPBase.h" />
+    <ClInclude Include="..\..\include\PPColor.h" />
+    <ClInclude Include="..\..\include\PPCommandParser.h" />
+    <ClInclude Include="..\..\include\PPContext.h" />
+    <ClInclude Include="..\..\include\PPCoord.h" />
+    <ClInclude Include="..\..\include\PPDash.h" />
+    <ClInclude Include="..\..\include\PPDefines.h" />
+    <ClInclude Include="..\..\include\PPDocument.h" />
+    <ClInclude Include="..\..\include\PPEBeginMarkedContent.h" />
+    <ClInclude Include="..\..\include\PPEEndMarkedContent.h" />
+    <ClInclude Include="..\..\include\PPEForm.h" />
+    <ClInclude Include="..\..\include\PPEGRestore.h" />
+    <ClInclude Include="..\..\include\PPEGSave.h" />
+    <ClInclude Include="..\..\include\PPEImage.h" />
+    <ClInclude Include="..\..\include\PPEInlineImage.h" />
+    <ClInclude Include="..\..\include\PPElement.h" />
+    <ClInclude Include="..\..\include\PPEMarkedContent.h" />
+    <ClInclude Include="..\..\include\PPEPath.h" />
+    <ClInclude Include="..\..\include\PPEShading.h" />
+    <ClInclude Include="..\..\include\PPEText.h" />
+    <ClInclude Include="..\..\include\PPFormBase.h" />
+    <ClInclude Include="..\..\include\PPGState.h" />
+    <ClInclude Include="..\..\include\PPMatrix.h" />
+    <ClInclude Include="..\..\include\PPPage.h" />
+    <ClInclude Include="..\..\include\PPParser.h" />
+    <ClInclude Include="..\..\include\PPPath.h" />
+    <ClInclude Include="..\..\include\PPPathItem.h" />
+    <ClInclude Include="..\..\include\PPTArray.h" />
+    <ClInclude Include="..\..\include\PPTBool.h" />
+    <ClInclude Include="..\..\include\PPTComment.h" />
+    <ClInclude Include="..\..\include\PPTDictionary.h" />
+    <ClInclude Include="..\..\include\PPTIndirectObj.h" />
+    <ClInclude Include="..\..\include\PPTIndirectRef.h" />
+    <ClInclude Include="..\..\include\PPTName.h" />
+    <ClInclude Include="..\..\include\PPTNull.h" />
+    <ClInclude Include="..\..\include\PPTNumber.h" />
+    <ClInclude Include="..\..\include\PPToken.h" />
+    <ClInclude Include="..\..\include\PPTStream.h" />
+    <ClInclude Include="..\..\include\PPTString.h" />
+    <ClInclude Include="..\..\include\PPTTrailer.h" />
+    <ClInclude Include="..\..\include\PPTXRef.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\PPBase.cpp" />
-    <ClCompile Include="..\..\PPColor.cpp" />
-    <ClCompile Include="..\..\PPCommandParser.cpp" />
-    <ClCompile Include="..\..\PPContext.cpp" />
-    <ClCompile Include="..\..\PPCoord.cpp" />
-    <ClCompile Include="..\..\PPDash.cpp" />
-    <ClCompile Include="..\..\PPDocument.cpp" />
-    <ClCompile Include="..\..\PPEBeginMarkedContent.cpp" />
-    <ClCompile Include="..\..\PPEEndMakedContent.cpp" />
-    <ClCompile Include="..\..\PPEForm.cpp" />
-    <ClCompile Include="..\..\PPEGRestore.cpp" />
-    <ClCompile Include="..\..\PPEGSave.cpp" />
-    <ClCompile Include="..\..\PPEImage.cpp" />
-    <ClCompile Include="..\..\PPEInlineImage.cpp" />
-    <ClCompile Include="..\..\PPElement.cpp" />
-    <ClCompile Include="..\..\PPEMarkedContent.cpp" />
-    <ClCompile Include="..\..\PPEPath.cpp" />
-    <ClCompile Include="..\..\PPEShading.cpp" />
-    <ClCompile Include="..\..\PPEText.cpp" />
-    <ClCompile Include="..\..\PPFormBase.cpp" />
-    <ClCompile Include="..\..\PPGState.cpp" />
-    <ClCompile Include="..\..\PPMatrix.cpp" />
-    <ClCompile Include="..\..\PPPage.cpp" />
-    <ClCompile Include="..\..\PPParser.cpp" />
-    <ClCompile Include="..\..\PPPath.cpp" />
-    <ClCompile Include="..\..\PPPathItem.cpp" />
-    <ClCompile Include="..\..\PPTArray.cpp" />
-    <ClCompile Include="..\..\PPTBool.cpp" />
-    <ClCompile Include="..\..\PPTComment.cpp" />
-    <ClCompile Include="..\..\PPTDictionary.cpp" />
-    <ClCompile Include="..\..\PPTIndirectObj.cpp" />
-    <ClCompile Include="..\..\PPTIndirectRef.cpp" />
-    <ClCompile Include="..\..\PPTName.cpp" />
-    <ClCompile Include="..\..\PPTNull.cpp" />
-    <ClCompile Include="..\..\PPTNumber.cpp" />
-    <ClCompile Include="..\..\PPToken.cpp" />
-    <ClCompile Include="..\..\PPTStream.cpp" />
-    <ClCompile Include="..\..\PPTString.cpp" />
-    <ClCompile Include="..\..\PPTTrailer.cpp" />
-    <ClCompile Include="..\..\PPTXRef.cpp" />
+    <ClCompile Include="..\..\src\Element\Graphic\PPColor.cpp" />
+    <ClCompile Include="..\..\src\Element\Graphic\PPContext.cpp" />
+    <ClCompile Include="..\..\src\Element\Graphic\PPDash.cpp" />
+    <ClCompile Include="..\..\src\Element\Graphic\PPGState.cpp" />
+    <ClCompile Include="..\..\src\Element\Graphic\PPMatrix.cpp" />
+    <ClCompile Include="..\..\src\Element\Graphic\PPPath.cpp" />
+    <ClCompile Include="..\..\src\Element\Graphic\PPPathItem.cpp" />
+    <ClCompile Include="..\..\src\Element\PPEBeginMarkedContent.cpp" />
+    <ClCompile Include="..\..\src\Element\PPEEndMakedContent.cpp" />
+    <ClCompile Include="..\..\src\Element\PPEForm.cpp" />
+    <ClCompile Include="..\..\src\Element\PPEGRestore.cpp" />
+    <ClCompile Include="..\..\src\Element\PPEGSave.cpp" />
+    <ClCompile Include="..\..\src\Element\PPEImage.cpp" />
+    <ClCompile Include="..\..\src\Element\PPEInlineImage.cpp" />
+    <ClCompile Include="..\..\src\Element\PPElement.cpp" />
+    <ClCompile Include="..\..\src\Element\PPEMarkedContent.cpp" />
+    <ClCompile Include="..\..\src\Element\PPEPath.cpp" />
+    <ClCompile Include="..\..\src\Element\PPEShading.cpp" />
+    <ClCompile Include="..\..\src\Element\PPEText.cpp" />
+    <ClCompile Include="..\..\src\PPBase.cpp" />
+    <ClCompile Include="..\..\src\PPCommandParser.cpp" />
+    <ClCompile Include="..\..\src\PPCoord.cpp" />
+    <ClCompile Include="..\..\src\PPDocument.cpp" />
+    <ClCompile Include="..\..\src\PPFormBase.cpp" />
+    <ClCompile Include="..\..\src\PPPage.cpp" />
+    <ClCompile Include="..\..\src\PPParser.cpp" />
+    <ClCompile Include="..\..\src\Token\PPTArray.cpp" />
+    <ClCompile Include="..\..\src\Token\PPTBool.cpp" />
+    <ClCompile Include="..\..\src\Token\PPTComment.cpp" />
+    <ClCompile Include="..\..\src\Token\PPTDictionary.cpp" />
+    <ClCompile Include="..\..\src\Token\PPTIndirectObj.cpp" />
+    <ClCompile Include="..\..\src\Token\PPTIndirectRef.cpp" />
+    <ClCompile Include="..\..\src\Token\PPTName.cpp" />
+    <ClCompile Include="..\..\src\Token\PPTNull.cpp" />
+    <ClCompile Include="..\..\src\Token\PPTNumber.cpp" />
+    <ClCompile Include="..\..\src\Token\PPToken.cpp" />
+    <ClCompile Include="..\..\src\Token\PPTStream.cpp" />
+    <ClCompile Include="..\..\src\Token\PPTString.cpp" />
+    <ClCompile Include="..\..\src\Token\PPTTrailer.cpp" />
+    <ClCompile Include="..\..\src\Token\PPTXRef.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

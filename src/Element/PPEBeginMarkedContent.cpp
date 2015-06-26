@@ -20,8 +20,10 @@ void PPEBeginMarkedContent::CopyMembers(PPBase *obj)
 
 void PPEBeginMarkedContent::SetParser(PPParser *parser)
 {
-	_property->_parser = parser;
-	_tag->_parser = parser;
+	if(_property)
+		_property->_parser = parser;
+	if(_tag)
+		_tag->_parser = parser;
 }
 
 string PPEBeginMarkedContent::makeCommandString()

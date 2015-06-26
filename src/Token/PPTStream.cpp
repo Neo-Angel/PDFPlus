@@ -94,6 +94,7 @@ PPTStream::PPTStream(PPParser *parser) : PPToken(parser)
     _streamSize = 0;
     _decoded = false;
     _decodeFailed = false;
+	_filterName = "None";
 }
 
 PPTStream::PPTStream(PPParser *parser, unsigned long length) : PPToken(parser)
@@ -104,11 +105,17 @@ PPTStream::PPTStream(PPParser *parser, unsigned long length) : PPToken(parser)
     _streamSize = length;
     _decoded = false;
     _decodeFailed = false;
+	_filterName = "None";
 }
 
 PPTStream::~PPTStream()
 {
     delete[] _streamData;
+}
+
+void PPTStream::SetDictionary(PPTDictionary *dict)
+{
+	_dict = dict;
 }
 
 void PPTStream::appendData(char *data, unsigned long length)
@@ -480,12 +487,12 @@ PPToken *PPTStream::parseString(string str, vector <PPToken *> &tokens, PPParser
         if (isKindOfNumber((PPTNumber *)token1) && isKindOfNumber((PPTNumber *)token2)) {
             PPTNumber *num1 = (PPTNumber *)token1;
             PPTNumber *num2 = (PPTNumber *)token2;
-            PPToken *token_obj = (PPToken *)new PPTIndirectRef(parser, num1->intValue(), num2->intValue());
-            if(token_obj) {
+            PPToken *token_ref = (PPToken *)new PPTIndirectRef(parser, num1->intValue(), num2->intValue());
+            if(token_ref) {
                 tokens.erase(tokens.begin() + (cnt-1));
                 tokens.erase(tokens.begin() + (cnt-2));
-                tokens.push_back(token_obj);
-                return token_obj;
+                tokens.push_back(token_ref);
+                return token_ref;
             }
         }
     }

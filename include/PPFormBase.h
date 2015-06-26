@@ -86,10 +86,12 @@ public:
 	int GetObjNum(){return _indirObj != NULL ? _indirObj->getObjNum() : 0;}
     int GetXObjNumOf(string name);
 	PPTIndirectObj *GetXObject();
+	PPTIndirectRef *ResourceForKey(string key);
 	bool HasElements() {return (_elements.size() > 0 ? true : false);}
 
 	PPContext *ptContext() {return _context;}
-
+	void SetValueToGState(PPTCommand *cmd, PPContext &gcontext);
+	void AddCommandToPath(PPTCommand *cmd, PPPath *path);
 	PPTStream *BuildStream();
 };
 

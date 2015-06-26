@@ -94,6 +94,14 @@ PPTIndirectObj *PPFormBase::GetXObject()
 	return _indirObj; 
 }
 
+PPTIndirectRef *PPFormBase::ResourceForKey(string key)
+{
+	if (_resourceDict == NULL)
+		return NULL;
+
+	PPTIndirectRef *ret = (PPTIndirectRef *)_resourceDict->objectForKey(key);
+	return ret;
+}
 void PPFormBase::addElement(PPElement *element)
 {
     element->willAddToParent(this);
@@ -107,6 +115,164 @@ void PPFormBase::writeElement(PPElement *element)
 	PPElement *copied = (PPElement *)element->Copy();
 
 	addElement(copied);
+}
+
+
+void PPFormBase::SetValueToGState(PPTCommand *cmd, PPContext &gcontext)
+{
+    
+    switch (cmd->_cmdInfo->type) {
+        case PPC_LineWidth:
+            gcontext.setLineWidth(cmd->getFloatValue(0));
+            break;
+        
+        case PPC_LineCap:
+            gcontext.setLineCap(cmd->getIntValue(0));
+            break;
+        
+        case PPC_LineJoin:
+            gcontext.setLineJoin(cmd->getIntValue(0));
+            break;
+        
+        case PPC_MiterLimit:
+            gcontext.setMiterLimit(cmd->getFloatValue(0));
+            break;
+        
+        case PPC_Dash:
+        {
+            PPDash dash;
+            cmd->getDash(&dash);
+            gcontext.setDash(dash);
+            break;
+        }
+        
+        case PPC_Intent:
+            gcontext.setIntent(cmd->getFloatValue(0));
+            break;
+        
+        case PPC_Flatness:
+            gcontext.setFlatness(cmd->getFloatValue(0));
+            break;
+        
+        case PPC_DictName:
+            gcontext.setDictName(cmd->getStringValue(0));
+            break;
+        
+        case PPC_Matrix:
+        {
+            PPMatrix mtx;
+            mtx._a = cmd->getFloatValue(0);
+            mtx._b = cmd->getFloatValue(1);
+            mtx._c = cmd->getFloatValue(2);
+            mtx._d = cmd->getFloatValue(3);
+            mtx._x = cmd->getFloatValue(4);
+            mtx._y = cmd->getFloatValue(5);
+            gcontext.setMatrix(mtx);
+            break;
+        }
+        
+        case PPC_StrokeColorSpace:
+            gcontext.setStrokeColorSpace(cmd->getStringValue(0));
+            break;
+        
+        case PPC_NonStrokeColorSpace:
+            gcontext.setFillColorSpace(cmd->getStringValue(0));
+            break;
+        
+        case PPC_SetColor:
+        case PPC_SetColorN:
+       {
+            int n = gcontext.numberOfStrokeColorCoponents();
+            if (n == 1) {
+                gcontext.setStrokeColor(cmd->getFloatValue(0));
+            }
+            else if(n == 3) {
+                gcontext.setStrokeColor(cmd->getFloatValue(0),cmd->getFloatValue(1),cmd->getFloatValue(2));
+            }
+            else if(n == 4) {
+                gcontext.setStrokeColor(cmd->getFloatValue(0),cmd->getFloatValue(1),cmd->getFloatValue(2), cmd->getFloatValue(3));
+            }
+            break;
+        }
+        case PPC_SetNonStrokeColor:
+        case PPC_SetNonStrokeColorN:
+        {
+            int n = gcontext.numberOfNonStrokeColorCoponents();
+            if (n == 1) {
+                gcontext.setFillColor(cmd->getFloatValue(0));
+            }
+            else if(n == 3) {
+                gcontext.setFillColor(cmd->getFloatValue(0),cmd->getFloatValue(1),cmd->getFloatValue(2));
+            }
+            else if(n == 4) {
+                gcontext.setFillColor(cmd->getFloatValue(0),cmd->getFloatValue(1),cmd->getFloatValue(2), cmd->getFloatValue(3));
+            }
+            break;
+        }
+        
+        case PPC_DeviceGray:
+            gcontext.setStrokeColorSpace(PPCSN_DeviceGray);
+            gcontext.setStrokeColor(cmd->getFloatValue(0));
+            break;
+        
+        case PPC_DeviceRGB:
+            gcontext.setStrokeColorSpace(PPCSN_DeviceRGB);
+            gcontext.setStrokeColor(cmd->getFloatValue(0),cmd->getFloatValue(1),cmd->getFloatValue(2));
+            break;
+        
+        case PPC_DeviceCMYK:
+            gcontext.setStrokeColorSpace(PPCSN_DeviceRGB);
+            gcontext.setStrokeColor(cmd->getFloatValue(0),cmd->getFloatValue(1),cmd->getFloatValue(2), cmd->getFloatValue(3));
+            break;
+            
+        case PPC_NonStrokeDeviceGray:
+            gcontext.setFillColorSpace(PPCSN_DeviceGray);
+            gcontext.setFillColor(cmd->getFloatValue(0));
+            break;
+        
+        case PPC_NonStrokeDeviceRGB:
+            gcontext.setFillColorSpace(PPCSN_DeviceRGB);
+            gcontext.setFillColor(cmd->getFloatValue(0),cmd->getFloatValue(1),cmd->getFloatValue(2));
+            break;
+        
+        case PPC_NonStrokeDeviceCMYK:
+            gcontext.setFillColorSpace(PPCSN_DeviceCMYK);
+            gcontext.setFillColor(cmd->getFloatValue(0),cmd->getFloatValue(1),cmd->getFloatValue(2), cmd->getFloatValue(3));
+            break;
+        
+        default:
+            break;
+    }
+}
+
+void PPFormBase::AddCommandToPath(PPTCommand *cmd, PPPath *path)
+{
+    switch (cmd->_cmdInfo->type) {
+        case PPC_MoveTo:
+            path->moveTo(cmd->getFloatValue(0), cmd->getFloatValue(1));
+            break;
+        case PPC_LineTo:
+            path->lineTo(cmd->getFloatValue(0), cmd->getFloatValue(1));
+            break;
+        case PPC_CurveTo:
+            path->curveTo(cmd->getFloatValue(0), cmd->getFloatValue(1), cmd->getFloatValue(2), 
+				cmd->getFloatValue(3), cmd->getFloatValue(4), cmd->getFloatValue(5));
+            break;
+        case PPC_CurveTo1:
+            path->curveTo1(cmd->getFloatValue(0), cmd->getFloatValue(1), cmd->getFloatValue(2), cmd->getFloatValue(3));
+            break;
+        case PPC_CurveTo2:
+            path->curveTo2(cmd->getFloatValue(0), cmd->getFloatValue(1), cmd->getFloatValue(2), cmd->getFloatValue(3));
+            break;
+        case PPC_ClosePath:
+            path->close();
+            break;
+        case PPC_Rectangle:
+            path->rectangle(cmd->getFloatValue(0), cmd->getFloatValue(1), cmd->getFloatValue(2), cmd->getFloatValue(3));
+            break;
+        default:
+            break;
+    }
 }
 
 int PPFormBase::buildElements()
@@ -125,7 +291,8 @@ int PPFormBase::buildElements()
         
         switch (cmd->_cmdInfo->group) {
             case PPCG_GState:
-                cmd->setValueToGState(gcontext);
+                cmd->setValueToGState(gcontext);  // => 
+				SetValueToGState(cmd, gcontext);
                 break;
             case PPCG_SaveGState:
                 {
@@ -150,7 +317,8 @@ int PPFormBase::buildElements()
                 if (path_element != NULL) {
                     path_element = NULL;
                 }
-                cmd->addCommandToPath(opened_path);
+                //cmd->addCommandToPath(opened_path);
+				AddCommandToPath(cmd, opened_path);
                 break;
             case PPCG_FinishPath:
             case PPCG_Clipping:
@@ -253,6 +421,7 @@ int PPFormBase::buildElements()
                 break;
                 
             default:
+				cout << " Unprocessed Command " << cmd->pdfString() << PP_ENDL;
                 break;
         }
     }
@@ -265,7 +434,7 @@ PPTStream *PPFormBase::BuildStream()
 	string retstr; 
 	ostringstream ostr;
 	size_t i, icnt = _elements.size();
-	for(i=0;i=icnt;i++) {
+	for(i=0;i<icnt;i++) {
 		PPElement *element = _elements.at(i);
 		retstr += element->commandString();
 	}

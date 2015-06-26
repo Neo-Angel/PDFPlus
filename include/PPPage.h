@@ -91,6 +91,7 @@ public:
     string xmlString(int level);
     string elementXmlString(int level);
 	PPMatrix *GetDefaultMatrix();
+	void BuildPDF();
 };
 
 #endif /* defined(__PDFPlusLib__PPPage__) */

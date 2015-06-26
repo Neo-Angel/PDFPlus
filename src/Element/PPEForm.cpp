@@ -11,14 +11,17 @@
 PPEForm::PPEForm(PPPage *page, PPDocument *doc)
 {
 	_name = doc->AddFormObject(page);
+	_dict = NULL;
 }
 PPEForm::PPEForm(PPTName *name, PPContext *gcontext) : PPElement(gcontext)
 {
 	_name = name;
+	_dict = NULL;
 }
 
 PPEForm::PPEForm(PPTDictionary *dict, PPContext *gcontext) : PPElement(gcontext)
 {
+	_name = NULL;
     _dict = dict;
 //    _stream = NULL;
 /*
@@ -44,8 +47,10 @@ void PPEForm::CopyMembers(PPBase *obj)
 
 void PPEForm::SetParser(PPParser *parser)
 {
-	_name->_parser = parser;
-	_dict->_parser = parser;
+	if(_name)
+		_name->_parser = parser;
+	if(_dict)
+		_dict->_parser = parser;
 }
 /*
 void PPEForm::setStream(PPTStream *stream)

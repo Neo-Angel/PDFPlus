@@ -34,7 +34,8 @@ void PPEText::SetParser(PPParser *parser)
 	size_t i, icnt = _cmdList.size();
 	for(i=0;i<icnt;i++) {
 		PPTCommand *acmd = _cmdList.at(i);
-		acmd->_parser = parser;
+		if(acmd)
+			acmd->_parser = parser;
 	}
 }
 

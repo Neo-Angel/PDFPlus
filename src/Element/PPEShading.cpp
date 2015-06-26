@@ -22,8 +22,10 @@ void PPEShading::CopyMembers(PPBase *obj)
 
 void PPEShading::SetParser(PPParser *parser)
 {
-	_name->_parser = parser;
-	_dict->_parser = parser;
+	if (_name)
+		_name->_parser = parser;
+	if (_dict)
+		_dict->_parser = parser;
 }
 
 string PPEShading::makeCommandString()
@@ -49,7 +51,7 @@ string PPEShading::xmlString(int level)
 void PPEShading::willAddToParent(PPFormBase *form)
 {
     PPElement::willAddToParent(form);
-    PPTIndirectRef *sh_ref = (PPTIndirectRef *)_parentForm->_resourceDict->objectForKey("Shading");
+    PPTIndirectRef *sh_ref = (PPTIndirectRef *)_parentForm->ResourceForKey("Shading");
     if (!sh_ref) {
         cout << "Shading IndirectRef not found..." << PP_ENDL;
         return;

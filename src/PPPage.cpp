@@ -92,15 +92,59 @@ void PPPage::loadDictionary(PPTDictionary *page_dict)
     }
 }
 
-void PPPage::WriteDictionary(PPTDictionary *page_dict)
+// Invoked by PPDocument::AddPage()
+void PPPage::WriteDictionary(PPTDictionary *page_dict) // -> PreBuildPDF
 {
+/* Ex)  
+371 0 obj
+<<
+	/ArtBox[86.7978 277.24 557.004 668.27]
+	/BleedBox[0.0 0.0 595.276 841.89]
+	/Contents[373 0 R 374 0 R 375 0 R 376 0 R 377 0 R 378 0 R 379 0 R 380 0 R]
+	/CropBox[0.0 0.0 595.276 841.89]
+	/Group 381 0 R
+	/LastModified(D:20150116185119+09'00')
+	/MediaBox[0.0 0.0 595.276 841.89]
+	/Parent 365 0 R
+	/PieceInfo<</Illustrator 382 0 R>>
+	/Resources<</ExtGState<</GS0 372 0 R>>>>
+	/Rotate 0
+	/TrimBox[0.0 0.0 595.276 841.89]
+	/Type/Page
+>>
+endobj
+*/
+	_pageDict = page_dict;
+	page_dict->SetTokenAndKey("Page", "Type");
+	page_dict->SetTokenAndKey(0, "Rotate");
+	
+//	PPRect media_rect = GetMediaBox();
+//	PPTArray *rect_arr = media_rect.GetArray(&_document->_parser);
+//	page_dict->SetTokenAndKey(rect_arr, "MediaBox");
+
+
 	PPTDictionary *rcs_dict = new PPTDictionary(&_document->_parser);
-	_document->SetRefTokenForKey(page_dict, rcs_dict, PPKN_RESOURCES);
+	PPTIndirectObj *rcs_obj = _document->SetRefTokenForKey(page_dict, rcs_dict, PPKN_RESOURCES);
+	/*
 	PPTDictionary *stream_dict = new PPTDictionary(&_document->_parser);
 //	PPTIndirectObj *stream_obj = _document->SetRefTokenForKey(stream_dict, rcs_dict, PPKN_CONTENTS);
 	PPTIndirectObj *stream_obj = _document->SetRefTokenForKey(page_dict, stream_dict, PPKN_CONTENTS);
 	PPTStream *contents = new PPTStream(&_document->_parser);
 	contents->_dict = stream_dict;
+	stream_obj->AddObj(contents);
+	*/
+}
+
+void PPPage::BuildPDF()
+{
+	PPTDictionary *stream_dict = new PPTDictionary(&_document->_parser);
+
+	PPTIndirectObj *stream_obj = _document->SetRefTokenForKey(_pageDict, stream_dict, PPKN_CONTENTS);
+	PPTStream *contents = BuildStream();
+	stream_dict->SetTokenAndKey(contents->_streamSize, "Length");
+	stream_dict->SetTokenAndKey("FlateDecode", "Filter"); // Filter/FlateDecode
+	contents->SetDictionary(stream_dict);
+	contents->_decoded = true; 
 	stream_obj->AddObj(contents);
 }
 
@@ -117,7 +161,7 @@ PPRect PPPage::rectForKey(string key)
 void PPPage::setRectForKey(PPRect rect, string key)
 {
 	PPTArray *num_list = new PPTArray(&_document->_parser);
-	setRectToArray(rect, num_list);
+	SetRectToArray(rect, num_list);
 	_pageDict->setTokenAndKey(num_list, key);
 }
 
@@ -212,25 +256,25 @@ PPRect PPPage::getArtBox()
 
 void PPPage::SetMediaBox(PPRect rect)
 {
-
+	setRectForKey(rect, "MediaBox");
 }
 void PPPage::SetCropBox(PPRect rect)
 {
-
+	setRectForKey(rect, "CropBox");
 }
 
 void PPPage::SetBleedBox(PPRect rect)
 {
-
+	setRectForKey(rect, "BleedBox");
 }
 void PPPage::SetTrimBox(PPRect rect)
 {
-
+	setRectForKey(rect, "TrimBox");
 }
 
 void PPPage::SetArtBox(PPRect rect)
 {
-
+	setRectForKey(rect, "ArtBox");
 }
 
 
