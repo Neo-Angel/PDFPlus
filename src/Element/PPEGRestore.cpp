@@ -11,7 +11,7 @@
 
 string PPEGRestore::makeCommandString()
 {
-    return "G\xa";
+    return "Q\xa";
 }
 string PPEGRestore::xmlString(int level)
 {

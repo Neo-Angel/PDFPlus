@@ -21,7 +21,7 @@ void PPGState::setLineWidth(float v)
     _lineWidth = v;
     _gflag |= PPGF_LINEWIDTH;
 }
-void PPGState::setIntent(float v)
+void PPGState::setIntent(string v)
 {
     _intent = v;
     _gflag |= PPGF_INTENT;
@@ -92,6 +92,7 @@ void PPGState::setStrokeColor(float c1, float c2, float c3, float c4)
     _strokeColor._c2 = c2;
     _strokeColor._c3 = c3;
     _strokeColor._c4 = c4;
+	_gflag |= PPGF_STROKECOLOR;
 }
 
 void PPGState::setFillColor(PPColor c)
@@ -134,7 +135,7 @@ string PPGState::makeCommandString()
     }
     if(_gflag & PPGF_INTENT) {
         cinfo = &PPCommandList[PPC_Intent];
-        ostr << _intent << " " << cinfo->code << PP_ENDL;
+        ostr << "/" << _intent << " " << cinfo->code << PP_ENDL;
     }
     if(_gflag & PPGF_FLATNESS) {
         cinfo = &PPCommandList[PPC_Flatness];
@@ -282,7 +283,7 @@ void PPGState::CopyMembers(PPBase *obj)
     ret_gstate->setFillColor(_fillColor);
     
     ret_gstate->setGFlags(_gflag);
-    clearGFlags();
+//    clearGFlags();
     
 }
 //string PPGState::xmlString(int level)

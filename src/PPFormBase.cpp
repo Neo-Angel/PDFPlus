@@ -147,7 +147,7 @@ void PPFormBase::SetValueToGState(PPTCommand *cmd, PPContext &gcontext)
         }
         
         case PPC_Intent:
-            gcontext.setIntent(cmd->getFloatValue(0));
+            gcontext.setIntent(cmd->getStringValue(0));
             break;
         
         case PPC_Flatness:
@@ -300,6 +300,7 @@ int PPFormBase::buildElements()
                     gcontext.saveGState();
                     PPEGSave *gsave = new PPEGSave(&gcontext);
                     addElement(gsave);
+					gcontext.clearGFlags();
                 }
                 break;
             case PPCG_RestoreGState:
@@ -308,6 +309,7 @@ int PPFormBase::buildElements()
                     gcontext.restoreGState();
                     PPEGRestore *grestore = new PPEGRestore(&gcontext);
                     addElement(grestore);
+					gcontext.clearGFlags();
                 }
                 break;
             case PPCG_DrawPath:
@@ -326,6 +328,7 @@ int PPFormBase::buildElements()
                 if (opened_path != NULL) {
                     // make path element and add to element list
                     path_element = new PPEPath(opened_path, &gcontext);
+					gcontext.clearGFlags();
                     addElement(path_element);
                     opened_path = NULL;
                 }
@@ -344,6 +347,7 @@ int PPFormBase::buildElements()
             case PPCG_EndText:
                 //                delete text_element;  //  You don't need to delete
                 addElement(text_element);
+				gcontext.clearGFlags();
                 text_element = NULL;
                 break;
             
@@ -356,6 +360,7 @@ int PPFormBase::buildElements()
                 break;
             case PPCG_EndInlineImage:
                 addElement(inline_img_element);
+				gcontext.clearGFlags();
                 inline_img_element = NULL;
                 break;
             
@@ -371,6 +376,7 @@ int PPFormBase::buildElements()
                         if (*subtype->_name == "Image") {
                             PPEImage *image_element = new PPEImage(obj_dict, &gcontext);
                             addElement(image_element);
+							gcontext.clearGFlags();
                         }
                         else if(*subtype->_name == "Form") {
                             PPEForm *form_element = new PPEForm(name, &gcontext);
@@ -378,6 +384,7 @@ int PPFormBase::buildElements()
 //                            form_element->setStream(indir_obj->stream());
 //                            form_element->buildElements();
                             addElement(form_element);
+							gcontext.clearGFlags();
                         }
                     }
                 }
@@ -389,6 +396,7 @@ int PPFormBase::buildElements()
                     PPTDictionary *porpert = (PPTDictionary *)cmd->getTokenValue(1);
                     PPEBeginMarkedContent *marked_content_element = new PPEBeginMarkedContent(tag, porpert, &gcontext);
                     addElement(marked_content_element);
+					gcontext.clearGFlags();
                 }
                 break;
             case PPCG_MarkedContent:
@@ -397,12 +405,14 @@ int PPFormBase::buildElements()
                     PPTDictionary *porpert = (PPTDictionary *)cmd->getTokenValue(1);
                     PPEMarkedContent *marked_content_element = new PPEMarkedContent(tag, porpert, &gcontext);
                     addElement(marked_content_element);
+					gcontext.clearGFlags();
                 }
                 break;
             case PPCG_EndMarkedContent:
                 {
                     PPEEndMarkedContent *marked_content_element = new PPEEndMarkedContent(&gcontext);
                     addElement(marked_content_element);
+					gcontext.clearGFlags();
                 }
                 break;
             case PPCG_Shading:
@@ -410,6 +420,7 @@ int PPFormBase::buildElements()
                     PPEShading *shading_element = new PPEShading(&gcontext);
                     shading_element->_name = (PPTName *)cmd->getTokenValue(0);
                     addElement(shading_element);
+					gcontext.clearGFlags();
                 }
                 break;
             

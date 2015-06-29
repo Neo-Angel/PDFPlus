@@ -19,7 +19,7 @@ enum PPCommandType {
     PPC_SaveGState, PPC_RestoreGState, PPC_Matrix,
     PPC_MoveTo, PPC_LineTo, PPC_CurveTo, PPC_CurveTo1, PPC_CurveTo2, PPC_ClosePath, PPC_Rectangle,
     PPC_Stroke, PPC_CloseStroke, PPC_Fill, PPC_Fill2, PPC_EOFill, PPC_FillStroke, PPC_EOFillStroke,
-    PPC_CloseFillStroke, PPC_CloseEOFillStroke, PPC_EndPath,
+    PPC_CloseFillStroke, PPC_CloseEOFillStroke, PPC_NoPaint,
     PPC_Clip, PPC_EOClip,
     PPC_BeginText,PPC_EndText,
     PPC_CharSpace, PPC_WordSpace,PPC_Scale,PPC_Leading,PPC_FontSize,PPC_Render,PPC_Rise,

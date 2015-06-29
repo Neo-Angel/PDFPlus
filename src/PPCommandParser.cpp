@@ -81,7 +81,7 @@ PPCommandInfo PPCommandList[PP_NUM_OF_OPS] = {
     {"B*",PPC_EOFillStroke, PPCG_FinishPath,0,"EOFillStroke"},
     {"b",PPC_CloseFillStroke, PPCG_FinishPath,0,"CloseFillStroke"},
     {"b*",PPC_CloseEOFillStroke, PPCG_FinishPath,0,"EOCloseFillStroke"},
-    {"n",PPC_EndPath, PPCG_FinishPath,0,"EndPath"},  // for clipping path, no stoking, no filling
+    {"n",PPC_NoPaint, PPCG_FinishPath,0,"EndPath"},  // for clipping path, no stoking, no filling
     
     {"W",PPC_Clip, PPCG_Clipping, 0,"Clip"},
     {"W*",PPC_EOClip, PPCG_Clipping,0,"EOClip"},
@@ -308,7 +308,7 @@ void PPTCommand::setValueToGState(PPContext &gcontext)
         }
         
         case PPC_Intent:
-            gcontext.setIntent(getFloatValue(0));
+            gcontext.setIntent(getStringValue(0));
             break;
         
         case PPC_Flatness:

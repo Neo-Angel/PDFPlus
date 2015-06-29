@@ -35,7 +35,7 @@ enum PPGStateFlag {
 class PPGState : public PPBase {
 public:
     float       _lineWidth;
-    float       _intent;
+    string       _intent;
     float       _flatness;
     float       _miterLimit;
 	float		_stroke_opacity;
@@ -59,8 +59,8 @@ public:
     void setLineWidth(float v);
 	void SetLineWidth(float v) {setLineWidth(v);}
     float lineWidth(){return _lineWidth;}
-    void setIntent(float v);
-    float intent(){return _intent;};
+    void setIntent(string v);
+    string intent(){return _intent;};
     void setFlatness(float v);
     float flatness(){return _flatness;}
     void setMiterLimit(float v);

@@ -4,6 +4,7 @@
 #include "PPGState.h"
 #include "PPPathItem.h"
 
+extern PPCommandInfo PPCommandList[];
 
 class PPContext;
 
@@ -17,11 +18,13 @@ class PPContext;
 PPEPath::PPEPath(PPPath *path, PPContext *gcontext):PPElement(gcontext)
 {
     _path = path;
+	_paintingType = PPC_NoPaint;
 }
 
 PPEPath::PPEPath(PPContext *gcontext):PPElement(gcontext)
 {
     _path = new PPPath;
+	_paintingType = PPC_NoPaint;
 }
 
 void PPEPath::CopyMembers(PPBase *obj)
@@ -32,7 +35,7 @@ void PPEPath::CopyMembers(PPBase *obj)
 	tar_obj->_strokeType = _strokeType;
 	tar_obj->_strokeType = _strokeType;
 	tar_obj->_fillType = _fillType;
-
+	tar_obj->_paintingType = _paintingType;
 
 }
 
@@ -62,11 +65,12 @@ void PPEPath::eoclip()
 }
 
 //PPC_Stroke, PPC_CloseStroke, PPC_Fill, PPC_Fill2, PPC_EOFill, PPC_FillStroke, PPC_EOFillStroke,
-//PPC_CloseFillStroke, PPC_CloseEOFillStroke, PPC_EndPath,
+//PPC_CloseFillStroke, PPC_CloseEOFillStroke, PPC_NoPaint,
 //PPC_Clip, PPC_EOClip,
 
 void PPEPath::setPaintingType(int type)
 {
+	_paintingType = type;
     switch (type) {
         case PPC_Stroke:
             stroke();
@@ -102,7 +106,7 @@ void PPEPath::setPaintingType(int type)
             fill();
             stroke();
             break;
-        case PPC_EndPath:
+        case PPC_NoPaint:
             _strokeType = PPEP_NonStroke;
             _fillType = PPEP_NonFill;
             break;
@@ -120,13 +124,33 @@ void PPEPath::setPaintingType(int type)
 
 string PPEPath::makeCommandString()
 {
-    _gstate->makeCommandString();
+//    _gstate->makeCommandString();
     string retstr;
     size_t i, icnt = _path->_itemList.size();
     for (i=0; i<icnt; i++) {
         PPPathItem *path_item = _path->_itemList.at(i);
         retstr += path_item->makeCommand();
     }
+	PPCommandInfo *cinfo = &PPCommandList[_paintingType];
+
+	retstr += (char *)(cinfo->code);
+	retstr += PP_ENDL;
+	/*
+	if(_clipType == PPEP_Clip) {
+		retstr += "W";
+		retstr += PP_ENDL;
+	}
+	else if(_clipType == PPEP_EOClip) {
+		retstr += "W*";
+		retstr += PP_ENDL;
+	}
+	if(_strokeType == PPEP_NonStroke && _fillType == PPEP_NonFill) {
+		retstr += "n";
+		retstr += PP_ENDL;
+	}
+	else if(_strokeType == PPEP_Stroke && _fillType == PPEP_NonFill) {
+	}
+	*/
     return retstr;
 }
 

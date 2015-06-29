@@ -17,6 +17,8 @@ public:
     PPEP_StrokeType _strokeType;
     PPEP_ClipType _clipType;
     PPEP_FillType _fillType;
+
+	int _paintingType;
     
 public:
     PPEPath(PPPath *path, PPContext *gcontext);
