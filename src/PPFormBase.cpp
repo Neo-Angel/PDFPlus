@@ -44,7 +44,7 @@ PPFormBase::PPFormBase(PPFormBase *form_base):_graphicParser((vector <PPToken *>
 {
 	_cur_element_idx = 0; // size_t 
 
-	_indirObj = NULL; // = (PPTIndirectObj *)form_base->_indirObj->Copy(); //PPTIndirectObj *
+	_indirObj = (PPTIndirectObj *)form_base->_indirObj->Copy(); //PPTIndirectObj *
     // _document; // PPDocument * : this set when this added to document
     _resourceDict = NULL; //PPTDictionary *
 //    _commands; // vector <PPTCommand *>
@@ -53,24 +53,56 @@ PPFormBase::PPFormBase(PPFormBase *form_base):_graphicParser((vector <PPToken *>
 
 }
 
-PPFormBase::PPFormBase(PPTIndirectObj *indir):_graphicParser((vector <PPToken *> *)&_commands)
+PPFormBase::PPFormBase(PPDocument *doc, PPTIndirectObj *indir):_graphicParser((vector <PPToken *> *)&_commands)
 {
-	PPTDictionary *dict = indir->firstDictionary();
-	PPTName *subtype_name = (PPTName *)dict->objectForKey("Subtype");
+	_document = doc;
+	_indirObj = indir; //(PPTIndirectObj *)indir->Copy();
+	_formDict = _indirObj->firstDictionary();
+	PPTName *subtype_name = (PPTName *)_formDict->objectForKey("Subtype");
 	_cur_element_idx = 0; // size_t 
-	_indirObj = (PPTIndirectObj *)indir->Copy();
 
+	_resourceDict = (PPTDictionary *)_formDict->objectForKey("Resources");
 
 	if (*subtype_name->_name == "Form") {
 		PPTStream *stream = indir->stream();
-		_graphicParser.parseStream(*stream);
-		buildElements();
+		if(stream) {
+			_graphicParser.parseStream(*stream);
+			buildElements();
+		}
+		else {
+			cout << "Created empty FormBase." << PP_ENDL;
+		}
 	}
+}
+
+// form_obj를 기반으로 새로운 Form 객체를 만든다.
+PPFormBase *PPFormBase::NewFormObj(PPFormBase *form_obj)
+{
+	PPTIndirectObj *indir = (PPTIndirectObj *)form_obj->_indirObj->Copy();
+	if(indir->_array.size() == 2) {
+		indir->_array.erase(indir->_array.begin()+1);
+	}
+	PPFormBase *ret_form = NULL;
+	if(indir->_array.size() == 1) {
+		int new_obj_num = _document->NewObjNum();
+		indir->_objNum = new_obj_num;
+		_document->PushObj(indir, new_obj_num);
+		ret_form = new PPFormBase(_document, indir);
+		ret_form->_form_key = (PPTName *)form_obj->_form_key->Copy();
+	}
+	return ret_form;
 }
 
 PPParser *PPFormBase::documentParser()
 {
 	return &_document->_parser;
+}
+PPToken *PPFormBase::ResourceForKey(string rcs_type, string rcs_key){
+	return _document->ResourceForKey(rcs_type, rcs_key);
+}
+
+PPToken *PPFormBase::WriteResource(PPToken *rcs, string type, string key) {
+	return _document->WriteResource(rcs, type, key);
 }
 
 int PPFormBase::GetXObjNumOf(string name)
@@ -110,10 +142,41 @@ void PPFormBase::addElement(PPElement *element)
 	// update _commands list from element 
 }
 
-void PPFormBase::writeElement(PPElement *element)
+void PPFormBase::writeElement(PPElement *src_element)
 {
-	PPElement *copied = (PPElement *)element->Copy();
+	PPElement *copied = (PPElement *)src_element->Copy();
+	// src_element 에 리소스 정보가 있으면
+	if(src_element->HasResource()) {
+		// src_element의 리소스 '타입'과 '키'로 this에 리소스가 있는지 체크
+		string rsc_type = src_element->ResourceType();
+		if(rsc_type == "ProcSet") {
+		}
+		else {
+			PPTDictionary *rsc_dict = (PPTDictionary *)_resourceDict->objectForKey(rsc_type);
+			if(!rsc_dict) {
+				rsc_dict = new PPTDictionary(&_document->_parser);
+				_resourceDict->SetTokenAndKey(rsc_dict, rsc_type);
+			}
+			string rsc_key = src_element->ResourceKey();
+			PPToken *rsc = ResourceForKey(rsc_type, rsc_key);
+			if(rsc) {
+				PPTIndirectObj *obj = (PPTIndirectObj *)rsc;
+				rsc_dict->SetRefTokenAndKey(obj, rsc_key, obj->_objNum);
+			}
+			else  {
+				// 없으면 리소스 복사
+				PPToken *src_rsc = src_element->GetResource();
+				if(src_rsc) {
+					rsc = WriteResource(src_rsc, rsc_type, rsc_key);  // _resources
+				}
+				_document->SetRefTokenForKey(rsc_dict,rsc,rsc_key); //rsc_dict, _tokens, parser->_objDict
+			}
+			//_document->SetRefTokenForKey(rsc_dict,rsc,rsc_key); //rsc_dict, _tokens, parser->_objDict
 
+			//int new_obj_num = _document->NewObjNum();
+			//rsc_dict->SetRefTokenAndKey(rsc, rsc_key, new_obj_num);
+		}
+	}
 	addElement(copied);
 }
 
@@ -418,7 +481,7 @@ int PPFormBase::buildElements()
             case PPCG_Shading:
                 {
                     PPEShading *shading_element = new PPEShading(&gcontext);
-                    shading_element->_name = (PPTName *)cmd->getTokenValue(0);
+					shading_element->_name = (PPTName *)cmd->getTokenValue(0)->Copy();
                     addElement(shading_element);
 					gcontext.clearGFlags();
                 }
@@ -464,17 +527,27 @@ PPElement *PPFormBase::next()
 	return NULL;
 }
 
-void PPFormBase::AddXObj(PPTIndirectObj *xobj) 
+
+void PPFormBase::AddXObjRef(PPTIndirectObj *xobj, string key) 
 {
 	 int obj_num = xobj->getObjNum();
 	_document->_xobjects[obj_num] = xobj;
+    PPTDictionary *xobject_dict = (PPTDictionary *)_resourceDict->valueObjectForKey("XObject");
+	if(xobject_dict == NULL) {
+		xobject_dict = new PPTDictionary(&_document->_parser);
+		_resourceDict->SetTokenAndKey(xobject_dict, "XObject");
+	}
 
+	xobject_dict->SetRefTokenAndKey(xobj, key, xobj->_objNum);
 }
 
 void PPFormBase::AddFormObj(PPFormBase *form_obj)
 {
 	PPTIndirectObj *xobj = form_obj->GetXObject();
-	form_obj->_document = _document;
-	int new_obj_num = _document->NewObjNum();
-	_document->_xobjects[new_obj_num] = xobj;
+//	form_obj->_document = _document;
+	PPTStream *stream = form_obj->BuildStream();
+	stream->_dict = (PPTDictionary *)xobj->_array[0];
+	xobj->AddObj(stream);
+	AddXObjRef(xobj, *form_obj->_form_key->_name);
+	delete form_obj;
 }

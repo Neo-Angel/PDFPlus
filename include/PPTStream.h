@@ -35,6 +35,7 @@ public:
     
     PPTStream(PPParser *parser);
     PPTStream(PPParser *parser, unsigned long length);
+	PPTStream();
     ~PPTStream();
 	void SetDictionary(PPTDictionary *dict);
     void appendData(char *data, unsigned long length);
@@ -63,6 +64,10 @@ public:
 
     string pdfString();
     string makePDFString(unsigned long &length);
+
+	PPBase *Create() {return new PPTStream();}
+	void CopyMembersTo(PPBase *obj) ;
+
 
 };
 

@@ -27,7 +27,9 @@ public:
     
     PPTIndirectObj(PPParser *parser, vector<PPToken *> token_list, int num1, int num2);
 	PPTIndirectObj(PPParser *parser, int num1, int num2);
+	PPTIndirectObj() {_objNum=0;_genNum=0;}
     ~PPTIndirectObj();
+
     string description();
     string xmlString(int level);
     string pdfString();
@@ -37,6 +39,7 @@ public:
     bool isStream();
     inline const char *classType(){return PPTN_INDIRECTOBJ;};
     PPTDictionary *firstDictionary();
+	PPTDictionary *FirstDictionary(){return firstDictionary();}
 	void AddObj(PPToken *obj);
     PPTStream *stream();
     
@@ -47,6 +50,9 @@ public:
     void write(std::ostream &os);
     void merge(PPTIndirectObj *ohter_indir);
     
+	PPBase *Create() {return new PPTIndirectObj();}
+	void CopyMembersTo(PPBase *obj) ;
+	void SetParser(PPParser *parser);
 };
 /////////////////////////////////////////
 

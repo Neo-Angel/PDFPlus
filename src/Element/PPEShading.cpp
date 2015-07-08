@@ -11,13 +11,27 @@
 //  PPEShading def
 //
 ///////////////////////////////////////////////////////
-void PPEShading::CopyMembers(PPBase *obj)
+PPEShading::PPEShading(PPContext *gcontext) : PPElement(gcontext)
 {
-	PPBase::CopyMembers(obj);
+	_dict = NULL;
+	_name = NULL;
+}
+
+PPEShading::PPEShading()
+{
+	_dict = NULL;
+	_name = NULL;
+}
+
+void PPEShading::CopyMembersTo(PPBase *obj)
+{
+	PPBase::CopyMembersTo(obj);
 	PPEShading *tar_obj = (PPEShading *)obj;
 
-	tar_obj->_name = (PPTName *)_name->Copy();
-	tar_obj->_dict = (PPTDictionary *)_dict->Copy();
+	if(_name)
+		tar_obj->_name = (PPTName *)_name->Copy();
+	if(_dict)
+		tar_obj->_dict = (PPTDictionary *)_dict->Copy();
 }
 
 void PPEShading::SetParser(PPParser *parser)
@@ -31,7 +45,10 @@ void PPEShading::SetParser(PPParser *parser)
 string PPEShading::makeCommandString()
 {
     string retstr;
-    retstr = _name->pdfString() + " sh\xa";
+	if(_name) {
+		retstr = _name->pdfString();
+		retstr += " sh\xa";
+	}
     return retstr;
 }
 
@@ -56,11 +73,17 @@ void PPEShading::willAddToParent(PPFormBase *form)
         cout << "Shading IndirectRef not found..." << PP_ENDL;
         return;
     }
-    PPTDictionary *sh_dict = (PPTDictionary *)sh_ref->valueObject();
-    if (!sh_dict) {
-        cout << "Shading Dictionary not found..." << PP_ENDL;
-        return;
-    }
+	PPTDictionary *sh_dict = NULL;
+	if(sh_ref->classType() == PPTN_INDIRECTREF) {
+		sh_dict = (PPTDictionary *)sh_ref->valueObject();
+		if (!sh_dict) {
+			cout << "Shading Dictionary not found..." << PP_ENDL;
+			return;
+		}
+	}
+	else if(sh_ref->classType() == PPTN_DICTIONARY) {
+		sh_dict = (PPTDictionary *)sh_ref;
+	}
     sh_ref = (PPTIndirectRef *)sh_dict->objectForKey(*_name->_name);
     if (!sh_ref) {
         cout << "Shading IndirectRef not found..." << PP_ENDL;

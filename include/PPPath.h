@@ -41,7 +41,7 @@ public:
     PPPath(){}
 	PPBase *Create() {return new PPPath;}
 
-	void CopyMembers(PPBase *obj);
+	void CopyMembersTo(PPBase *obj);
 
 	void checkBounds(float x, float y);
 	void moveTo(float x, float y); void MoveTo(float x, float y) {moveTo(x, y);}

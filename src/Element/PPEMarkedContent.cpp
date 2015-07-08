@@ -10,13 +10,27 @@
 //  PPEMarkedContent
 //
 ///////////////////////////////////////////////////////
-void PPEMarkedContent::CopyMembers(PPBase *obj)
+PPEMarkedContent::PPEMarkedContent(PPTName *tag, PPTDictionary *property, PPContext *gcontext) : PPElement(gcontext)
 {
-	PPBase::CopyMembers(obj);
+	_tag = (PPTName *)tag->Copy();
+       _property = (PPTDictionary *)property->Copy();
+}
+PPEMarkedContent::PPEMarkedContent()
+{
+	_property = NULL; 
+	_tag = NULL;
+}
+
+
+void PPEMarkedContent::CopyMembersTo(PPBase *obj)
+{
+	PPBase::CopyMembersTo(obj);
 	PPEMarkedContent *tar_obj = (PPEMarkedContent *)obj;
 
-	tar_obj->_tag = (PPTName *)_tag->Copy();
-	tar_obj->_property = (PPTDictionary *)_property->Copy();
+	if(_tag)
+		tar_obj->_tag = (PPTName *)_tag->Copy();
+	if(_property)
+		tar_obj->_property = (PPTDictionary *)_property->Copy();
 }
 
 void PPEMarkedContent::SetParser(PPParser *parser)

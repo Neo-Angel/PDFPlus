@@ -18,14 +18,7 @@ class PPTIndirectObj;
 class PPTDictionary;
 class PPTCommand;
 
-class PPFormBase : public PPBase {
-protected:
-		PPContext *_context;
-public:
-    PPDocument *_document;
-    PPCommandParser _graphicParser;
 
-	size_t _cur_element_idx;
 
 /*
 	<Object ID='2' Gen='0' Pos='886486'>
@@ -62,26 +55,45 @@ public:
 		</Stream>
 	</Object>
 */
+
+
+class PPFormBase : public PPBase {
+protected:
+	PPContext *_context;
+public:
+	PPTName *_form_key;
+
+    PPDocument *_document;
+    PPCommandParser _graphicParser;
+
+	size_t _cur_element_idx;
     PPTIndirectObj *_indirObj;  // XObject
 
     PPTDictionary *_resourceDict;
+	PPTDictionary *_formDict;
+
     vector <PPTCommand *> _commands;
     vector <PPElement *> _elements;
     
 public:
     PPFormBase();
 	PPFormBase(PPFormBase *form_base);
-	PPFormBase(PPTIndirectObj *indir);
+	PPFormBase(PPDocument *doc, PPTIndirectObj *indir);
 
 	PPParser *documentParser();
     virtual int buildElements();
+	virtual PPToken *ResourceForKey(string rcs_type, string rcs_key);
+	virtual PPToken *WriteResource(PPToken *rcs, string type, string key);
+
+
     void addElement(PPElement *element);
 	void AddElement(PPElement *element) {addElement(element);}
-	void AddXObj(PPTIndirectObj *xobj);
+//	void AddXObj(PPTIndirectObj *xobj);
+	void AddXObjRef(PPTIndirectObj *xobj, string key);
 	void AddFormObj(PPFormBase *form_obj);
 	PPElement *next(); PPElement *Next() {return next();}
 	void writeElement(PPElement *element);
-	void WriteElement(PPElement *element) {addElement(element);}
+	void WriteElement(PPElement *element) {writeElement(element);}
 	int getObjNum(){return _indirObj != NULL ? _indirObj->getObjNum() : 0;}
 	int GetObjNum(){return _indirObj != NULL ? _indirObj->getObjNum() : 0;}
     int GetXObjNumOf(string name);
@@ -93,6 +105,7 @@ public:
 	void SetValueToGState(PPTCommand *cmd, PPContext &gcontext);
 	void AddCommandToPath(PPTCommand *cmd, PPPath *path);
 	PPTStream *BuildStream();
+	PPFormBase *NewFormObj(PPFormBase *form_obj);
 };
 
 #endif /* defined(__PDFPlusLib__PPFormBase__) */

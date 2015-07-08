@@ -84,6 +84,12 @@ public:
     virtual string pdfString() {return "";}
     virtual string pdfString(ostream &os) {return pdfString();}
     virtual void write(std::ostream &os);
+	virtual PPToken *Copy(PPParser *parser);
+	virtual void SetParser(PPParser *parser);
+//	PPBase *Create() {return new PPToken();} // 추상 클래스라서 사용할 수 없답니다. 
+	PPBase *Copy() {return PPBase::Copy();};
+
+	void CopyMembersTo(PPBase *obj) ;
 
 };
 /////////////////////////////////////////

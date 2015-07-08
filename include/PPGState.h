@@ -54,7 +54,7 @@ public:
     PPGState();
 	PPBase *Create() {return new PPGState();}
 
-	void CopyMembers(PPBase *obj);
+	void CopyMembersTo(PPBase *obj);
 
     void setLineWidth(float v);
 	void SetLineWidth(float v) {setLineWidth(v);}

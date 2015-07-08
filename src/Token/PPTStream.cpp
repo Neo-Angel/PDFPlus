@@ -87,6 +87,16 @@ void PPStreamBuf::collect(char *buf)
 // PPTStream   ////////////////////////////////
 //             ////////////////////////////////
 ///////////////////////////////////////////////
+PPTStream::PPTStream()
+{
+    _streamData = NULL;
+    _index = 0;
+    _streamSize = 0;
+    _decoded = false;
+    _decodeFailed = false;
+	_filterName = "None";
+}
+
 PPTStream::PPTStream(PPParser *parser) : PPToken(parser)
 {
     _streamData = NULL;
@@ -559,3 +569,21 @@ void PPTStream::getline(char *buf, size_t size)
     _index --;
 }
 
+void PPTStream::CopyMembersTo(PPBase *obj)
+{
+	PPToken::CopyMembersTo(obj);
+	PPTStream *stream = (PPTStream *)obj;
+
+    stream->_index = _index;
+    
+    stream->_streamSize = _streamSize;
+	stream->_streamData = new char[_streamSize]; 
+	memcpy(stream->_streamData, _streamData, _streamSize);
+	stream->_filterName = _filterName;
+    stream->_next = _next;
+
+    stream->_decoded = _decoded;
+    stream->_decodeFailed = _decodeFailed;
+    stream->_dict = NULL;
+
+}

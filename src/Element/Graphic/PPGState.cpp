@@ -263,9 +263,9 @@ string PPGState::makeCommandString()
     retstr = ostr.str();
     return retstr;
 }
-void PPGState::CopyMembers(PPBase *obj)
+void PPGState::CopyMembersTo(PPBase *obj)
 {
-	PPBase::CopyMembers(obj);
+	PPBase::CopyMembersTo(obj);
     PPGState *ret_gstate = (PPGState *)obj;
 
     ret_gstate->setLineWidth(_lineWidth);

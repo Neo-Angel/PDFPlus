@@ -26,6 +26,7 @@ public:
     PPTTrailer(PPParser *parser, PPTIndirectObj *indir, unsigned long long xref);
     PPTTrailer(PPParser *parser, unsigned long long xref);
     PPTTrailer(PPParser *parser);
+	PPTTrailer();
     ~PPTTrailer();
     
     string xmlString(int level);
@@ -42,6 +43,12 @@ public:
     void setFileID(PPTArray *idarr);
     void build();
     void merge(PPTTrailer *trailer);
+
+	PPBase *Create() {return new PPTTrailer();}
+	void CopyMembersTo(PPBase *obj);
+	void SetParser(PPParser *parser);
+
+
 };
 
 /////////////////////////////////////////

@@ -20,7 +20,7 @@ public:
 	PPEInlineImage(){}
 	PPBase *Create(){return new PPEInlineImage;}
 
-	void CopyMembers(PPBase *);
+	void CopyMembersTo(PPBase *);
 	void SetParser(PPParser *parser);
 
     void setBeginImageObject(PPTCommand *cmd){}

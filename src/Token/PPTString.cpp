@@ -40,3 +40,10 @@ string PPTString::pdfString()
     return retstr;
 }
 
+void PPTString::CopyMembersTo(PPBase *obj)
+{
+	PPToken::CopyMembersTo(obj);
+
+	PPTString *str = (PPTString *)obj;
+	str->_string = new string(*_string);
+}

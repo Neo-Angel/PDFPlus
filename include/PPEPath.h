@@ -27,7 +27,7 @@ public:
 	PPEPath(){}
 	PPBase *Create(){return new PPEPath;}
 
-	void CopyMembers(PPBase *obj);
+	void CopyMembersTo(PPBase *obj);
     string makeCommandString();
     string xmlString(int level);
     

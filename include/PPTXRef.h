@@ -20,6 +20,7 @@ public:
     map <unsigned int, XRefItem *> _xreflist;
     PPTTrailer *_trailerObj;
 
+	PPTXRef() {_trailerObj = NULL;}
     PPTXRef(PPParser *parser);
     ~PPTXRef();
     void addXRef(unsigned int objnum, unsigned long long offset, int gennum, char type);
@@ -31,6 +32,9 @@ public:
     
     void merge(PPTXRef *trailer);
     
+	PPBase *Create() {return new PPTXRef();}
+	void CopyMembersTo(PPBase *obj);
+
 };
 /////////////////////////////////////////
 

@@ -18,9 +18,6 @@ static const char	*PP_ENDL = "\x0a";
 static const char	*PPTN_BASE = "PPBase";
 
 class PPBase {
-    
-    
-    
 public:
     virtual ~PPBase();
 
@@ -32,7 +29,7 @@ template<class T>
     virtual const char *classType();
 	virtual PPBase *Create() {return new PPBase();}
 	virtual PPBase *Copy();
-	virtual void CopyMembers(PPBase *);
+	virtual void CopyMembersTo(PPBase *);
 };
 
 

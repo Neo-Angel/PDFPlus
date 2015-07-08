@@ -27,7 +27,7 @@ public:
 	PPEImage();
 	PPBase *Create(){return new PPEImage;}
 
-	void CopyMembers(PPBase *);
+	void CopyMembersTo(PPBase *);
 	void SetParser(PPParser *parser);
 
     string makeCommandString();

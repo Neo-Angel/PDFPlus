@@ -13,6 +13,7 @@ public:
     
 	PPTArray(PPParser *parser) : PPToken(parser) {};
     PPTArray(PPParser *parser, vector<PPToken *> token_list);
+	PPTArray();
     ~PPTArray();
     string internalXmlString(int level);
     string xmlString(int level);
@@ -22,6 +23,10 @@ public:
     string pdfString();
 	void AddToken(PPToken *token) {_array.push_back(token);}
 	void AddToken(int num);
+
+	PPBase *Create() {return new PPTArray;}
+	void CopyMembersTo(PPBase *obj) ;
+	void SetParser(PPParser *parser);
 
 };
 /////////////////////////////////////////

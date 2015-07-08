@@ -35,3 +35,12 @@ string PPTName::pdfString()
     retstr += *_name;
     return retstr;
 }
+
+
+void PPTName::CopyMembersTo(PPBase *obj) 
+{
+	PPToken::CopyMembersTo(obj);
+
+	PPTName *name = (PPTName *)obj;
+	name->_name = new string(*_name);
+}

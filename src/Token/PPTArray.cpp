@@ -10,6 +10,11 @@ PPTArray::PPTArray(PPParser *parser, vector<PPToken *> token_list) : PPToken(par
     _array = token_list;
 }
 
+PPTArray::PPTArray()
+{
+
+}
+
 PPTArray::~PPTArray()
 {
     int i, icnt = (int)_array.size();
@@ -66,4 +71,32 @@ string PPTArray::pdfString()
 void PPTArray::AddToken(int num) 
 {
 	AddToken((PPToken *)new PPTNumber(_parser, num));
+}
+
+
+void PPTArray::CopyMembersTo(PPBase *obj) 
+{
+	PPToken::CopyMembersTo(obj);
+
+
+	PPTArray *tar_arr =(PPTArray *)obj;
+	tar_arr->_array.clear();
+	int i, icnt = size();
+	for(i=0;i<icnt;i++) {
+		PPToken *org_token = objectAtIndex(i);
+		PPToken *new_token = (PPToken *)org_token->Copy();
+		tar_arr->AddToken(new_token);
+	}
+}
+
+void PPTArray::SetParser(PPParser *parser)
+{
+	PPToken::SetParser(parser);
+
+	int i, icnt = size();
+	for(i=0;i<icnt;i++) {
+		PPToken *token = objectAtIndex(i);
+		if(parser != token->_parser)
+			token->SetParser(parser);
+	}
 }

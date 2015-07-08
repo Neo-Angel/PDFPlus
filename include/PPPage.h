@@ -55,7 +55,7 @@ public:
 			<Name>Page</Name>
 		</Dict>
 */
-    PPTDictionary *_pageDict;
+//    PPTDictionary *_pageDict;
 
 protected:
     
@@ -67,12 +67,17 @@ protected:
     size_t contentsCount();
     PPTStream *contentAt(size_t i);
 	void setRectForKey(PPRect rect, string key);
+	void StoreResources();
 
 public:
 	PPPage(PPPage *page);
     PPPage(PPDocument *doc);
     void loadDictionary(PPTDictionary *page_dict);
 	void WriteDictionary(PPTDictionary *page_dict);
+
+	PPTDictionary *ResourcesDict();
+	PPTDictionary *ResourceDictForType(string str);
+	void AddResource(PPToken *res, char *type, char *key);
     
 	PPRect getMediaBox();	PPRect GetMediaBox() {return getMediaBox();}
 	PPRect getCropBox();	PPRect GetCropBox() {return getCropBox();}
@@ -92,6 +97,7 @@ public:
     string elementXmlString(int level);
 	PPMatrix *GetDefaultMatrix();
 	void BuildPDF();
+
 };
 
 #endif /* defined(__PDFPlusLib__PPPage__) */

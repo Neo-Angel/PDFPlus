@@ -79,6 +79,7 @@ public:
     ~PPParser();
     map <int, PPTIndirectObj *> &objectsDictionary();
     PPToken *objectByID(int objid);
+	PPToken *ObjectForNumber(int num){return objectByID(num);}
     PPToken *objectAtFilePosition(unsigned long long pos);
 
     bool parseSource(PPParserSource &source, vector<PPToken *> &token_list);  // startParse

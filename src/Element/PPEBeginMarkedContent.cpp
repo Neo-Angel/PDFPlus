@@ -9,13 +9,25 @@
 //  Begin Mark Content
 //
 ///////////////////////////////////////////////////////
-void PPEBeginMarkedContent::CopyMembers(PPBase *obj)
+
+PPEBeginMarkedContent::PPEBeginMarkedContent(PPTName *tag, PPTDictionary *property, PPContext *gcontext) : PPElement(gcontext){
+		_tag = (PPTName *)tag->Copy();
+		_property = (PPTDictionary *)property->Copy();
+    }
+PPEBeginMarkedContent::PPEBeginMarkedContent(){
+        _tag = NULL;
+        _property = NULL;
+	}
+
+void PPEBeginMarkedContent::CopyMembersTo(PPBase *obj)
 {
-	PPBase::CopyMembers(obj);
+	PPBase::CopyMembersTo(obj);
 	PPEBeginMarkedContent *tar_obj = (PPEBeginMarkedContent *)obj;
 
-	tar_obj->_property = (PPTDictionary *)_property->Copy();
-	tar_obj->_tag = (PPTName *)_tag->Copy();
+	if(_property)
+		tar_obj->_property = (PPTDictionary *)_property->Copy();
+	if(_tag)
+		tar_obj->_tag = (PPTName *)_tag->Copy();
 }
 
 void PPEBeginMarkedContent::SetParser(PPParser *parser)

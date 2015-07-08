@@ -38,3 +38,14 @@ string PPTComment::pdfString()
     return retstr;
     
 }
+
+void PPTComment::CopyMembersTo(PPBase *obj) 
+{
+	PPToken::CopyMembersTo(obj);
+
+	PPTComment *comment = (PPTComment *)obj;
+	comment->_comment = new string(*_comment);
+
+//	string *comment = (PPTName *)obj;
+//	_comment = new string(*comment->_name);
+}

@@ -66,9 +66,8 @@ public:
     
     PPElement(PPContext *gcontext);
 	PPElement(PPGState *gstate);
-	PPElement() {};
-	PPBase *Create() {return new PPElement();}
-
+	PPElement();
+	
     ~PPElement();
     virtual void willAddToParent(PPFormBase *form);
 	virtual string makeCommandString() {return "";}
@@ -76,8 +75,13 @@ public:
 	virtual PPElementType getType() {return PPET_NONE;}
 	virtual PPRect getBBox() {return _bounds;}
 	virtual void SetParser(PPParser *parser) {};
+	virtual bool HasResource();
+	virtual string ResourceType();
+	virtual string ResourceKey();
+	virtual PPToken *GetResource();
 
-	void CopyMembers(PPBase *obj);
+	PPBase *Create() {return new PPElement();}
+	void CopyMembersTo(PPBase *obj);
 
 	
     string commandString();

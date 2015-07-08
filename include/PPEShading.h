@@ -18,11 +18,11 @@ public:
     PPTDictionary *_dict;
     
 public:
-    PPEShading(PPContext *gcontext) : PPElement(gcontext){_dict = NULL;_name = NULL;}
-	PPEShading(){}
+    PPEShading(PPContext *gcontext);
+	PPEShading();
 	PPBase *Create(){return new PPEShading;}
 
-	void CopyMembers(PPBase *);
+	void CopyMembersTo(PPBase *);
 	void SetParser(PPParser *parser);
 
     string makeCommandString();

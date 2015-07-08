@@ -27,11 +27,12 @@ PPEPath::PPEPath(PPContext *gcontext):PPElement(gcontext)
 	_paintingType = PPC_NoPaint;
 }
 
-void PPEPath::CopyMembers(PPBase *obj)
+void PPEPath::CopyMembersTo(PPBase *obj)
 {
-	PPElement::CopyMembers(obj);
+	PPElement::CopyMembersTo(obj);
 	PPEPath *tar_obj = (PPEPath *)obj;
-	tar_obj->_path = (PPPath *)_path->Copy();
+	if(_path)
+		tar_obj->_path = (PPPath *)_path->Copy();
 	tar_obj->_strokeType = _strokeType;
 	tar_obj->_strokeType = _strokeType;
 	tar_obj->_fillType = _fillType;

@@ -35,6 +35,12 @@ PPElement::PPElement(PPGState *gstate)
 	_gstate = (PPGState *)gstate->Copy();
 }
 
+PPElement::PPElement()
+{
+	 _gstate = NULL;
+
+}
+
 PPElement::~PPElement()
 {
     delete _gstate;
@@ -42,7 +48,9 @@ PPElement::~PPElement()
 
 string PPElement::commandString()
 {
-    string cmd_str = _gstate->makeCommandString();
+    string cmd_str = "";
+	if(_gstate)
+		cmd_str = _gstate->makeCommandString();
     cmd_str += makeCommandString();
     return cmd_str;
 }
@@ -53,15 +61,47 @@ void PPElement::willAddToParent(PPFormBase *form)
     
 }
 
-void PPElement::CopyMembers(PPBase *obj)
+void PPElement::CopyMembersTo(PPBase *obj)
 {
-	PPBase::CopyMembers(obj);
+	PPBase::CopyMembersTo(obj);
 	PPElement *ret_el = (PPElement *)obj;
 
-	ret_el->_gstate = (PPGState *)_gstate->Copy();
+	if(_gstate)
+		ret_el->_gstate = (PPGState *)_gstate->Copy();
     ret_el->_gflag = _gflag;
 	ret_el->_bounds = _bounds;
 }
 
+bool PPElement::HasResource()
+{
+	if(_gstate && _gstate->_gflag & PPGF_DICTNAME) {
+		return true;
+	}
+	return false;
+}
+
+string PPElement::ResourceType()
+{
+	string type;
+	if(_gstate && _gstate->_gflag & PPGF_DICTNAME) {
+		type = "ExtGState"; 
+	}
+	return type;
+}
+
+string PPElement::ResourceKey()
+{
+	string key;
+	if(_gstate && _gstate->_gflag & PPGF_DICTNAME) {
+		key = _gstate->dictName(); 
+	}
+	return key;
+}
+
+PPToken *PPElement::GetResource()
+{
+	PPToken *rcs = _parentForm->ResourceForKey(ResourceType(), ResourceKey());
+	return rcs;
+}
 
 

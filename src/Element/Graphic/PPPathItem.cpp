@@ -10,9 +10,9 @@ extern PPCommandInfo PPCommandList[];
 //
 //////////////////////////////////////////////////////////
 
-void PPPathItem::CopyMembers(PPBase *obj)
+void PPPathItem::CopyMembersTo(PPBase *obj)
 {
-	PPBase::CopyMembers(obj);
+	PPBase::CopyMembersTo(obj);
 	PPPathItem *new_obj = (PPPathItem *) obj;
 	new_obj->_op = _op;
 	new_obj->_pt1 = _pt1;

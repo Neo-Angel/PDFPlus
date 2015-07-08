@@ -36,13 +36,20 @@ PPEForm::PPEForm(PPTDictionary *dict, PPContext *gcontext) : PPElement(gcontext)
 	*/
 }
 
-
-void PPEForm::CopyMembers(PPBase *obj)
+PPEForm::PPEForm()
 {
-	PPElement::CopyMembers(obj);
+	_name = NULL; 
+	_dict = NULL;
+}
+
+void PPEForm::CopyMembersTo(PPBase *obj)
+{
+	PPElement::CopyMembersTo(obj);
 	PPEForm *tar_obj = (PPEForm *)obj;
-	tar_obj->_name = (PPTName *)_name->Copy();
-	tar_obj->_dict = (PPTDictionary *)_dict->Copy();
+	if(_name)
+		tar_obj->_name = (PPTName *)_name->Copy();
+	if(_dict)
+		tar_obj->_dict = (PPTDictionary *)_dict->Copy();
 }
 
 void PPEForm::SetParser(PPParser *parser)
@@ -109,11 +116,13 @@ PPFormBase *PPEForm::GetFormObj()  // Not Form Element
 	PPTIndirectObj *indir_obj = GetXObject();
 	if(indir_obj) {
 //		PPTDictionary *dict = indir_obj->firstDictionary();
-		ret_form = new PPFormBase(indir_obj);
+		PPDocument *doc = _parentForm->_document;
+		ret_form = new PPFormBase(doc, indir_obj);
 		if (!ret_form->HasElements()) {
 			delete ret_form;
 			return NULL;
 		}
+		ret_form->_form_key = (PPTName *)_name->Copy();
 	}
 	return ret_form;
 }

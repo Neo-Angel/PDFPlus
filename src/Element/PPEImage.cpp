@@ -23,14 +23,17 @@ PPEImage::PPEImage()
 	_stream = NULL;
 }
 
-void PPEImage::CopyMembers(PPBase *obj)
+void PPEImage::CopyMembersTo(PPBase *obj)
 {
-	PPBase::CopyMembers(obj);
+	PPBase::CopyMembersTo(obj);
 	PPEImage *tar_obj = (PPEImage *)obj;
 
-	tar_obj->_name = (PPTName *)_name->Copy();
-	tar_obj->_dict = (PPTDictionary *)_dict->Copy();
-	tar_obj->_stream = (PPTStream *)_stream->Copy();
+	if(_name)
+		tar_obj->_name = (PPTName *)_name->Copy();
+	if(_dict)
+		tar_obj->_dict = (PPTDictionary *)_dict->Copy();
+	if(_stream)
+		tar_obj->_stream = (PPTStream *)_stream->Copy();
 }
 
 void PPEImage::SetParser(PPParser *parser) 

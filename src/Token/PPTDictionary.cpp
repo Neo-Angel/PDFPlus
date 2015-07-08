@@ -6,6 +6,7 @@
 #include "PPTIndirectObj.h"
 #include "PPTIndirectRef.h"
 #include "PPTNumber.h"
+#include "PPParser.h"
 
 // PPTDictionary //////////////////////////////////
 
@@ -47,9 +48,19 @@ PPTIndirectObj *PPTDictionary::SetRefTokenAndKey(PPToken *token, string key, int
 {
 	PPTIndirectRef *ref = new PPTIndirectRef(_parser, obj_num, 0);
 	SetTokenAndKey(ref, key);
-	PPTIndirectObj *obj = new PPTIndirectObj(_parser, obj_num, 0);
+	PPTIndirectObj *obj = NULL;
+	if(token->classType() == PPTN_INDIRECTOBJ) {
+		obj = (PPTIndirectObj *)token;
+		obj->_objNum = obj_num;
+	}
+	else  {
+		obj = (PPTIndirectObj *)_parser->ObjectForNumber(obj_num);
+		if(!obj) {
+			obj = new PPTIndirectObj(_parser, obj_num, 0);
+		}
+		obj->AddObj(token);
+	}
 	obj->addRefObj(ref);
-	obj->AddObj(token);
 	return obj;
 }
 
@@ -189,4 +200,32 @@ string PPTDictionary::pdfString()
     }
     retstr += ">>\xa";
     return retstr;
+}
+
+
+void PPTDictionary::CopyMembersTo(PPBase *obj)
+{
+	PPToken::CopyMembersTo(obj);
+
+	PPTDictionary *tar_dict = (PPTDictionary *)obj;
+	map <string, PPToken *> ::iterator it_token_objs;
+    for(it_token_objs = _dict.begin(); it_token_objs != _dict.end(); it_token_objs++) {
+        string key = it_token_objs->first;
+        PPToken *token = (PPToken *)(it_token_objs->second);
+		PPToken *copied_token = (PPToken *)token->Copy();
+		tar_dict->_dict[key] = copied_token;
+    }
+
+}
+
+void PPTDictionary::SetParser(PPParser *parser)
+{
+	PPToken::SetParser(parser);
+
+	map <string, PPToken *> ::iterator it_token_objs;
+    for(it_token_objs = _dict.begin(); it_token_objs != _dict.end(); it_token_objs++) {
+        PPToken *token = (PPToken *)(it_token_objs->second);
+		if(parser != token->_parser)
+			token->SetParser(parser);
+    }
 }

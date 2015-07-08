@@ -94,3 +94,8 @@ void PPTXRef::merge(PPTXRef *trailer)
 {
     
 }
+
+void PPTXRef::CopyMembersTo(PPBase *obj)
+{
+	PPToken::CopyMembersTo(obj);
+}

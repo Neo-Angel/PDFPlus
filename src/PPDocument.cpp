@@ -191,6 +191,7 @@ void PPDocument::SetPageCount(int cnt)
 	pages_dict->SetTokenAndKey(number, "Count");
 }
 
+// 실질적인 PDF 내의 페이지 구성
 void PPDocument::AddPage(PPPage *page)
 {
 	PPTArray *page_array = PageArray();
@@ -218,7 +219,7 @@ PPPage *PPDocument::newPage(PPRect &rect)
 {
 	PPPage *page = new PPPage(this);
 
-	// AddPage() 에서 page->_pageDict가 지정된단. 
+	// AddPage() 에서 page->_formDict가 지정된단. 
 	// 그래야 page->SetMediaBox() 가 제대로 동작한다.
 	AddPage(page);
 
@@ -357,6 +358,7 @@ int PPDocument::buildDocument()
 void PPDocument::PushObj(PPTIndirectObj *obj, int obj_num)
 {
 	_tokens.push_back(obj);
+	obj->SetParser(&_parser);
 	_parser._objDict[obj_num] = obj;
 }
 
@@ -928,7 +930,7 @@ void PPDocument::getline(char *buf, size_t size)
 
 int PPDocument::NewObjNum()
 {
-	return (_objNumber++);
+	return (++_objNumber);
 }
 
 
@@ -942,7 +944,7 @@ PPTName *PPDocument::AddFormObject(PPPage *page)
 	vector <PPToken *> token_list;
 	PPTDictionary *dict = new PPTDictionary(&_parser);
 	// BBox : pages MediaBox
-	PPTArray *src_rect_arr = (PPTArray *)page->_pageDict->objectForKey("MediaBox");
+	PPTArray *src_rect_arr = (PPTArray *)page->_formDict->objectForKey("MediaBox");
 	if(src_rect_arr) {
 		PPTArray *rect_array = (PPTArray *)src_rect_arr->Copy();
 		dict->setTokenAndKey(rect_array, "BBox");
@@ -961,7 +963,7 @@ PPTName *PPDocument::AddFormObject(PPPage *page)
 	matrix->AddToken(0);
 	dict->setTokenAndKey((PPToken *)matrix, "Matrix");
 	// Resources : Ref (ColorSpace, ExtGState, Properties, Shading)
-	PPToken *pg_rcs = page->_pageDict->objectForKey("Resource");
+	PPToken *pg_rcs = page->_formDict->objectForKey("Resource");
 	if(pg_rcs) {
 		PPToken *resource = (PPToken *)pg_rcs->Copy();
 		dict->setTokenAndKey(resource, "Resource");
@@ -972,9 +974,11 @@ PPTName *PPDocument::AddFormObject(PPPage *page)
 	// Type : XObject <Name>
 	dict->setTokenAndKey((PPToken *)new PPTName(&_parser,new string("XObject")), "Type");
 
+	++_objNumber;
 	PPTIndirectObj *indirObj = new PPTIndirectObj(&_parser, token_list, _objNumber, 0);
-	_xobjects[_objNumber++] = indirObj;
-	_tokens.push_back(indirObj);
+	PushObj(indirObj, _objNumber);
+	_xobjects[_objNumber] = indirObj;
+//	_tokens.push_back(indirObj);
 	ret_name = new PPTName(&_parser, new string(name_str));
 	return ret_name;
 }
@@ -989,3 +993,63 @@ PPTIndirectObj *PPDocument::SetRefTokenForKey(PPTDictionary *dict, PPToken *toke
 }
 
 
+PPToken *PPDocument::ResourceForKey(string type, string key)
+{
+	string newkey = type;
+	newkey += "_";
+	newkey += key;
+	PPToken *ret_rcs = _resources[newkey];
+	if( ret_rcs == NULL) {
+		_resources.erase(newkey);
+	}
+	return ret_rcs;
+}
+
+void PPDocument::AddResource(PPToken *rsc, string type, string key)
+{
+	PPToken *already_have = ResourceForKey(type, key);
+	if(already_have)
+		return;
+	if(rsc->classType() == PPTN_INDIRECTREF) {
+		PPTIndirectRef *rsc_ref = (PPTIndirectRef *)rsc;
+		rsc = rsc_ref->targetObject();
+	}
+
+	string newkey = type;
+	newkey += "_";
+	newkey += key;
+	_resources[newkey] = rsc;
+	/*
+	if(rsc->classType() == PPTN_INDIRECTOBJ) {
+		PPTIndirectObj *rsc_obj = (PPTIndirectObj *)rsc;
+		++_objNumber;
+		rsc_obj->_objNum = _objNumber;
+		PushObj(rsc_obj,_objNumber);
+	}
+	*/
+}
+
+void PPDocument::AddResource(PPToken *rcs, string type)
+{
+
+}
+
+PPToken *PPDocument::WriteResource(PPToken *rsc, string type, string key)
+{
+	PPToken *new_rsc = (PPToken *)rsc->Copy();
+//	if(new_rsc->classType() == PPTN_INDIRECTOBJ) {
+//		PPTIndirectObj *indir = (PPTIndirectObj *)new_rsc;
+//		int num = NewObjNum();
+//		indir->_objNum = num;
+//	}
+	AddResource(new_rsc, type, key);
+	/*
+	if(rcs->classType() == PPTN_INDIRECTOBJ) {
+		PPTIndirectObj *rcs_obj = (PPTIndirectObj *)rcs;
+		++_objNumber;
+		rcs_obj->_objNum = _objNumber;
+		PushObj(rcs_obj,_objNumber);
+	}
+	*/
+	return new_rsc;
+}

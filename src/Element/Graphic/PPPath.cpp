@@ -11,9 +11,9 @@
 //
 //////////////////////////////////////////////////////////
 
-void PPPath::CopyMembers(PPBase *obj)
+void PPPath::CopyMembersTo(PPBase *obj)
 {
-	PPBase::CopyMembers(obj);
+	PPBase::CopyMembersTo(obj);
 	PPPath *tar_obj = (PPPath *)obj;
 	tar_obj->_bounds = _bounds;
 

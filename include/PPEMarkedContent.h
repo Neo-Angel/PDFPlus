@@ -14,14 +14,11 @@ class PPEMarkedContent : public PPElement {
     PPTName * _tag;
     
 public:
-    PPEMarkedContent(PPTName *tag, PPTDictionary *property, PPContext *gcontext) : PPElement(gcontext){
-        _tag = tag;
-        _property = property;
-    }
-	PPEMarkedContent(){}
+    PPEMarkedContent(PPTName *tag, PPTDictionary *property, PPContext *gcontext);
+	PPEMarkedContent();
 	PPBase *Create(){return new PPEMarkedContent;}
 
-	void CopyMembers(PPBase *);
+	void CopyMembersTo(PPBase *);
 	void SetParser(PPParser *parser);
 
     string makeCommandString();

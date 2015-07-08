@@ -17,6 +17,11 @@ PPTBool::PPTBool(PPParser *parser, string &str):PPToken(parser)
     _bool = (str.compare("true") == 0);
 }
 
+PPTBool::PPTBool()
+{
+	_bool = false;
+}
+
 string PPTBool::xmlString(int level)
 {
     string retstr;
@@ -27,4 +32,12 @@ string PPTBool::xmlString(int level)
 string PPTBool::pdfString()
 {
     return boolStr(_bool);
+}
+
+void PPTBool::CopyMembersTo(PPBase *obj) 
+{
+	PPToken::CopyMembersTo(obj);
+
+	PPTBool *bool_obj =(PPTBool *)obj;
+	bool_obj->_bool = _bool;
 }

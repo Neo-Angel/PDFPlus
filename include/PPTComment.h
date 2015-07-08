@@ -14,9 +14,14 @@ class PPTComment : public PPToken {
     
 public:
     PPTComment(PPParser *parser, string *str);
+	PPTComment() {_comment = NULL;}
     ~PPTComment();
     string xmlString(int level);
     string pdfString();
+
+	PPBase *Create() {return new PPTComment();}
+	void CopyMembersTo(PPBase *obj) ;
+
 };
 /////////////////////////////////////////
 

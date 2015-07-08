@@ -30,17 +30,43 @@ PPPage::PPPage(PPDocument *doc)  // this invokes PPFormBase() (default)construct
 PPPage::PPPage(PPPage *page)
 {
 	_document = page->_document;
-	_pageDict = (PPTDictionary *)page->_pageDict->Copy();
+	_formDict = (PPTDictionary *)page->_formDict->Copy();
+}
+
+
+void PPPage::StoreResources()
+{
+	map <string, PPToken *> &rscs_map = _resourceDict->_dict;
+	map <string, PPToken *> ::iterator it_rscs;
+	for(it_rscs = rscs_map.begin(); it_rscs != rscs_map.end(); it_rscs++) {
+		string rsc_type = it_rscs->first;
+		PPToken *rsc_value = (PPTDictionary *)it_rscs->second;
+		if(rsc_value->classType() == PPTN_DICTIONARY) {
+			PPTDictionary *rsc_dict = (PPTDictionary *)rsc_value;
+			map <string, PPToken *> &rsc_map = rsc_dict->_dict;
+			map <string, PPToken *> ::iterator it_rsc;
+			for(it_rsc = rsc_map.begin(); it_rsc != rsc_map.end(); it_rsc++) {
+				string rsc_key = it_rsc->first;
+				PPToken *rsc = it_rsc->second;
+				_document->AddResource(rsc, rsc_type, rsc_key);
+			}
+		}
+		else if(rsc_value->classType() == PPTN_ARRAY) {
+			_document->AddResource(rsc_value, rsc_type);
+		}
+	}
 }
 
 void PPPage::loadDictionary(PPTDictionary *page_dict)
 {
-    _pageDict = page_dict;
+    _formDict = page_dict;
 	_context->ptMatrix()->rotate(rotate());
 
-//    PPTIndirectObj *rcs_indir = (PPTIndirectObj *)_pageDict->indirectObjectForKey("Resources");
+//    PPTIndirectObj *rcs_indir = (PPTIndirectObj *)_formDict->indirectObjectForKey("Resources");
 //    _resourceDict = rcs_indir->firstDictionary();
-    _resourceDict = (PPTDictionary *)_pageDict->valueObjectForKey("Resources");
+    _resourceDict = (PPTDictionary *)_formDict->valueObjectForKey("Resources");
+	StoreResources();
+
     
     PPTDictionary *font_dict = (PPTDictionary *)_resourceDict->valueObjectForKey("Font");
     if (font_dict) {
@@ -114,7 +140,7 @@ void PPPage::WriteDictionary(PPTDictionary *page_dict) // -> PreBuildPDF
 >>
 endobj
 */
-	_pageDict = page_dict;
+	_formDict = page_dict;
 	page_dict->SetTokenAndKey("Page", "Type");
 	page_dict->SetTokenAndKey(0, "Rotate");
 	
@@ -123,8 +149,8 @@ endobj
 //	page_dict->SetTokenAndKey(rect_arr, "MediaBox");
 
 
-	PPTDictionary *rcs_dict = new PPTDictionary(&_document->_parser);
-	PPTIndirectObj *rcs_obj = _document->SetRefTokenForKey(page_dict, rcs_dict, PPKN_RESOURCES);
+	_resourceDict = new PPTDictionary(&_document->_parser);
+	PPTIndirectObj *rcs_obj = _document->SetRefTokenForKey(page_dict, _resourceDict, PPKN_RESOURCES);
 	/*
 	PPTDictionary *stream_dict = new PPTDictionary(&_document->_parser);
 //	PPTIndirectObj *stream_obj = _document->SetRefTokenForKey(stream_dict, rcs_dict, PPKN_CONTENTS);
@@ -139,7 +165,7 @@ void PPPage::BuildPDF()
 {
 	PPTDictionary *stream_dict = new PPTDictionary(&_document->_parser);
 
-	PPTIndirectObj *stream_obj = _document->SetRefTokenForKey(_pageDict, stream_dict, PPKN_CONTENTS);
+	PPTIndirectObj *stream_obj = _document->SetRefTokenForKey(_formDict, stream_dict, PPKN_CONTENTS);
 	PPTStream *contents = BuildStream();
 	stream_dict->SetTokenAndKey(contents->_streamSize, "Length");
 	stream_dict->SetTokenAndKey("FlateDecode", "Filter"); // Filter/FlateDecode
@@ -148,10 +174,34 @@ void PPPage::BuildPDF()
 	stream_obj->AddObj(contents);
 }
 
+PPTDictionary *PPPage::ResourcesDict()
+{
+	PPToken * rscs_tkn = _formDict->ValueObjectForKey(PPKN_RESOURCES);
+	if(rscs_tkn) {
+		return (PPTDictionary *)rscs_tkn;
+	}
+	return NULL;
+}
+
+PPTDictionary *PPPage::ResourceDictForType(string type)
+{
+	PPTDictionary *rscs_dict = ResourcesDict();
+	if(rscs_dict) {
+		PPTDictionary *rsc_dict = (PPTDictionary *)rscs_dict->ValueObjectForKey(type);
+		return rsc_dict;
+	}
+	return NULL;
+}
+
+void PPPage::AddResource(PPToken *res, char *type, char *key)
+{
+
+}
+
 PPRect PPPage::rectForKey(string key)
 {
     PPRect rect;
-    PPTArray *num_list = (PPTArray *)_pageDict->objectForKey(key);
+    PPTArray *num_list = (PPTArray *)_formDict->objectForKey(key);
     if (num_list) {
         return rectFromArray(num_list);
     }
@@ -162,13 +212,13 @@ void PPPage::setRectForKey(PPRect rect, string key)
 {
 	PPTArray *num_list = new PPTArray(&_document->_parser);
 	SetRectToArray(rect, num_list);
-	_pageDict->setTokenAndKey(num_list, key);
+	_formDict->setTokenAndKey(num_list, key);
 }
 
 int PPPage::intValueForKey(string key)
 {
     int ret = 0;
-    PPTNumber *num = (PPTNumber *)_pageDict->objectForKey(key);
+    PPTNumber *num = (PPTNumber *)_formDict->objectForKey(key);
     if (num) {
         return num->intValue();
     }
@@ -178,7 +228,7 @@ int PPPage::intValueForKey(string key)
 float PPPage::floatValueForKey(string key)
 {
     float ret = 0;
-    PPTNumber *num = (PPTNumber *)_pageDict->objectForKey(key);
+    PPTNumber *num = (PPTNumber *)_formDict->objectForKey(key);
     if (num) {
         return num->floatValue();
     }
@@ -187,7 +237,7 @@ float PPPage::floatValueForKey(string key)
 
 bool PPPage::hasValueWithKey(string key)
 {
-    if(_pageDict->objectForKey(key))
+    if(_formDict->objectForKey(key))
         return true;
     return false;
 }
@@ -196,7 +246,7 @@ PPTStream *PPPage::contentAt(size_t i)
 {
     PPTStream *ret_stream = NULL;
     
-    PPToken *contents = _pageDict->objectForKey(PPKN_CONTENTS);
+    PPToken *contents = _formDict->objectForKey(PPKN_CONTENTS);
     if (contents->classType() == PPTN_ARRAY) {
         PPTArray *array = (PPTArray *)contents;
         if (array->size() > i) {
@@ -214,7 +264,7 @@ PPTStream *PPPage::contentAt(size_t i)
 
 size_t PPPage::contentsCount()
 {
-    PPToken *contents = _pageDict->objectForKey(PPKN_CONTENTS);
+    PPToken *contents = _formDict->objectForKey(PPKN_CONTENTS);
     if (contents->classType() == PPTN_ARRAY) {
         PPTArray *array = (PPTArray *)contents;
         return array->size();

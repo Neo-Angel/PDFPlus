@@ -25,10 +25,10 @@ public:
 	PPEForm(PPPage *page, PPDocument *doc);
     PPEForm(PPTDictionary *dict, PPContext *gcontext);
     PPEForm(PPTName *name, PPContext *gcontext);
-	PPEForm(){}
+	PPEForm();
 	PPBase *Create(){return new PPEForm;}
 
-	void CopyMembers(PPBase *);
+	void CopyMembersTo(PPBase *);
 	void SetParser(PPParser *parser);
 
 //    void setStream(PPTStream *stream);

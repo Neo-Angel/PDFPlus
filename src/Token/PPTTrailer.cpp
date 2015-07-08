@@ -15,6 +15,15 @@
 #include "PPTIndirectRef.h"
 #include "PPTXRef.h"
 
+PPTTrailer::PPTTrailer()
+{
+    _dict = NULL;
+    _xrefIndirect = NULL;
+    _startxref = 0L;
+    _next = NULL;
+    _xrefObj = NULL;
+}
+
 PPTTrailer::PPTTrailer(PPParser *parser, PPTDictionary *dict, unsigned long long xref) : PPToken(parser)
 {
     _dict = dict;
@@ -240,3 +249,17 @@ void PPTTrailer::write(std::ostream &os)
 //    return NULL;
 //}
 
+void PPTTrailer::CopyMembersTo(PPBase *obj)
+{
+	PPToken::CopyMembersTo(obj);
+
+	PPTTrailer *trailer = (PPTTrailer *)obj;
+//	trailer->_startxref = _startxref;
+}
+
+void PPTTrailer::SetParser(PPParser *parser)
+{
+	PPToken::SetParser(parser);
+	_dict->SetParser(parser);
+	_xrefObj->SetParser(parser);
+}

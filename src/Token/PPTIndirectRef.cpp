@@ -68,3 +68,13 @@ PPTIndirectObj *PPTIndirectRef::targetObject()
     PPTIndirectObj *ret = (PPTIndirectObj *)_parser->objectByID(_objNum);
     return ret;
 }
+
+
+void PPTIndirectRef::CopyMembersTo(PPBase *obj) 
+{
+	PPToken::CopyMembersTo(obj);
+
+	PPTIndirectRef *indir_ref = (PPTIndirectRef *)obj;
+	indir_ref->_genNum = _genNum;
+	indir_ref->_objNum = _objNum;
+}

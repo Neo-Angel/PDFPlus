@@ -28,7 +28,7 @@ public:
 	PPPathItem() {}
 	PPBase *Create() {return new PPPathItem;}
 
-	void CopyMembers(PPBase *obj);
+	void CopyMembersTo(PPBase *obj);
 
     string makeCommand();
     string xmlString(int level);

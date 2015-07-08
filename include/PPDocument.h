@@ -67,7 +67,7 @@ public:  //protected:
     PPTName *_pageLayout;
     PPTName *_pageMode;
     
-
+	map <string, PPToken *> _resources;
     map <int, PPToken *> _fonts;  // PPToken => PPTIndirectObj
     map <int, PPToken *> _xobjects; // images : PPToken => PPTIndirectObj
 
@@ -78,7 +78,12 @@ public:
     string xobjectsXMLString(int level);
     string fontsXMLString(int level);
     
-    
+ 	PPToken *ResourceForKey(string rcs_type, string rcs_key);
+	void AddResource(PPToken *rcs, string type, string key);
+	void AddResource(PPToken *rcs, string type) ;
+
+	// return copied resource.
+	PPToken *WriteResource(PPToken *rcs, string type, string key);
 public:
     
 	PPDocument();

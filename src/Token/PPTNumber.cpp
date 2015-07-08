@@ -62,3 +62,12 @@ string PPTNumber::xmlString(int level)
     retstr += tapStr(level) + "<Number>" +stringValue() + "</Number>\xa";
     return retstr;
 }
+
+void PPTNumber::CopyMembersTo(PPBase *obj)
+{
+	PPToken::CopyMembersTo(obj);
+
+	PPTNumber *num = (PPTNumber *)obj;
+	num->_numstr = new string(*_numstr);
+	num->_number = _number;
+}

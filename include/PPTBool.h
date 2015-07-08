@@ -11,12 +11,17 @@
 
 ///////////////////////////////////////// PPTBool
 class PPTBool : public PPToken {
+public:
     bool _bool;
+
 public:
     PPTBool(PPParser *parser, string &str);
+	PPTBool();
     string xmlString(int level);
     string pdfString();
 
+	PPBase *Create() {return new PPTBool();}
+	void CopyMembersTo(PPBase *obj) ;
 };
 /////////////////////////////////////////
 

@@ -9,9 +9,9 @@
 //
 ///////////////////////////////////////////////////////
 
-void PPEText::CopyMembers(PPBase *obj)
+void PPEText::CopyMembersTo(PPBase *obj)
 {
-	PPElement::CopyMembers(obj);
+	PPElement::CopyMembersTo(obj);
 	PPEText *tar_obj = (PPEText *)obj;
 
 	size_t i, icnt = _cmdList.size();

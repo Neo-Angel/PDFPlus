@@ -79,7 +79,7 @@ const char *PPBase::classType()
 }
 
 
-void PPBase::CopyMembers(PPBase *obj)
+void PPBase::CopyMembersTo(PPBase *obj)
 {
 
 }
@@ -87,7 +87,7 @@ void PPBase::CopyMembers(PPBase *obj)
 PPBase *PPBase::Copy()
 {
 	PPBase *new_obj = this->Create();
-	CopyMembers(new_obj);
+	CopyMembersTo(new_obj);
 
 	return new_obj;
 }

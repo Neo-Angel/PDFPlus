@@ -15,14 +15,11 @@ class PPEBeginMarkedContent : public PPElement {
     PPTName * _tag;
     
 public:
-    PPEBeginMarkedContent(PPTName *tag, PPTDictionary *property, PPContext *gcontext) : PPElement(gcontext){
-        _tag = tag;
-        _property = property;
-    }
-	PPEBeginMarkedContent(){}
+    PPEBeginMarkedContent(PPTName *tag, PPTDictionary *property, PPContext *gcontext);
+	PPEBeginMarkedContent();
 	PPBase *Create(){return new PPEBeginMarkedContent;}
 
-	void CopyMembers(PPBase *);
+	void CopyMembersTo(PPBase *);
 	void SetParser(PPParser *parser);
 
     string makeCommandString();

@@ -137,3 +137,19 @@ string toNomalASCIIString(string src_str)
     return retstr;
 }
 
+void PPToken::SetParser(PPParser *parser)
+{
+	_parser = parser;
+}
+
+PPToken *PPToken::Copy(PPParser *parser)
+{
+	PPToken *ret_token = (PPToken *)PPBase::Copy();
+	ret_token->SetParser(parser);
+	return ret_token;
+}
+
+void PPToken::CopyMembersTo(PPBase *obj)
+{
+	PPBase::CopyMembersTo(obj);
+}

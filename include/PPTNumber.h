@@ -17,6 +17,7 @@ public:
     PPTNumber(PPParser *parser, string *str);
     PPTNumber(PPParser *parser, int num);
 	PPTNumber(PPParser *parser, float num);
+	PPTNumber() {_numstr = NULL; _number = 0.0;}
     ~PPTNumber();
     float floatValue();
     long long longlongValue();
@@ -25,7 +26,12 @@ public:
     string stringValue();
     string pdfString() {return stringValue();}
     string xmlString(int level);
-    inline const char *classType(){return PPTN_NUMBER;};
+    inline const char *classType(){return PPTN_NUMBER;}
+
+	PPBase *Create() {return new PPTNumber();}
+	void CopyMembersTo(PPBase *obj);
+
+
 };
 /////////////////////////////////////////
 

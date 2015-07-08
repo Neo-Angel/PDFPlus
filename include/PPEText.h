@@ -22,7 +22,7 @@ public:
     PPEText(PPContext *gcontext) : PPElement(gcontext){}
 	PPBase *Create(){return new PPEText;}
 
-	void CopyMembers(PPBase *);
+	void CopyMembersTo(PPBase *);
 	void SetParser(PPParser *parser);
 
 

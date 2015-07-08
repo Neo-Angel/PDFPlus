@@ -79,6 +79,9 @@ PPTDictionary *PPTIndirectObj::firstDictionary()
 
 void PPTIndirectObj::AddObj(PPToken *obj)
 {
+	if(obj == this) {
+		cout << "obj == this" << PP_ENDL;
+	}
 	_array.push_back(obj);
 }
 PPTStream *PPTIndirectObj::stream()
@@ -224,3 +227,33 @@ void PPTIndirectObj::merge(PPTIndirectObj *ohter_indir)
     
 }
 
+void PPTIndirectObj::CopyMembersTo(PPBase *obj)
+{
+	PPToken::CopyMembersTo(obj);
+
+	PPTIndirectObj *indir_obj = (PPTIndirectObj *)obj;
+	indir_obj->_genNum = _genNum;
+	indir_obj->_objNum = _objNum;
+
+	indir_obj->_array.clear();
+	int i, icnt = _array.size();
+	for(i=0;i<icnt;i++) {
+		PPToken *org_token = _array.at(i);
+		PPToken *new_token = (PPToken *)org_token->Copy();
+		indir_obj->AddObj(new_token);
+	}
+	_ref_list.clear();
+}
+
+void PPTIndirectObj::SetParser(PPParser *parser)
+{
+	PPToken::SetParser(parser);
+
+	int i, icnt = _array.size();
+	for(i=0;i<icnt;i++) {
+		PPToken *token = _array.at(i);
+		if(parser != token->_parser)
+			token->SetParser(parser);
+	}
+
+}
