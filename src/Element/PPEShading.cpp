@@ -97,4 +97,27 @@ void PPEShading::willAddToParent(PPFormBase *form)
 }
 
 
+bool PPEShading::HasResource()
+{
+	return true;
+}
+string PPEShading::ResourceType()
+{
+	return "Shading";
+}
+string PPEShading::ResourceKey()
+{
+	return *_name->_name;
+}
+
+PPToken *PPEShading::GetResource()
+{
+	if(_dict) {
+		return _dict;
+	}
+
+	return PPElement::GetResource();
+//	PPToken *rsc = _parentForm->_document->ResourceForKey(ResourceType(), ResourceKey());
+//	return rsc;
+}
 

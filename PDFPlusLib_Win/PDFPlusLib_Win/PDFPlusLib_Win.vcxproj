@@ -91,7 +91,9 @@
     <ClInclude Include="..\..\include\PPDash.h" />
     <ClInclude Include="..\..\include\PPDefines.h" />
     <ClInclude Include="..\..\include\PPDocument.h" />
+    <ClInclude Include="..\..\include\PPEBeginCompatibility.h" />
     <ClInclude Include="..\..\include\PPEBeginMarkedContent.h" />
+    <ClInclude Include="..\..\include\PPEEndCompatibility.h" />
     <ClInclude Include="..\..\include\PPEEndMarkedContent.h" />
     <ClInclude Include="..\..\include\PPEForm.h" />
     <ClInclude Include="..\..\include\PPEGRestore.h" />
@@ -124,6 +126,7 @@
     <ClInclude Include="..\..\include\PPTString.h" />
     <ClInclude Include="..\..\include\PPTTrailer.h" />
     <ClInclude Include="..\..\include\PPTXRef.h" />
+    <ClInclude Include="PPEBeginCompatiblity.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
@@ -135,7 +138,9 @@
     <ClCompile Include="..\..\src\Element\Graphic\PPMatrix.cpp" />
     <ClCompile Include="..\..\src\Element\Graphic\PPPath.cpp" />
     <ClCompile Include="..\..\src\Element\Graphic\PPPathItem.cpp" />
+    <ClCompile Include="..\..\src\Element\PPEBeginCompatibility.cpp" />
     <ClCompile Include="..\..\src\Element\PPEBeginMarkedContent.cpp" />
+    <ClCompile Include="..\..\src\Element\PPEEndCompatibility.cpp" />
     <ClCompile Include="..\..\src\Element\PPEEndMakedContent.cpp" />
     <ClCompile Include="..\..\src\Element\PPEForm.cpp" />
     <ClCompile Include="..\..\src\Element\PPEGRestore.cpp" />

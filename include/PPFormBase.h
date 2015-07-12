@@ -69,6 +69,7 @@ public:
 	size_t _cur_element_idx;
     PPTIndirectObj *_indirObj;  // XObject
 
+	// ExtGState, ColorSpace, Pattern, Shading, XObject, Font, ProcSet, Properties 
     PPTDictionary *_resourceDict;
 	PPTDictionary *_formDict;
 

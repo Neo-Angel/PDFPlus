@@ -195,6 +195,9 @@ string PPTDictionary::pdfString()
         retstr += name;
         retstr += " ";
         PPToken *token = (PPToken *)(it_token_objs->second);
+		if(name == "Length") {
+			cout << "Length = " << token->pdfString() << ";" << PP_ENDL;
+		}
         retstr += token->pdfString();
         retstr += "\xa";
     }

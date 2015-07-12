@@ -79,8 +79,8 @@ public:
     string fontsXMLString(int level);
     
  	PPToken *ResourceForKey(string rcs_type, string rcs_key);
-	void AddResource(PPToken *rcs, string type, string key);
-	void AddResource(PPToken *rcs, string type) ;
+	PPToken *AddResource(PPToken *rcs, string type, string key);
+	PPToken *AddResource(PPToken *rcs, string type) ;
 
 	// return copied resource.
 	PPToken *WriteResource(PPToken *rcs, string type, string key);

@@ -22,6 +22,8 @@
 #include "PPEMarkedContent.h"
 #include "PPEEndMarkedContent.h"
 #include "PPEShading.h"
+#include "PPEBeginCompatibility.h"
+#include "PPEEndCompatibility.h"
 
 #include "PPTName.h"
 #include "PPTDictionary.h"
@@ -167,9 +169,16 @@ void PPFormBase::writeElement(PPElement *src_element)
 				// 없으면 리소스 복사
 				PPToken *src_rsc = src_element->GetResource();
 				if(src_rsc) {
+/*					if(src_rsc->classType() != PPTN_INDIRECTOBJ) {
+						int obj_num = _document->NewObjNum();
+						PPTIndirectObj *container_obj = new PPTIndirectObj(&&_document->_parser, obj_num, 0);
+						container_obj->AddObj(rsc);
+						src_rsc = container_obj;
+					}
+					*/
 					rsc = WriteResource(src_rsc, rsc_type, rsc_key);  // _resources
+					_document->SetRefTokenForKey(rsc_dict,rsc,rsc_key); //rsc_dict, _tokens, parser->_objDict
 				}
-				_document->SetRefTokenForKey(rsc_dict,rsc,rsc_key); //rsc_dict, _tokens, parser->_objDict
 			}
 			//_document->SetRefTokenForKey(rsc_dict,rsc,rsc_key); //rsc_dict, _tokens, parser->_objDict
 
@@ -488,10 +497,18 @@ int PPFormBase::buildElements()
                 break;
             
             case PPCG_BeginCompatibility:
-                cout << " PPCG_BeginCompatibility ..." << PP_ENDL;
+				{
+                    PPEBeginCompatibility *compatibility_element = new PPEBeginCompatibility(&gcontext);
+                    addElement(compatibility_element);
+					gcontext.clearGFlags();
+				}
                 break;
             case PPCG_EndCompatibility:
-                cout << " PPCG_EndCompatibility ..." << PP_ENDL;
+				{
+                    PPEEndCompatibility *compatibility_element = new PPEEndCompatibility(&gcontext);
+                    addElement(compatibility_element);
+					gcontext.clearGFlags();
+				}
                 break;
                 
             default:
@@ -516,12 +533,13 @@ PPTStream *PPFormBase::BuildStream()
 	PPTStream *stream = new PPTStream(&_document->_parser, size);
 	const char *cstr = retstr.c_str();
 	memcpy(stream->_streamData, cstr, size);
+	stream->_decoded = true;
 	return stream;
 }
 
 PPElement *PPFormBase::next()
 {
-	if (_elements.size() > 0 && _cur_element_idx < _elements.size()-1) {
+	if (_elements.size() > 0 && _cur_element_idx < _elements.size()) {
 		return _elements[ _cur_element_idx++];
 	}
 	return NULL;
@@ -547,6 +565,7 @@ void PPFormBase::AddFormObj(PPFormBase *form_obj)
 //	form_obj->_document = _document;
 	PPTStream *stream = form_obj->BuildStream();
 	stream->_dict = (PPTDictionary *)xobj->_array[0];
+	stream->_dict->SetTokenAndKey(stream->_streamSize, "Length");
 	xobj->AddObj(stream);
 	AddXObjRef(xobj, *form_obj->_form_key->_name);
 	delete form_obj;

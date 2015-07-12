@@ -167,6 +167,15 @@
     <ClInclude Include="..\..\include\PPPath.h">
       <Filter>소스 파일\Element\Graphic</Filter>
     </ClInclude>
+    <ClInclude Include="PPEBeginCompatiblity.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\PPEBeginCompatibility.h">
+      <Filter>소스 파일\Element</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\PPEEndCompatibility.h">
+      <Filter>소스 파일\Element</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -291,6 +300,12 @@
     </ClCompile>
     <ClCompile Include="..\..\src\Element\Graphic\PPPathItem.cpp">
       <Filter>소스 파일\Element\Graphic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Element\PPEBeginCompatibility.cpp">
+      <Filter>소스 파일\Element</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Element\PPEEndCompatibility.cpp">
+      <Filter>소스 파일\Element</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

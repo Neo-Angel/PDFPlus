@@ -1005,16 +1005,21 @@ PPToken *PPDocument::ResourceForKey(string type, string key)
 	return ret_rcs;
 }
 
-void PPDocument::AddResource(PPToken *rsc, string type, string key)
+PPToken *PPDocument::AddResource(PPToken *rsc, string type, string key)
 {
 	PPToken *already_have = ResourceForKey(type, key);
 	if(already_have)
-		return;
+		return rsc;
 	if(rsc->classType() == PPTN_INDIRECTREF) {
 		PPTIndirectRef *rsc_ref = (PPTIndirectRef *)rsc;
 		rsc = rsc_ref->targetObject();
 	}
-
+	if(rsc->classType() != PPTN_INDIRECTOBJ) {
+		PPTIndirectObj *container_obj = new PPTIndirectObj(&_parser, 0, 0);
+		container_obj->AddObj(rsc);
+	//	PushObj(container_obj, _objNumber);
+		rsc = (PPToken *)container_obj;
+	}
 	string newkey = type;
 	newkey += "_";
 	newkey += key;
@@ -1027,11 +1032,12 @@ void PPDocument::AddResource(PPToken *rsc, string type, string key)
 		PushObj(rsc_obj,_objNumber);
 	}
 	*/
+	return rsc;
 }
 
-void PPDocument::AddResource(PPToken *rcs, string type)
+PPToken *PPDocument::AddResource(PPToken *rcs, string type)
 {
-
+	return NULL;
 }
 
 PPToken *PPDocument::WriteResource(PPToken *rsc, string type, string key)
@@ -1042,7 +1048,7 @@ PPToken *PPDocument::WriteResource(PPToken *rsc, string type, string key)
 //		int num = NewObjNum();
 //		indir->_objNum = num;
 //	}
-	AddResource(new_rsc, type, key);
+	new_rsc = AddResource(new_rsc, type, key);
 	/*
 	if(rcs->classType() == PPTN_INDIRECTOBJ) {
 		PPTIndirectObj *rcs_obj = (PPTIndirectObj *)rcs;

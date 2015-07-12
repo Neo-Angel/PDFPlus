@@ -213,6 +213,7 @@ string PPTStream::makePDFString(unsigned long &length)
     }
     else {
         retstr.append(_streamData, _streamSize);
+		length = _streamSize;
     }
     retstr += "endstream\xa";
     return retstr;

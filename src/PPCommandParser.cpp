@@ -543,7 +543,10 @@ PPToken *PPCommandParser::parseString(string str, vector <PPToken *> &tokens, PP
             PPTCommand *cmd = new PPTCommand;
             cmd->_cmdInfo = cinfo;
             int i, icnt = cinfo->numOfOperands;
-            if (icnt != tokens.size()) {
+			if(icnt == -1) { // -1 은 오퍼랜드 갯수가 정해지지 않았음을 의미.
+				icnt = tokens.size();
+			}
+			else if (icnt != tokens.size()) {
                 cout << "Error : Graphic Parsing Error (" << str << ")\xa";
                 return NULL;
             }

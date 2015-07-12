@@ -46,6 +46,8 @@
 #include <PPEBeginMarkedContent.h>
 #include <PPEMarkedContent.h>
 #include <PPEEndMarkedContent.h>
+#include <PPEBeginCompatibility.h>
+#include <PPEEndCompatibility.h>
 #include <PPEPath.h>
 #include <PPEShading.h>
 #include <PPEText.h>

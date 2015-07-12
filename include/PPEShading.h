@@ -29,6 +29,11 @@ public:
     string xmlString(int level);
     void willAddToParent(PPFormBase *form);
 	PPElementType getType() {return PPET_SHADING;}
+
+	bool HasResource();
+	string ResourceType();
+	string ResourceKey();
+	PPToken *GetResource();
 };
 
 
