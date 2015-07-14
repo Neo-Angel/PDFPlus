@@ -1,5 +1,7 @@
 
 #include <sstream>
+
+#include "PPDocument.h"
 #include "PPTIndirectRef.h"
 
 //  ////////////////////////////////// PPTIndirectRef
@@ -77,4 +79,16 @@ void PPTIndirectRef::CopyMembersTo(PPBase *obj)
 	PPTIndirectRef *indir_ref = (PPTIndirectRef *)obj;
 	indir_ref->_genNum = _genNum;
 	indir_ref->_objNum = _objNum;
+}
+
+void PPTIndirectRef::MoveInto(PPDocument *doc)
+{
+	PPTIndirectObj *obj = (PPTIndirectObj *)_parser->ObjectForNumber(_objNum);
+	if(!obj)
+		return;
+	PPTIndirectObj *copied_obj = (PPTIndirectObj *)obj->Copy();
+	copied_obj->MoveInto(doc);
+	doc->PushObj(copied_obj, doc->NewObjNum());
+	_objNum = copied_obj->_objNum;
+	copied_obj->addRefObj(this);
 }

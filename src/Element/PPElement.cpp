@@ -49,9 +49,11 @@ PPElement::~PPElement()
 string PPElement::commandString()
 {
     string cmd_str = "";
-	if(_gstate)
+	if(_gstate) {
 		cmd_str = _gstate->makeCommandString();
-    cmd_str += makeCommandString();
+	}
+	string cmd_wd = makeCommandString();
+    cmd_str += cmd_wd;
     return cmd_str;
 }
 
@@ -74,17 +76,28 @@ void PPElement::CopyMembersTo(PPBase *obj)
 
 bool PPElement::HasResource()
 {
-	if(_gstate && _gstate->_gflag & PPGF_DICTNAME) {
-		return true;
+	if(_gstate){
+		if(_gstate->_gflag & PPGF_DICTNAME) {
+			return true;
+		}
+		else if(_gstate->_gflag & PPGF_COLORSPACE) {
+			return true;
+		}
 	}
+	
 	return false;
 }
 
 string PPElement::ResourceType()
 {
 	string type;
-	if(_gstate && _gstate->_gflag & PPGF_DICTNAME) {
-		type = "ExtGState"; 
+	if(_gstate) {
+		if(_gstate->_gflag & PPGF_DICTNAME) {
+			type = "ExtGState"; 
+		}
+		else if(_gstate->_gflag & PPGF_COLORSPACE) {
+			type = "ColorSpace"; 
+		}
 	}
 	return type;
 }
@@ -92,8 +105,16 @@ string PPElement::ResourceType()
 string PPElement::ResourceKey()
 {
 	string key;
-	if(_gstate && _gstate->_gflag & PPGF_DICTNAME) {
-		key = _gstate->dictName(); 
+	if(_gstate) {
+		if(_gstate->_gflag & PPGF_DICTNAME) {
+			key = _gstate->dictName(); 
+		}
+		else if(_gstate->_gflag & PPGF_STROKECOLORSPC) {
+			key = _gstate->_strokeColor.UserColorSpaceName();
+		}
+		else if(_gstate->_gflag & PPGF_FILLCOLORSPC) {
+			key = _gstate->_fillColor.UserColorSpaceName();
+		}
 	}
 	return key;
 }

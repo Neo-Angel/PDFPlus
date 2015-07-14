@@ -28,6 +28,8 @@ public:
 	void CopyMembersTo(PPBase *obj) ;
 
     inline const char *classType(){return PPTN_INDIRECTREF;};
+
+	void MoveInto(PPDocument *doc);
 };
 /////////////////////////////////////////
 

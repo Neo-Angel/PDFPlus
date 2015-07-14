@@ -333,44 +333,59 @@ void PPTCommand::setValueToGState(PPContext &gcontext)
         }
         
         case PPC_StrokeColorSpace:
-            gcontext.setStrokeColorSpace(getStringValue(0));
+            gcontext.SetUserStrokeColorSpace(getStringValue(0));
             break;
         
         case PPC_NonStrokeColorSpace:
-            gcontext.setFillColorSpace(getStringValue(0));
+            gcontext.SetUserFillColorSpace(getStringValue(0));
             break;
         
-        case PPC_SetColor:
+			// Set Color
+        case PPC_SetColor: 
+			gcontext.SetStrokeColor(_operands);
+			break;
         case PPC_SetColorN:
-       {
+			gcontext.SetStrokeColorN(_operands);
+			break;
+		/*
+		{
+		 
             int n = gcontext.numberOfStrokeColorCoponents();
             if (n == 1) {
-                gcontext.setStrokeColor(getFloatValue(0));
+                gcontext.setStrokeColor(cmd->getFloatValue(0));
             }
             else if(n == 3) {
-                gcontext.setStrokeColor(getFloatValue(0),getFloatValue(1),getFloatValue(2));
+                gcontext.setStrokeColor(cmd->getFloatValue(0),cmd->getFloatValue(1),cmd->getFloatValue(2));
             }
             else if(n == 4) {
-                gcontext.setStrokeColor(getFloatValue(0),getFloatValue(1),getFloatValue(2), getFloatValue(3));
+                gcontext.setStrokeColor(cmd->getFloatValue(0),cmd->getFloatValue(1),cmd->getFloatValue(2), cmd->getFloatValue(3));
             }
+			
             break;
         }
+		*/
         case PPC_SetNonStrokeColor:
+			gcontext.SetFillColor(_operands);
+			break;
+
         case PPC_SetNonStrokeColorN:
+			gcontext.SetFillColorN(_operands);
+			break;
+			/*
         {
             int n = gcontext.numberOfNonStrokeColorCoponents();
             if (n == 1) {
-                gcontext.setFillColor(getFloatValue(0));
+                gcontext.setFillColor(cmd->getFloatValue(0));
             }
             else if(n == 3) {
-                gcontext.setFillColor(getFloatValue(0),getFloatValue(1),getFloatValue(2));
+                gcontext.setFillColor(cmd->getFloatValue(0),cmd->getFloatValue(1),cmd->getFloatValue(2));
             }
             else if(n == 4) {
-                gcontext.setFillColor(getFloatValue(0),getFloatValue(1),getFloatValue(2), getFloatValue(3));
+                gcontext.setFillColor(cmd->getFloatValue(0),cmd->getFloatValue(1),cmd->getFloatValue(2), cmd->getFloatValue(3));
             }
             break;
         }
-        
+        */
         case PPC_DeviceGray:
             gcontext.setStrokeColorSpace(PPCSN_DeviceGray);
             gcontext.setStrokeColor(getFloatValue(0));
@@ -382,7 +397,7 @@ void PPTCommand::setValueToGState(PPContext &gcontext)
             break;
         
         case PPC_DeviceCMYK:
-            gcontext.setStrokeColorSpace(PPCSN_DeviceRGB);
+            gcontext.setStrokeColorSpace(PPCSN_DeviceCMYK);
             gcontext.setStrokeColor(getFloatValue(0),getFloatValue(1),getFloatValue(2), getFloatValue(3));
             break;
             
@@ -491,6 +506,9 @@ bool PPCommandParser::canParseString(string str)
 PPToken *PPCommandParser::parseString(string str, vector <PPToken *> &tokens, PPParser *parser)
 {
     PPCommandInfo *cinfo = CommandDict[str];
+	if(str == "scn") {
+		cout << "GState Command..." << PP_ENDL;
+	}
     if (cinfo) {
         if (cinfo->type == PPC_BeginInlineImage) {
             // sorry. I will implement later.

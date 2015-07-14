@@ -32,7 +32,16 @@ string PPTName::xmlString(int level)
 string PPTName::pdfString()
 {
     string retstr = "/";
-    retstr += *_name;
+	int i, icnt = _name->length();
+	for(i=0;i<icnt;i++) {
+		unsigned short ch = (*_name)[i];
+		if(ch == ' ') {
+			retstr += "#20";
+		}
+		else {
+			retstr += ch;
+		}
+	}
     return retstr;
 }
 

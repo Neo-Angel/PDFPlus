@@ -1,7 +1,10 @@
 
 
+#include <sstream>
 #include <string>
 #include "PPColor.h"
+
+#include "PPTNumber.h"
 
 using namespace std;
 
@@ -35,6 +38,10 @@ void PPColor::SetColorSpaceName(string name)
 	_colorName = "";
 }
 
+void PPColor::SetUserColorSpaceName(string name)
+{
+	_userColorSpaceName = name;
+}
 
 void PPColor::SetRGBColor(float r, float g, float b, float a)
 {
@@ -71,6 +78,46 @@ int PPColor::numberOfCoponents(bool &is_string)
     
 }
 
+void PPColor::SetColos(vector<PPToken *> &colors) // &vector<PPToken *> _operands
+{
+	_numofcolors = colors.size();
+	if(_numofcolors >= 1) {
+		PPTNumber *number = (PPTNumber *)colors[0];
+		_c1 = number->floatValue();
+	}
+	if(_numofcolors >= 2) {
+		_c2 = ((PPTNumber *)colors[1])->floatValue();
+	}
+	if(_numofcolors >= 3) {
+		_c3 = ((PPTNumber *)colors[2])->floatValue();
+	}
+	if(_numofcolors >= 4) {
+		_c4 = ((PPTNumber *)colors[3])->floatValue();
+	}
+
+}	
+
+
+string PPColor::StringOfColors()
+{
+	ostringstream ostr;
+	string retstr = "";
+	if(_numofcolors >= 1) {
+		ostr << _c1;
+	}
+	if(_numofcolors >= 2) {
+		ostr << " " << _c2;
+	}
+	if(_numofcolors >= 3) {
+		ostr << " " << _c3;
+	}
+	if(_numofcolors >= 4) {
+		ostr << " " << _c4;
+	}
+
+    retstr = ostr.str();
+	return retstr;
+}
 PPColor *PPNewRGBColor(float r, float g, float b, float a)
 {
 	PPColor *ret_color = new PPColor;

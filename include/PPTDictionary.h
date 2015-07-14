@@ -43,7 +43,7 @@ public:
 	PPBase *Create() {return new PPTDictionary();}
 	void CopyMembersTo(PPBase *obj) ;
 	void SetParser(PPParser *parser);
-
+	void MoveInto(PPDocument *doc);
 
     inline const char *classType(){return PPTN_DICTIONARY;};
 };

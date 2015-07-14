@@ -28,6 +28,8 @@ public:
 	void CopyMembersTo(PPBase *obj) ;
 	void SetParser(PPParser *parser);
 
+	void MoveInto(PPDocument *doc);
+
 };
 /////////////////////////////////////////
 

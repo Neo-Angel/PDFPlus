@@ -84,8 +84,10 @@ PPFormBase *PPFormBase::NewFormObj(PPFormBase *form_obj)
 	if(indir->_array.size() == 2) {
 		indir->_array.erase(indir->_array.begin()+1);
 	}
+
 	PPFormBase *ret_form = NULL;
 	if(indir->_array.size() == 1) {
+		indir->MoveInto(_document);
 		int new_obj_num = _document->NewObjNum();
 		indir->_objNum = new_obj_num;
 		_document->PushObj(indir, new_obj_num);
@@ -189,7 +191,7 @@ void PPFormBase::writeElement(PPElement *src_element)
 	addElement(copied);
 }
 
-
+// 여러 GState 의 값들 중에 cmd 내용에 부합하는 값을 변경한다.
 void PPFormBase::SetValueToGState(PPTCommand *cmd, PPContext &gcontext)
 {
     
@@ -244,16 +246,23 @@ void PPFormBase::SetValueToGState(PPTCommand *cmd, PPContext &gcontext)
         }
         
         case PPC_StrokeColorSpace:
-            gcontext.setStrokeColorSpace(cmd->getStringValue(0));
+            gcontext.SetUserStrokeColorSpace(cmd->getStringValue(0));
             break;
         
         case PPC_NonStrokeColorSpace:
-            gcontext.setFillColorSpace(cmd->getStringValue(0));
+            gcontext.SetUserFillColorSpace(cmd->getStringValue(0));
             break;
         
-        case PPC_SetColor:
+			// Set Color
+        case PPC_SetColor: 
+			gcontext.SetStrokeColor(cmd->_operands);
+			break;
         case PPC_SetColorN:
-       {
+			gcontext.SetStrokeColorN(cmd->_operands);
+			break;
+		/*
+		{
+		 
             int n = gcontext.numberOfStrokeColorCoponents();
             if (n == 1) {
                 gcontext.setStrokeColor(cmd->getFloatValue(0));
@@ -264,10 +273,18 @@ void PPFormBase::SetValueToGState(PPTCommand *cmd, PPContext &gcontext)
             else if(n == 4) {
                 gcontext.setStrokeColor(cmd->getFloatValue(0),cmd->getFloatValue(1),cmd->getFloatValue(2), cmd->getFloatValue(3));
             }
+			
             break;
         }
+		*/
         case PPC_SetNonStrokeColor:
+			gcontext.SetFillColor(cmd->_operands);
+			break;
+
         case PPC_SetNonStrokeColorN:
+			gcontext.SetFillColorN(cmd->_operands);
+			break;
+			/*
         {
             int n = gcontext.numberOfNonStrokeColorCoponents();
             if (n == 1) {
@@ -281,7 +298,7 @@ void PPFormBase::SetValueToGState(PPTCommand *cmd, PPContext &gcontext)
             }
             break;
         }
-        
+        */
         case PPC_DeviceGray:
             gcontext.setStrokeColorSpace(PPCSN_DeviceGray);
             gcontext.setStrokeColor(cmd->getFloatValue(0));
@@ -293,7 +310,7 @@ void PPFormBase::SetValueToGState(PPTCommand *cmd, PPContext &gcontext)
             break;
         
         case PPC_DeviceCMYK:
-            gcontext.setStrokeColorSpace(PPCSN_DeviceRGB);
+            gcontext.setStrokeColorSpace(PPCSN_DeviceCMYK);
             gcontext.setStrokeColor(cmd->getFloatValue(0),cmd->getFloatValue(1),cmd->getFloatValue(2), cmd->getFloatValue(3));
             break;
             

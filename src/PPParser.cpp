@@ -561,7 +561,7 @@ bool parseXRef(PPParserSource &source, PPTXRef *xref, int objnum, int count)
 }
 bool isAlphabet(char ch)
 {
-    if ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z')) {
+    if ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || ch == '*') {
         return true;
     }
     return false;

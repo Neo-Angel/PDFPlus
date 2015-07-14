@@ -33,7 +33,7 @@ void PPEPath::CopyMembersTo(PPBase *obj)
 	PPEPath *tar_obj = (PPEPath *)obj;
 	if(_path)
 		tar_obj->_path = (PPPath *)_path->Copy();
-	tar_obj->_strokeType = _strokeType;
+	tar_obj->_clipType = _clipType;
 	tar_obj->_strokeType = _strokeType;
 	tar_obj->_fillType = _fillType;
 	tar_obj->_paintingType = _paintingType;
@@ -130,13 +130,17 @@ string PPEPath::makeCommandString()
     size_t i, icnt = _path->_itemList.size();
     for (i=0; i<icnt; i++) {
         PPPathItem *path_item = _path->_itemList.at(i);
-        retstr += path_item->makeCommand();
+		string path_item_str = path_item->makeCommand();
+        retstr += path_item_str;
+		if(path_item_str == "-1.15 2.542 0 1.403 0 0 c\n") {
+			cout << "-1.15 2.542 0 1.403 0 0 c" << PP_ENDL;
+		}
     }
 	PPCommandInfo *cinfo = &PPCommandList[_paintingType];
 
 	retstr += (char *)(cinfo->code);
 	retstr += PP_ENDL;
-	/*
+	
 	if(_clipType == PPEP_Clip) {
 		retstr += "W";
 		retstr += PP_ENDL;
@@ -145,6 +149,7 @@ string PPEPath::makeCommandString()
 		retstr += "W*";
 		retstr += PP_ENDL;
 	}
+	/*
 	if(_strokeType == PPEP_NonStroke && _fillType == PPEP_NonFill) {
 		retstr += "n";
 		retstr += PP_ENDL;

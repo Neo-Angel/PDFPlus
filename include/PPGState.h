@@ -28,7 +28,12 @@ enum PPGStateFlag {
     PPGF_FILLCOLORSPC       = 0x00000400,
     PPGF_STROKECOLOR        = 0x00000800,
     PPGF_FILLCOLOR          = 0x00001000,
-    PPGF_CLIPPING           = 0x00002000
+    PPGF_CLIPPING           = 0x00002000,
+	PPGF_COLORSPACE			= 0x00004000,
+    PPGF_SETFILLCOLOR       = 0x00008000,
+    PPGF_SETSTROKECOLOR     = 0x00010000,
+    PPGF_SETFILLCOLORN      = 0x00020000,
+    PPGF_SETSTROKECOLORN    = 0x00040000
 };
 
 
@@ -43,6 +48,7 @@ public:
     byte        _lineCap;
     byte        _lineJoin;
     string      _dictName;
+
 
     PPDash      _dash;
     PPMatrix    _matrix;
@@ -87,6 +93,7 @@ public:
     int numberOfStrokeColorCoponents();
     int numberOfNonStrokeColorCoponents();
     void setStrokeColorSpace(string name);
+	void SetUserStrokeColorSpace(string name);
     string strokeColorSpace(){return _strokeColor._colorSpaceName;}
 	void setStrokeColor(PPColor c);  void SetStrokeColor(PPColor c) {setStrokeColor(c);}
     void setStrokeColor(float c1, float c2 = -1, float c3 = -1, float c4 = -1);
@@ -96,6 +103,7 @@ public:
 	PPColor *strokeColor(){return &_strokeColor;}
     
     void setFillColorSpace(string name);
+	void SetUserFillColorSpace(string name);
     string fillColorSpace(){return _fillColor._colorSpaceName;};
 	void setFillColor(PPColor c); void SetFillColor(PPColor c) {setFillColor(c);}
     void setFillColor(float c1, float c2 = -1, float c3 = -1, float c4 = -1);
@@ -110,6 +118,11 @@ public:
     string makeCommandString();
     string xmlString(int level);
 	void setTransform(PPMatrix mtx){_matrix = mtx;}
+
+	void SetStrokeColor(vector<PPToken *> &_operands);
+	void SetStrokeColorN(vector<PPToken *> &_operands);
+	void SetFillColor(vector<PPToken *> &_operands);
+	void SetFillColorN(vector<PPToken *> &_operands);
 };
 
 

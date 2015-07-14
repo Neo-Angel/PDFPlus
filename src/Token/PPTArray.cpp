@@ -100,3 +100,13 @@ void PPTArray::SetParser(PPParser *parser)
 			token->SetParser(parser);
 	}
 }
+
+
+void PPTArray::MoveInto(PPDocument *doc)
+{
+	int i, icnt = size();
+	for(i=0;i<icnt;i++) {
+		PPToken *token = objectAtIndex(i);
+		token->MoveInto(doc);
+	}
+}

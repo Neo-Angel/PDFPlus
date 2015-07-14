@@ -3,7 +3,7 @@
 #define __PDFPlusLib__PPColor__
 
 #include <PPBase.h>
-
+#include <PPToken.h>
 //
 //      PPColor
 //
@@ -27,13 +27,16 @@ extern const char *PPCSN_Pattern ;
 class PPColor : public PPBase {
     
 public:
+	string _userColorSpaceName;
     string _colorSpaceName;
     string _alterColorSpaceName;
     float _c1, _c2, _c3, _c4;
     string _colorName;
+	byte		_numofcolors;
 
-
+	PPColor(){_numofcolors = 0; _c1=_c2=_c3=_c4=-1;}
     void SetColorSpaceName(string name);
+	void SetUserColorSpaceName(string name);
 	void SetColorName(string name) {_colorName = name;}
 	void SetAlterColorSpaceName(string name) {_alterColorSpaceName = name;}
 	void SetCMYKColor(float c, float m, float y, float k) {_c1 = c; _c2 = m; _c3 = y; _c4 = k;}
@@ -41,8 +44,11 @@ public:
 	void SetAlpha(float a) {_c4 = a;}
     string colorSpaceName(){return _colorSpaceName;}
     string ColorSpaceName(){return _colorSpaceName;}
+	string UserColorSpaceName(){return _userColorSpaceName;}
     int numberOfCoponents(bool &is_string);
 	string colorName(){return _colorName;}
+	void SetColos(vector<PPToken *> &colors);
+	string StringOfColors();
 
 };
 

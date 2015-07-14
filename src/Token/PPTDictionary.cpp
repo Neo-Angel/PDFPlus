@@ -232,3 +232,14 @@ void PPTDictionary::SetParser(PPParser *parser)
 			token->SetParser(parser);
     }
 }
+
+
+void PPTDictionary::MoveInto(PPDocument *doc)
+{
+	map <string, PPToken *> ::iterator it_token_objs;
+    for(it_token_objs = _dict.begin(); it_token_objs != _dict.end(); it_token_objs++) {
+        PPToken *token = (PPToken *)(it_token_objs->second);
+		token->MoveInto(doc);
+    }
+
+}

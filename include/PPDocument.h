@@ -79,11 +79,11 @@ public:
     string fontsXMLString(int level);
     
  	PPToken *ResourceForKey(string rcs_type, string rcs_key);
-	PPToken *AddResource(PPToken *rcs, string type, string key);
-	PPToken *AddResource(PPToken *rcs, string type) ;
+	PPTIndirectObj *AddResource(PPToken *rcs, string type, string key);
+	PPTIndirectObj *AddResource(PPToken *rcs, string type) ;
 
 	// return copied resource.
-	PPToken *WriteResource(PPToken *rcs, string type, string key);
+	PPTIndirectObj *WriteResource(PPToken *rcs, string type, string key);
 public:
     
 	PPDocument();

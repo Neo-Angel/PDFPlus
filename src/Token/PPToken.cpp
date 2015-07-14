@@ -141,15 +141,21 @@ void PPToken::SetParser(PPParser *parser)
 {
 	_parser = parser;
 }
-
+/*
 PPToken *PPToken::Copy(PPParser *parser)
 {
 	PPToken *ret_token = (PPToken *)PPBase::Copy();
 	ret_token->SetParser(parser);
 	return ret_token;
 }
+*/
 
 void PPToken::CopyMembersTo(PPBase *obj)
 {
 	PPBase::CopyMembersTo(obj);
+	PPToken *token = (PPToken *)obj;
+
+	// 외부에 의해서 _parser다 다시 지정되기 전 까지는 
+	//이전 _parser(출처)를 가지고 있는다.
+	token->_parser = _parser; 
 }

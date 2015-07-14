@@ -53,6 +53,7 @@ public:
 	PPBase *Create() {return new PPTIndirectObj();}
 	void CopyMembersTo(PPBase *obj) ;
 	void SetParser(PPParser *parser);
+	void MoveInto(PPDocument *doc);
 };
 /////////////////////////////////////////
 

@@ -2,6 +2,8 @@
 
 #include <sstream>
 
+#include "PPDocument.h"
+
 #include "PPTIndirectObj.h"
 
 #include "PPTName.h"
@@ -240,6 +242,11 @@ void PPTIndirectObj::CopyMembersTo(PPBase *obj)
 	for(i=0;i<icnt;i++) {
 		PPToken *org_token = _array.at(i);
 		PPToken *new_token = (PPToken *)org_token->Copy();
+		if(i == 1 && new_token->classType() == PPTN_STREAM) {
+			PPTDictionary *dict = (PPTDictionary *)indir_obj->_array.at(0);
+			PPTStream *stream = (PPTStream *)new_token;
+			stream->_dict = dict;
+		}
 		indir_obj->AddObj(new_token);
 	}
 	_ref_list.clear();
@@ -257,3 +264,18 @@ void PPTIndirectObj::SetParser(PPParser *parser)
 	}
 
 }
+
+
+// 도큐먼트 파라미터는 나중에 PPParser 로 교체하자.
+//     _tokens 를 PPParser 클래스로 옮기기
+void PPTIndirectObj::MoveInto(PPDocument *doc)
+{
+	int i, icnt = _array.size();
+	for(i=0;i<icnt;i++) {
+		PPToken *token = _array.at(i);
+		if(&(doc->_parser) != token->_parser) {
+			token->MoveInto(doc);
+		}
+	}
+}
+
