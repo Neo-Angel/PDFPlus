@@ -35,7 +35,7 @@ PPPage::PPPage(PPPage *page)
 
 
 void PPPage::StoreResources()
-{
+{/*
 	map <string, PPToken *> &rscs_map = _resourceDict->_dict;
 	map <string, PPToken *> ::iterator it_rscs;
 	for(it_rscs = rscs_map.begin(); it_rscs != rscs_map.end(); it_rscs++) {
@@ -54,7 +54,7 @@ void PPPage::StoreResources()
 		else if(rsc_value->classType() == PPTN_ARRAY) {
 			_document->AddResource(rsc_value, rsc_type);
 		}
-	}
+	} */
 }
 
 void PPPage::loadDictionary(PPTDictionary *page_dict)
@@ -65,6 +65,8 @@ void PPPage::loadDictionary(PPTDictionary *page_dict)
 //    PPTIndirectObj *rcs_indir = (PPTIndirectObj *)_formDict->indirectObjectForKey("Resources");
 //    _resourceDict = rcs_indir->firstDictionary();
     _resourceDict = (PPTDictionary *)_formDict->valueObjectForKey("Resources");
+
+	// 읽어들인 리소스들을 Document에 저장한다.
 	StoreResources();
 
     

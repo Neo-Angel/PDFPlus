@@ -28,6 +28,7 @@ public:
     PPToken *objectForKey(string &keyname);
     PPToken *objectForKey(const char *keyname);
 	PPToken *ObjectForKey(const char *keyname){return objectForKey(keyname);}
+	PPToken *ObjectForKey(string keyname){return objectForKey(keyname);}
 	PPTName *nameForKey(const char *keyname);
     PPToken *indirectObjectForKey(string &keyname);
     PPToken *valueObjectForKey(string &keyname);

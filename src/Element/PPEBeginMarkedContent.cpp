@@ -21,7 +21,7 @@ PPEBeginMarkedContent::PPEBeginMarkedContent(){
 
 void PPEBeginMarkedContent::CopyMembersTo(PPBase *obj)
 {
-	PPBase::CopyMembersTo(obj);
+	PPElement::CopyMembersTo(obj);
 	PPEBeginMarkedContent *tar_obj = (PPEBeginMarkedContent *)obj;
 
 	if(_property)

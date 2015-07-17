@@ -24,6 +24,7 @@
 #include "PPEShading.h"
 #include "PPEBeginCompatibility.h"
 #include "PPEEndCompatibility.h"
+#include "PPParser.h"
 
 #include "PPTName.h"
 #include "PPTDictionary.h"
@@ -101,12 +102,12 @@ PPParser *PPFormBase::documentParser()
 {
 	return &_document->_parser;
 }
-PPToken *PPFormBase::ResourceForKey(string rcs_type, string rcs_key){
-	return _document->ResourceForKey(rcs_type, rcs_key);
+PPToken *PPFormBase::ResourceForKey( int obj_num){
+	return _document->ResourceForExtObjNum( obj_num);
 }
 
-PPToken *PPFormBase::WriteResource(PPToken *rcs, string type, string key) {
-	return _document->WriteResource(rcs, type, key);
+PPToken *PPFormBase::WriteResource(PPToken *rcs, int obj_num) {
+	return _document->WriteResource(rcs,  obj_num);
 }
 
 int PPFormBase::GetXObjNumOf(string name)
@@ -152,40 +153,44 @@ void PPFormBase::writeElement(PPElement *src_element)
 	// src_element 에 리소스 정보가 있으면
 	if(src_element->HasResource()) {
 		// src_element의 리소스 '타입'과 '키'로 this에 리소스가 있는지 체크
-		string rsc_type = src_element->ResourceType();
-		if(rsc_type == "ProcSet") {
-		}
-		else {
-			PPTDictionary *rsc_dict = (PPTDictionary *)_resourceDict->objectForKey(rsc_type);
-			if(!rsc_dict) {
-				rsc_dict = new PPTDictionary(&_document->_parser);
-				_resourceDict->SetTokenAndKey(rsc_dict, rsc_type);
+		vector <const char *> type_list = src_element->ResourceList();
+		int i, icnt = type_list.size();
+			if(icnt > 1) {
+				cout << "Multi Resources... " << PP_ENDL;
 			}
-			string rsc_key = src_element->ResourceKey();
-			PPToken *rsc = ResourceForKey(rsc_type, rsc_key);
-			if(rsc) {
-				PPTIndirectObj *obj = (PPTIndirectObj *)rsc;
-				rsc_dict->SetRefTokenAndKey(obj, rsc_key, obj->_objNum);
+		for(i=0;i<icnt;i++) {
+			const char *rsc_type = type_list[i]; //src_element->ResourceType();
+			if(rsc_type == PPRT_PROSET) {
 			}
-			else  {
-				// 없으면 리소스 복사
-				PPToken *src_rsc = src_element->GetResource();
-				if(src_rsc) {
-/*					if(src_rsc->classType() != PPTN_INDIRECTOBJ) {
-						int obj_num = _document->NewObjNum();
-						PPTIndirectObj *container_obj = new PPTIndirectObj(&&_document->_parser, obj_num, 0);
-						container_obj->AddObj(rsc);
-						src_rsc = container_obj;
+			else {
+				do {
+					PPTDictionary *rsc_dict = (PPTDictionary *)_resourceDict->objectForKey(rsc_type);
+					if(!rsc_dict) {
+						rsc_dict = new PPTDictionary(&_document->_parser);
+						_resourceDict->SetTokenAndKey(rsc_dict, rsc_type);
 					}
-					*/
-					rsc = WriteResource(src_rsc, rsc_type, rsc_key);  // _resources
-					_document->SetRefTokenForKey(rsc_dict,rsc,rsc_key); //rsc_dict, _tokens, parser->_objDict
-				}
-			}
-			//_document->SetRefTokenForKey(rsc_dict,rsc,rsc_key); //rsc_dict, _tokens, parser->_objDict
+					string rsc_key = src_element->ResourceKeyFor(rsc_type);
+					int src_obj_num = src_element->ResourceObjNum(rsc_type);
+					if(src_obj_num == 0) {
+						cout << " External Resource Object number cannot be Zero." << PP_ENDL;
+						break;
+					}
+					PPToken *rsc = _document->ResourceForExtObjNum(src_obj_num);
 
-			//int new_obj_num = _document->NewObjNum();
-			//rsc_dict->SetRefTokenAndKey(rsc, rsc_key, new_obj_num);
+					if(rsc) {
+						PPTIndirectObj *obj = (PPTIndirectObj *)rsc;
+						rsc_dict->SetRefTokenAndKey(obj, rsc_key, obj->_objNum);
+					}
+					else  {
+						// 없으면 리소스 복사
+						PPToken *src_rsc = src_element->GetResource(rsc_type);
+						if(src_rsc) {
+							rsc = WriteResource(src_rsc, src_obj_num);  // _resources
+							_document->SetRefTokenForKey(rsc_dict,rsc,rsc_key); //rsc_dict, _tokens, parser->_objDict
+						}
+					}
+				}while(0);
+			}
 		}
 	}
 	addElement(copied);
@@ -364,6 +369,49 @@ void PPFormBase::AddCommandToPath(PPTCommand *cmd, PPPath *path)
     }
 }
 
+string PPFormBase::SubtypeFor(string name)
+{
+	string subtype;
+	do {
+		PPTIndirectRef *xobj_ref = (PPTIndirectRef *)ResourceForKey("XObject");
+		if (!xobj_ref) {
+			cout << "XObje IndirectRef not found..." << PP_ENDL;
+			break;
+		}
+		PPTDictionary *xobj_dict = NULL;
+		if(xobj_ref->classType() == PPTN_INDIRECTREF) {
+			xobj_dict = (PPTDictionary *)xobj_ref->valueObject();
+			if (!xobj_dict) {
+				cout << "Shading Dictionary not found..." << PP_ENDL;
+				break;
+			}
+		}
+		else if(xobj_ref->classType() == PPTN_DICTIONARY) {
+			xobj_dict = (PPTDictionary *)xobj_ref;
+		}
+		xobj_ref = (PPTIndirectRef *)xobj_dict->objectForKey(name);
+		if (!xobj_ref) {
+			cout << "Shading IndirectRef not found..." << PP_ENDL;
+			break;
+		}
+		PPTIndirectObj *xobj = (PPTIndirectObj *)xobj_ref->targetObject();
+		if (!xobj) {
+			cout << "Shading Resource Object not found..." << PP_ENDL;
+			break;
+		}
+		xobj_dict = xobj->firstDictionary();
+		if(xobj_dict == NULL) {
+			break;
+		}
+		PPTName *subtype_name =  (PPTName *)xobj_dict->ObjectForKey("Subtype");
+		if(subtype_name == NULL) {
+			break;
+		}
+		subtype = *subtype_name->_name;
+	} while(0);
+	return subtype;
+}
+
 int PPFormBase::buildElements()
 {
     PPContext gcontext;
@@ -457,6 +505,18 @@ int PPFormBase::buildElements()
                 {
 					PPTName *name = (PPTName *)cmd->getTokenValue(0);
 					string name_str = *name->_name;
+
+					string subtype = SubtypeFor(name_str);
+					if(subtype == "Form") {
+						PPEForm *form_element = new PPEForm(name, &gcontext);
+						addElement(form_element);
+					}
+					else if(subtype == "Image") {
+						PPEImage *form_element = new PPEImage(name, &gcontext);
+						addElement(form_element);
+					}
+					gcontext.clearGFlags();
+					/*
                     int obj_num = GetXObjNumOf(name_str);  // Object Number for XObject named 'name'
                     PPTIndirectObj *indir_obj = (PPTIndirectObj *)_document->_xobjects[obj_num];
                     if(indir_obj) {
@@ -476,6 +536,7 @@ int PPFormBase::buildElements()
 							gcontext.clearGFlags();
                         }
                     }
+					*/
                 }
                 break;
                 
@@ -544,7 +605,8 @@ PPTStream *PPFormBase::BuildStream()
 	size_t i, icnt = _elements.size();
 	for(i=0;i<icnt;i++) {
 		PPElement *element = _elements.at(i);
-		retstr += element->commandString();
+		string cmdstr = element->commandString();
+		retstr += cmdstr;
 	}
 	unsigned long size = retstr.size();
 	PPTStream *stream = new PPTStream(&_document->_parser, size);

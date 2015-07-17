@@ -15,7 +15,8 @@
 class PPEShading : public PPElement {
 public:
     PPTName * _name;
-    PPTDictionary *_dict;
+//    PPTDictionary *_dict;
+	PPTIndirectObj *_sh_res;
     
 public:
     PPEShading(PPContext *gcontext);
@@ -34,6 +35,10 @@ public:
 	string ResourceType();
 	string ResourceKey();
 	PPToken *GetResource();
+
+	vector <const char *> ResourceList();
+	string ResourceKeyFor(const char *rsc_type);
+	PPToken *GetResource(const char *rsc_type);
 };
 
 

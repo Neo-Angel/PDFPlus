@@ -24,7 +24,7 @@ PPEMarkedContent::PPEMarkedContent()
 
 void PPEMarkedContent::CopyMembersTo(PPBase *obj)
 {
-	PPBase::CopyMembersTo(obj);
+	PPElement::CopyMembersTo(obj);
 	PPEMarkedContent *tar_obj = (PPEMarkedContent *)obj;
 
 	if(_tag)

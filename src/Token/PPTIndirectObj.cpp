@@ -144,6 +144,9 @@ void PPTIndirectObj::write(ostream &os)
         }
     }
     else if (isStream()) {
+		if(_array.size() == 1) {
+			cout << "Error : Stream must have 'stream' object!" << PP_ENDL;
+		}
         ostringstream ostr;
         
         _filepos = os.tellp();

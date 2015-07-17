@@ -17,14 +17,16 @@ class PPTDictionary;
 class PPEForm : public PPElement {  // , public PPFormBase {
 public:
     PPTName *_name;
-    PPTDictionary *_dict;
+	PPTIndirectObj *_xobj;
+	string _subtype; // "Form", "Image"
+//    PPTDictionary *_dict;
 //    PPTStream *_stream;
     
 public:
 //	PPEForm(PPEForm *form);
 	PPEForm(PPPage *page, PPDocument *doc);
-    PPEForm(PPTDictionary *dict, PPContext *gcontext);
-    PPEForm(PPTName *name, PPContext *gcontext);
+//    PPEForm(PPTDictionary *dict, PPContext *gcontext);
+    PPEForm(PPTName *name, PPContext *gcontext); //  PPFormBase::BuildElement() 에서 쓰임.
 	PPEForm();
 	PPBase *Create(){return new PPEForm;}
 
@@ -37,6 +39,17 @@ public:
 	PPTIndirectObj *GetXObject();
 	PPFormBase *GetFormObj();
 	PPElementType getType() {return PPET_FORM;}
+
+	void willAddToParent(PPFormBase *form);
+
+	bool HasResource();
+	string ResourceType();
+	string ResourceKey();
+	PPToken *GetResource();
+
+	vector <const char *> ResourceList();
+	string ResourceKeyFor(const char *rsc_type);
+	PPToken *GetResource(const char *rsc_type);
 
 };
 

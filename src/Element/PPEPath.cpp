@@ -132,8 +132,12 @@ string PPEPath::makeCommandString()
         PPPathItem *path_item = _path->_itemList.at(i);
 		string path_item_str = path_item->makeCommand();
         retstr += path_item_str;
-		if(path_item_str == "-1.15 2.542 0 1.403 0 0 c\n") {
-			cout << "-1.15 2.542 0 1.403 0 0 c" << PP_ENDL;
+		
+		if(path_item_str == "-4.346 -4.132 l\n") {
+			cout << "-4.346 -4.132 l" << PP_ENDL;
+		}
+		if(path_item_str == "173.301 279.635 l\n") {
+			cout << "173.301 279.635 l" << PP_ENDL;
 		}
     }
 	PPCommandInfo *cinfo = &PPCommandList[_paintingType];

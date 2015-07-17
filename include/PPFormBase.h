@@ -83,8 +83,8 @@ public:
 
 	PPParser *documentParser();
     virtual int buildElements();
-	virtual PPToken *ResourceForKey(string rcs_type, string rcs_key);
-	virtual PPToken *WriteResource(PPToken *rcs, string type, string key);
+	virtual PPToken *ResourceForKey(int obj_num);
+	virtual PPToken *WriteResource(PPToken *rcs, int obj_num);
 
 
     void addElement(PPElement *element);
@@ -107,6 +107,8 @@ public:
 	void AddCommandToPath(PPTCommand *cmd, PPPath *path);
 	PPTStream *BuildStream();
 	PPFormBase *NewFormObj(PPFormBase *form_obj);
+
+	string SubtypeFor(string name);
 };
 
 #endif /* defined(__PDFPlusLib__PPFormBase__) */

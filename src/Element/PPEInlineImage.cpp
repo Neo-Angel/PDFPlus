@@ -11,7 +11,7 @@
 ///////////////////////////////////////////////////////
 void PPEInlineImage::CopyMembersTo(PPBase *obj)
 {
-	PPBase::CopyMembersTo(obj);
+	PPElement::CopyMembersTo(obj);
 	PPEInlineImage *tar_obj = (PPEInlineImage *)obj;
 	//map <string, PPToken *> _dict
     map <string, PPToken *>::iterator it_dict;

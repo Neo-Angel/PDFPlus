@@ -13,33 +13,33 @@
 ///////////////////////////////////////////////////////
 PPEShading::PPEShading(PPContext *gcontext) : PPElement(gcontext)
 {
-	_dict = NULL;
+	_sh_res = NULL;
 	_name = NULL;
 }
 
 PPEShading::PPEShading()
 {
-	_dict = NULL;
+	_sh_res = NULL;
 	_name = NULL;
 }
 
 void PPEShading::CopyMembersTo(PPBase *obj)
 {
-	PPBase::CopyMembersTo(obj);
+	PPElement::CopyMembersTo(obj);
 	PPEShading *tar_obj = (PPEShading *)obj;
 
 	if(_name)
 		tar_obj->_name = (PPTName *)_name->Copy();
-	if(_dict)
-		tar_obj->_dict = (PPTDictionary *)_dict->Copy();
+	if(_sh_res)
+		tar_obj->_sh_res = (PPTIndirectObj *)_sh_res->Copy();
 }
 
 void PPEShading::SetParser(PPParser *parser)
 {
 	if (_name)
 		_name->_parser = parser;
-	if (_dict)
-		_dict->_parser = parser;
+	if (_sh_res)
+		_sh_res->_parser = parser;
 }
 
 string PPEShading::makeCommandString()
@@ -57,9 +57,12 @@ string PPEShading::xmlString(int level)
     string retstr;
     ostringstream ostr;
     ostr << tapStr(level) << "<Element type='Shading' name='" << *_name->_name << "'>" << PP_ENDL;
-    if (_dict) {
-        ostr << _dict->xmlString(level+1);
+    if (_sh_res) {
+        ostr << _sh_res->xmlString(level+1);
     }
+//    if (_dict) {
+//        ostr << _dict->xmlString(level+1);
+//    }
     ostr << tapStr(level) << "</Element>" << PP_ENDL;
     retstr = ostr.str();
     return retstr;
@@ -89,11 +92,16 @@ void PPEShading::willAddToParent(PPFormBase *form)
         cout << "Shading IndirectRef not found..." << PP_ENDL;
         return;
     }
-    _dict = (PPTDictionary *)sh_ref->valueObject();
-    if (!_dict) {
-        cout << "Shading Dictionary not found..." << PP_ENDL;
+	_sh_res = (PPTIndirectObj *)sh_ref->targetObject();
+    if (!_sh_res) {
+        cout << "Shading Resource Object not found..." << PP_ENDL;
         return;
-    }
+	}
+//	_dict = (PPTDictionary *)sh_ref->valueObject();
+//    if (!_dict) {
+//        cout << "Shading Dictionary not found..." << PP_ENDL;
+//        return;
+//    }
 }
 
 
@@ -101,6 +109,7 @@ bool PPEShading::HasResource()
 {
 	return true;
 }
+
 string PPEShading::ResourceType()
 {
 	return "Shading";
@@ -112,12 +121,42 @@ string PPEShading::ResourceKey()
 
 PPToken *PPEShading::GetResource()
 {
-	if(_dict) {
-		return _dict;
-	}
+	if(_sh_res)
+		return _sh_res;
+//	if(_dict) {
+//		return _dict;
+//	}
 
 	return PPElement::GetResource();
 //	PPToken *rsc = _parentForm->_document->ResourceForKey(ResourceType(), ResourceKey());
 //	return rsc;
 }
 
+
+/////////////////////////////////////////////////////  Multi Resource Handling
+vector <const char *> PPEShading::ResourceList()
+{
+	vector <const char *> rsc_list = PPElement::ResourceList();
+	rsc_list.push_back(PPRT_SHADING);
+	return rsc_list;
+}
+
+string PPEShading::ResourceKeyFor(const char *rsc_type)
+{
+	string key = PPElement::ResourceKeyFor(rsc_type);
+	if(key.length() > 0) {
+		return key;
+	}
+	return *_name->_name;
+}
+
+
+PPToken *PPEShading::GetResource(const char *rsc_type)
+{
+	if(rsc_type == PPRT_SHADING) {
+		if(_sh_res)
+			return _sh_res;
+	}
+
+	return PPElement::GetResource();
+}

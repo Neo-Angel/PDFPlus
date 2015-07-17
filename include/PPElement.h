@@ -44,6 +44,16 @@ enum PPElementType {
 //    PPET_FORMEND
 };
 
+// ExtGState, ColorSpace, Pattern, Shading, XObject, Font, ProcSet, Properties 
+extern const char *PPRT_EXTSTATE;
+extern const char *PPRT_COLORSPC;
+extern const char *PPRT_PATTERN;
+extern const char *PPRT_SHADING;
+extern const char *PPRT_XOBJECT;
+extern const char *PPRT_FONT;
+extern const char *PPRT_PROSET;
+extern const char *PPRT_PROPERTIES;
+
 //
 //      PPElement
 //
@@ -79,7 +89,13 @@ public:
 	virtual bool HasResource();
 	virtual string ResourceType();
 	virtual string ResourceKey();
+	virtual int ResourceObjNum();
 	virtual PPToken *GetResource();
+
+	virtual vector <const char *> ResourceList();
+	virtual string ResourceKeyFor(const char *rsc_type);
+	virtual int ResourceObjNum(const char *rsc_type);
+	virtual PPToken *GetResource(const char *rsc_type);
 
 	PPBase *Create() {return new PPElement();}
 	void CopyMembersTo(PPBase *obj);
