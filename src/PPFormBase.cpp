@@ -61,10 +61,10 @@ PPFormBase::PPFormBase(PPDocument *doc, PPTIndirectObj *indir):_graphicParser((v
 	_document = doc;
 	_indirObj = indir; //(PPTIndirectObj *)indir->Copy();
 	_formDict = _indirObj->firstDictionary();
-	PPTName *subtype_name = (PPTName *)_formDict->objectForKey("Subtype");
+	PPTName *subtype_name = (PPTName *)_formDict->ValueObjectForKey("Subtype"); //objectForKey("Subtype");
 	_cur_element_idx = 0; // size_t 
 
-	_resourceDict = (PPTDictionary *)_formDict->objectForKey("Resources");
+	_resourceDict = (PPTDictionary *)_formDict->ValueObjectForKey("Resources"); // objectForKey("Resources");
 
 	if (*subtype_name->_name == "Form") {
 		PPTStream *stream = indir->stream();

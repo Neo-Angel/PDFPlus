@@ -178,5 +178,5 @@ PPToken *PPEImage::GetResource(const char *rsc_type)
 			return _xobj;
 	}
 
-	return PPElement::GetResource();
+	return PPElement::GetResource(rsc_type);
 }

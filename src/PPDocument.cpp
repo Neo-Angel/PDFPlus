@@ -118,10 +118,12 @@ bool PPDocument::open(string filepath)
     ///////////////////////////////////
 
     _file.seekg(0L, ios::beg);
+	_parser.stream_list.clear();
     if(!_parser.parseSource(*this, _tokens)) {
         _state = PPDS_Parsing_Error;
         return false;
     }
+	_parser.DecodeStreams(_tokens);
     size_t i, icnt = _parser._ref_list.size();
     for (i=0; i<icnt; i++) {
         PPTIndirectRef *indir_ref = _parser._ref_list[i];

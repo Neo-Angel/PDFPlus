@@ -158,5 +158,5 @@ PPToken *PPEShading::GetResource(const char *rsc_type)
 			return _sh_res;
 	}
 
-	return PPElement::GetResource();
+	return PPElement::GetResource(rsc_type);
 }

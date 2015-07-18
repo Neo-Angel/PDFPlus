@@ -140,19 +140,19 @@ string PPEPath::makeCommandString()
 			cout << "173.301 279.635 l" << PP_ENDL;
 		}
     }
+	if(_clipType == PPEP_Clip) {
+		retstr += "W ";
+		//retstr += PP_ENDL;
+	}
+	else if(_clipType == PPEP_EOClip) {
+		retstr += "W* ";
+		//retstr += PP_ENDL;
+	}
 	PPCommandInfo *cinfo = &PPCommandList[_paintingType];
 
 	retstr += (char *)(cinfo->code);
 	retstr += PP_ENDL;
 	
-	if(_clipType == PPEP_Clip) {
-		retstr += "W";
-		retstr += PP_ENDL;
-	}
-	else if(_clipType == PPEP_EOClip) {
-		retstr += "W*";
-		retstr += PP_ENDL;
-	}
 	/*
 	if(_strokeType == PPEP_NonStroke && _fillType == PPEP_NonFill) {
 		retstr += "n";

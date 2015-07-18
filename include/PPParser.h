@@ -74,7 +74,7 @@ public:
     map <int, PPTIndirectObj *> _objDict;
     map <unsigned long long, PPToken *> _filePtDict; // IndirectObj, Trailer, XRef
     vector <PPTIndirectRef *> _ref_list;
-
+	vector <PPToken *> stream_list;
     
     ~PPParser();
     map <int, PPTIndirectObj *> &objectsDictionary();
@@ -83,6 +83,7 @@ public:
     PPToken *objectAtFilePosition(unsigned long long pos);
 
     bool parseSource(PPParserSource &source, vector<PPToken *> &token_list);  // startParse
+	void PPParser::DecodeStreams(vector<PPToken *> &token_list);
 };
 
 #endif /* defined(__PDFPlusLib__PPParser__) */

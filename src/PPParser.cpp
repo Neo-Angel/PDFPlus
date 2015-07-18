@@ -632,7 +632,10 @@ bool canSourceParseString(PPParserSource &source, string curstr)
 
 bool PPParser::parseSource(PPParserSource &source, vector<PPToken *> &token_list)
 {
+	
+
 //    PPParserState state = PPPS_None;
+
     PPTXRef *XRef = NULL;
     size_t filept = 0;
     unsigned long long wordoffset = 0;
@@ -815,6 +818,7 @@ bool PPParser::parseSource(PPParserSource &source, vector<PPToken *> &token_list
                 PPTStream *stream = (PPTStream *)token_obj;
                 stream->_dict = dict;
                 token_list.push_back(token_obj);
+				stream_list.push_back(token_obj);
             }
         }
         else if(curstr.length() == 3 && curstr == "obj") {  //  indirect object
@@ -927,7 +931,34 @@ bool PPParser::parseSource(PPParserSource &source, vector<PPToken *> &token_list
 //        }
         prev_ch = ch;
     }
+
     return true;
+}
+
+void PPParser::DecodeStreams(vector<PPToken *> &token_list)
+{
+		
+	int i, icnt = stream_list.size();
+	for(i=0;i<icnt;i++) {
+		PPTStream *stream = (PPTStream *)stream_list[i];
+		PPTDictionary *dict = stream->_dict;
+		PPToken *val_obj = (PPToken *)dict->valueObjectForKey("Length");
+		if (val_obj) {
+            PPTNumber *len_obj = (PPTNumber *)val_obj;
+            long length = len_obj->longValue();
+            PPTName *filter = (PPTName *)dict->nameForKey("Filter");
+            if (filter != NULL && *filter->_name == "FlateDecode") {
+                stream->flateDecodeStream();
+                PPTName *type = (PPTName *)dict->objectForKey("Type");
+                if (type != NULL && *type->_name == "ObjStm") {
+                    if(stream->parseObjStm(token_list, this) == false) {
+                        return;
+                    }
+                 }
+			}
+		}
+	}
+
 }
 
 PPParser::~PPParser()
