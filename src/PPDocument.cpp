@@ -215,6 +215,7 @@ void PPDocument::AddPage(PPPage *page)
 	PPTDictionary *root_dict = RootDict();
 	PPTIndirectObj *pages = (PPTIndirectObj *)root_dict->indirectObjectForKey("Pages");
 	PPTIndirectRef *parent_ref = new PPTIndirectRef(&_parser, pages->_objNum, 0);
+	pages->addRefObj(parent_ref);
 	page_dict->SetTokenAndKey(parent_ref, "Parent");
 
 	page->WriteDictionary(page_dict);
