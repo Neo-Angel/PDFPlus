@@ -251,11 +251,22 @@ void PPFormBase::SetValueToGState(PPTCommand *cmd, PPContext &gcontext)
         }
         
         case PPC_StrokeColorSpace:
-            gcontext.SetUserStrokeColorSpace(cmd->getStringValue(0));
+			{
+				string color_name = cmd->getStringValue(0);
+
+				PPTDictionary *rsc_dict = (PPTDictionary *)_resourceDict->valueObjectForKey("ColorSpace");
+				PPTArray *rsc_arr = (PPTArray *)rsc_dict->valueObjectForKey(color_name);
+				gcontext.SetUserStrokeColorSpace(color_name, rsc_arr);
+			}
             break;
         
         case PPC_NonStrokeColorSpace:
-            gcontext.SetUserFillColorSpace(cmd->getStringValue(0));
+			{
+				string color_name = cmd->getStringValue(0);
+				PPTDictionary *rsc_dict = (PPTDictionary *)_resourceDict->valueObjectForKey("ColorSpace");
+				PPTArray *rsc_arr = (PPTArray *)rsc_dict->valueObjectForKey(color_name);
+				gcontext.SetUserFillColorSpace(color_name, rsc_arr);
+			}
             break;
         
 			// Set Color
@@ -428,7 +439,6 @@ int PPFormBase::buildElements()
         
         switch (cmd->_cmdInfo->group) {
             case PPCG_GState:
-                cmd->setValueToGState(gcontext);  // => 
 				SetValueToGState(cmd, gcontext);
                 break;
             case PPCG_SaveGState:
@@ -471,7 +481,6 @@ int PPFormBase::buildElements()
                 }
                 if (path_element != NULL) {
                     path_element->setPaintingType(cmd->_cmdInfo->type);
-                    //                cmd->addCommandToPathElement(path_element);
                 }
                 break;
                 
@@ -621,6 +630,7 @@ PPElement *PPFormBase::next()
 	if (_elements.size() > 0 && _cur_element_idx < _elements.size()) {
 		return _elements[ _cur_element_idx++];
 	}
+	_cur_element_idx = 0;
 	return NULL;
 }
 

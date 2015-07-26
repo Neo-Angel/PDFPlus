@@ -104,6 +104,8 @@ void PPPath::curveTo2(float cx1, float cy1, float x, float y)
     path_item->_pt1._y = cy1;
     path_item->_pt2._x = x;
     path_item->_pt2._y = y;
+	checkBounds(cx1, cy1);
+	checkBounds(x, y);
     _itemList.push_back(path_item);
 }
 
@@ -115,6 +117,8 @@ void PPPath::rectangle(float x, float y, float w, float h)
     path_item->_pt1._y = y;
     path_item->_pt2._x = w;
     path_item->_pt2._y = h;
+	checkBounds(x, y);
+	checkBounds(x+w, y+h);
     _itemList.push_back(path_item);
 }
 

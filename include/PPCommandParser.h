@@ -85,10 +85,13 @@ public:
     string getStringValue(int idx);
 	string *getStringPt(int idx);
     PPToken *getTokenValue(int idx);
-    void setValueToGState(PPContext &gcontext);
-    void addCommandToPath(PPPath *path);
-    void addCommandToPathElement(PPEPath *pathElement);
+//    void setValueToGState(PPContext &gcontext);
+//    void addCommandToPath(PPPath *path);
+//    void addCommandToPathElement(PPEPath *pathElement);
     string pdfString();
+
+	PPBase *Create() {return new PPTCommand();}
+	void CopyMembersTo(PPBase *obj) ;
 };
 
 static const char  *PPTN_GRAPHIC_PARSER = "PPCommandParser";

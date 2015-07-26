@@ -50,6 +50,7 @@ public:
     void write(std::ostream &os);
     void merge(PPTIndirectObj *ohter_indir);
     
+	// CopyMembersTo 멤버를 계승 받기 위해선 Create 멤버함수를 구현해야함.
 	PPBase *Create() {return new PPTIndirectObj();}
 	void CopyMembersTo(PPBase *obj) ;
 	void SetParser(PPParser *parser);

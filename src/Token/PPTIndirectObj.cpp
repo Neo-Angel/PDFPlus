@@ -162,7 +162,7 @@ void PPTIndirectObj::write(ostream &os)
         ostr << dict->pdfString();
         ostr << stream_pdfstr;
 
-        ostr << "endobj" << PP_ENDL;
+        ostr << "endobj";// << PP_ENDL;
         os << ostr.str() << PP_ENDL;
         
         _parser->_filePtDict[_filepos] = this;
@@ -204,7 +204,7 @@ string PPTIndirectObj::pdfString()
         }
         ostr << pdfstr;
     }
-    ostr << "endobj" << PP_ENDL;
+    ostr << "endobj";// << PP_ENDL;
     string retstr = ostr.str();
     return retstr;
 }

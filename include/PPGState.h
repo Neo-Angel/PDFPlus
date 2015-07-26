@@ -93,7 +93,7 @@ public:
     int numberOfStrokeColorCoponents();
     int numberOfNonStrokeColorCoponents();
     void setStrokeColorSpace(string name);
-	void SetUserStrokeColorSpace(string name);
+	void SetUserStrokeColorSpace(string name, PPTArray *arr);
     string strokeColorSpace(){return _strokeColor._colorSpaceName;}
 	void setStrokeColor(PPColor c);  void SetStrokeColor(PPColor c) {setStrokeColor(c);}
     void setStrokeColor(float c1, float c2 = -1, float c3 = -1, float c4 = -1);
@@ -103,7 +103,7 @@ public:
 	PPColor *strokeColor(){return &_strokeColor;}
     
     void setFillColorSpace(string name);
-	void SetUserFillColorSpace(string name);
+	void SetUserFillColorSpace(string name, PPTArray *arr);
     string fillColorSpace(){return _fillColor._colorSpaceName;};
 	void setFillColor(PPColor c); void SetFillColor(PPColor c) {setFillColor(c);}
     void setFillColor(float c1, float c2 = -1, float c3 = -1, float c4 = -1);

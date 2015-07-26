@@ -7,6 +7,7 @@
 #include "PPTIndirectRef.h"
 #include "PPTNumber.h"
 #include "PPParser.h"
+#include "PPTString.h"
 
 // PPTDictionary //////////////////////////////////
 
@@ -36,6 +37,13 @@ void PPTDictionary::SetTokenAndKey(string name, string key)
 	string *name_ptr = new string(name);
 	PPTName *name_obj = new PPTName(_parser, name_ptr);
 	setTokenAndKey(name_obj, key);
+}
+
+void PPTDictionary::SetStringAndKey(string name, string key)
+{
+	string *name_ptr = new string(name);
+	PPTString *str_obj = new PPTString(_parser, name_ptr);
+	setTokenAndKey(str_obj, key);
 }
 
 void PPTDictionary::SetTokenAndKey(int num, string key)

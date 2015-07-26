@@ -424,7 +424,17 @@ int PPDocument::PreBuildPDF()
 
 	//  --  InfoDict
 		PPTDictionary *info_dict = new PPTDictionary(&_parser);
-		info_dict->SetTokenAndKey(PPVN_CREATOR, PPKN_CREATOR);
+		info_dict->SetStringAndKey(PPVN_CREATOR, PPKN_TITLE);
+		info_dict->SetStringAndKey(PPVN_CREATOR, PPKN_AUTHOR);
+		info_dict->SetStringAndKey(PPVN_CREATOR, PPKN_SUBJECT);
+		info_dict->SetStringAndKey(PPVN_CREATOR, PPKN_PRODUCER);
+		info_dict->SetStringAndKey(PPVN_CREATOR, PPKN_CREATOR);
+		info_dict->SetStringAndKey("D:20150719033247Z00'00'", PPKN_CREATIONDATE);
+		info_dict->SetStringAndKey("D:20150719033247Z00'00'", PPKN_MODDATE);
+		info_dict->SetStringAndKey(PPVN_CREATOR, "Keywords");
+
+
+
 		info_obj->AddObj(info_dict);
 	//  End  InfoDict
 

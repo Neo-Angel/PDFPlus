@@ -18,12 +18,19 @@ class PPContext;
 PPEPath::PPEPath(PPPath *path, PPContext *gcontext):PPElement(gcontext)
 {
     _path = path;
+	_strokeType = PPEP_NonStroke;
+	_clipType = PPEP_NonClip;
+	_fillType = PPEP_NonFill;
 	_paintingType = PPC_NoPaint;
 }
 
 PPEPath::PPEPath(PPContext *gcontext):PPElement(gcontext)
 {
     _path = new PPPath;
+	_strokeType = PPEP_NonStroke;
+	_clipType = PPEP_NonClip;
+	_fillType = PPEP_NonFill;
+
 	_paintingType = PPC_NoPaint;
 }
 

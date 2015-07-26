@@ -279,177 +279,6 @@ void PPTCommand::getDash(PPDash *dash)
     dash->_phase = (PPTNumber *)_operands[1];
 }
 
-void PPTCommand::setValueToGState(PPContext &gcontext)
-{
-    
-    switch (_cmdInfo->type) {
-        case PPC_LineWidth:
-            gcontext.setLineWidth(getFloatValue(0));
-            break;
-        
-        case PPC_LineCap:
-            gcontext.setLineCap(getIntValue(0));
-            break;
-        
-        case PPC_LineJoin:
-            gcontext.setLineJoin(getIntValue(0));
-            break;
-        
-        case PPC_MiterLimit:
-            gcontext.setMiterLimit(getFloatValue(0));
-            break;
-        
-        case PPC_Dash:
-        {
-            PPDash dash;
-            getDash(&dash);
-            gcontext.setDash(dash);
-            break;
-        }
-        
-        case PPC_Intent:
-            gcontext.setIntent(getStringValue(0));
-            break;
-        
-        case PPC_Flatness:
-            gcontext.setFlatness(getFloatValue(0));
-            break;
-        
-        case PPC_DictName:
-            gcontext.setDictName(getStringValue(0));
-            break;
-        
-        case PPC_Matrix:
-        {
-            PPMatrix mtx;
-            mtx._a = getFloatValue(0);
-            mtx._b = getFloatValue(1);
-            mtx._c = getFloatValue(2);
-            mtx._d = getFloatValue(3);
-            mtx._x = getFloatValue(4);
-            mtx._y = getFloatValue(5);
-            gcontext.setMatrix(mtx);
-            break;
-        }
-        
-        case PPC_StrokeColorSpace:
-            gcontext.SetUserStrokeColorSpace(getStringValue(0));
-            break;
-        
-        case PPC_NonStrokeColorSpace:
-            gcontext.SetUserFillColorSpace(getStringValue(0));
-            break;
-        
-			// Set Color
-        case PPC_SetColor: 
-			gcontext.SetStrokeColor(_operands);
-			break;
-        case PPC_SetColorN:
-			gcontext.SetStrokeColorN(_operands);
-			break;
-		/*
-		{
-		 
-            int n = gcontext.numberOfStrokeColorCoponents();
-            if (n == 1) {
-                gcontext.setStrokeColor(cmd->getFloatValue(0));
-            }
-            else if(n == 3) {
-                gcontext.setStrokeColor(cmd->getFloatValue(0),cmd->getFloatValue(1),cmd->getFloatValue(2));
-            }
-            else if(n == 4) {
-                gcontext.setStrokeColor(cmd->getFloatValue(0),cmd->getFloatValue(1),cmd->getFloatValue(2), cmd->getFloatValue(3));
-            }
-			
-            break;
-        }
-		*/
-        case PPC_SetNonStrokeColor:
-			gcontext.SetFillColor(_operands);
-			break;
-
-        case PPC_SetNonStrokeColorN:
-			gcontext.SetFillColorN(_operands);
-			break;
-			/*
-        {
-            int n = gcontext.numberOfNonStrokeColorCoponents();
-            if (n == 1) {
-                gcontext.setFillColor(cmd->getFloatValue(0));
-            }
-            else if(n == 3) {
-                gcontext.setFillColor(cmd->getFloatValue(0),cmd->getFloatValue(1),cmd->getFloatValue(2));
-            }
-            else if(n == 4) {
-                gcontext.setFillColor(cmd->getFloatValue(0),cmd->getFloatValue(1),cmd->getFloatValue(2), cmd->getFloatValue(3));
-            }
-            break;
-        }
-        */
-        case PPC_DeviceGray:
-            gcontext.setStrokeColorSpace(PPCSN_DeviceGray);
-            gcontext.setStrokeColor(getFloatValue(0));
-            break;
-        
-        case PPC_DeviceRGB:
-            gcontext.setStrokeColorSpace(PPCSN_DeviceRGB);
-            gcontext.setStrokeColor(getFloatValue(0),getFloatValue(1),getFloatValue(2));
-            break;
-        
-        case PPC_DeviceCMYK:
-            gcontext.setStrokeColorSpace(PPCSN_DeviceCMYK);
-            gcontext.setStrokeColor(getFloatValue(0),getFloatValue(1),getFloatValue(2), getFloatValue(3));
-            break;
-            
-        case PPC_NonStrokeDeviceGray:
-            gcontext.setFillColorSpace(PPCSN_DeviceGray);
-            gcontext.setFillColor(getFloatValue(0));
-            break;
-        
-        case PPC_NonStrokeDeviceRGB:
-            gcontext.setFillColorSpace(PPCSN_DeviceRGB);
-            gcontext.setFillColor(getFloatValue(0),getFloatValue(1),getFloatValue(2));
-            break;
-        
-        case PPC_NonStrokeDeviceCMYK:
-            gcontext.setFillColorSpace(PPCSN_DeviceCMYK);
-            gcontext.setFillColor(getFloatValue(0),getFloatValue(1),getFloatValue(2), getFloatValue(3));
-            break;
-        
-        default:
-            break;
-    }
-}
-
-void PPTCommand::addCommandToPath(PPPath *path)
-{
-    switch (_cmdInfo->type) {
-        case PPC_MoveTo:
-            path->moveTo(getFloatValue(0), getFloatValue(1));
-            break;
-        case PPC_LineTo:
-            path->lineTo(getFloatValue(0), getFloatValue(1));
-            break;
-        case PPC_CurveTo:
-            path->curveTo(getFloatValue(0), getFloatValue(1), getFloatValue(2), getFloatValue(3), getFloatValue(4), getFloatValue(5));
-            break;
-        case PPC_CurveTo1:
-            path->curveTo1(getFloatValue(0), getFloatValue(1), getFloatValue(2), getFloatValue(3));
-            break;
-        case PPC_CurveTo2:
-            path->curveTo2(getFloatValue(0), getFloatValue(1), getFloatValue(2), getFloatValue(3));
-            break;
-        case PPC_ClosePath:
-            path->close();
-            break;
-        case PPC_Rectangle:
-            path->rectangle(getFloatValue(0), getFloatValue(1), getFloatValue(2), getFloatValue(3));
-            break;
-        default:
-            break;
-    }
-}
-
 string PPTCommand::pdfString()
 {
     string retstr;
@@ -460,10 +289,21 @@ string PPTCommand::pdfString()
         retstr += " ";
     }
     retstr += _cmdInfo->code;
+	retstr += "\xa";
     return retstr;
 }
 
+void PPTCommand::CopyMembersTo(PPBase *obj)
+{
+	PPTCommand *tar_cmd = (PPTCommand *)obj;
+	int i, icnt = _operands.size();
+	for(i=0;i<icnt;i++) {
+		PPToken *token = (PPToken *)_operands[i]->Copy();
+		tar_cmd->_operands.push_back(token);
+	}
 
+	tar_cmd->_cmdInfo = _cmdInfo;
+}
 //  PPCommandParser
 //
 //

@@ -5,6 +5,7 @@
 #include "PPColor.h"
 #include "PPMatrix.h"
 #include "PPCommandParser.h"
+#include "PPTName.h"
 
 extern PPCommandInfo PPCommandList[];
 string tapStr(int cnt);
@@ -121,16 +122,22 @@ void PPGState::setFillColorSpace(string name)
     _fillColor.SetColorSpaceName(name);
 }
 
-void PPGState::SetUserStrokeColorSpace(string name)
+void PPGState::SetUserStrokeColorSpace(string name, PPTArray *arr)
 {
     _strokeColor.SetUserColorSpaceName(name);
+	PPTName *cs_name = (PPTName *)arr->_array[0];
+	_strokeColor.SetColorSpaceName(*cs_name->_name);
+	_strokeColor._colorInfo = arr;
     _gflag |= PPGF_STROKECOLORSPC;
 	_gflag |= PPGF_COLORSPACE;
 }
 
-void PPGState::SetUserFillColorSpace(string name)
+void PPGState::SetUserFillColorSpace(string name, PPTArray *arr)
 {
     _fillColor.SetUserColorSpaceName(name);
+	PPTName *cs_name = (PPTName *)arr->_array[0];
+	_fillColor.SetColorSpaceName(*cs_name->_name);
+	_fillColor._colorInfo = arr;
     _gflag |= PPGF_FILLCOLORSPC;
 	_gflag |= PPGF_COLORSPACE;
 }
@@ -285,11 +292,11 @@ string PPGState::makeCommandString()
 	}
 	if(_gflag & PPGF_SETSTROKECOLORN) {
 		cinfo = &PPCommandList[PPC_SetColorN];
-		ostr << _fillColor.StringOfColors()  << " " << cinfo->code << PP_ENDL;
+		ostr << _strokeColor.StringOfColors()  << " " << cinfo->code << PP_ENDL;
 	}
 	if(_gflag & PPGF_SETFILLCOLOR) {
 		cinfo = &PPCommandList[PPC_SetNonStrokeColor];
-		ostr << _strokeColor.StringOfColors()  << " " << cinfo->code << PP_ENDL;
+		ostr << _fillColor.StringOfColors()  << " " << cinfo->code << PP_ENDL;
 	}
 	if(_gflag & PPGF_SETFILLCOLORN) {
 		cinfo = &PPCommandList[PPC_SetNonStrokeColorN];

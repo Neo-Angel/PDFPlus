@@ -41,17 +41,26 @@ const char *PPRT_PROPERTIES = "Properties";
 PPElement::PPElement(PPContext *gcontext)
 {
     _gstate = gcontext->newGState();
+	_parentForm = NULL;
+	_gflag = PPGF_NONE;
+	_bounds = PPRect(0,0,0,0);
 }
 
 PPElement::PPElement(PPGState *gstate)
 {
 	_gstate = (PPGState *)gstate->Copy();
+	_parentForm = NULL;
+	_gflag = PPGF_NONE;
+	_bounds = PPRect(0,0,0,0);
+
 }
 
 PPElement::PPElement()
 {
 	 _gstate = NULL;
-
+	_parentForm = NULL;
+	_gflag = PPGF_NONE;
+	_bounds = PPRect(0,0,0,0);
 }
 
 PPElement::~PPElement()

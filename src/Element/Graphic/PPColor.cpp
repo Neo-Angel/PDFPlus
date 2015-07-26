@@ -5,6 +5,7 @@
 #include "PPColor.h"
 
 #include "PPTNumber.h"
+#include "PPTName.h"
 
 using namespace std;
 
@@ -140,4 +141,15 @@ PPColor *PPNewCMYKColor(float c, float m, float y, float k)
 	ret_color->_c4 = k;
 
 	return ret_color;
+}
+
+
+string PPColor::UserColorName()
+{
+	string ret_str;
+	if(_colorInfo) {
+		PPTName *name = (PPTName *)_colorInfo->_array[1];
+		ret_str = *name->_name;
+	}
+	return ret_str;
 }

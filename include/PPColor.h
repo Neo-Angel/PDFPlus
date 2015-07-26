@@ -4,6 +4,7 @@
 
 #include <PPBase.h>
 #include <PPToken.h>
+#include <PPTArray.h>
 //
 //      PPColor
 //
@@ -34,7 +35,9 @@ public:
     string _colorName;
 	byte		_numofcolors;
 
-	PPColor(){_numofcolors = 0; _c1=_c2=_c3=_c4=-1;}
+	PPTArray *_colorInfo;
+
+	PPColor(){_numofcolors = 0; _c1=_c2=_c3=_c4=-1; _colorInfo = NULL;}
     void SetColorSpaceName(string name);
 	void SetUserColorSpaceName(string name);
 	void SetColorName(string name) {_colorName = name;}
@@ -49,7 +52,7 @@ public:
 	string colorName(){return _colorName;}
 	void SetColos(vector<PPToken *> &colors);
 	string StringOfColors();
-
+	string UserColorName();
 };
 
 

@@ -31,6 +31,7 @@ public:
 
     void addCommand(PPTCommand *cmd);
 	PPElementType getType() {return PPET_TEXT;}
+	string commandString();
 };
 
 

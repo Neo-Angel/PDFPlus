@@ -21,7 +21,7 @@ void PPEText::CopyMembersTo(PPBase *obj)
 		tar_obj->_cmdList.push_back(new_obj);
 	}
 	
-	icnt = _cmdList.size();
+	icnt = _textList.size();
 	for(i=0;i<icnt;i++) {
 		string *src_obj = _textList.at(i);
 		string *new_obj = new string(*src_obj);
@@ -43,11 +43,13 @@ string PPEText::makeCommandString()
 {
     string retstr;
     
+	retstr += "BT\xa";
     size_t i, icnt = _cmdList.size();
     for (i=0; i<icnt; i++) {
         PPTCommand *cmd = _cmdList.at(i);
         retstr += cmd->pdfString();
     }
+	retstr += "ET\xa";
     return retstr;
 }
 
@@ -74,3 +76,8 @@ string PPEText::xmlString(int level)
     return retstr;
 }
 
+string PPEText::commandString()
+{
+	return PPElement::commandString();
+
+}
