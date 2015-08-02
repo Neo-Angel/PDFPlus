@@ -167,9 +167,6 @@
     <ClInclude Include="..\..\include\PPPath.h">
       <Filter>소스 파일\Element\Graphic</Filter>
     </ClInclude>
-    <ClInclude Include="PPEBeginCompatiblity.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\PPEBeginCompatibility.h">
       <Filter>소스 파일\Element</Filter>
     </ClInclude>

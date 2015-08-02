@@ -2,7 +2,8 @@
 #include <sstream>
 #include "PPEText.h"
 #include "PPGState.h"
-
+#include "PPContext.h"
+#include "PPTName.h"
 
 
 //  Text
@@ -27,6 +28,14 @@ void PPEText::CopyMembersTo(PPBase *obj)
 		string *new_obj = new string(*src_obj);
 		tar_obj->_textList.push_back(new_obj);
 	}
+
+	icnt = _fontKeyList.size();
+	for(i=0;i<icnt;i++) {
+		string *src_obj = _fontKeyList.at(i);
+		string *new_obj = new string(*src_obj);
+		tar_obj->_fontKeyList.push_back(new_obj);
+	}
+
 }
 
 void PPEText::SetParser(PPParser *parser)
@@ -39,23 +48,41 @@ void PPEText::SetParser(PPParser *parser)
 	}
 }
 
+string PPEText::commandString()
+{
+    string cmd_str;
+    
+	cmd_str += "BT\xa";
+	cmd_str += PPElement::commandString();
+	cmd_str += "ET\xa";
+    return cmd_str;
+}
+
 string PPEText::makeCommandString()
 {
     string retstr;
-    
-	retstr += "BT\xa";
+
     size_t i, icnt = _cmdList.size();
     for (i=0; i<icnt; i++) {
         PPTCommand *cmd = _cmdList.at(i);
         retstr += cmd->pdfString();
     }
-	retstr += "ET\xa";
+
     return retstr;
 }
 
 void PPEText::addCommand(PPTCommand *cmd)
 {
     _cmdList.push_back(cmd);
+	if(cmd->_cmdInfo->type == PPC_FontAndSize) {
+		PPTName *font_name = (PPTName *)cmd->_operands[0];
+		_fontKeyList.push_back(font_name->_name);
+	}
+}
+
+void PPEText::SetGContext(PPContext *gcontext)
+{
+	_gstate = gcontext->newGState();
 }
 
 string PPEText::xmlString(int level)
@@ -76,8 +103,36 @@ string PPEText::xmlString(int level)
     return retstr;
 }
 
-string PPEText::commandString()
-{
-	return PPElement::commandString();
 
+bool PPEText::HasResource()
+{
+	if(_fontKeyList.size() > 0) {
+		return true;
+	}
+	return PPElement::HasResource();
 }
+/////////////////////////////////////////////////////  Multi Resource Handling
+vector <const char *> PPEText::ResourceList()
+{
+	vector <const char *> rsc_list = PPElement::ResourceList();
+	if(_fontKeyList.size() > 0) {
+		rsc_list.push_back(PPRT_FONT);
+	}
+	return rsc_list;
+}
+
+string PPEText::ResourceKeyFor(const char *rsc_type)
+{
+	string key = PPElement::ResourceKeyFor(rsc_type);
+	if(key.length() > 0) {
+		return key;
+	}
+	string ret_key;
+	if(rsc_type == PPRT_FONT) {
+		if(_fontKeyList.size() > 0) {
+			ret_key = *_fontKeyList[0];
+		}
+	}
+	return ret_key;
+}
+

@@ -224,6 +224,8 @@ int PPElement::ResourceObjNum(const char *rsc_type)
 		return 0;
 	}
 
+	// 동시에 두개 이상의 도큐먼트를 열어놓고 작업 할때를 대비해서
+	// ResourceObjNum 는 도큐먼트 ID 와 조합으로 만들어 낸다.
 	int ret_num = _parentForm->_document->_docID << 24;
 	ret_num += rsc_ref->_objNum;
 

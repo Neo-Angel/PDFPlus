@@ -155,9 +155,7 @@ void PPFormBase::writeElement(PPElement *src_element)
 		// src_element의 리소스 '타입'과 '키'로 this에 리소스가 있는지 체크
 		vector <const char *> type_list = src_element->ResourceList();
 		int i, icnt = type_list.size();
-			if(icnt > 1) {
-				cout << "Multi Resources... " << PP_ENDL;
-			}
+		// 한 엘리먼트에 여려개(icnt)의 리소스가 있을 수 있음.
 		for(i=0;i<icnt;i++) {
 			const char *rsc_type = type_list[i]; //src_element->ResourceType();
 			if(rsc_type == PPRT_PROSET) {
@@ -175,7 +173,7 @@ void PPFormBase::writeElement(PPElement *src_element)
 						cout << " External Resource Object number cannot be Zero." << PP_ENDL;
 						break;
 					}
-					PPToken *rsc = _document->ResourceForExtObjNum(src_obj_num);
+					PPToken *rsc = _document->ResourceForExtObjNum(src_obj_num); //ExtObjNum == src_obj_num
 
 					if(rsc) {
 						PPTIndirectObj *obj = (PPTIndirectObj *)rsc;
@@ -485,13 +483,14 @@ int PPFormBase::buildElements()
                 break;
                 
             case PPCG_BeginText:
-                text_element = new PPEText(&gcontext);
+                text_element = new PPEText();
                 break;
             case PPCG_Text:
                 text_element->addCommand(cmd);
                 break;
             case PPCG_EndText:
                 //                delete text_element;  //  You don't need to delete
+				text_element->SetGContext(&gcontext);
                 addElement(text_element);
 				gcontext.clearGFlags();
                 text_element = NULL;

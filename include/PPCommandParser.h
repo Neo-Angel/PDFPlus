@@ -22,7 +22,7 @@ enum PPCommandType {
     PPC_CloseFillStroke, PPC_CloseEOFillStroke, PPC_NoPaint,
     PPC_Clip, PPC_EOClip,
     PPC_BeginText,PPC_EndText,
-    PPC_CharSpace, PPC_WordSpace,PPC_Scale,PPC_Leading,PPC_FontSize,PPC_Render,PPC_Rise,
+    PPC_CharSpace, PPC_WordSpace,PPC_Scale,PPC_Leading,PPC_FontAndSize,PPC_Render,PPC_Rise,
     PPC_NextLine,PPC_NextLine2,PPC_TextMatrix,PPC_NextLine3,
     PPC_ShowText,PPC_ShowMultiText,PPC_ShowTextNextLine, PPC_ShowTextNextLine2,
     PPC_GlyphWidth,PPC_GlyphWidthAndBox,

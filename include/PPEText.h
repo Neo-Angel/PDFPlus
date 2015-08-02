@@ -16,6 +16,7 @@ class PPTCommand;
 class PPEText : public PPElement {
     vector<PPTCommand *> _cmdList;
     vector<string *> _textList;
+	vector<string *> _fontKeyList;
 
 public:
 	PPEText(){};
@@ -26,12 +27,20 @@ public:
 	void SetParser(PPParser *parser);
 
 
-    string makeCommandString();
+	string commandString();
+	string makeCommandString();
     string xmlString(int level);
 
+	void SetGContext(PPContext *gcontext);
     void addCommand(PPTCommand *cmd);
 	PPElementType getType() {return PPET_TEXT;}
-	string commandString();
+
+
+	bool HasResource();
+	vector <const char *> ResourceList();
+	string ResourceKeyFor(const char *rsc_type);
+
+
 };
 
 

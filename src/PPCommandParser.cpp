@@ -93,7 +93,7 @@ PPCommandInfo PPCommandList[PP_NUM_OF_OPS] = {
     {"Tw",PPC_WordSpace, PPCG_Text, 1,"WordSpace"},
     {"Tz",PPC_Scale, PPCG_Text, 1,"Scale"},
     {"TL",PPC_Leading, PPCG_Text, 1,"Leading"},
-    {"Tf",PPC_FontSize, PPCG_Text, 2,"FontSize"},
+    {"Tf",PPC_FontAndSize, PPCG_Text, 2,"FontAndSize"},
     {"Tr",PPC_Render, PPCG_Text, 1,"Render"},
     {"Ts",PPC_Rise, PPCG_Text, 1,"Rise"},
     
