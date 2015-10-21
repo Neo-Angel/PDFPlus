@@ -33,6 +33,10 @@
     <None Include="..\..\LICENSE">
       <Filter>리소스 파일</Filter>
     </None>
+    <None Include="ClassDiagram2.cd" />
+    <None Include="DevNote.txt">
+      <Filter>리소스 파일</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -173,6 +177,12 @@
     <ClInclude Include="..\..\include\PPEEndCompatibility.h">
       <Filter>소스 파일\Element</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\PPLayer.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\PPETextState.h">
+      <Filter>소스 파일\Element</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -302,6 +312,12 @@
       <Filter>소스 파일\Element</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Element\PPEEndCompatibility.cpp">
+      <Filter>소스 파일\Element</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\PPLayer.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\PPETextState.cpp">
       <Filter>소스 파일\Element</Filter>
     </ClCompile>
   </ItemGroup>

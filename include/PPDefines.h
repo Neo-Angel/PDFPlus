@@ -23,7 +23,12 @@ struct PPData{
 typedef unsigned char  byte;
 #endif
 
+#ifndef word
+typedef unsigned short  word;
+#endif
 
-string tapStr(int cnt);
+
+string tabStr(int cnt);
+string toHexStr(string str);
 
 #endif

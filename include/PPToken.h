@@ -85,7 +85,9 @@ public:
     virtual string pdfString(ostream &os) {return pdfString();}
     virtual void write(std::ostream &os);
 //	virtual PPToken *Copy(PPParser *parser);
-	virtual void MoveInto(PPDocument *doc) {};
+
+	// 모든 하위 토큰들을 통해 IndirectRef에서 IndirectObj 들을 doc 소속으로 변경함.
+	virtual void MoveInto(PPDocument *doc) {}; // 유일하게 PPDocument::WriteResource() 에서 쓰임
 	virtual void SetParser(PPParser *parser);
 //	PPBase *Create() {return new PPToken();} // 추상 클래스라서 사용할 수 없답니다. 
 	PPBase *Copy() {return PPBase::Copy();};

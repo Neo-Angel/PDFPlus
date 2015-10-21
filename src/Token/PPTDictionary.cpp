@@ -46,6 +46,14 @@ void PPTDictionary::SetStringAndKey(string name, string key)
 	setTokenAndKey(str_obj, key);
 }
 
+void PPTDictionary::SetNameAndKey(string name, string key)
+{
+	string *name_ptr = new string(name);
+	PPTName *str_obj = new PPTName(_parser, name_ptr);
+	setTokenAndKey(str_obj, key);
+}
+
+
 void PPTDictionary::SetTokenAndKey(int num, string key)
 {
 	PPTNumber *num_obj = new PPTNumber(_parser, num);
@@ -162,16 +170,16 @@ string PPTDictionary::description()
 string PPTDictionary::internalXmlString(int level)
 {
     string retstr;
-    retstr += tapStr(level) + "<Dict>\xa";
+    retstr += tabStr(level) + "<Dict>\xa";
     map <string, PPToken *> ::iterator it_token_objs;
     for(it_token_objs = _dict.begin(); it_token_objs != _dict.end(); it_token_objs++) {
         string name = it_token_objs->first;
-        retstr += tapStr(level+1) + "<Key>" + name + "</Key>\xa";
+        retstr += tabStr(level+1) + "<Key>" + name + "</Key>\xa";
         
         PPToken *token = valueObjectForKey(name);
         retstr += token->internalXmlString(level+1);
     }
-    retstr += tapStr(level) + "</Dict>\xa";
+    retstr += tabStr(level) + "</Dict>\xa";
     
     return retstr;
 }
@@ -179,16 +187,16 @@ string PPTDictionary::internalXmlString(int level)
 string PPTDictionary::xmlString(int level)
 {
     string retstr;
-    retstr += tapStr(level) + "<Dict>\xa";
+    retstr += tabStr(level) + "<Dict>\xa";
     map <string, PPToken *> ::iterator it_token_objs;
     for(it_token_objs = _dict.begin(); it_token_objs != _dict.end(); it_token_objs++) {
         string name = it_token_objs->first;
-        retstr += tapStr(level+1) + "<Key>" + name + "</Key>\xa";
+        retstr += tabStr(level+1) + "<Key>" + name + "</Key>\xa";
         
         PPToken *token = (PPToken *)(it_token_objs->second);
         retstr += token->xmlString(level+1);
     }
-    retstr += tapStr(level) + "</Dict>\xa";
+    retstr += tabStr(level) + "</Dict>\xa";
     
     return retstr;
 }

@@ -67,19 +67,10 @@ string PPEForm::xmlString(int level)
 {
     string retstr;
     ostringstream ostr;
-    ostr << tapStr(level) << "<Element type='Form'>" << PP_ENDL;
+    ostr << tabStr(level) << "<Element type='Form'>" << PP_ENDL;
     ostr << _gstate->xmlString(level+1);
     ostr << _xobj->xmlString(level+1);
-	/*
-    ostr << tapStr(level+1) << "<SubElement>" << PP_ENDL;
-    size_t i, icnt = _elements.size();
-    for (i=0; i<icnt; i++) {
-        PPElement *el =  _elements.at(i);
-        ostr << el->xmlString(level+2);
-    }
-    ostr << tapStr(level+1) << "</SubElement>" << PP_ENDL;
-   */
-    ostr << tapStr(level) << "</Element>" << PP_ENDL;
+    ostr << tabStr(level) << "</Element>" << PP_ENDL;
     retstr = ostr.str();
     return retstr;
 }
@@ -150,11 +141,6 @@ void PPEForm::willAddToParent(PPFormBase *form)
 		return;
 	}
 	_subtype = *subtype_name->_name;
-//	_dict = (PPTDictionary *)sh_ref->valueObject();
-//    if (!_dict) {
-//        cout << "Shading Dictionary not found..." << PP_ENDL;
-//        return;
-//    }
 }
 
 bool PPEForm::HasResource()
@@ -162,33 +148,10 @@ bool PPEForm::HasResource()
 	return true;
 }
 
-string PPEForm::ResourceType()
-{
-	return "XObject"; //_subtype;
-}
-string PPEForm::ResourceKey()
-{
-	return *_name->_name;
-}
-
-
-PPToken *PPEForm::GetResource()
-{
-	if(_xobj)
-		return _xobj;
-//	if(_dict) {
-//		return _dict;
-//	}
-
-	return PPElement::GetResource();
-//	PPToken *rsc = _parentForm->_document->ResourceForKey(ResourceType(), ResourceKey());
-//	return rsc;
-}
-
 /////////////////////////////////////////////////////  Multi Resource Handling
-vector <const char *> PPEForm::ResourceList()
+vector <const char *> PPEForm::ResourceTypeList()
 {
-	vector <const char *> rsc_list = PPElement::ResourceList();
+	vector <const char *> rsc_list = PPElement::ResourceTypeList();
 	rsc_list.push_back(PPRT_XOBJECT);
 	return rsc_list;
 }

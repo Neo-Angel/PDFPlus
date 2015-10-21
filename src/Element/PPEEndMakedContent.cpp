@@ -21,7 +21,7 @@ string PPEEndMarkedContent::xmlString(int level)
 {
     string retstr;
     ostringstream ostr;
-    ostr << tapStr(level) << "<Element type='EndMarkedContent'/>" << PP_ENDL;
+    ostr << tabStr(level) << "<Element type='EndMarkedContent'/>" << PP_ENDL;
     retstr = ostr.str();
     return retstr;
 }

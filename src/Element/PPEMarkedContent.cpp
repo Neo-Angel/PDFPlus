@@ -57,11 +57,11 @@ string PPEMarkedContent::xmlString(int level)
 {
     string retstr;
     ostringstream ostr;
-    ostr << tapStr(level) << "<Element type='MarkedContent' tag='" << _tag->_name << "'>" << PP_ENDL;
+    ostr << tabStr(level) << "<Element type='MarkedContent' tag='" << _tag->_name << "'>" << PP_ENDL;
     if (_property) {
         ostr << _property->xmlString(level+1);
     }
-    ostr << tapStr(level) << "</Element>" << PP_ENDL;
+    ostr << tabStr(level) << "</Element>" << PP_ENDL;
     retstr = ostr.str();
     return retstr;
 }

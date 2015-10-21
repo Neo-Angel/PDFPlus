@@ -1,0 +1,165 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="PPBase" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAIAAAAAAAAgAAAEAACQAQAAAAAUA=</HashCode>
+      <FileName>c:\work\pdfplus\lib\include\ppbase.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PPTCommand" Collapsed="true">
+    <Position X="4" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAgAAAAAgAAAAAABAAAAAAAFIAEAACAEEAAIAAgA=</HashCode>
+      <FileName>c:\work\pdfplus\lib\include\ppcommandparser.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PPCommandParser" Collapsed="true">
+    <Position X="7.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAgAAAAAABACEkQAEAAAQIAAAAAEAAgAEAAEA=</HashCode>
+      <FileName>c:\work\pdfplus\lib\include\ppcommandparser.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PPPoint" Collapsed="true">
+    <Position X="3.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAARAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>c:\work\pdfplus\lib\include\ppcoord.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PPSize" Collapsed="true">
+    <Position X="1.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAAAAAAAAAAAAABAAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>c:\work\pdfplus\lib\include\ppcoord.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PPRect" Collapsed="true">
+    <Position X="6.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>OAAAAAQABAAABwQAQIMBAECAAwAAAACAAQAwABoBMEA=</HashCode>
+      <FileName>c:\work\pdfplus\lib\include\ppcoord.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PTRect" Collapsed="true">
+    <Position X="8.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAwAAAACAAQAAAAAEAAA=</HashCode>
+      <FileName>c:\work\pdfplus\lib\include\ppcoord.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PPDocument" Collapsed="true">
+    <Position X="5.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>SEFBAKBRB4TEYAAhAWEESEVwSWXSrAgwAQDKSCdCFQA=</HashCode>
+      <FileName>c:\work\pdfplus\lib\include\ppdocument.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PPFormBase" Collapsed="true">
+    <Position X="0.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAUQUEABHQAUIDUAAIAYABgBAAAgABBAABIMFEE=</HashCode>
+      <FileName>c:\work\pdfplus\lib\include\ppformbase.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PPPage" Collapsed="true">
+    <Position X="2.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>DAAAAIACICLAFWAAQAAUAEAADAQAAIaCADAEAAYiAAA=</HashCode>
+      <FileName>c:\work\pdfplus\lib\include\pppage.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PPParserSource" Collapsed="true">
+    <Position X="5.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAAAAAABACAEQAEAAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>c:\work\pdfplus\lib\include\ppparser.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PPParser" Collapsed="true">
+    <Position X="1.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CIAAgAAQgkAAADIAATAAAACAAAAACAAAAAQAEgQAEAQ=</HashCode>
+      <FileName>c:\work\pdfplus\lib\include\ppparser.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="PPCommandInfo" Collapsed="true">
+    <Position X="10.5" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAACAAAAAAAAAAAAAAAAIAAFAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>c:\work\pdfplus\lib\include\ppcommandparser.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="PPData" Collapsed="true">
+    <Position X="10.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAA=</HashCode>
+      <FileName>c:\work\pdfplus\lib\include\ppdefines.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Typedef Name="byte" Collapsed="true">
+    <Position X="10.5" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>c:\program files\microsoft sdks\windows\v7.0a\include\rpcndr.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="PPDocumentState" Collapsed="true">
+    <Position X="10.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>c:\work\pdfplus\lib\include\ppdocument.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="PPParserState" Collapsed="true">
+    <Position X="10.5" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Work\PDFPlus\Lib\src\PPParser.cpp</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="PPParserReturn" Collapsed="true">
+    <Position X="2.25" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>c:\work\pdfplus\lib\include\ppparser.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Enum Name="PPCommandType" Collapsed="true">
+    <Position X="5.75" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AowQAOIBDCA4Qx2BCBCFBGEAoygIIBAg8YJEkAKiwSA=</HashCode>
+      <FileName>c:\work\pdfplus\lib\include\ppcommandparser.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="PPCommandGroup" Collapsed="true">
+    <Position X="7.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAASAAIAAAAAAAAAAUQAALCAAAAAAUBCAAAgBAACAAA=</HashCode>
+      <FileName>c:\work\pdfplus\lib\include\ppcommandparser.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="__unnamed_enum_026f_1" Collapsed="true">
+    <Position X="10.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAQAAAAAIAAAABAAAAAAAIAAgAAAAAAAAAAAA=</HashCode>
+      <FileName>c:\work\pdfplus\lib\include\ppdocument.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="__unnamed_enum_02aa_1" Collapsed="true">
+    <Position X="10.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Work\PDFPlus\Lib\src\PPParser.cpp</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="__unnamed_enum_0280_1" Collapsed="true">
+    <Position X="0.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAQAAAAAAAAAAAAAQAAACAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>c:\work\pdfplus\lib\include\ppparser.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="맑은 고딕" Size="9" />
+</ClassDiagram>

@@ -69,11 +69,11 @@ string PPEImage::xmlString(int level)
 {
     string retstr;
     ostringstream ostr;
-    ostr << tapStr(level) << "<Element type='Image'>" << PP_ENDL;
+    ostr << tabStr(level) << "<Element type='Image'>" << PP_ENDL;
     ostr << _gstate->xmlString(level+1);
     ostr << _xobj->xmlString(level+1);
     
-    ostr << tapStr(level) << "</Element>" << PP_ENDL;
+    ostr << tabStr(level) << "</Element>" << PP_ENDL;
     retstr = ostr.str();
     return retstr;
 }
@@ -117,11 +117,6 @@ void PPEImage::willAddToParent(PPFormBase *form)
 		return;
 	}
 	_subtype = *subtype_name->_name;
-//	_dict = (PPTDictionary *)sh_ref->valueObject();
-//    if (!_dict) {
-//        cout << "Shading Dictionary not found..." << PP_ENDL;
-//        return;
-//    }
 }
 
 bool PPEImage::HasResource()
@@ -129,34 +124,11 @@ bool PPEImage::HasResource()
 	return true;
 }
 
-string PPEImage::ResourceType()
-{
-	return "XObject"; //_subtype;
-}
-string PPEImage::ResourceKey()
-{
-	return *_name->_name;
-}
-
-
-PPToken *PPEImage::GetResource()
-{
-	if(_xobj)
-		return _xobj;
-//	if(_dict) {
-//		return _dict;
-//	}
-
-	return PPElement::GetResource();
-//	PPToken *rsc = _parentForm->_document->ResourceForKey(ResourceType(), ResourceKey());
-//	return rsc;
-}
-
 
 /////////////////////////////////////////////////////  Multi Resource Handling
-vector <const char *> PPEImage::ResourceList()
+vector <const char *> PPEImage::ResourceTypeList()
 {
-	vector <const char *> rsc_list = PPElement::ResourceList();
+	vector <const char *> rsc_list = PPElement::ResourceTypeList();
 	rsc_list.push_back(PPRT_XOBJECT);
 	return rsc_list;
 }

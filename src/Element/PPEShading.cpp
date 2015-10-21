@@ -56,14 +56,14 @@ string PPEShading::xmlString(int level)
 {
     string retstr;
     ostringstream ostr;
-    ostr << tapStr(level) << "<Element type='Shading' name='" << *_name->_name << "'>" << PP_ENDL;
+    ostr << tabStr(level) << "<Element type='Shading' name='" << *_name->_name << "'>" << PP_ENDL;
     if (_sh_res) {
         ostr << _sh_res->xmlString(level+1);
     }
 //    if (_dict) {
 //        ostr << _dict->xmlString(level+1);
 //    }
-    ostr << tapStr(level) << "</Element>" << PP_ENDL;
+    ostr << tabStr(level) << "</Element>" << PP_ENDL;
     retstr = ostr.str();
     return retstr;
 }
@@ -71,37 +71,11 @@ string PPEShading::xmlString(int level)
 void PPEShading::willAddToParent(PPFormBase *form)
 {
     PPElement::willAddToParent(form);
-    PPTIndirectRef *sh_ref = (PPTIndirectRef *)_parentForm->ResourceForKey("Shading");
-    if (!sh_ref) {
-        cout << "Shading IndirectRef not found..." << PP_ENDL;
-        return;
-    }
-	PPTDictionary *sh_dict = NULL;
-	if(sh_ref->classType() == PPTN_INDIRECTREF) {
-		sh_dict = (PPTDictionary *)sh_ref->valueObject();
-		if (!sh_dict) {
-			cout << "Shading Dictionary not found..." << PP_ENDL;
-			return;
-		}
-	}
-	else if(sh_ref->classType() == PPTN_DICTIONARY) {
-		sh_dict = (PPTDictionary *)sh_ref;
-	}
-    sh_ref = (PPTIndirectRef *)sh_dict->objectForKey(*_name->_name);
-    if (!sh_ref) {
-        cout << "Shading IndirectRef not found..." << PP_ENDL;
-        return;
-    }
-	_sh_res = (PPTIndirectObj *)sh_ref->targetObject();
+	_sh_res = (PPTIndirectObj *)PPElement::GetResource(PPRT_SHADING);
     if (!_sh_res) {
         cout << "Shading Resource Object not found..." << PP_ENDL;
         return;
 	}
-//	_dict = (PPTDictionary *)sh_ref->valueObject();
-//    if (!_dict) {
-//        cout << "Shading Dictionary not found..." << PP_ENDL;
-//        return;
-//    }
 }
 
 
@@ -110,33 +84,10 @@ bool PPEShading::HasResource()
 	return true;
 }
 
-string PPEShading::ResourceType()
-{
-	return "Shading";
-}
-string PPEShading::ResourceKey()
-{
-	return *_name->_name;
-}
-
-PPToken *PPEShading::GetResource()
-{
-	if(_sh_res)
-		return _sh_res;
-//	if(_dict) {
-//		return _dict;
-//	}
-
-	return PPElement::GetResource();
-//	PPToken *rsc = _parentForm->_document->ResourceForKey(ResourceType(), ResourceKey());
-//	return rsc;
-}
-
-
 /////////////////////////////////////////////////////  Multi Resource Handling
-vector <const char *> PPEShading::ResourceList()
+vector <const char *> PPEShading::ResourceTypeList()
 {
-	vector <const char *> rsc_list = PPElement::ResourceList();
+	vector <const char *> rsc_list = PPElement::ResourceTypeList();
 	rsc_list.push_back(PPRT_SHADING);
 	return rsc_list;
 }

@@ -22,7 +22,7 @@
 
 #include "PPDefines.h"
 
-string tapStr(int cnt);
+string tabStr(int cnt);
 
 
 ///////////////////////////////////////// PPStreamBuf Class Declation
@@ -163,8 +163,8 @@ string PPTStream::xmlString(int level)
         }
     }
     string retstr;
-    retstr += tapStr(level) + "<Stream><![CDATA[";
-    //    retstr += tapStr(level) + "<String><![CDATA[" +*_string + "]]></String>\xa";
+    retstr += tabStr(level) + "<Stream><![CDATA[";
+    //    retstr += tabStr(level) + "<String><![CDATA[" +*_string + "]]></String>\xa";
     
     PPTName *filter = (PPTName *)_dict->objectForKey("Filter");
     if (_decoded && filter && *filter->_name == "FlateDecode") {
@@ -174,7 +174,7 @@ string PPTStream::xmlString(int level)
     else {
         int chidx = 0;
         unsigned long i;
-        retstr += tapStr(level + 1);
+        retstr += tabStr(level + 1);
         for (i=0; i<_streamSize; i++) {
             unsigned char ch = _streamData[i];
             retstr += hexStr(ch);
@@ -189,14 +189,14 @@ string PPTStream::xmlString(int level)
             if (chidx == 40) {
                 if (i < +_streamSize - 1) {
                     retstr += "\xa";
-                    retstr += tapStr(level + 1);
+                    retstr += tabStr(level + 1);
                 }
                 chidx = 0;
             }
         }
     }
     retstr += "\xa";
-    retstr += tapStr(level) + "]]></Stream>\xa";
+    retstr += tabStr(level) + "]]></Stream>\xa";
     
     return retstr;
 }

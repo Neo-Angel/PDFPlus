@@ -11,6 +11,7 @@
 #include "PPTStream.h"
 #include "PPContext.h"
 #include "PPEText.h"
+#include "PPETextState.h"
 #include "PPEInlineImage.h"
 #include "PPEGSave.h"
 #include "PPEGRestore.h"
@@ -29,6 +30,7 @@
 #include "PPTName.h"
 #include "PPTDictionary.h"
 #include "PPTIndirectRef.h"
+#include "PPLayer.h"
 
 // =========================================================== PPContext - E
 //
@@ -41,6 +43,9 @@ PPFormBase::PPFormBase():_graphicParser((vector <PPToken *> *)&_commands)
 	_cur_element_idx = 0;
 	_indirObj = NULL;
 	_resourceDict = NULL;
+
+	PPLayer *layer = new PPLayer();
+	_layers.push_back(layer);
 }
 
 PPFormBase::PPFormBase(PPFormBase *form_base):_graphicParser((vector <PPToken *> *)&_commands)
@@ -52,12 +57,16 @@ PPFormBase::PPFormBase(PPFormBase *form_base):_graphicParser((vector <PPToken *>
     _resourceDict = NULL; //PPTDictionary *
 //    _commands; // vector <PPTCommand *>
 //    _graphicParser; // PPCommandParser
-//    _elements; // vector <PPElement *> 
+	PPLayer *layer = new PPLayer();
+	_layers.push_back(layer);
 
 }
 
 PPFormBase::PPFormBase(PPDocument *doc, PPTIndirectObj *indir):_graphicParser((vector <PPToken *> *)&_commands)
 {
+	PPLayer *layer = new PPLayer();
+	_layers.push_back(layer);
+
 	_document = doc;
 	_indirObj = indir; //(PPTIndirectObj *)indir->Copy();
 	_formDict = _indirObj->firstDictionary();
@@ -78,7 +87,19 @@ PPFormBase::PPFormBase(PPDocument *doc, PPTIndirectObj *indir):_graphicParser((v
 	}
 }
 
+PPFormBase::~PPFormBase()
+{
+	PPBase::~PPBase();
+
+	int i, icnt = _layers.size();
+	for(i=0;i<icnt;i++) {
+		PPLayer *layer = _layers[i];
+		delete layer;
+	}
+}
+
 // form_obj를 기반으로 새로운 Form 객체를 만든다.
+//사용하는 데가 없어 봉인중 
 PPFormBase *PPFormBase::NewFormObj(PPFormBase *form_obj)
 {
 	PPTIndirectObj *indir = (PPTIndirectObj *)form_obj->_indirObj->Copy();
@@ -88,7 +109,7 @@ PPFormBase *PPFormBase::NewFormObj(PPFormBase *form_obj)
 
 	PPFormBase *ret_form = NULL;
 	if(indir->_array.size() == 1) {
-		indir->MoveInto(_document);
+		indir->MoveInto(_document); // 검색되지 않토록 변형
 		int new_obj_num = _document->NewObjNum();
 		indir->_objNum = new_obj_num;
 		_document->PushObj(indir, new_obj_num);
@@ -97,6 +118,7 @@ PPFormBase *PPFormBase::NewFormObj(PPFormBase *form_obj)
 	}
 	return ret_form;
 }
+
 
 PPParser *PPFormBase::documentParser()
 {
@@ -139,12 +161,56 @@ PPTIndirectRef *PPFormBase::ResourceForKey(string key)
 	PPTIndirectRef *ret = (PPTIndirectRef *)_resourceDict->objectForKey(key);
 	return ret;
 }
+
 void PPFormBase::addElement(PPElement *element)
 {
     element->willAddToParent(this);
 	element->SetParser(&_document->_parser);
-    _elements.push_back(element);
+
+	PPLayer *last_layer = _layers[_layers.size()-1];
+	last_layer->_elements.push_back(element);
+
 	// update _commands list from element 
+}
+
+void PPFormBase::AddLayer(string *properties)
+{
+	PPLayer *last_layer = _layers[_layers.size()-1];
+	if(last_layer->_key.length() == 0) {
+		last_layer->_key = *properties;
+	}
+	else {
+		PPLayer *layer = new PPLayer();
+		layer->_key = *properties;
+		_layers.push_back(layer);
+	}
+
+}
+
+size_t PPFormBase::numberOfElements()
+{
+	size_t tot_cnt = 0;
+	int i, icnt = _layers.size();
+	for(i=0;i<icnt;i++) {
+		int el_cnt = _layers[i]->_elements.size();
+		tot_cnt += el_cnt;
+	}
+	return tot_cnt;
+}
+
+PPElement *PPFormBase::elementAtIndex(int idx)
+{
+	int tot_cnt = 0;
+	int i, icnt = _layers.size();
+	for(i=0;i<icnt;i++) {
+		int el_cnt = _layers[i]->_elements.size();
+		if(idx < (tot_cnt+el_cnt)) {
+			int r_idx = idx - tot_cnt;
+			return _layers[i]->_elements[r_idx];
+		}
+		tot_cnt += el_cnt;
+	}
+	return NULL;
 }
 
 void PPFormBase::writeElement(PPElement *src_element)
@@ -153,11 +219,14 @@ void PPFormBase::writeElement(PPElement *src_element)
 	// src_element 에 리소스 정보가 있으면
 	if(src_element->HasResource()) {
 		// src_element의 리소스 '타입'과 '키'로 this에 리소스가 있는지 체크
-		vector <const char *> type_list = src_element->ResourceList();
+		vector <const char *> type_list = src_element->ResourceTypeList();
 		int i, icnt = type_list.size();
-		// 한 엘리먼트에 여려개(icnt)의 리소스가 있을 수 있음.
+		// 한 엘리먼트에 여려 종류(icnt)의 리소스가 있을 수 있음.
 		for(i=0;i<icnt;i++) {
 			const char *rsc_type = type_list[i]; //src_element->ResourceType();
+			if(rsc_type == PPRT_PROPERTIES) {
+				cout << " PPRT_PROPERTIES.." << PP_ENDL;
+			}
 			if(rsc_type == PPRT_PROSET) {
 			}
 			else {
@@ -185,6 +254,13 @@ void PPFormBase::writeElement(PPElement *src_element)
 						if(src_rsc) {
 							rsc = WriteResource(src_rsc, src_obj_num);  // _resources
 							_document->SetRefTokenForKey(rsc_dict,rsc,rsc_key); //rsc_dict, _tokens, parser->_objDict
+							if(rsc_type == PPRT_PROPERTIES && _document->_OCProperties == NULL) { // OCG(Layer)
+								PPDocument *src_doc = src_element->_parentForm->_document;
+								PPTDictionary *src_ocproperties = src_doc->_OCProperties;
+								if(src_ocproperties) {
+									_document->WriteOCProperties(src_ocproperties);  //###
+								}
+							}
 						}
 					}
 				}while(0);
@@ -427,6 +503,7 @@ int PPFormBase::buildElements()
     PPPath *opened_path = NULL;
     PPEPath *path_element = NULL;
     PPEText *text_element = NULL;
+	PPETextState *textstate_element = NULL;
     PPEInlineImage *inline_img_element = NULL;
     //    PPEImage *imageElement = NULL;
     
@@ -434,10 +511,26 @@ int PPFormBase::buildElements()
     size_t i, icnt = _commands.size();
     for (i=0; i<icnt; i++) {
         PPTCommand *cmd = _commands[i];
-        
+        if(textstate_element != NULL) {
+			switch (cmd->_cmdInfo->group) {
+			case PPCG_TextState:
+				break;
+			default:
+				textstate_element->SetGContext(&gcontext);
+				addElement(textstate_element);
+				gcontext.clearGFlags();
+				textstate_element = NULL;
+			}
+		}
+
         switch (cmd->_cmdInfo->group) {
             case PPCG_GState:
-				SetValueToGState(cmd, gcontext);
+				if(text_element) {
+					text_element->addCommand(cmd);
+				}
+				else {
+					SetValueToGState(cmd, gcontext);
+				}
                 break;
             case PPCG_SaveGState:
                 {
@@ -475,7 +568,7 @@ int PPFormBase::buildElements()
                     path_element = new PPEPath(opened_path, &gcontext);
 					gcontext.clearGFlags();
                     addElement(path_element);
-                    opened_path = NULL;
+                    opened_path = NULL; 
                 }
                 if (path_element != NULL) {
                     path_element->setPaintingType(cmd->_cmdInfo->type);
@@ -486,14 +579,31 @@ int PPFormBase::buildElements()
                 text_element = new PPEText();
                 break;
             case PPCG_Text:
+				if(text_element == NULL) {
+					text_element = new PPEText();
+				}
                 text_element->addCommand(cmd);
                 break;
             case PPCG_EndText:
                 //                delete text_element;  //  You don't need to delete
-				text_element->SetGContext(&gcontext);
-                addElement(text_element);
-				gcontext.clearGFlags();
-                text_element = NULL;
+				if(text_element != NULL) {
+					text_element->SetGContext(&gcontext);
+
+					addElement(text_element);
+					gcontext.clearGFlags();
+					text_element = NULL;
+				}
+                break;
+            case PPCG_TextState:
+				if(text_element) {
+					text_element->addCommand(cmd);
+				}
+				else {
+					if(textstate_element == NULL) {
+						textstate_element = new PPETextState();
+					}
+					textstate_element->addCommand(cmd);
+				}
                 break;
             
             case PPCG_BeginInlineImage:
@@ -550,10 +660,17 @@ int PPFormBase::buildElements()
                 
             case PPCG_BeginMarkedContent:
                 {
-                    PPTName *tag = (PPTName *)cmd->getTokenValue(0);
-                    PPTDictionary *porpert = (PPTDictionary *)cmd->getTokenValue(1);
-                    PPEBeginMarkedContent *marked_content_element = new PPEBeginMarkedContent(tag, porpert, &gcontext);
-                    addElement(marked_content_element);
+					PPTName *tag = (PPTName *)cmd->getTokenValue(0);
+					PPToken *properties = NULL;
+					if(cmd->_cmdInfo->type == PPC_BeginMarkedContentP) {
+						properties = (PPToken *)cmd->getTokenValue(1);
+						if(properties->classType() == PPTN_NAME) {
+							PPTName *property_name = (PPTName *)properties;
+							AddLayer(property_name->_name);
+						}
+					}
+					PPEBeginMarkedContent *marked_content_element = new PPEBeginMarkedContent(tag, properties, &gcontext);;
+					addElement(marked_content_element);
 					gcontext.clearGFlags();
                 }
                 break;
@@ -563,7 +680,6 @@ int PPFormBase::buildElements()
                     PPTDictionary *porpert = (PPTDictionary *)cmd->getTokenValue(1);
                     PPEMarkedContent *marked_content_element = new PPEMarkedContent(tag, porpert, &gcontext);
                     addElement(marked_content_element);
-					gcontext.clearGFlags();
                 }
                 break;
             case PPCG_EndMarkedContent:
@@ -610,9 +726,9 @@ PPTStream *PPFormBase::BuildStream()
 {
 	string retstr; 
 	ostringstream ostr;
-	size_t i, icnt = _elements.size();
+	size_t i, icnt = numberOfElements(); //_elements.size();
 	for(i=0;i<icnt;i++) {
-		PPElement *element = _elements.at(i);
+		PPElement *element = elementAtIndex(i); //_elements.at(i);
 		string cmdstr = element->commandString();
 		retstr += cmdstr;
 	}
@@ -626,8 +742,8 @@ PPTStream *PPFormBase::BuildStream()
 
 PPElement *PPFormBase::next()
 {
-	if (_elements.size() > 0 && _cur_element_idx < _elements.size()) {
-		return _elements[ _cur_element_idx++];
+	if (numberOfElements() > 0 && _cur_element_idx < numberOfElements()) {
+		return elementAtIndex(_cur_element_idx++);
 	}
 	_cur_element_idx = 0;
 	return NULL;

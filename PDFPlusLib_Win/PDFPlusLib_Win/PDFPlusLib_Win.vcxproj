@@ -165,6 +165,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="..\..\LICENSE" />
+    <None Include="ClassDiagram2.cd" />
+    <None Include="DevNote.txt" />
     <None Include="PDFPlus.txt" />
     <None Include="ReadMe.txt" />
   </ItemGroup>
@@ -192,8 +194,10 @@
     <ClInclude Include="..\..\include\PPEPath.h" />
     <ClInclude Include="..\..\include\PPEShading.h" />
     <ClInclude Include="..\..\include\PPEText.h" />
+    <ClInclude Include="..\..\include\PPETextState.h" />
     <ClInclude Include="..\..\include\PPFormBase.h" />
     <ClInclude Include="..\..\include\PPGState.h" />
+    <ClInclude Include="..\..\include\PPLayer.h" />
     <ClInclude Include="..\..\include\PPMatrix.h" />
     <ClInclude Include="..\..\include\PPPage.h" />
     <ClInclude Include="..\..\include\PPParser.h" />
@@ -242,7 +246,9 @@
     <ClCompile Include="..\..\src\PPCommandParser.cpp" />
     <ClCompile Include="..\..\src\PPCoord.cpp" />
     <ClCompile Include="..\..\src\PPDocument.cpp" />
+    <ClCompile Include="..\..\src\PPETextState.cpp" />
     <ClCompile Include="..\..\src\PPFormBase.cpp" />
+    <ClCompile Include="..\..\src\PPLayer.cpp" />
     <ClCompile Include="..\..\src\PPPage.cpp" />
     <ClCompile Include="..\..\src\PPParser.cpp" />
     <ClCompile Include="..\..\src\Token\PPTArray.cpp" />

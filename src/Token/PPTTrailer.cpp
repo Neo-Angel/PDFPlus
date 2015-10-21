@@ -71,7 +71,7 @@ string PPTTrailer::xmlString(int level)
 {
     string retstr;
     ostringstream ostr;
-    ostr <<tapStr(level)<< "<Trailer>\xa";
+    ostr <<tabStr(level)<< "<Trailer>\xa";
     if (_xrefIndirect) {
         ostr <<_xrefIndirect->xmlString(level+1);
     }
@@ -81,8 +81,8 @@ string PPTTrailer::xmlString(int level)
     if (_dict) {
         ostr <<_dict->xmlString(level+1);
     }
-    ostr <<tapStr(level+1)<<"<StartXRef>"<<_startxref<<"</StartXRef>\xa";
-    ostr <<tapStr(level)<< "</Trailer>\xa";
+    ostr <<tabStr(level+1)<<"<StartXRef>"<<_startxref<<"</StartXRef>\xa";
+    ostr <<tabStr(level)<< "</Trailer>\xa";
     retstr = ostr.str();
     return retstr;
 }

@@ -180,14 +180,14 @@ string PPEPath::xmlString(int level)
     const char *fill_state = (_fillType != PPEP_NonFill ? "yes" : "no");
     const char *clipping_state = (_clipType > 0 ? "yes" : "no");
     
-    ostr << tapStr(level) << "<Element  type='Path' stroke='"<< stroke_state;
+    ostr << tabStr(level) << "<Element  type='Path' stroke='"<< stroke_state;
     ostr << "' fill='" << fill_state;
     ostr << "' clipping= '" << clipping_state << "'>" << PP_ENDL;
 
     ostr << _gstate->xmlString(level+1);
     ostr << _path->xmlString(level+1);
    
-    ostr << tapStr(level) << "</Element>" << PP_ENDL;
+    ostr << tabStr(level) << "</Element>" << PP_ENDL;
     retstr = ostr.str();
     return retstr;
 }

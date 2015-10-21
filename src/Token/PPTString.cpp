@@ -29,15 +29,22 @@ string PPTString::xmlString(int level)
     wstring wstr;
     stringToWString(wstr, *_string);
     string utf8_str = PPwstrToUtf8(wstr);
-    retstr += tapStr(level) + "<String><![CDATA[" + utf8_str + "]]></String>\xa";
+    retstr += tabStr(level) + "<String><![CDATA[" + utf8_str + "]]></String>\xa";
     return retstr;
 }
 string PPTString::pdfString()
 {
+    string retstr = "<";
+	retstr += toHexStr(*_string);
+    retstr += ">";
+    return retstr;
+
+	/*
     string retstr = "(";
     retstr += *_string;
     retstr += ")";
     return retstr;
+	*/
 }
 
 void PPTString::CopyMembersTo(PPBase *obj)

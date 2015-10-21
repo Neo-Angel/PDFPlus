@@ -25,7 +25,7 @@ PPTBool::PPTBool()
 string PPTBool::xmlString(int level)
 {
     string retstr;
-    retstr += tapStr(level) + "<Bool>" + boolStr(_bool) + "</Bool>\xa";
+    retstr += tabStr(level) + "<Bool>" + boolStr(_bool) + "</Bool>\xa";
     return retstr;
 }
 

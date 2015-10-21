@@ -32,11 +32,8 @@ public:
 	PPElementType getType() {return PPET_SHADING;}
 
 	bool HasResource();
-	string ResourceType();
-	string ResourceKey();
-	PPToken *GetResource();
 
-	vector <const char *> ResourceList();
+	vector <const char *> ResourceTypeList();
 	string ResourceKeyFor(const char *rsc_type);
 	PPToken *GetResource(const char *rsc_type);
 };

@@ -8,7 +8,7 @@
 #include "PPTName.h"
 
 extern PPCommandInfo PPCommandList[];
-string tapStr(int cnt);
+string tabStr(int cnt);
 
 
 
@@ -336,32 +336,32 @@ void PPGState::CopyMembersTo(PPBase *obj)
 //    PPCommandInfo *cinfo;
 //    if(_gflag & PPGF_LINEWIDTH) {
 //        cinfo = &PPCommandList[PPC_LineWidth];
-//        ostr << tapStr(level) << "<LineWidth value=" << _lineWidth <<"/>" << PP_ENDL;
+//        ostr << tabStr(level) << "<LineWidth value=" << _lineWidth <<"/>" << PP_ENDL;
 //    }
 //    if(_gflag & PPGF_INTENT) {
 //        cinfo = &PPCommandList[PPC_Intent];
-//        ostr << tapStr(level) << "<Intent value=" << _intent <<"/>" << PP_ENDL;
+//        ostr << tabStr(level) << "<Intent value=" << _intent <<"/>" << PP_ENDL;
 //    }
 //    if(_gflag & PPGF_FLATNESS) {
 //        cinfo = &PPCommandList[PPC_Flatness];
-//        ostr << tapStr(level) << "<Flatness value=" << _flatness <<"/>" << PP_ENDL;
+//        ostr << tabStr(level) << "<Flatness value=" << _flatness <<"/>" << PP_ENDL;
 //    }
 //    if(_gflag & PPGF_MITERLIMIT) {
 //        cinfo = &PPCommandList[PPC_MiterLimit];
-//        ostr << tapStr(level) << "<MiterLimit value=" << _miterLimit <<"/>" << PP_ENDL;
+//        ostr << tabStr(level) << "<MiterLimit value=" << _miterLimit <<"/>" << PP_ENDL;
 //    }
 //    if(_gflag & PPGF_LINECAP) {
 //        cinfo = &PPCommandList[PPC_LineCap];
-//        ostr << tapStr(level) << "<LineCap value=" << _lineCap <<"/>" << PP_ENDL;
+//        ostr << tabStr(level) << "<LineCap value=" << _lineCap <<"/>" << PP_ENDL;
 //    }
 //    if(_gflag & PPGF_LINEJOIN) {
 //        cinfo = &PPCommandList[PPC_LineJoin];
-//        ostr << tapStr(level) << "<LineJoin value=" << _lineJoin <<"/>" << PP_ENDL;
+//        ostr << tabStr(level) << "<LineJoin value=" << _lineJoin <<"/>" << PP_ENDL;
 //    }
 //    if(_gflag & PPGF_DICTNAME) {
 //        cinfo = &PPCommandList[PPC_DictName];
 //        ostr << "/" << _dictName << " " << cinfo->code << PP_ENDL;
-//        ostr << tapStr(level) << "<DictName value='" << _dictName <<"'/>" << PP_ENDL;
+//        ostr << tabStr(level) << "<DictName value='" << _dictName <<"'/>" << PP_ENDL;
 //    }
 //    retstr = ostr.str();
 //    return retstr;
@@ -370,9 +370,9 @@ void PPGState::CopyMembersTo(PPBase *obj)
 string PPGState::xmlString(int level)
 {
     string retstr;
-    retstr += tapStr(level) + "<GState>\xa";
+    retstr += tabStr(level) + "<GState>\xa";
     retstr += makeCommandString() + "\xa";
-    retstr += tapStr(level) + "</GState>\xa";
+    retstr += tabStr(level) + "</GState>\xa";
     return retstr;
 }
 

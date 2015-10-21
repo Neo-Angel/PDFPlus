@@ -1,6 +1,6 @@
 
 #include <sstream>
-#include "PPEText.h"
+#include "PPETextState.h"
 #include "PPGState.h"
 #include "PPContext.h"
 #include "PPTName.h"
@@ -10,23 +10,16 @@
 //
 ///////////////////////////////////////////////////////
 
-void PPEText::CopyMembersTo(PPBase *obj)
+void PPETextState::CopyMembersTo(PPBase *obj)
 {
 	PPElement::CopyMembersTo(obj);
-	PPEText *tar_obj = (PPEText *)obj;
+	PPETextState *tar_obj = (PPETextState *)obj;
 
 	size_t i, icnt = _cmdList.size();
 	for(i=0;i<icnt;i++) {
 		PPTCommand *src_obj = _cmdList.at(i);
 		PPTCommand *new_obj = (PPTCommand *)src_obj->Copy();
 		tar_obj->_cmdList.push_back(new_obj);
-	}
-	
-	icnt = _textList.size();
-	for(i=0;i<icnt;i++) {
-		string *src_obj = _textList.at(i);
-		string *new_obj = new string(*src_obj);
-		tar_obj->_textList.push_back(new_obj);
 	}
 
 	icnt = _fontKeyList.size();
@@ -38,7 +31,7 @@ void PPEText::CopyMembersTo(PPBase *obj)
 
 }
 
-void PPEText::SetParser(PPParser *parser)
+void PPETextState::SetParser(PPParser *parser)
 {
 	size_t i, icnt = _cmdList.size();
 	for(i=0;i<icnt;i++) {
@@ -48,17 +41,15 @@ void PPEText::SetParser(PPParser *parser)
 	}
 }
 
-string PPEText::commandString()
+string PPETextState::commandString()
 {
     string cmd_str;
     
-	cmd_str += "BT\xa";
 	cmd_str += PPElement::commandString();
-	cmd_str += "ET\xa";
     return cmd_str;
 }
 
-string PPEText::makeCommandString()
+string PPETextState::makeCommandString()
 {
     string retstr;
 
@@ -71,7 +62,7 @@ string PPEText::makeCommandString()
     return retstr;
 }
 
-void PPEText::addCommand(PPTCommand *cmd)
+void PPETextState::addCommand(PPTCommand *cmd)
 {
     _cmdList.push_back(cmd);
 	if(cmd->_cmdInfo->type == PPC_FontAndSize) {
@@ -80,31 +71,31 @@ void PPEText::addCommand(PPTCommand *cmd)
 	}
 }
 
-void PPEText::SetGContext(PPContext *gcontext)
+void PPETextState::SetGContext(PPContext *gcontext)
 {
 	_gstate = gcontext->newGState();
 }
 
-string PPEText::xmlString(int level)
+string PPETextState::xmlString(int level)
 {
     string retstr;
     ostringstream ostr;
-    ostr << tabStr(level) << "<Element type='Text'>" << PP_ENDL;
+    ostr << tabStr(level) << "<Element type='TextState'>" << PP_ENDL;
     ostr << _gstate->xmlString(level+1);
-    ostr << tabStr(level+1) << "<Text>" << PP_ENDL;
+    ostr << tabStr(level+1) << "<State>" << PP_ENDL;
     size_t i, icnt = _cmdList.size();
     for (i=0; i<icnt; i++) {
         PPTCommand *cmd = _cmdList.at(i);
         ostr << cmd->pdfString();
     }
-    ostr << tabStr(level+1) << "</Text>" << PP_ENDL;
+    ostr << tabStr(level+1) << "</State>" << PP_ENDL;
     ostr << tabStr(level) << "</Element>" << PP_ENDL;
     retstr = ostr.str();
     return retstr;
 }
 
 
-bool PPEText::HasResource()
+bool PPETextState::HasResource()
 {
 	if(_fontKeyList.size() > 0) {
 		return true;
@@ -112,7 +103,7 @@ bool PPEText::HasResource()
 	return PPElement::HasResource();
 }
 /////////////////////////////////////////////////////  Multi Resource Handling
-vector <const char *> PPEText::ResourceTypeList()
+vector <const char *> PPETextState::ResourceTypeList()
 {
 	vector <const char *> rsc_list = PPElement::ResourceTypeList();
 	if(_fontKeyList.size() > 0) {
@@ -121,7 +112,7 @@ vector <const char *> PPEText::ResourceTypeList()
 	return rsc_list;
 }
 
-string PPEText::ResourceKeyFor(const char *rsc_type)
+string PPETextState::ResourceKeyFor(const char *rsc_type)
 {
 	string key = PPElement::ResourceKeyFor(rsc_type);
 	if(key.length() > 0) {

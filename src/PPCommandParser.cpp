@@ -89,13 +89,13 @@ PPCommandInfo PPCommandList[PP_NUM_OF_OPS] = {
     {"BT",PPC_BeginText, PPCG_BeginText, 0,"BeginText"},
     {"ET",PPC_EndText, PPCG_EndText, 0,"EndText"},
     
-    {"Tc",PPC_CharSpace, PPCG_Text, 1,"CharSpace"},
-    {"Tw",PPC_WordSpace, PPCG_Text, 1,"WordSpace"},
-    {"Tz",PPC_Scale, PPCG_Text, 1,"Scale"},
-    {"TL",PPC_Leading, PPCG_Text, 1,"Leading"},
-    {"Tf",PPC_FontAndSize, PPCG_Text, 2,"FontAndSize"},
-    {"Tr",PPC_Render, PPCG_Text, 1,"Render"},
-    {"Ts",PPC_Rise, PPCG_Text, 1,"Rise"},
+    {"Tc",PPC_CharSpace, PPCG_TextState, 1,"CharSpace"},
+    {"Tw",PPC_WordSpace, PPCG_TextState, 1,"WordSpace"},
+    {"Tz",PPC_Scale, PPCG_TextState, 1,"Scale"},
+    {"TL",PPC_Leading, PPCG_TextState, 1,"Leading"},
+    {"Tf",PPC_FontAndSize, PPCG_TextState, 2,"FontAndSize"},
+    {"Tr",PPC_Render, PPCG_TextState, 1,"Render"},
+    {"Ts",PPC_Rise, PPCG_TextState, 1,"Rise"},
     
     {"Td",PPC_NextLine, PPCG_Text, 2,"NextLine"},
     {"TD",PPC_NextLine2, PPCG_Text, 2,"NextLine2"},
@@ -145,7 +145,7 @@ PPCommandInfo PPCommandList[PP_NUM_OF_OPS] = {
 
 map <string, PPCommandInfo *> CommandDict;
 
-string tapStr(int cnt);
+string tabStr(int cnt);
 
 
 
@@ -183,16 +183,16 @@ string PPTCommand::xmlString(int level)
     string retstr;
 //    PPCommandInfo &cmdinfo = PPCommandList[_type];
     if (_operands.size() == 0) {
-        retstr += tapStr(level) + "<"+_cmdInfo->name+"/>\xa";
+        retstr += tabStr(level) + "<"+_cmdInfo->name+"/>\xa";
     }
     else {
-        retstr += tapStr(level) + "<"+_cmdInfo->name+">\xa";
+        retstr += tabStr(level) + "<"+_cmdInfo->name+">\xa";
         int i, icnt = (int)_operands.size();
         for (i=0; i<icnt; i++) {
             PPToken *token = _operands.at(i);
             retstr += token->xmlString(level+1);
         }
-        retstr += tapStr(level) + "</"+_cmdInfo->name+">\xa";
+        retstr += tabStr(level) + "</"+_cmdInfo->name+">\xa";
     }
     
     return retstr;

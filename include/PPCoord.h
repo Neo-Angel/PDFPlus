@@ -12,7 +12,7 @@
 #include <stdio.h>
 
 #include "PPBase.h"
-#include "PPCoord.h"
+
 
 class PPPoint : PPBase {
 public:

@@ -48,10 +48,21 @@ public:  //protected:
     PPParser _parser;
     
     vector <PPPage *> _pages;
-    vector <PPToken *> _tokens;
+
+	//////////////////////////////////////////////////////
+	// PDF+ 의 핵심 자료구조 
+	//////////////////////////////////////////////////////
+    vector <PPToken *> _tokens; // Core Raw Data of PDF+
+	//////////////////////////////////////////////////////
+
     PPDocumentState _state;
     PPTTrailer *_trailer;
     PPTXRef *_xref;
+
+	PPTDictionary *_OCProperties;
+	PPTArray *_layerOrders;
+	PPTArray *_OCGs;
+	PPTArray *_layersOn;
     
     // Info
     PPTString *_author;
@@ -68,10 +79,11 @@ public:  //protected:
     PPTName *_pageLayout;
     PPTName *_pageMode;
     
-	map <int, PPToken *> _resources;
+//	map <int, PPToken *> _resources;
 //	map <string, PPToken *> _resources;
     map <int, PPToken *> _fonts;  // PPToken => PPTIndirectObj
     map <int, PPToken *> _xobjects; // images : PPToken => PPTIndirectObj
+	map <int, PPTIndirectObj *> _srcIndirectObjs;
 
 public:
 	void readPage(PPTDictionary *page_dict);
@@ -154,6 +166,18 @@ public:
 	void AddPage(PPPage *page);
 
 	void PushObj(PPTIndirectObj *obj, int obj_num);
+	void PushObj(PPTIndirectObj *obj);
+
+	// Layer(OCG) Related Methods
+	int NumberOfLayers();
+	PPTDictionary *LayerInfoAtIndex(int idx);
+	PPTDictionary *PPDocument::LayerForName(string name);
+	bool AddLayer(string name);
+	bool RenameLayer(string org_name, string new_name);
+	void ReorderLayer(int from_idx, int to_idx);
+	void WriteOCProperties(PPTDictionary *properties);
+
+	void ApplyTokenToList(PPToken *token);
 };
 
 #endif /* defined(__PDFPlusLib__PPDocument__) */

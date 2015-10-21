@@ -16,7 +16,7 @@ string PPEGRestore::makeCommandString()
 string PPEGRestore::xmlString(int level)
 {
     string retstr;
-    retstr = tapStr(level) + "<Element type='GRestore'/>\xa";
+    retstr = tabStr(level) + "<Element type='GRestore'/>\xa";
 
     return retstr;
 }

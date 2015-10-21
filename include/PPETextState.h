@@ -1,6 +1,6 @@
 
-#ifndef __PDFPlusLib__PPEText__
-#define __PDFPlusLib__PPEText__
+#ifndef __PDFPlusLib__PPETextState__
+#define __PDFPlusLib__PPETextState__
 
 #include <PPElement.h>
 
@@ -8,20 +8,19 @@
 
 
 //
-//      PPEText
+//      PPETextState
 //
 ///////////////////////////////////////////////////////////////
 class PPTCommand;
 
-class PPEText : public PPElement {
+class PPETextState : public PPElement {
     vector<PPTCommand *> _cmdList;
-    vector<string *> _textList;
 	vector<string *> _fontKeyList;
 
 public:
-	PPEText(){};
-    PPEText(PPContext *gcontext) : PPElement(gcontext){}
-	PPBase *Create(){return new PPEText;}
+	PPETextState(){};
+    PPETextState(PPContext *gcontext) : PPElement(gcontext){}
+	PPBase *Create(){return new PPETextState;}
 
 	void CopyMembersTo(PPBase *);
 	void SetParser(PPParser *parser);
@@ -33,7 +32,7 @@ public:
 
 	void SetGContext(PPContext *gcontext);
     void addCommand(PPTCommand *cmd);
-	PPElementType getType() {return PPET_TEXT;}
+	PPElementType getType() {return PPET_TEXT_STATE;}
 
 
 	bool HasResource();

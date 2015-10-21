@@ -24,7 +24,7 @@ string PPTName::description()
 string PPTName::xmlString(int level)
 {
     string retstr;
-    retstr += tapStr(level) + "<Name>" +*_name + "</Name>\xa";
+    retstr += tabStr(level) + "<Name>" +*_name + "</Name>\xa";
     return retstr;
 }
 

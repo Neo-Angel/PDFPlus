@@ -27,13 +27,13 @@ PPTArray::~PPTArray()
 string PPTArray::xmlString(int level)
 {
     string retstr;
-    retstr += tapStr(level) + "<Array>\xa";
+    retstr += tabStr(level) + "<Array>\xa";
     int i, icnt = (int)_array.size();
     for (i=0; i<icnt; i++) {
         PPToken *token = _array.at(i);
         retstr += token->xmlString(level+1);
     }
-    retstr += tapStr(level) + "</Array>\xa";
+    retstr += tabStr(level) + "</Array>\xa";
 
     return retstr;
 }
@@ -41,13 +41,13 @@ string PPTArray::xmlString(int level)
 string PPTArray::internalXmlString(int level)
 {
     string retstr;
-    retstr += tapStr(level) + "<Array>\xa";
+    retstr += tabStr(level) + "<Array>\xa";
     int i, icnt = (int)_array.size();
     for (i=0; i<icnt; i++) {
         PPToken *token = _array.at(i);
         retstr += token->internalXmlString(level+1);
     }
-    retstr += tapStr(level) + "</Array>\xa";
+    retstr += tabStr(level) + "</Array>\xa";
     
     return retstr;
 }
@@ -109,4 +109,16 @@ void PPTArray::MoveInto(PPDocument *doc)
 		PPToken *token = objectAtIndex(i);
 		token->MoveInto(doc);
 	}
+}
+
+void PPTArray::RemoveAtIndex(int idx)
+{
+	_array.erase(_array.begin() + idx);
+}
+
+void PPTArray::Reorder(int from_idx, int to_idx)
+{
+	PPToken *token = _array[from_idx];
+	RemoveAtIndex(from_idx);
+	_array.insert(_array.begin()+to_idx, token);
 }

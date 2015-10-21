@@ -5,7 +5,7 @@
 //  ////////////////////////////////// PPTNull
 string PPTNull::xmlString(int level)
 {
-    string retstr = tapStr(level) + "<Null/>";
+    string retstr = tabStr(level) + "<Null/>";
     return retstr;
 }
 

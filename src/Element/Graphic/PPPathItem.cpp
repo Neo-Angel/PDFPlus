@@ -63,29 +63,29 @@ string PPPathItem::xmlString(int level)
     ostringstream ostr;
     switch (_op) {
         case PPC_MoveTo:
-            ostr << tapStr(level) << "<MoveTo X=" << _pt1._x <<" Y=" << _pt1._y << ">" << PP_ENDL;
+            ostr << tabStr(level) << "<MoveTo X=" << _pt1._x <<" Y=" << _pt1._y << ">" << PP_ENDL;
             break;
         case PPC_LineTo:
-            ostr << tapStr(level) << "<LineTo X=" << _pt1._x <<" Y=" << _pt1._y << ">" << PP_ENDL;
+            ostr << tabStr(level) << "<LineTo X=" << _pt1._x <<" Y=" << _pt1._y << ">" << PP_ENDL;
             break;
         case PPC_CurveTo1:
-            ostr << tapStr(level) << "<CurveTo1 X1=" << _pt1._x <<" Y1=" << _pt1._y
+            ostr << tabStr(level) << "<CurveTo1 X1=" << _pt1._x <<" Y1=" << _pt1._y
             << " X2=" << _pt2._x <<" Y2=" << _pt2._y << ">" << PP_ENDL;
             break;
         case PPC_CurveTo2:
-            ostr << tapStr(level) << "<CurveTo2 X1=" << _pt1._x <<" Y1=" << _pt1._y
+            ostr << tabStr(level) << "<CurveTo2 X1=" << _pt1._x <<" Y1=" << _pt1._y
             << " X2=" << _pt2._x <<" Y2=" << _pt2._y << ">" << PP_ENDL;
             break;
         case PPC_CurveTo:
-            ostr << tapStr(level) << "<CurveTo X1=" << _pt1._x <<" Y1=" << _pt1._y
+            ostr << tabStr(level) << "<CurveTo X1=" << _pt1._x <<" Y1=" << _pt1._y
             << " X2=" << _pt2._x <<" Y2=" << _pt2._y << " X3=" << _pt3._x <<" Y3=" << _pt3._y <<">" << PP_ENDL;
             break;
         case PPC_Rectangle:
-            ostr << tapStr(level) << "<Rectangle X1=" << _pt1._x <<" Y1=" << _pt1._y
+            ostr << tabStr(level) << "<Rectangle X1=" << _pt1._x <<" Y1=" << _pt1._y
             << " X2=" << _pt2._x <<" Y2=" << _pt2._y << ">" << PP_ENDL;
             break;
         case PPC_ClosePath:
-            ostr << tapStr(level) << "<ClosePath/>" << PP_ENDL;
+            ostr << tabStr(level) << "<ClosePath/>" << PP_ENDL;
             break;
 
         default:

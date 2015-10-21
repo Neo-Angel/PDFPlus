@@ -110,77 +110,8 @@ bool PPElement::HasResource()
 	return false;
 }
 
-string PPElement::ResourceType()
-{
-	string type;
-	if(_gstate) {
-		if(_gstate->_gflag & PPGF_DICTNAME) {
-			type = PPRT_EXTSTATE; 
-		}
-		else if(_gstate->_gflag & PPGF_COLORSPACE) {
-			type = PPRT_COLORSPC; 
-		}
-	}
-	return type;
-}
-
-
-string PPElement::ResourceKey()
-{
-	string key;
-	if(_gstate) {
-		if(_gstate->_gflag & PPGF_DICTNAME) {
-			key = _gstate->dictName(); 
-		}
-		else if(_gstate->_gflag & PPGF_STROKECOLORSPC) {
-			key = _gstate->_strokeColor.UserColorSpaceName();
-		}
-		else if(_gstate->_gflag & PPGF_FILLCOLORSPC) {
-			key = _gstate->_fillColor.UserColorSpaceName();
-		}
-	}
-	return key;
-}
-int PPElement::ResourceObjNum()
-{
-	string rsc_type = ResourceType();
-	PPTDictionary *rsc_keys = (PPTDictionary *)_parentForm->_resourceDict->ObjectForKey(rsc_type);
-	if(rsc_keys == NULL) {
-		return 0;
-	}
-
-	string rsc_key = ResourceKey();
-	PPTIndirectRef *rsc_ref = (PPTIndirectRef *)rsc_keys->ObjectForKey(rsc_key);
-	if(rsc_ref == NULL) {
-		return 0;
-	}
-
-	int ret_num = _parentForm->_document->_docID << 24;
-	ret_num += rsc_ref->_objNum;
-
-	return ret_num;
-}
-
-PPToken *PPElement::GetResource()
-{
-	string rsc_type = ResourceType();
-	PPTDictionary *rsc_keys = (PPTDictionary *)_parentForm->_resourceDict->ObjectForKey(rsc_type);
-	if(rsc_keys == NULL) {
-		return 0;
-	}
-
-	string rsc_key = ResourceKey();
-	PPTIndirectRef *rsc_ref = (PPTIndirectRef *)rsc_keys->ObjectForKey(rsc_key);
-	if(rsc_ref == NULL) {
-		return 0;
-	}
-
-	PPToken *rcs = rsc_ref->targetObject();
-	return rcs;
-}
-
 /////////////////////////////////////////////////////  Multi Resource Handling
-vector <const char *> PPElement::ResourceList()
+vector <const char *> PPElement::ResourceTypeList()
 {
 	vector <const char *> rsc_list;
 	if(_gstate){
@@ -213,38 +144,54 @@ string PPElement::ResourceKeyFor(const char *rsc_type)
 
 int PPElement::ResourceObjNum(const char *rsc_type)
 {
-	PPTDictionary *rsc_keys = (PPTDictionary *)_parentForm->_resourceDict->ObjectForKey(rsc_type);
-	if(rsc_keys == NULL) {
-		return 0;
-	}
-
-	string rsc_key = ResourceKeyFor(rsc_type);
-	PPTIndirectRef *rsc_ref = (PPTIndirectRef *)rsc_keys->ObjectForKey(rsc_key);
-	if(rsc_ref == NULL) {
-		return 0;
-	}
+	PPTIndirectObj *rsc_obj = (PPTIndirectObj *)GetResource(rsc_type);
 
 	// 동시에 두개 이상의 도큐먼트를 열어놓고 작업 할때를 대비해서
 	// ResourceObjNum 는 도큐먼트 ID 와 조합으로 만들어 낸다.
 	int ret_num = _parentForm->_document->_docID << 24;
-	ret_num += rsc_ref->_objNum;
+	ret_num += rsc_obj->_objNum;
 
 	return ret_num;
 }
 
 PPToken *PPElement::GetResource(const char *rsc_type)
 {
-	PPTDictionary *rsc_keys = (PPTDictionary *)_parentForm->_resourceDict->ObjectForKey(rsc_type);
-	if(rsc_keys == NULL) {
-		return 0;
+	PPToken *ret_res;
+
+    PPTIndirectRef *res_ref = (PPTIndirectRef *)_parentForm->ResourceForKey(rsc_type);
+    if (!res_ref) {
+        cout << "Resource IndirectRef not found..." << PP_ENDL;
+        return NULL;
+    }
+	PPTDictionary *res_dict = NULL;
+	if(res_ref->classType() == PPTN_INDIRECTREF) {
+		res_dict = (PPTDictionary *)res_ref->valueObject();
+		if (!res_dict) {
+			cout << "Resource Dictionary not found..." << PP_ENDL;
+			return NULL;
+		}
+	}
+	else if(res_ref->classType() == PPTN_DICTIONARY) {
+		res_dict = (PPTDictionary *)res_ref;
 	}
 
 	string rsc_key = ResourceKeyFor(rsc_type);
-	PPTIndirectRef *rsc_ref = (PPTIndirectRef *)rsc_keys->ObjectForKey(rsc_key);
-	if(rsc_ref == NULL) {
-		return 0;
+    res_ref = (PPTIndirectRef *)res_dict->objectForKey(rsc_key);
+    if (!res_ref) {
+        cout << "Resource IndirectRef not found..." << PP_ENDL;
+        return NULL;
+    }
+	ret_res = (PPTIndirectObj *)res_ref->targetObject();
+    if (!ret_res) {
+        cout << "Resource Resource Object not found..." << PP_ENDL;
+        return NULL;
 	}
-
-	PPToken *rcs = rsc_ref->targetObject();
-	return rcs;
+	return ret_res;
 }
+
+
+PPDocument *PPElement::GetDocument()
+{
+	return _parentForm->_document;
+}
+

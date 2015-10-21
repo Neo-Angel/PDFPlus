@@ -21,7 +21,7 @@ string PPEEndCompatibility::xmlString(int level)
 {
     string retstr;
     ostringstream ostr;
-    ostr << tapStr(level) << "<Element type='EndCompatibility'/>" << PP_ENDL;
+    ostr << tabStr(level) << "<Element type='EndCompatibility'/>" << PP_ENDL;
     retstr = ostr.str();
     return retstr;
 }

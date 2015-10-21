@@ -50,6 +50,8 @@ PPDocument::PPDocument(string filepath)
     _subject = NULL;
     _title =  NULL;
 	_state = PPDS_None;
+	_OCProperties = NULL;
+	_parser._owner = this;
 
 	// open 단계에서는 저수준의 오브젝트(Token)들을 읽어들인다.
 	// 주로 PPToken 의 서브 클래스 들이다.
@@ -80,6 +82,9 @@ PPDocument::PPDocument()
     _subject = NULL;
     _title =  NULL;
 	_state = PPDS_None;
+	_OCProperties = NULL;
+	_parser._owner = this;
+
     PreBuildPDF();
 }
 PPDocument::~PPDocument()
@@ -90,7 +95,7 @@ PPDocument::~PPDocument()
         PPToken *token = _tokens.at(i);
         delete token;
     }
-    cout << "PPParser destructed..." << PP_ENDL;
+    cout << "Document destructed..." << PP_ENDL;
     
 }
 
@@ -276,6 +281,9 @@ void PPDocument::WriteLoadedPages()
 	}
 }
 
+/////////////////////////////////////////////////////////////////
+// PDF 를 읽어서 도큐먼트를 구성함
+/////////////////////////////////////////////////////////////////
 int PPDocument::buildDocument()
 {
     if (isBuiltDocument()) {
@@ -342,6 +350,7 @@ int PPDocument::buildDocument()
         }
     }
     
+	// root_obj (Type:Catalog)
     PPTIndirectObj *root_obj = (PPTIndirectObj *)_trailer->rootObject();
     if (root_obj == NULL) {
         return -2; // error: Cannot find Root Object;
@@ -353,15 +362,23 @@ int PPDocument::buildDocument()
     _version = (PPTName *)root_dict->valueObjectForKey("Version");
     _pageLayout = (PPTName *)root_dict->valueObjectForKey("PageLayout");
     _pageMode = (PPTName *)root_dict->valueObjectForKey("PageMode");
-    
+    _OCProperties = (PPTDictionary *)root_dict->valueObjectForKey("OCProperties");
     PPTIndirectObj *pages = (PPTIndirectObj *)root_dict->indirectObjectForKey("Pages");
     PPTDictionary *pages_dict = pages->firstDictionary();
-
+	if(_OCProperties) {
+		PPTDictionary *d_dict = (PPTDictionary *)_OCProperties->valueObjectForKey("D");
+		if(d_dict) {
+			_layerOrders = (PPTArray *)d_dict->valueObjectForKey("Order");
+			_layersOn = (PPTArray *)d_dict->valueObjectForKey("ON");
+		}
+		_OCGs = (PPTArray *)_OCProperties->valueObjectForKey("OCGs");
+	}
     loadPages(pages_dict);
     _state = PPDS_Built_Document;
     return 0;
 }
 
+// Indirect Object를 _tokens 에 넣을 때는 이 함수를 쓴다.
 void PPDocument::PushObj(PPTIndirectObj *obj, int obj_num)
 {
 	if(_parser._objDict[obj_num] != NULL) {
@@ -374,21 +391,35 @@ void PPDocument::PushObj(PPTIndirectObj *obj, int obj_num)
 	
 }
 
+void PPDocument::PushObj(PPTIndirectObj *obj)
+{
+	int obj_num = obj->_objNum;
+	if(_parser._objDict[obj_num] != NULL) {
+		_parser._objDict.erase(obj_num);
+		return;
+	}
+	_tokens.push_back(obj);
+	obj->SetParser(&_parser);
+	_parser._objDict[obj_num] = obj;
+	
+}
+////////////////////////////////////////////
+// PDF의 기본 요소들을 세팅함 
+////////////////////////////////////////////
 int PPDocument::PreBuildPDF()
 {
 	_objNumber = 1;
-	_tokens.clear();
+	_tokens.clear();  // Core Raw Data of PDF 
 
-	string *ver_str = new string("PDF-1.4");
+	string *ver_str = new string("PDF-1.5");
 	PPTComment *verstr = new PPTComment(&_parser, ver_str);
 	_tokens.push_back(verstr);
 
-	string *test_tstr = new string("Test PDF");
+	string *test_tstr = new string("PDFPlus");
 	PPTComment *teststr = new PPTComment(&_parser, test_tstr);
 	_tokens.push_back(teststr);
 
 	_trailer = new PPTTrailer(&_parser);
-//	PPTDictionary *dict = new PPTDictionary(&_parser);
 
 	PPTIndirectRef *root_ref = new PPTIndirectRef(&_parser,++_objNumber, 0);
 	_trailer->getDictionary()->setTokenAndKey(root_ref, PPKN_ROOT);
@@ -404,6 +435,7 @@ int PPDocument::PreBuildPDF()
 		root_dict->setTokenAndKey(pages_ref, PPKN_PAGES);
 		PPTIndirectObj *pages_obj = new PPTIndirectObj(&_parser, _objNumber, 0);
 		pages_obj->addRefObj(pages_ref);
+
 		PushObj(pages_obj, _objNumber);
 			PPTDictionary *pages_dict = new PPTDictionary(&_parser);
 			PPTArray *page_list = new PPTArray(&_parser);
@@ -432,8 +464,6 @@ int PPDocument::PreBuildPDF()
 		info_dict->SetStringAndKey("D:20150719033247Z00'00'", PPKN_CREATIONDATE);
 		info_dict->SetStringAndKey("D:20150719033247Z00'00'", PPKN_MODDATE);
 		info_dict->SetStringAndKey(PPVN_CREATOR, "Keywords");
-
-
 
 		info_obj->AddObj(info_dict);
 	//  End  InfoDict
@@ -487,11 +517,11 @@ string PPDocument::xobjectsXMLString(int level)
     map <int, PPToken *> ::iterator it_token_objs;
     for(it_token_objs = _xobjects.begin(); it_token_objs != _xobjects.end(); it_token_objs++) {
         int obj_num = it_token_objs->first;
-        ostr << tapStr(level) << "<XObject id ='" << obj_num << "'>\xa";
+        ostr << tabStr(level) << "<XObject id ='" << obj_num << "'>\xa";
         PPTIndirectObj *indir_obj = (PPTIndirectObj *)it_token_objs->second;
         PPTDictionary *obj_dict = indir_obj->firstDictionary();
         ostr << obj_dict->internalXmlString(level+1);
-        ostr << tapStr(level) << "</XObject>\xa";
+        ostr << tabStr(level) << "</XObject>\xa";
     }
     
     retstr = ostr.str();
@@ -506,11 +536,11 @@ string PPDocument::fontsXMLString(int level)
     map <int, PPToken *> ::iterator it_token_objs;
     for(it_token_objs = _fonts.begin(); it_token_objs != _fonts.end(); it_token_objs++) {
         int obj_num = it_token_objs->first;
-        ostr << tapStr(level) << "<Font name='" << obj_num << "'>\xa";
+        ostr << tabStr(level) << "<Font name='" << obj_num << "'>\xa";
         PPTIndirectObj *indir_obj = (PPTIndirectObj *)it_token_objs->second;
         PPTDictionary *obj_dict = indir_obj->firstDictionary();
         ostr << obj_dict->internalXmlString(level+1);
-        ostr << tapStr(level) << "</Font>\xa";
+        ostr << tabStr(level) << "</Font>\xa";
     }
     
     retstr = ostr.str();
@@ -522,57 +552,57 @@ string PPDocument::xmlString(int level)
     string retstr;
     ostringstream ostr;
    if (_version) {
-        ostr << tapStr(level) << "<Version>" << *_version->_name << "</Version>\xa";
+        ostr << tabStr(level) << "<Version>" << *_version->_name << "</Version>\xa";
     }
     if (_pageLayout) {
-        ostr << tapStr(level) << "<PageLayout>" << *_pageLayout->_name << "</PageLayout>\xa";
+        ostr << tabStr(level) << "<PageLayout>" << *_pageLayout->_name << "</PageLayout>\xa";
     }
     if (_pageMode) {
-        ostr << tapStr(level) << "<PageMode>" << *_pageMode->_name << "</PageMode>\xa";
+        ostr << tabStr(level) << "<PageMode>" << *_pageMode->_name << "</PageMode>\xa";
     }
     
     if (_title) {
-        ostr << tapStr(level) << "<Title><![CDATA[" << _title->utf8String() << "]]></Title>\xa";
+        ostr << tabStr(level) << "<Title><![CDATA[" << _title->utf8String() << "]]></Title>\xa";
     }
     if (_subject) {
-        ostr << tapStr(level) << "<Subject><![CDATA[" << _subject->utf8String() << "]]></Subject>\xa";
+        ostr << tabStr(level) << "<Subject><![CDATA[" << _subject->utf8String() << "]]></Subject>\xa";
     }
     if (_producer) {
- //       ostr << tapStr(level) << "<Producer>" << *_producer->_string << "</Producer>\xa";
-        ostr << tapStr(level) << "<Producer><![CDATA[" << _producer->utf8String() << "]]></Producer>\xa";
+ //       ostr << tabStr(level) << "<Producer>" << *_producer->_string << "</Producer>\xa";
+        ostr << tabStr(level) << "<Producer><![CDATA[" << _producer->utf8String() << "]]></Producer>\xa";
     }
     if (_author) {
-        ostr << tapStr(level) << "<Author><![CDATA[" << _author->utf8String() << "]]></Author>\xa";
+        ostr << tabStr(level) << "<Author><![CDATA[" << _author->utf8String() << "]]></Author>\xa";
     }
     if (_creator) {
-        ostr << tapStr(level) << "<Creator><![CDATA[" << _creator->utf8String() << "]]></Creator>\xa";
+        ostr << tabStr(level) << "<Creator><![CDATA[" << _creator->utf8String() << "]]></Creator>\xa";
     }
     if (_creationDate) {
-        ostr << tapStr(level) << "<CreationDate>" << *_creationDate->_string << "</CreationDate>\xa";
+        ostr << tabStr(level) << "<CreationDate>" << *_creationDate->_string << "</CreationDate>\xa";
     }
     if (_modDate) {
-        ostr << tapStr(level) << "<ModDate>" << *_modDate->_string << "</ModDate>\xa";
+        ostr << tabStr(level) << "<ModDate>" << *_modDate->_string << "</ModDate>\xa";
     }
     if (_keywords) {
-        ostr << tapStr(level) << "<Keywords><![CDATA[" << _keywords->utf8String() << "]]></Keywords>\xa";
+        ostr << tabStr(level) << "<Keywords><![CDATA[" << _keywords->utf8String() << "]]></Keywords>\xa";
     }
     
-    ostr << tapStr(level) << "<NumberOfPages>" <<_pages.size() << "</NumberOfPages>\xa";
-    ostr << tapStr(level) << "<Pages>\xa";
+    ostr << tabStr(level) << "<NumberOfPages>" <<_pages.size() << "</NumberOfPages>\xa";
+    ostr << tabStr(level) << "<Pages>\xa";
     size_t icnt = _pages.size();
     for (size_t i=0; i<icnt; i++) {
         PPPage *page = _pages.at(i);
         ostr << page->xmlString(level+1);
     }
-    ostr << tapStr(level) << "</Pages>\xa";
+    ostr << tabStr(level) << "</Pages>\xa";
 
-    ostr << tapStr(level) << "<XObjects>\xa";
+    ostr << tabStr(level) << "<XObjects>\xa";
     ostr << xobjectsXMLString(level+1);
-    ostr << tapStr(level) << "</XObjects>\xa";
+    ostr << tabStr(level) << "</XObjects>\xa";
 
-    ostr << tapStr(level) << "<Fonts>\xa";
+    ostr << tabStr(level) << "<Fonts>\xa";
     ostr << fontsXMLString(level+1);
-    ostr << tapStr(level) << "</Fonts>\xa";
+    ostr << tabStr(level) << "</Fonts>\xa";
     retstr = ostr.str();
     
     return retstr;
@@ -595,14 +625,14 @@ string PPDocument::elementXmlString(int level)
 {
     string retstr;
     ostringstream ostr;
-    ostr << tapStr(level) << "<NumberOfPages>" <<_pages.size() << "</NumberOfPages>\xa";
-    ostr << tapStr(level) << "<Pages>\xa";
+    ostr << tabStr(level) << "<NumberOfPages>" <<_pages.size() << "</NumberOfPages>\xa";
+    ostr << tabStr(level) << "<Pages>\xa";
     size_t icnt = _pages.size();
     for (size_t i=0; i<icnt; i++) {
         PPPage *page = _pages.at(i);
         ostr << page->elementXmlString(level+1);
     }
-    ostr << tapStr(level) << "</Pages>\xa";
+    ostr << tabStr(level) << "</Pages>\xa";
     retstr = ostr.str();
     
     return retstr;
@@ -674,33 +704,6 @@ void PPDocument::saveFontsToFolder(const char *folder)
 {
     
 }
-//
-//void PPDocument::resortObjNum()
-//{
-//    
-//    vector<PPTIndirectObj *> indir_objs;
-//    int new_idx = 0;
-//    
-//    map <int, PPTIndirectObj *> ::iterator it_indir_objs;
-//    for(it_indir_objs = _parser._objDict.begin(); it_indir_objs != _parser._objDict.end(); it_indir_objs++) {
-////        int obj_num = it_indir_objs->first;
-//        PPTIndirectObj *indir_obj = it_indir_objs->second;
-//        if (indir_obj) {
-//            indir_objs.push_back(indir_obj);
-//        }
-//    }
-//    
-//    size_t i, icnt = indir_objs.size();
-//    _parser._objDict.clear();
-//    for (i=0; i < icnt; i++) {
-//        PPTIndirectObj *indir_obj = indir_objs[i];
-//        new_idx = (int)i + 1;
-//        indir_obj->setObjNum(new_idx);
-//
-//        _parser._objDict[new_idx] = indir_obj;
-//    }
-//    _parser._last_obj_idx = new_idx;
-//}
 
 void PPDocument::resortObjNum()
 {
@@ -1062,7 +1065,7 @@ PPTIndirectObj *PPDocument::AddResource(PPToken *rsc, int num)
 		rsc = (PPToken *)container_obj;
 	}
 
-	_resources[num] = rsc;
+	_srcIndirectObjs[num] = (PPTIndirectObj *)rsc; //_resources[num] = rsc;
 	return (PPTIndirectObj *)rsc;
 }
 
@@ -1091,10 +1094,125 @@ PPTIndirectObj *PPDocument::WriteResource(PPToken *rsc, int obj_num)
 
 PPToken *PPDocument::ResourceForExtObjNum(int num)
 {
-	PPToken *ret_token = _resources[num];
+	PPToken *ret_token = _srcIndirectObjs[num]; //_resources[num];
 
 	if(ret_token == NULL) {
-		_resources.erase(num);
+		_srcIndirectObjs.erase(num);
 	}
 	return ret_token;
 }
+
+/////////////////////////////////////////////////////////////
+//  Layer(OCG) Related Methods
+/////////////////////////////////////////////////////////////
+
+#pragma mark -
+#pragma mark Sketch Button actions
+
+int PPDocument::NumberOfLayers()
+{
+	if(_layerOrders)
+		return _layerOrders->size();
+	return 0;
+}
+
+PPTDictionary *PPDocument::LayerInfoAtIndex(int idx)
+{
+	PPTDictionary *ret_dict = NULL;
+	PPToken *layer = _layerOrders->_array[idx];
+	if(layer->typeName() == PPTN_INDIRECTREF) {
+		PPTIndirectRef *layer_ref = (PPTIndirectRef *)layer;
+		ret_dict = (PPTDictionary *)layer_ref->valueObject();
+	}
+	else if(layer->typeName() == PPTN_DICTIONARY) {
+		ret_dict = (PPTDictionary *)layer;
+	}
+	return ret_dict;
+}
+
+PPTDictionary *PPDocument::LayerForName(string name) 
+{
+	int i, icnt = this->NumberOfLayers();
+	for(i=0;i<icnt;i++) {
+		PPTDictionary *layer_dict = this->LayerInfoAtIndex(i);
+		PPTString *str = (PPTString *)layer_dict->ValueObjectForKey("Name");
+		if(*str->_string == name) {
+			return layer_dict;
+		}
+	}
+	return NULL;
+}
+
+
+bool PPDocument::AddLayer(string name) 
+{
+	PPTDictionary *layer_dict = new PPTDictionary(&_parser);
+	layer_dict->SetStringAndKey(name, "Name");
+	layer_dict->SetNameAndKey("OCG", "Type");
+	PPTIndirectRef *layer_ref = new PPTIndirectRef(&_parser, ++_objNumber, 0);
+	PPTIndirectObj *layer_obj = new PPTIndirectObj(&_parser, _objNumber, 0);
+	layer_obj->AddObj(layer_dict);
+	_layerOrders->AddToken(layer_ref);
+	_layersOn->AddToken(layer_ref);
+	_OCGs->AddToken(layer_ref);
+	PushObj(layer_obj, _objNumber);
+//	_tokens.insert(_tokens.begin(),layer_obj);
+	return true;
+}
+
+bool PPDocument::RenameLayer(string org_name, string new_name)
+{
+	PPTDictionary *layer_dict = this->LayerForName(org_name);
+	if(layer_dict) {
+		PPTString *name_str = (PPTString *)layer_dict->ObjectForKey("Name");
+		delete name_str->_string;
+		name_str->_string = new string(new_name);
+		return true;
+	}
+	return false;
+}
+
+void PPDocument::ReorderLayer(int from_idx, int to_idx)
+{
+	_layerOrders->Reorder(from_idx, to_idx);
+
+}
+
+void PPDocument::WriteOCProperties(PPTDictionary *properties)
+{
+	// root_obj (Type:Catalog)
+    PPTIndirectObj *root_obj = (PPTIndirectObj *)_trailer->rootObject();
+    PPTDictionary *root_dict = root_obj->firstDictionary();
+
+	_OCProperties = (PPTDictionary *)properties->Copy();
+	root_dict->SetTokenAndKey(_OCProperties, "OCProperties");
+	//OCProperties	(Dictionary)
+		// D (Dictionary)
+			// ON (Array)
+			// Order (Array) ref
+			// RBGroups (Array) opt
+		// OCGs (Array)
+	//ApplyTokenToList(_OCProperties, properties->);### 
+	
+	_OCProperties->MoveInto(this);
+}
+
+/*
+void PPDocument::ApplyTokenToList(PPToken *token, PPDocument *src_doc)
+{
+	if(token->classType() == PPTN_DICTIONARY) {
+		PPTDictionary *ppdict = (PPTDictionary *)token;
+		map <string, PPToken *> dict = ppdict->_dict;
+	    map <string, PPToken *> ::iterator it_token;
+		for(it_token = dict.begin(); it_token != dict.end(); it_token++) {
+			PPToken *token = it_token->second;
+			if(token->classType() == PPTN_INDIRECTREF) {
+			}
+			else {
+
+			}
+        }
+    }
+
+}
+*/

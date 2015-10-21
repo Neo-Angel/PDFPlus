@@ -59,7 +59,7 @@ long PPTNumber::longValue()
 string PPTNumber::xmlString(int level)
 {
     string retstr;
-    retstr += tapStr(level) + "<Number>" +stringValue() + "</Number>\xa";
+    retstr += tabStr(level) + "<Number>" +stringValue() + "</Number>\xa";
     return retstr;
 }
 

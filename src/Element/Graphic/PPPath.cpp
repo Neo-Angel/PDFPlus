@@ -134,14 +134,14 @@ string PPPath::xmlString(int level)  // for Element
     string retstr;
     ostringstream ostr;
     
-    ostr << tapStr(level) << "<Path>" << PP_ENDL;
+    ostr << tabStr(level) << "<Path>" << PP_ENDL;
     size_t i, icnt = _itemList.size();
     for (i=0; i<icnt; i++) {
         PPPathItem *pitem = _itemList.at(i);
         ostr << pitem->xmlString(level+1) ;
     }
     
-    ostr << tapStr(level) << "</Path>" << PP_ENDL;
+    ostr << tabStr(level) << "</Path>" << PP_ENDL;
     retstr = ostr.str();
     return retstr;
 }

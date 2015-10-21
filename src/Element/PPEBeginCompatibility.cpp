@@ -21,7 +21,7 @@ string PPEBeginCompatibility::xmlString(int level)
 {
     string retstr;
     ostringstream ostr;
-    ostr << tapStr(level) << "<Element type='BeginCompatibility'/>" << PP_ENDL;
+    ostr << tabStr(level) << "<Element type='BeginCompatibility'/>" << PP_ENDL;
     retstr = ostr.str();
     return retstr;
 }

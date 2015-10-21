@@ -70,6 +70,7 @@ protected:
     PPTIndirectObj *parseIndirectObj(PPParserSource &source, PPTNumber *num1, PPTNumber *num2);
     
 public:
+	void *_owner; // mainly PPDocument(?)
     unsigned int _last_obj_idx;
     map <int, PPTIndirectObj *> _objDict;
     map <unsigned long long, PPToken *> _filePtDict; // IndirectObj, Trailer, XRef

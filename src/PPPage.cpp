@@ -18,7 +18,7 @@
 #include "PPTDictionary.h"
 #include "PPTIndirectRef.h"
 
-string tapStr(int cnt);
+string tabStr(int cnt);
 
 
 PPPage::PPPage(PPDocument *doc)  // this invokes PPFormBase() (default)constructor.
@@ -339,7 +339,7 @@ void PPPage::appendRectXmlString(ostringstream &ostr, string keyname, int level)
 {
     if (hasValueWithKey(keyname)) {
         PPRect rect = rectForKey(keyname);
-        ostr << tapStr(level) << "<" << keyname <<" X='" << rect._origin._x
+        ostr << tabStr(level) << "<" << keyname <<" X='" << rect._origin._x
         << "' Y='" <<  rect._origin._x
         << "' Width='" << rect._size._width
         << "' Height='" << rect._size._height << "'/>\xa";
@@ -351,23 +351,23 @@ string PPPage::xmlString(int level)
 {
     string retstr;
     ostringstream ostr;
-    ostr << tapStr(level) << "<Page>\xa";
+    ostr << tabStr(level) << "<Page>\xa";
     appendRectXmlString(ostr, "MediaBox", level+1);
     appendRectXmlString(ostr, "CropBox", level+1);
     appendRectXmlString(ostr, "BleedBox", level+1);
     appendRectXmlString(ostr, "TrimBox", level+1);
     appendRectXmlString(ostr, "ArtBox", level+1);
     if (hasValueWithKey("Rotate")) {
-        ostr << tapStr(level+1) << "<Rotate angle='" << rotate() << "'/>\xa";
+        ostr << tabStr(level+1) << "<Rotate angle='" << rotate() << "'/>\xa";
     }
-    ostr << tapStr(level+1) << "<Contents>\xa";
+    ostr << tabStr(level+1) << "<Contents>\xa";
     size_t icnt = _commands.size();
     for (size_t i=0; i<icnt; i++) {
         PPToken *token = _commands.at(i);
         ostr << token->xmlString(level + 2);
     }
-    ostr << tapStr(level+1) << "</Contents>\xa";
-    ostr << tapStr(level) << "</Page>\xa";
+    ostr << tabStr(level+1) << "</Contents>\xa";
+    ostr << tabStr(level) << "</Page>\xa";
     
     retstr = ostr.str();
     return retstr;
@@ -377,13 +377,13 @@ string PPPage::elementXmlString(int level)
 {
     string retstr;
     ostringstream ostr;
-    ostr << tapStr(level) << "<Page>\xa";
-    size_t i, icnt = _elements.size();
+    ostr << tabStr(level) << "<Page>\xa";
+    size_t i, icnt = numberOfElements();
     for (i= 0; i<icnt; i++) {
-        PPElement *element = _elements.at(i);
+        PPElement *element = elementAtIndex(i);
         ostr << element->xmlString(level+1);
     }
-    ostr << tapStr(level) << "</Page>\xa";
+    ostr << tabStr(level) << "</Page>\xa";
     retstr = ostr.str();
     return retstr;
 }

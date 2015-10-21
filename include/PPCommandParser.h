@@ -46,6 +46,7 @@ enum PPCommandGroup {
     PPCG_BeginText,
     PPCG_EndText,
     PPCG_Text,
+	PPCG_TextState,
     PPCG_BeginInlineImage,
     PPCG_InlineImage,
     PPCG_EndInlineImage,

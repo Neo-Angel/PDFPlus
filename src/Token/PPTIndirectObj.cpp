@@ -52,9 +52,9 @@ string PPTIndirectObj::description()
 string PPTIndirectObj::xmlString(int level)
 {
     ostringstream ostr;
-    ostr <<tapStr(level)<<"<Object ID='"<<_objNum<<"' Gen='"<<_genNum<< "' Pos='"<<_filepos<<"'>\xa";
+    ostr <<tabStr(level)<<"<Object ID='"<<_objNum<<"' Gen='"<<_genNum<< "' Pos='"<<_filepos<<"'>\xa";
     string retstr = ostr.str();
-//    retstr += tapStr(level) + "<Indirect Object=" + _objNum + ", Generation="+ _genNum+ ">\xa";
+//    retstr += tabStr(level) + "<Indirect Object=" + _objNum + ", Generation="+ _genNum+ ">\xa";
     size_t icnt = _array.size();
     size_t i;
     icnt = _array.size();
@@ -63,7 +63,7 @@ string PPTIndirectObj::xmlString(int level)
         retstr += token->xmlString(level+1);
 //        delete token;
     }
-    retstr += tapStr(level) + "</Object>\xa";
+    retstr += tabStr(level) + "</Object>\xa";
     
     return retstr;
 }

@@ -23,6 +23,8 @@ public:
     string pdfString();
 	void AddToken(PPToken *token) {_array.push_back(token);}
 	void AddToken(int num);
+	void Reorder(int from_idx, int to_idx);
+	void RemoveAtIndex(int idx);
 
 	PPBase *Create() {return new PPTArray;}
 	void CopyMembersTo(PPBase *obj) ;

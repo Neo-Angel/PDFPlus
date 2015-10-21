@@ -16,6 +16,35 @@
 
 
 
+byte hexlist[16] = {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
+
+word haxFromByte(byte ch, byte &b1, byte &b2)
+{
+	word ch1 = hexlist[ (ch & 0xf0) >> 4 ];
+	word ch2 = hexlist[ ch & 0x0f ];
+	b1 = ch1;
+	b2 = ch2;
+	word ret = (ch1 << 8) | ch2;
+	return ret;
+}
+
+string toHexStr(string str)
+{
+	string ret;
+	int i, icnt = str.length();
+	char twobytes[3];
+	twobytes[2] = NULL;
+	for(i=0;i<icnt;i++) {
+		byte ch = str.at(i);
+		byte b1, b2;
+		word wch = haxFromByte(ch, b1, b2);
+
+		twobytes[0] = b1;
+		twobytes[1] = b2;
+		ret = ret + twobytes;
+	}
+	return ret;
+}
 
 void PPwstrToUtf8(string& dest, const wstring& src)
 {
@@ -111,7 +140,7 @@ void PPToken::write(std::ostream &os)
 //    
 //}
 
-string tapStr(int cnt)
+string tabStr(int cnt)
 {
     string retstr;
     int i;
@@ -120,6 +149,7 @@ string tapStr(int cnt)
     }
     return retstr;
 }
+
 
 string toNomalASCIIString(string src_str)
 {

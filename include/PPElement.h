@@ -34,6 +34,7 @@ enum PPElementType {
     PPET_IMAGE,
 	PPET_INLINE_IMAGE,
     PPET_TEXT,
+	PPET_TEXT_STATE,
     PPET_FORM,
     PPET_SHADING,
 	PPET_BEGIN_MARKED_CONTENT,
@@ -86,16 +87,13 @@ public:
 	virtual PPElementType getType() {return PPET_NONE;}
 	virtual PPRect getBBox() {return _bounds;}
 	virtual void SetParser(PPParser *parser) {};
-	virtual bool HasResource();
-	virtual string ResourceType();
-	virtual string ResourceKey();
-	virtual int ResourceObjNum();
-	virtual PPToken *GetResource();
 
-	virtual vector <const char *> ResourceList();
+	virtual bool HasResource();
+	virtual vector <const char *> ResourceTypeList();
 	virtual string ResourceKeyFor(const char *rsc_type);
 	virtual int ResourceObjNum(const char *rsc_type);
 	virtual PPToken *GetResource(const char *rsc_type);
+	//virtual PPToken *GetRealResource(string rsc_type, string rsc_key);
 	virtual string commandString();
 
 	PPBase *Create() {return new PPElement();}
@@ -108,7 +106,7 @@ public:
 	PPMatrix *getCTM() {return _gstate->getCTM();}
 	PPElementType GetType() {return getType();}
 	PPRect GetBBox() {return getBBox();}
-
+	PPDocument *GetDocument();
 
 };
 

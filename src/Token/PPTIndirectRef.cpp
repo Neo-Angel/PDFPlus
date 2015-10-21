@@ -26,7 +26,7 @@ string PPTIndirectRef::xmlString(int level)
 {
     string retstr;
     ostringstream ostr;
-    ostr <<tapStr(level)<<"<Ref ObjID='"<<_objNum<<"' Gen='"<<_genNum<< "'/>\xa";
+    ostr <<tabStr(level)<<"<Ref ObjID='"<<_objNum<<"' Gen='"<<_genNum<< "'/>\xa";
     retstr = ostr.str();
     return retstr;
 }
@@ -55,9 +55,9 @@ string PPTIndirectRef::internalXmlString(int level)
     string retstr;
     PPToken *obj = valueObject();
 //    if (obj->classType() == PPTN_DICTIONARY) {
-//        retstr += tapStr(level) + "<Dict>\xa";
+//        retstr += tabStr(level) + "<Dict>\xa";
 //        retstr += obj->internalXmlString(level+1);
-//        retstr += tapStr(level) + "</Dict>\xa";
+//        retstr += tabStr(level) + "</Dict>\xa";
 //    }
 //    else {
         retstr += obj->internalXmlString(level);
@@ -81,14 +81,30 @@ void PPTIndirectRef::CopyMembersTo(PPBase *obj)
 	indir_ref->_objNum = _objNum;
 }
 
+// 다른 도큐먼트에서 복사되어 넘어올때 처리
+// 객체넘버를 다시 적용함.
 void PPTIndirectRef::MoveInto(PPDocument *doc)
 {
-	PPTIndirectObj *obj = (PPTIndirectObj *)_parser->ObjectForNumber(_objNum);
-	if(!obj)
-		return;
-	PPTIndirectObj *copied_obj = (PPTIndirectObj *)obj->Copy();
-	copied_obj->MoveInto(doc);
-	doc->PushObj(copied_obj, doc->NewObjNum());
+	PPDocument *src_doc = (PPDocument *)_parser->_owner;
+	PPTIndirectObj *copied_obj = NULL;
+	int src_id = src_doc->_docID << 24;
+	src_id += _objNum;
+
+	if(src_doc) {
+		// 이전에 처리된 적이 있는 지 확인
+		copied_obj = doc->_srcIndirectObjs[src_id];
+	}
+	if(!copied_obj) {
+		PPTIndirectObj *obj = (PPTIndirectObj *)_parser->ObjectForNumber(_objNum);
+		if(!obj)
+			return;
+		copied_obj = (PPTIndirectObj *)obj->Copy();
+		copied_obj->MoveInto(doc);
+		int new_obj_num = doc->NewObjNum();
+		doc->PushObj(copied_obj, new_obj_num);
+		copied_obj->_objNum = new_obj_num;
+		doc->_srcIndirectObjs[src_id] = copied_obj;
+	}
 	_objNum = copied_obj->_objNum;
 	copied_obj->addRefObj(this);
 }

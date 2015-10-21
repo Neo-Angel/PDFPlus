@@ -35,20 +35,20 @@ string PPTXRef::xmlString(int level)
 {
     string retstr;
     ostringstream ostr;
-    ostr <<tapStr(level)<< "<CrossRef Pos='" << _filepos << "'>\xa";
+    ostr <<tabStr(level)<< "<CrossRef Pos='" << _filepos << "'>\xa";
     map <unsigned int, XRefItem *> ::iterator it_xref_objs;
     for(it_xref_objs = _xreflist.begin(); it_xref_objs != _xreflist.end(); it_xref_objs++) {
         unsigned int objnum = it_xref_objs->first;
-        ostr <<tapStr(level+1)<<"<XRef ObjID='"<<objnum<<"'>\xa";
+        ostr <<tabStr(level+1)<<"<XRef ObjID='"<<objnum<<"'>\xa";
         
         XRefItem *item = it_xref_objs->second;
-        ostr <<tapStr(level+2)<<"<Offset>"<<item->offset<<"</Offset>\xa";
-        ostr <<tapStr(level+2)<<"<Generation>"<<item->generation<<"</Generation>\xa";
-        ostr <<tapStr(level+2)<<"<Type>"<<item->type<<"</Type>\xa";
+        ostr <<tabStr(level+2)<<"<Offset>"<<item->offset<<"</Offset>\xa";
+        ostr <<tabStr(level+2)<<"<Generation>"<<item->generation<<"</Generation>\xa";
+        ostr <<tabStr(level+2)<<"<Type>"<<item->type<<"</Type>\xa";
         
-        ostr <<tapStr(level+1)<<"</XRef>\xa";
+        ostr <<tabStr(level+1)<<"</XRef>\xa";
     }
-    ostr <<tapStr(level)<< "</CrossRef>\xa";
+    ostr <<tabStr(level)<< "</CrossRef>\xa";
     retstr = ostr.str();
     return retstr;
 }
