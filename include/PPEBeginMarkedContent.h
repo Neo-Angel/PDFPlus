@@ -16,6 +16,8 @@ class PPEBeginMarkedContent : public PPElement {
     PPTIndirectObj *_OCGInfo;
 public:
     PPEBeginMarkedContent(PPTName *tag, PPToken *properties, PPContext *gcontext);
+    PPEBeginMarkedContent(PPParser *parser, string properties, PPContext *gcontext);
+
 	PPEBeginMarkedContent();
 	~PPEBeginMarkedContent();
 	PPBase *Create(){return new PPEBeginMarkedContent;}

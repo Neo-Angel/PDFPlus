@@ -27,6 +27,7 @@
 #include "PPEEndCompatibility.h"
 #include "PPParser.h"
 
+#include "PPTString.h"
 #include "PPTName.h"
 #include "PPTDictionary.h"
 #include "PPTIndirectRef.h"
@@ -43,6 +44,7 @@ PPFormBase::PPFormBase():_graphicParser((vector <PPToken *> *)&_commands)
 	_cur_element_idx = 0;
 	_indirObj = NULL;
 	_resourceDict = NULL;
+	_curLayer = NULL;
 
 	PPLayer *layer = new PPLayer();
 	_layers.push_back(layer);
@@ -55,6 +57,7 @@ PPFormBase::PPFormBase(PPFormBase *form_base):_graphicParser((vector <PPToken *>
 	_indirObj = (PPTIndirectObj *)form_base->_indirObj->Copy(); //PPTIndirectObj *
     // _document; // PPDocument * : this set when this added to document
     _resourceDict = NULL; //PPTDictionary *
+	_curLayer = NULL;
 //    _commands; // vector <PPTCommand *>
 //    _graphicParser; // PPCommandParser
 	PPLayer *layer = new PPLayer();
@@ -85,6 +88,7 @@ PPFormBase::PPFormBase(PPDocument *doc, PPTIndirectObj *indir):_graphicParser((v
 			cout << "Created empty FormBase." << PP_ENDL;
 		}
 	}
+	_curLayer = NULL;
 }
 
 PPFormBase::~PPFormBase()
@@ -167,24 +171,128 @@ void PPFormBase::addElement(PPElement *element)
     element->willAddToParent(this);
 	element->SetParser(&_document->_parser);
 
-	PPLayer *last_layer = _layers[_layers.size()-1];
-	last_layer->_elements.push_back(element);
+	PPLayer *layer;
+	if(_curLayer != NULL) {
+		layer = _curLayer;
+	}
+	else {
+		layer = _layers[0];
+	}
+	layer->_elements.push_back(element);
 
 	// update _commands list from element 
 }
 
-void PPFormBase::AddLayer(string *properties)
+PPLayer *PPFormBase::AddLayerWithProperties(string property_name)
 {
-	PPLayer *last_layer = _layers[_layers.size()-1];
-	if(last_layer->_key.length() == 0) {
-		last_layer->_key = *properties;
+	PPTDictionary *properties_dict = (PPTDictionary *)_resourceDict->ValueObjectForKey("Properties");
+	PPTDictionary *layer_dict = (PPTDictionary *)properties_dict->ValueObjectForKey(property_name);
+	if(layer_dict) {
+		PPTString *str_obj = (PPTString *)layer_dict->ObjectForKey("Name");
+		string *layer_name = str_obj->_string;
+		PPLayer *layer = this->LayerForName(*layer_name);
+		if(layer == NULL) {
+			layer = new PPLayer();
+			layer->_layer_dict = layer_dict;
+			layer->_properties = property_name;
+			layer->_parent = this;
+			_layers.push_back(layer);
+		}
+		return layer;
 	}
-	else {
-		PPLayer *layer = new PPLayer();
-		layer->_key = *properties;
-		_layers.push_back(layer);
+	return NULL;
+}
+
+PPLayer *PPFormBase::AddLayer(string layer_name)
+{
+	// layer_name의 레이어가 없다고 간주하고 시작함.
+	PPTIndirectObj *layer_obj = _document->LayerObjForName(layer_name);
+	PPTIndirectRef *layer_ref = new PPTIndirectRef(&_document->_parser, layer_obj->_objNum, layer_obj->_genNum);
+
+	PPLayer *ret_layer = NULL;
+	PPTDictionary *properties_dict = (PPTDictionary *)_resourceDict->ValueObjectForKey("Properties");
+	if(properties_dict == NULL) {
+		properties_dict = new PPTDictionary(&_document->_parser);
+		_resourceDict->SetTokenAndKey(properties_dict, "Properties");
 	}
 
+	/* layer_name의 레이어 찾기. 없다고 간주하므로 찾을 필요가 없어졌음.
+	map <string, PPToken *> dict = properties_dict->_dict;
+    map <string, PPToken *> ::iterator it_token;
+	for(it_token = dict.begin(); it_token != dict.end(); it_token++) {
+		string property_name = it_token->first;
+		PPTDictionary *layer_dict = (PPTDictionary *)properties_dict->ValueObjectForKey(property_name);
+
+    }*/
+
+	// 새 properties key 만들기 
+	char pname[10] = "LP0";
+	int name_idx = 0;
+	int i, icnt = _layers.size();
+	for(i=0;i<icnt;i++) {
+		PPLayer *layer = _layers[i];
+		if(layer->_properties == pname) {
+			name_idx ++;
+			sprintf(pname, "LP%d",name_idx);
+			i = 0;
+			continue;
+		}
+	}
+
+	properties_dict->SetTokenAndKey(layer_ref, pname);
+	layer_obj->addRefObj(layer_ref);
+	PPTDictionary *layer_dict = (PPTDictionary *)layer_ref->valueObject();
+
+	ret_layer = new PPLayer();
+	ret_layer->_layer_dict = layer_dict;
+	ret_layer->_properties = pname;
+	ret_layer->_parent = this;
+	_layers.push_back(ret_layer);
+
+	return ret_layer;
+	/*
+	PPTDictionary *layer_dict = (PPTDictionary *)properties_dict->ValueObjectForKey(pname);
+	if(layer_dict == NULL) {
+		properties_dict->SetTokenAndKey(layer_ref, pname);
+		layer_dict = (PPTDictionary *)layer_ref->valueObject();
+
+		ret_layer = new PPLayer();
+		ret_layer->_layer_dict = layer_dict;
+		ret_layer->_properties = property_name;
+		ret_layer->_parent = this;
+		_layers.push_back(ret_layer);
+	}
+	else {
+		int i, icnt = _layers.size();
+		for(i=0;i<icnt;i++) {
+			PPLayer *layer = _layers[i];
+			if(layer->_properties == pname) {
+				ret_layer = layer;
+				break;
+			}
+		}
+	}
+	return ret_layer;
+	*/
+}
+
+PPLayer *PPFormBase::BeginLayer(char *lname) 
+{
+	_curLayer = this->LayerForName(lname);
+	if(_curLayer == NULL) {
+		_curLayer = this->AddLayer(lname);
+	}
+	PPEBeginMarkedContent *begin_mark = new PPEBeginMarkedContent(&_document->_parser, _curLayer->_properties, ptContext());
+
+	writeElement(begin_mark);
+	return _curLayer;
+}
+
+void PPFormBase::EndLayer()
+{
+	PPEEndMarkedContent *end_mark = new PPEEndMarkedContent(ptContext());
+	writeElement(end_mark);
+	_curLayer = NULL;
 }
 
 size_t PPFormBase::numberOfElements()
@@ -215,7 +323,13 @@ PPElement *PPFormBase::elementAtIndex(int idx)
 
 void PPFormBase::writeElement(PPElement *src_element)
 {
-	PPElement *copied = (PPElement *)src_element->Copy();
+	if(src_element->_parentForm == NULL) {
+		addElement(src_element);
+	}
+	else {
+		PPElement *copied = (PPElement *)src_element->Copy();
+		addElement(copied);
+	}
 	// src_element 에 리소스 정보가 있으면
 	if(src_element->HasResource()) {
 		// src_element의 리소스 '타입'과 '키'로 this에 리소스가 있는지 체크
@@ -253,12 +367,14 @@ void PPFormBase::writeElement(PPElement *src_element)
 						PPToken *src_rsc = src_element->GetResource(rsc_type);
 						if(src_rsc) {
 							rsc = WriteResource(src_rsc, src_obj_num);  // _resources
-							_document->SetRefTokenForKey(rsc_dict,rsc,rsc_key); //rsc_dict, _tokens, parser->_objDict
-							if(rsc_type == PPRT_PROPERTIES && _document->_OCProperties == NULL) { // OCG(Layer)
-								PPDocument *src_doc = src_element->_parentForm->_document;
-								PPTDictionary *src_ocproperties = src_doc->_OCProperties;
-								if(src_ocproperties) {
-									_document->WriteOCProperties(src_ocproperties);  //###
+							if(rsc) {
+								_document->SetRefTokenForKey(rsc_dict,rsc,rsc_key); //rsc_dict, _tokens, parser->_objDict
+								if(rsc_type == PPRT_PROPERTIES && _document->_OCProperties == NULL) { // OCG(Layer)
+									PPDocument *src_doc = src_element->_parentForm->_document;
+									PPTDictionary *src_ocproperties = src_doc->_OCProperties;
+									if(src_ocproperties) {
+										_document->WriteOCProperties(src_ocproperties);  //###
+									}
 								}
 							}
 						}
@@ -267,7 +383,6 @@ void PPFormBase::writeElement(PPElement *src_element)
 			}
 		}
 	}
-	addElement(copied);
 }
 
 // 여러 GState 의 값들 중에 cmd 내용에 부합하는 값을 변경한다.
@@ -666,7 +781,7 @@ int PPFormBase::buildElements()
 						properties = (PPToken *)cmd->getTokenValue(1);
 						if(properties->classType() == PPTN_NAME) {
 							PPTName *property_name = (PPTName *)properties;
-							AddLayer(property_name->_name);
+							AddLayerWithProperties(*property_name->_name);
 						}
 					}
 					PPEBeginMarkedContent *marked_content_element = new PPEBeginMarkedContent(tag, properties, &gcontext);;
@@ -774,3 +889,21 @@ void PPFormBase::AddFormObj(PPFormBase *form_obj)
 	AddXObjRef(xobj, *form_obj->_form_key->_name);
 	delete form_obj;
 }
+
+void PPFormBase::BeginReadLayer(char *layer_name)
+{
+
+}
+
+PPLayer *PPFormBase::LayerForName(string name)
+{
+	int i, icnt = _layers.size();
+	for(i=0;i<icnt;i++) {
+		PPLayer *layer = _layers[i];
+		if(layer->Name() == name) {
+			return layer;
+		}
+	}
+	return NULL;
+}
+

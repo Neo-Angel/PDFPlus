@@ -14,11 +14,21 @@ PPEBeginMarkedContent::PPEBeginMarkedContent(PPTName *tag, PPToken *properties, 
 		_tag = (PPTName *)tag->Copy();
 		if(properties)
 			_properties = (PPToken *)properties->Copy();
+		_OCGInfo = NULL;
 }
 
+PPEBeginMarkedContent::PPEBeginMarkedContent(PPParser *parser, string properties, PPContext *gcontext) : PPElement(gcontext)
+{
+	string *tag_str = new string("OC");
+	_tag = new PPTName(parser, tag_str);
+	string *new_properties = new string(properties);
+	_properties = new PPTName(parser, new_properties);
+	_OCGInfo = NULL;
+}
 PPEBeginMarkedContent::PPEBeginMarkedContent(){
         _tag = NULL;
         _properties = NULL;
+	_OCGInfo = NULL;
 }
 
 PPEBeginMarkedContent::~PPEBeginMarkedContent(){

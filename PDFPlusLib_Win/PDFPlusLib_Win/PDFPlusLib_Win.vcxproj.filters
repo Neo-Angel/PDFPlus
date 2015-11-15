@@ -254,9 +254,6 @@
     <ClCompile Include="..\..\src\Element\PPEBeginMarkedContent.cpp">
       <Filter>소스 파일\Element</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Element\PPEEndMakedContent.cpp">
-      <Filter>소스 파일\Element</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Element\PPEForm.cpp">
       <Filter>소스 파일\Element</Filter>
     </ClCompile>
@@ -318,6 +315,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\PPETextState.cpp">
+      <Filter>소스 파일\Element</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Element\PPEEndMarkedContent.cpp">
       <Filter>소스 파일\Element</Filter>
     </ClCompile>
   </ItemGroup>

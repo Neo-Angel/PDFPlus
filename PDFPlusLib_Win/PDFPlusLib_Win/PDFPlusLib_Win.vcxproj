@@ -231,7 +231,7 @@
     <ClCompile Include="..\..\src\Element\PPEBeginCompatibility.cpp" />
     <ClCompile Include="..\..\src\Element\PPEBeginMarkedContent.cpp" />
     <ClCompile Include="..\..\src\Element\PPEEndCompatibility.cpp" />
-    <ClCompile Include="..\..\src\Element\PPEEndMakedContent.cpp" />
+    <ClCompile Include="..\..\src\Element\PPEEndMarkedContent.cpp" />
     <ClCompile Include="..\..\src\Element\PPEForm.cpp" />
     <ClCompile Include="..\..\src\Element\PPEGRestore.cpp" />
     <ClCompile Include="..\..\src\Element\PPEGSave.cpp" />

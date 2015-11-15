@@ -27,7 +27,7 @@
 #include "PPTTrailer.h"
 #include "PPTComment.h"
 #include "PPPage.h"
-
+#include "PPLayer.h"
 
 static unsigned int DOC_COUNT = 0;
 PPDocument::PPDocument(string filepath)
@@ -52,6 +52,9 @@ PPDocument::PPDocument(string filepath)
 	_state = PPDS_None;
 	_OCProperties = NULL;
 	_parser._owner = this;
+	_layerOrders = NULL;
+	_OCGs = NULL;
+	_layersOn = NULL;
 
 	// open 단계에서는 저수준의 오브젝트(Token)들을 읽어들인다.
 	// 주로 PPToken 의 서브 클래스 들이다.
@@ -84,6 +87,9 @@ PPDocument::PPDocument()
 	_state = PPDS_None;
 	_OCProperties = NULL;
 	_parser._owner = this;
+	_layerOrders = NULL;
+	_OCGs = NULL;
+	_layersOn = NULL;
 
     PreBuildPDF();
 }
@@ -236,10 +242,10 @@ PPPage *PPDocument::newPage(PPRect &rect)
 	AddPage(page);
 
 	page->SetMediaBox(rect);
-	page->SetCropBox(rect);
-	page->SetArtBox(rect);
-	page->SetBleedBox(rect);
-	page->SetTrimBox(rect);
+//	page->SetCropBox(rect);
+//	page->SetArtBox(rect);
+//	page->SetBleedBox(rect);
+//	page->SetTrimBox(rect);
 	_pages.push_back(page);
 
 	return page;
@@ -1072,6 +1078,9 @@ PPTIndirectObj *PPDocument::AddResource(PPToken *rsc, int num)
 
 PPTIndirectObj *PPDocument::WriteResource(PPToken *rsc, int obj_num)
 {
+	if(rsc->_parser->_owner == this->_parser._owner) {
+		return NULL;
+	}
 	PPToken *new_rsc = (PPToken *)rsc->Copy();
 
 //	if(new_rsc->classType() == PPTN_INDIRECTOBJ) {
@@ -1106,8 +1115,8 @@ PPToken *PPDocument::ResourceForExtObjNum(int num)
 //  Layer(OCG) Related Methods
 /////////////////////////////////////////////////////////////
 
-#pragma mark -
-#pragma mark Sketch Button actions
+//#pragma mark -
+//#pragma mark Sketch Button actions
 
 int PPDocument::NumberOfLayers()
 {
@@ -1130,7 +1139,18 @@ PPTDictionary *PPDocument::LayerInfoAtIndex(int idx)
 	return ret_dict;
 }
 
-PPTDictionary *PPDocument::LayerForName(string name) 
+PPTIndirectObj *PPDocument::LayerObjAtIndex(int idx)
+{
+	PPTIndirectObj *ret_obj = NULL;
+	PPToken *layer = _layerOrders->_array[idx];
+	if(layer->typeName() == PPTN_INDIRECTREF) {
+		PPTIndirectRef *layer_ref = (PPTIndirectRef *)layer;
+		ret_obj = (PPTIndirectObj *)layer_ref->targetObject();
+	}
+	return ret_obj;
+}
+
+PPTDictionary *PPDocument::LayerDictForName(string name) 
 {
 	int i, icnt = this->NumberOfLayers();
 	for(i=0;i<icnt;i++) {
@@ -1143,18 +1163,73 @@ PPTDictionary *PPDocument::LayerForName(string name)
 	return NULL;
 }
 
+PPTIndirectObj *PPDocument::LayerObjForName(string name) 
+{
+	int i, icnt = this->NumberOfLayers();
+	for(i=0;i<icnt;i++) {
+		PPTDictionary *layer_dict = this->LayerInfoAtIndex(i);
+		PPTString *str = (PPTString *)layer_dict->ValueObjectForKey("Name");
+		if(*str->_string == name) {
+			PPTIndirectObj *ret_obj = this->LayerObjAtIndex(i);
+			return ret_obj;
+		}
+	}
+	return NULL;
+}
 
+
+PPLayer *PPDocument::NewLayerForName(string name)
+{
+	PPTDictionary *layer_dict = LayerDictForName(name);
+	PPLayer *ret_layer = new PPLayer(layer_dict);
+	return ret_layer;
+}
+
+void PPDocument::BuildOCProperties() {
+    //_OCProperties = (PPTDictionary *)root_dict->valueObjectForKey("OCProperties");
+
+	_OCProperties = new PPTDictionary();
+	PPTDictionary *d_dict = new PPTDictionary();
+
+	_layerOrders = new PPTArray();
+	d_dict->SetTokenAndKey(_layerOrders, "Order");
+	_layersOn = new PPTArray();
+	d_dict->SetTokenAndKey(_layersOn, "ON");
+	_OCProperties->SetTokenAndKey(d_dict, "D");
+
+	_OCGs = new PPTArray();
+	_OCProperties->SetTokenAndKey(_OCGs, "OCGs");
+
+	PPTIndirectObj *root_obj = (PPTIndirectObj *)_trailer->rootObject();
+    PPTDictionary *root_dict = root_obj->firstDictionary();
+	root_dict->SetTokenAndKey(_OCProperties, "OCProperties");
+
+}
 bool PPDocument::AddLayer(string name) 
 {
+	if(_OCProperties == NULL) {
+		this->BuildOCProperties();
+	}
 	PPTDictionary *layer_dict = new PPTDictionary(&_parser);
+	// 'Intent', 'Usage' are optional.
 	layer_dict->SetStringAndKey(name, "Name");
 	layer_dict->SetNameAndKey("OCG", "Type");
-	PPTIndirectRef *layer_ref = new PPTIndirectRef(&_parser, ++_objNumber, 0);
+	++_objNumber;
+	PPTIndirectRef *layer_ref = new PPTIndirectRef(&_parser, _objNumber, 0);
 	PPTIndirectObj *layer_obj = new PPTIndirectObj(&_parser, _objNumber, 0);
 	layer_obj->AddObj(layer_dict);
+
 	_layerOrders->AddToken(layer_ref);
+	layer_obj->addRefObj(layer_ref);
+
+	layer_ref = new PPTIndirectRef(&_parser, _objNumber, 0);
 	_layersOn->AddToken(layer_ref);
+	layer_obj->addRefObj(layer_ref);
+
+	layer_ref = new PPTIndirectRef(&_parser, _objNumber, 0);
 	_OCGs->AddToken(layer_ref);
+	layer_obj->addRefObj(layer_ref);
+
 	PushObj(layer_obj, _objNumber);
 //	_tokens.insert(_tokens.begin(),layer_obj);
 	return true;
@@ -1162,7 +1237,7 @@ bool PPDocument::AddLayer(string name)
 
 bool PPDocument::RenameLayer(string org_name, string new_name)
 {
-	PPTDictionary *layer_dict = this->LayerForName(org_name);
+	PPTDictionary *layer_dict = this->LayerDictForName(org_name);
 	if(layer_dict) {
 		PPTString *name_str = (PPTString *)layer_dict->ObjectForKey("Name");
 		delete name_str->_string;

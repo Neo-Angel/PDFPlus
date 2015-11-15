@@ -34,6 +34,18 @@ PPEPath::PPEPath(PPContext *gcontext):PPElement(gcontext)
 	_paintingType = PPC_NoPaint;
 }
 
+PPEPath::PPEPath(float x, float y, float w, float h, PPContext *gcontext):PPElement(gcontext)
+{
+    _path = new PPPath;
+	_strokeType = PPEP_NonStroke;
+	_clipType = PPEP_NonClip;
+	_fillType = PPEP_NonFill;
+
+	_paintingType = PPC_NoPaint;
+
+	this->AddRect(x, y, w, h);
+}
+
 void PPEPath::CopyMembersTo(PPBase *obj)
 {
 	PPElement::CopyMembersTo(obj);
@@ -47,27 +59,27 @@ void PPEPath::CopyMembersTo(PPBase *obj)
 
 }
 
-void PPEPath::stroke()
+void PPEPath::Stroke()
 {
     _strokeType = PPEP_Stroke;
 }
 
-void PPEPath::fill()
+void PPEPath::Fill()
 {
     _fillType = PPEP_Fill;
 }
 
-void PPEPath::eofill()
+void PPEPath::EOFill()
 {
     _fillType = PPEP_EOFill;
 }
 
-void PPEPath::clip()
+void PPEPath::Clip()
 {
     _clipType = PPEP_Clip;
 }
 
-void PPEPath::eoclip()
+void PPEPath::EOClip()
 {
     _clipType = PPEP_EOClip;
 }
@@ -81,48 +93,48 @@ void PPEPath::setPaintingType(int type)
 	_paintingType = type;
     switch (type) {
         case PPC_Stroke:
-            stroke();
+            Stroke();
             break;
         case PPC_CloseStroke:
             _path->close();
-            stroke();
+            Stroke();
             break;
         case PPC_Fill:
-            fill();
+            Fill();
             break;
         case PPC_Fill2:
-            fill();
+            Fill();
             break;
         case PPC_EOFill:
-            eofill();
+            EOFill();
             break;
         case PPC_FillStroke:
-            fill();
-            stroke();
+            Fill();
+            Stroke();
             break;
         case PPC_EOFillStroke:
-            eofill();
-            stroke();
+            EOFill();
+            Stroke();
             break;
         case PPC_CloseFillStroke:
             _path->close();
-            fill();
-            stroke();
+            Fill();
+            Stroke();
             break;
         case PPC_CloseEOFillStroke:
             _path->close();
-            fill();
-            stroke();
+            Fill();
+            Stroke();
             break;
         case PPC_NoPaint:
             _strokeType = PPEP_NonStroke;
             _fillType = PPEP_NonFill;
             break;
         case PPC_Clip:
-            clip();
+            Clip();
             break;
         case PPC_EOClip:
-            eoclip();
+            EOClip();
             break;
             
         default:
@@ -149,16 +161,35 @@ string PPEPath::makeCommandString()
     }
 	if(_clipType == PPEP_Clip) {
 		retstr += "W ";
-		//retstr += PP_ENDL;
 	}
 	else if(_clipType == PPEP_EOClip) {
 		retstr += "W* ";
-		//retstr += PP_ENDL;
 	}
-	PPCommandInfo *cinfo = &PPCommandList[_paintingType];
-
-	retstr += (char *)(cinfo->code);
+	else {
+		if(_strokeType == PPEP_Stroke) {
+			if(_fillType == PPEP_Fill) {
+				retstr += "B";
+			}
+			else if(_fillType == PPEP_EOFill) {
+				retstr += "B*";
+			}
+			else {
+				retstr += "S";
+			}
+		}
+		else {
+			if(_fillType == PPEP_Fill) {
+				retstr += "f";
+			}
+			else if(_fillType == PPEP_EOFill) {
+				retstr += "f*";
+			}
+		}
+	}
 	retstr += PP_ENDL;
+	//PPCommandInfo *cinfo = &PPCommandList[_paintingType];
+	//retstr += (char *)(cinfo->code);
+	//retstr += PP_ENDL;
 	
 	/*
 	if(_strokeType == PPEP_NonStroke && _fillType == PPEP_NonFill) {
@@ -190,5 +221,14 @@ string PPEPath::xmlString(int level)
     ostr << tabStr(level) << "</Element>" << PP_ENDL;
     retstr = ostr.str();
     return retstr;
+}
+
+void PPEPath::AddRect(float x, float y, float w, float h)
+{
+	_path->MoveTo(x, y);
+	_path->LineTo(x+w, y);
+	_path->LineTo(x+w, y+h);
+	_path->LineTo(x, y+h);
+	_path->ClosePath();
 }
 

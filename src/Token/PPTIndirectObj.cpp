@@ -252,7 +252,7 @@ void PPTIndirectObj::CopyMembersTo(PPBase *obj)
 		}
 		indir_obj->AddObj(new_token);
 	}
-	_ref_list.clear();
+	//_ref_list.clear();
 }
 
 void PPTIndirectObj::SetParser(PPParser *parser)

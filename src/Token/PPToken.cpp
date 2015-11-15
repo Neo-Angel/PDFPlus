@@ -22,8 +22,8 @@ word haxFromByte(byte ch, byte &b1, byte &b2)
 {
 	word ch1 = hexlist[ (ch & 0xf0) >> 4 ];
 	word ch2 = hexlist[ ch & 0x0f ];
-	b1 = ch1;
-	b2 = ch2;
+	b1 = (byte)ch1;
+	b2 = (byte)ch2;
 	word ret = (ch1 << 8) | ch2;
 	return ret;
 }

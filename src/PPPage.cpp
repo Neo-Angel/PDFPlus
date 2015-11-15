@@ -15,6 +15,7 @@
 #include "PPContext.h"
 #include "PPTNumber.h"
 #include "PPTArray.h"
+#include "PPTName.h"
 #include "PPTDictionary.h"
 #include "PPTIndirectRef.h"
 
@@ -150,8 +151,20 @@ endobj
 //	PPTArray *rect_arr = media_rect.GetArray(&_document->_parser);
 //	page_dict->SetTokenAndKey(rect_arr, "MediaBox");
 
+	if(_resourceDict == NULL) {
+		_resourceDict = new PPTDictionary(&_document->_parser);
 
-	_resourceDict = new PPTDictionary(&_document->_parser);
+		PPTArray *proset_list = new PPTArray(&_document->_parser);
+
+		PPTName *pname = new PPTName(&_document->_parser, new string("PDF"));
+		proset_list->AddToken(pname);
+		pname = new PPTName(&_document->_parser, new string("Test"));
+		proset_list->AddToken(pname);
+		proset_list->AddToken(new PPTName(&_document->_parser, new string("ImageB")));
+		proset_list->AddToken(new PPTName(&_document->_parser, new string("ImageC")));
+		proset_list->AddToken(new PPTName(&_document->_parser, new string("ImageI")));
+		_resourceDict->SetTokenAndKey(proset_list, "ProcSet");
+	}
 	PPTIndirectObj *rcs_obj = _document->SetRefTokenForKey(page_dict, _resourceDict, PPKN_RESOURCES);
 	/*
 	PPTDictionary *stream_dict = new PPTDictionary(&_document->_parser);

@@ -6,6 +6,7 @@
 #include <PPBase.h>
 #include <PPCommandParser.h>
 #include <PPTIndirectObj.h>
+#include <PPContext.h>
 //
 //      PPEFormBase
 //
@@ -13,7 +14,7 @@
 class PPToken;
 class PPDocument;
 class PPElement;
-class PPContext;
+
 class PPTIndirectObj;
 class PPTDictionary;
 class PPTCommand;
@@ -38,7 +39,7 @@ public:
     vector <PPTCommand *> _commands;
 
 	vector <PPLayer *> _layers;
-
+	PPLayer *_curLayer;
     
 public:
     PPFormBase();
@@ -52,14 +53,16 @@ public:
 	virtual PPToken *ResourceForKey(int obj_num);
 	virtual PPToken *WriteResource(PPToken *rcs, int obj_num);
 
-	void PPFormBase::AddLayer(string *properties);
-	PPLayer *GetLayerForName(string name);
+	PPLayer *AddLayerWithProperties(string property_name);
+	PPLayer *AddLayer(string layer_name);
+	PPLayer *LayerForName(string name);
 
     void addElement(PPElement *element);
 	void AddElement(PPElement *element) {addElement(element);}
 //	void AddXObj(PPTIndirectObj *xobj);
 	void AddXObjRef(PPTIndirectObj *xobj, string key);
 	void AddFormObj(PPFormBase *form_obj);
+	void RemoveElementAtIndex(int idx);
 
 	size_t numberOfElements();
 	PPElement *elementAtIndex(int idx);
@@ -84,6 +87,9 @@ public:
 	PPFormBase *NewFormObj(PPFormBase *form_obj); //CutOpt: Additional.cpp 에서 사용중 
 
 	string SubtypeFor(string name);
+	PPLayer *BeginLayer(char *layerName);
+	void EndLayer();
+	void BeginReadLayer(char *layer_name);
 };
 
 #endif /* defined(__PDFPlusLib__PPFormBase__) */

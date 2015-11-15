@@ -131,6 +131,18 @@ PPColor *PPNewRGBColor(float r, float g, float b, float a)
 	return ret_color;
 }
 
+PPColor PPRGBColor(float r, float g, float b, float a)
+{
+	PPColor ret_color;
+	ret_color._colorSpaceName = PPCSN_DeviceRGB;
+	ret_color._c1 = r;
+	ret_color._c2 = g;
+	ret_color._c3 = b;
+	ret_color._c4 = a;
+
+	return ret_color;
+}
+
 PPColor *PPNewCMYKColor(float c, float m, float y, float k)
 {
 	PPColor *ret_color = new PPColor;
@@ -143,7 +155,17 @@ PPColor *PPNewCMYKColor(float c, float m, float y, float k)
 	return ret_color;
 }
 
+PPColor PPCMYKColor(float c, float m, float y, float k)
+{
+	PPColor ret_color;
+	ret_color._colorSpaceName = PPCSN_DeviceCMYK;
+	ret_color._c1 = c;
+	ret_color._c2 = m;
+	ret_color._c3 = y;
+	ret_color._c4 = k;
 
+	return ret_color;
+}
 string PPColor::UserColorName()
 {
 	string ret_str;

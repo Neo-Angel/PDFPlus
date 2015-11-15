@@ -21,21 +21,24 @@ public:
 	int _paintingType;
     
 public:
+	PPEPath(float x, float y, float w, float h);
     PPEPath(PPPath *path, PPContext *gcontext);
     PPEPath(PPContext *gcontext);
 	PPEPath(PPGState *gstate):PPElement(gstate){};
 	PPEPath(){}
+	
+	PPEPath(float x, float y, float w, float h, PPContext *gcontext);
 	PPBase *Create(){return new PPEPath;}
 
 	void CopyMembersTo(PPBase *obj);
     string makeCommandString();
     string xmlString(int level);
     
-    void stroke();
-    void fill();
-    void eofill();
-    void clip();
-    void eoclip();
+    void Stroke();
+    void Fill();
+    void EOFill();
+    void Clip();
+    void EOClip();
 
 	inline bool isFilled() { return (_fillType != PPEP_NonFill);}
 	inline bool IsFilled() { return (_fillType != PPEP_NonFill);}
@@ -57,6 +60,16 @@ public:
 	PPElementType getType() {return PPET_PATH;}
 	PPPath *getPath() {return _path;}
 	PPRect getBBox() {return _path->getBBox();}
+
+	void AddRect(float x, float y, float w, float h);
+	void MoveTo(float x, float y) { _path->moveTo(x, y);}
+	void LineTo(float x, float y) { _path->lineTo(x, y);}
+	void CurveTo(float cx1, float cy1, float cx2, float cy2, float x, float y) {
+		_path->curveTo(cx1, cy1, cx2, cy2, x, y);
+	}
+	void ClosePath() { _path->ClosePath(); }
+
+
 
 };
 

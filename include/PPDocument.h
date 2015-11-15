@@ -20,6 +20,7 @@
 using namespace std;
 
 class PPPage;
+class PPLayer;
 
 typedef enum {
     PPDS_None,
@@ -171,11 +172,15 @@ public:
 	// Layer(OCG) Related Methods
 	int NumberOfLayers();
 	PPTDictionary *LayerInfoAtIndex(int idx);
-	PPTDictionary *PPDocument::LayerForName(string name);
+	PPTIndirectObj *LayerObjAtIndex(int idx);
+	PPTDictionary *LayerDictForName(string name);
+	PPTIndirectObj *LayerObjForName(string name);
+	PPLayer *NewLayerForName(string name);
 	bool AddLayer(string name);
 	bool RenameLayer(string org_name, string new_name);
 	void ReorderLayer(int from_idx, int to_idx);
 	void WriteOCProperties(PPTDictionary *properties);
+	void BuildOCProperties();
 
 	void ApplyTokenToList(PPToken *token);
 };

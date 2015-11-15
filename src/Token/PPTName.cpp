@@ -39,7 +39,7 @@ string PPTName::pdfString()
 			retstr += "#20";
 		}
 		else {
-			retstr += ch;
+w			retstr += ch;
 		}
 	}
     return retstr;

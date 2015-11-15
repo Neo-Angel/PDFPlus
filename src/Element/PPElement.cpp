@@ -158,6 +158,10 @@ PPToken *PPElement::GetResource(const char *rsc_type)
 {
 	PPToken *ret_res;
 
+	if(_parentForm == NULL) {
+        cout << "No _parentForm..." << PP_ENDL;
+		return NULL;
+	}
     PPTIndirectRef *res_ref = (PPTIndirectRef *)_parentForm->ResourceForKey(rsc_type);
     if (!res_ref) {
         cout << "Resource IndirectRef not found..." << PP_ENDL;
