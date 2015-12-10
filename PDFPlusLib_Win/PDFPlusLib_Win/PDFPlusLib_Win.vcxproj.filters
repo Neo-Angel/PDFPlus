@@ -183,6 +183,9 @@
     <ClInclude Include="..\..\include\PPETextState.h">
       <Filter>소스 파일\Element</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\PPImage.h">
+      <Filter>소스 파일\Element\Graphic</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -319,6 +322,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\Element\PPEEndMarkedContent.cpp">
       <Filter>소스 파일\Element</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Element\Graphic\PPImage.cpp">
+      <Filter>소스 파일\Element\Graphic</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

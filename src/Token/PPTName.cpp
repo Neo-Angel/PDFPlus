@@ -7,6 +7,13 @@ PPTName::PPTName(PPParser *parser, string *str):PPToken(parser)
 {
     _name = str;
 }
+
+PPTName::PPTName(PPParser *parser, string str):PPToken(parser)
+{	
+	string *new_str = new string(str);
+    _name = new_str;
+}
+
 PPTName::~PPTName()
 {
     delete _name;
@@ -39,7 +46,7 @@ string PPTName::pdfString()
 			retstr += "#20";
 		}
 		else {
-w			retstr += ch;
+			retstr += ch;
 		}
 	}
     return retstr;

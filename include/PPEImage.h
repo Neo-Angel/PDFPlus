@@ -15,17 +15,22 @@
 class PPTName;
 class PPTDictionary;
 class PPTStream;
+class PPImage;
 
 class PPEImage : public PPElement {
 public:
-    PPTName *_name;
+    string _name;
 	PPTIndirectObj *_xobj;
 	string _subtype; // "Form", "Image"
+	PPImage *_image;
+	char *_image_path;
 //    PPTDictionary *_dict;
 //    PPTStream *_stream;
     
 public:
+	PPEImage(string name, PPContext *gcontext);
 	PPEImage(PPTName *name, PPContext *gcontext);
+	PPEImage(char *image_path, PPContext *gcontext);
     PPEImage(PPTDictionary *dict, PPContext *gcontext);
 	PPEImage();
 	PPBase *Create(){return new PPEImage;}

@@ -67,14 +67,14 @@ PPTIndirectObj *PPTDictionary::SetRefTokenAndKey(PPToken *token, string key, int
 	PPTIndirectObj *obj = NULL;
 	if(token->classType() == PPTN_INDIRECTOBJ) {
 		obj = (PPTIndirectObj *)token;
-		obj->_objNum = obj_num;
+		obj->_objNum = obj_num; // ???
 	}
 	else  {
 		obj = (PPTIndirectObj *)_parser->ObjectForNumber(obj_num);
 		if(!obj) {
 			obj = new PPTIndirectObj(_parser, obj_num, 0);
 		}
-		obj->AddObj(token);
+		obj->AddObj(token);  // 이 부분은 바로 위 if문안으로 들어가야 되는거 아닌지...
 	}
 	obj->addRefObj(ref);
 	return obj;
@@ -117,7 +117,7 @@ PPTName *PPTDictionary::nameForKey(const char *keyname)
     return ret_name;
 }
 
-PPToken *PPTDictionary::indirectObjectForKey(string &keyname)
+PPTIndirectObj *PPTDictionary::indirectObjectForKey(string &keyname)
 {
     PPToken *ret = _dict[keyname];
     if (ret) {
@@ -130,7 +130,7 @@ PPToken *PPTDictionary::indirectObjectForKey(string &keyname)
     else {
         _dict.erase(keyname);
     }
-    return ret;
+    return NULL; //(PPTIndirectObj *)ret;
 }
 
 PPToken *PPTDictionary::valueObjectForKey(string &keyname)

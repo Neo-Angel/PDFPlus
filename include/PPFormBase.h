@@ -78,6 +78,10 @@ public:
     int GetXObjNumOf(string name);
 	PPTIndirectObj *GetXObject();
 	PPTIndirectRef *ResourceForKey(string key);
+	PPTDictionary *ResourceDictForKey(string key);
+	PPTIndirectObj *ResourceObjForName(string name, string resource_type);
+	string NameFromResourceObj(PPTIndirectObj *obj, string resource_type);
+
 	bool HasElements() {return (numberOfElements() > 0 ? true : false);}
 
 	PPContext *ptContext() {return _context;}

@@ -119,7 +119,7 @@ public:
     
     string makeCommandString();
     string xmlString(int level);
-	void setTransform(PPMatrix mtx){_matrix = mtx;}
+	void setTransform(PPMatrix mtx){setMatrix(mtx);}
 
 	void SetStrokeColor(vector<PPToken *> &_operands);
 	void SetStrokeColorN(vector<PPToken *> &_operands);

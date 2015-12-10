@@ -187,7 +187,7 @@ PPTDictionary *PPDocument::PagesDictionary()
 {
 	PPTDictionary *root_dict = RootDict();
 
-    PPTIndirectObj *pages = (PPTIndirectObj *)root_dict->indirectObjectForKey("Pages");
+    PPTIndirectObj *pages = (PPTIndirectObj *)root_dict->IndirectObjectForKey("Pages");
     PPTDictionary *pages_dict = pages->firstDictionary();
 	return pages_dict;
 }
@@ -224,7 +224,7 @@ void PPDocument::AddPage(PPPage *page)
 	page_obj->AddObj(page_dict);
 
 	PPTDictionary *root_dict = RootDict();
-	PPTIndirectObj *pages = (PPTIndirectObj *)root_dict->indirectObjectForKey("Pages");
+	PPTIndirectObj *pages = (PPTIndirectObj *)root_dict->IndirectObjectForKey("Pages");
 	PPTIndirectRef *parent_ref = new PPTIndirectRef(&_parser, pages->_objNum, 0);
 	pages->addRefObj(parent_ref);
 	page_dict->SetTokenAndKey(parent_ref, "Parent");
@@ -369,7 +369,7 @@ int PPDocument::buildDocument()
     _pageLayout = (PPTName *)root_dict->valueObjectForKey("PageLayout");
     _pageMode = (PPTName *)root_dict->valueObjectForKey("PageMode");
     _OCProperties = (PPTDictionary *)root_dict->valueObjectForKey("OCProperties");
-    PPTIndirectObj *pages = (PPTIndirectObj *)root_dict->indirectObjectForKey("Pages");
+    PPTIndirectObj *pages = (PPTIndirectObj *)root_dict->IndirectObjectForKey("Pages");
     PPTDictionary *pages_dict = pages->firstDictionary();
 	if(_OCProperties) {
 		PPTDictionary *d_dict = (PPTDictionary *)_OCProperties->valueObjectForKey("D");
@@ -1291,3 +1291,22 @@ void PPDocument::ApplyTokenToList(PPToken *token, PPDocument *src_doc)
 
 }
 */
+
+
+/////////////////////////////////////////////////////////////
+//  Image Related Methods
+/////////////////////////////////////////////////////////////
+#include "PPImage.h"
+
+PPTIndirectObj *PPDocument::ImageFromPath(string path)
+{
+	PPTIndirectObj *ret_obj = _images[path];
+	if(ret_obj == NULL) {
+		PPImage *image = new PPImage(path, &_parser);
+		int obj_num = NewObjNum();
+		ret_obj = image->MakeIndirectObj(obj_num);
+		PushObj(ret_obj);
+		_images[path] = ret_obj;
+	}
+	return ret_obj;
+}

@@ -13,6 +13,7 @@ class PPTName : public PPToken {
 public:
     string *_name;
     PPTName(PPParser *parser, string *str);
+	PPTName(PPParser *parser, string str);
 	PPTName() {_name = NULL;}
     ~PPTName();
 //    string *getName();

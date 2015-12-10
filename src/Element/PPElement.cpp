@@ -199,3 +199,9 @@ PPDocument *PPElement::GetDocument()
 	return _parentForm->_document;
 }
 
+
+void PPElement::SetTransform(float a, float b, float c, float d, float x, float y)
+{
+	PPMatrix mtx(a, b, c, d, x, y); 
+	_gstate->setMatrix(mtx);
+}

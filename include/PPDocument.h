@@ -85,6 +85,7 @@ public:  //protected:
     map <int, PPToken *> _fonts;  // PPToken => PPTIndirectObj
     map <int, PPToken *> _xobjects; // images : PPToken => PPTIndirectObj
 	map <int, PPTIndirectObj *> _srcIndirectObjs;
+	map <string, PPTIndirectObj *> _images;
 
 public:
 	void readPage(PPTDictionary *page_dict);
@@ -183,6 +184,8 @@ public:
 	void BuildOCProperties();
 
 	void ApplyTokenToList(PPToken *token);
+
+	PPTIndirectObj *ImageFromPath(string path);
 };
 
 #endif /* defined(__PDFPlusLib__PPDocument__) */

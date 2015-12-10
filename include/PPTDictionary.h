@@ -32,12 +32,14 @@ public:
 	PPToken *ObjectForKey(const char *keyname){return objectForKey(keyname);}
 	PPToken *ObjectForKey(string keyname){return objectForKey(keyname);}
 	PPTName *nameForKey(const char *keyname);
-    PPToken *indirectObjectForKey(string &keyname);
+    PPTIndirectObj *indirectObjectForKey(string &keyname);
     PPToken *valueObjectForKey(string &keyname);
 	PPToken *ValueObjectForKey(string &keyname){return valueObjectForKey(keyname);}
 	PPToken *ValueObjectForKey(const char *keyname){string key(keyname); return ValueObjectForKey(key);}
-    PPToken *indirectObjectForKey(const char *keyname){string str(keyname);return indirectObjectForKey(str);}
+    PPTIndirectObj *indirectObjectForKey(const char *keyname){string str(keyname);return indirectObjectForKey(str);}
+	PPTIndirectObj *IndirectObjectForKey(const char *keyname){string str(keyname);return indirectObjectForKey(str);}
     PPToken *valueObjectForKey(const char *keyname){string str(keyname);return valueObjectForKey(str);}
+
     string description();
     string xmlString(int level);
     string internalXmlString(int level);

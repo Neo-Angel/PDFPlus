@@ -157,6 +157,73 @@ PPTIndirectObj *PPFormBase::GetXObject()
 	return _indirObj; 
 }
 
+PPTDictionary *PPFormBase::ResourceDictForKey(string key)
+{
+	if (_resourceDict == NULL)
+		return NULL;
+
+	PPTDictionary *ret = (PPTDictionary *)_resourceDict->valueObjectForKey(key);
+	return ret;
+}
+
+PPTIndirectObj *PPFormBase::ResourceObjForName(string name, string resource_type)
+{
+	PPTDictionary *dict = ResourceDictForKey(resource_type);
+	if(dict == NULL) {
+		return NULL;
+	}
+	PPTIndirectObj *obj = dict->indirectObjectForKey(name);
+	return obj;
+}
+
+string PPFormBase::NameFromResourceObj(PPTIndirectObj *obj, string resource_type)
+{
+	int obj_num = obj->_objNum;
+	PPTDictionary *rsc_dict = ResourceDictForKey(resource_type);
+	if(rsc_dict == NULL) {
+		rsc_dict = new PPTDictionary(&_document->_parser);
+		_resourceDict->SetTokenAndKey(rsc_dict, resource_type);
+	}
+	map <string, PPToken *> *map_dict = &rsc_dict->_dict;
+    map <string, PPToken *>::iterator it_dict;
+	vector <string> namelist;
+
+	for(it_dict = map_dict->begin(); it_dict != map_dict->end(); it_dict++) {
+        PPTIndirectRef *rsc_ref = (PPTIndirectRef *)it_dict->second;
+		string name = it_dict->first;
+		if(rsc_ref->_objNum == obj->_objNum) {
+			return name;
+		}
+		namelist.push_back(name);
+    }
+
+
+	char pname[10] = "RC0";
+	char *format = "RC%d";
+	if(resource_type == "XObject") {
+		strcpy(pname, "IM0");
+		format = "IM%d";
+	}
+
+	int name_idx = 0;
+	int i, icnt = namelist.size();
+	for(i=0;i<icnt;i++) {
+		string name = namelist[i];
+		if(name == pname) {
+			name_idx ++;
+			sprintf(pname, format,name_idx);
+			i = 0;
+			continue;
+		}
+	}
+	
+	PPTIndirectRef *new_rsc_ref = new PPTIndirectRef(&_document->_parser, obj->_objNum, obj->_genNum);
+	rsc_dict->SetRefTokenAndKey(obj, pname, obj->_objNum);
+
+	return pname;
+}
+
+
 PPTIndirectRef *PPFormBase::ResourceForKey(string key)
 {
 	if (_resourceDict == NULL)
@@ -165,6 +232,7 @@ PPTIndirectRef *PPFormBase::ResourceForKey(string key)
 	PPTIndirectRef *ret = (PPTIndirectRef *)_resourceDict->objectForKey(key);
 	return ret;
 }
+
 
 void PPFormBase::addElement(PPElement *element)
 {
@@ -369,6 +437,7 @@ void PPFormBase::writeElement(PPElement *src_element)
 							rsc = WriteResource(src_rsc, src_obj_num);  // _resources
 							if(rsc) {
 								_document->SetRefTokenForKey(rsc_dict,rsc,rsc_key); //rsc_dict, _tokens, parser->_objDict
+								// PPElement::willAddToParent 에서 해결할 수 없었을까? 추후 검토.
 								if(rsc_type == PPRT_PROPERTIES && _document->_OCProperties == NULL) { // OCG(Layer)
 									PPDocument *src_doc = src_element->_parentForm->_document;
 									PPTDictionary *src_ocproperties = src_doc->_OCProperties;

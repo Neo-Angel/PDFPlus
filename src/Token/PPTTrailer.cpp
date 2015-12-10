@@ -153,14 +153,14 @@ void PPTTrailer::setFileID(PPTArray *idarr)
 PPToken *PPTTrailer::rootObject()
 {
     PPTDictionary *dict = getDictionary();
-    PPToken *ret = dict->indirectObjectForKey(PPKN_ROOT); // Indirect Ref.
+    PPToken *ret = dict->IndirectObjectForKey(PPKN_ROOT); // Indirect Ref.
     return ret;
 }
 
 PPToken *PPTTrailer::infoObject()
 {
     PPTDictionary *dict = getDictionary();
-    PPToken *ret = dict->indirectObjectForKey(PPKN_INFO); // Indirect Ref.
+    PPToken *ret = dict->IndirectObjectForKey(PPKN_INFO); // Indirect Ref.
     return ret;
 }
 

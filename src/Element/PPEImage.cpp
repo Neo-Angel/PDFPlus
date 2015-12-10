@@ -6,26 +6,49 @@
 #include "PPTDictionary.h"
 #include "PPTIndirectObj.h"
 #include "PPTIndirectRef.h"
+#include "PPImage.h"
+
 //  Image
 //
 ///////////////////////////////////////////////////////
-
-PPEImage::PPEImage(PPTDictionary *dict, PPContext *gcontext) : PPElement(gcontext)
+PPEImage::PPEImage(PPTName *name, PPContext *gcontext) : PPElement(gcontext)
 {
-	_name = NULL;
+	_name = *name->_name;
+	_image = NULL;
+	_image_path = NULL;
 //	_dict = dict;
 //	_stream = NULL;
 }
 
-PPEImage::PPEImage(PPTName *name, PPContext *gcontext) : PPElement(gcontext)
+PPEImage::PPEImage(PPTDictionary *dict, PPContext *gcontext) : PPElement(gcontext)
 {
-	_name = name;
+//	_name = NULL;
+	_image = NULL;
+	_image_path = NULL;
+//	_dict = dict;
+//	_stream = NULL;
+}
+
+PPEImage::PPEImage(string name, PPContext *gcontext) : PPElement(gcontext)
+{
+//	_name = name;
 	_xobj = NULL;
+	_image = NULL;
+	_image_path = NULL;
+}
+
+
+PPEImage::PPEImage(char *image_path, PPContext *gcontext) : PPElement(gcontext)
+{
+//	_name = NULL;
+	_image = NULL;
+	_xobj = NULL;
+	_image_path = image_path;
 }
 
 PPEImage::PPEImage()
 {
-	_name = NULL;
+//	_name = NULL;
 //	_dict = NULL;
 //	_stream = NULL;
 }
@@ -35,8 +58,8 @@ void PPEImage::CopyMembersTo(PPBase *obj)
 	PPElement::CopyMembersTo(obj);
 	PPEImage *tar_obj = (PPEImage *)obj;
 
-	if(_name)
-		tar_obj->_name = (PPTName *)_name->Copy();
+
+	tar_obj->_name = _name;
 	if(_xobj)
 		tar_obj->_xobj = (PPTIndirectObj *)_xobj->Copy();
 //	if(_dict)
@@ -47,8 +70,8 @@ void PPEImage::CopyMembersTo(PPBase *obj)
 
 void PPEImage::SetParser(PPParser *parser) 
 {
-	if(_name)
-		_name->_parser = parser;
+//	if(_name)
+//		_name->_parser = parser;
 	if(_xobj)
 		_xobj->_parser = parser;
 //	if(_stream)
@@ -60,8 +83,8 @@ string PPEImage::makeCommandString()
 {
     string retstr;
 	retstr = PPElement::makeCommandString();
-	if(_name)
-		retstr += _name->pdfString() + " Do\xa";
+	if(_name.length())
+		retstr += "/"+_name + " Do\xa";
     return retstr;
 }
 
@@ -82,6 +105,18 @@ string PPEImage::xmlString(int level)
 void PPEImage::willAddToParent(PPFormBase *form)
 {
     PPElement::willAddToParent(form);
+	if (_image_path) {
+		PPDocument *doc = form->_document;
+		_xobj = doc->ImageFromPath(_image_path);
+		if(_xobj) {
+			_name = form->NameFromResourceObj(_xobj, "XObject");
+			
+			_subtype = "Image";
+		}
+		_image_path = NULL;
+		return;
+	}
+
     PPTIndirectRef *xobj_ref = (PPTIndirectRef *)_parentForm->ResourceForKey("XObject");
     if (!xobj_ref) {
         cout << "XObje IndirectRef not found..." << PP_ENDL;
@@ -98,7 +133,7 @@ void PPEImage::willAddToParent(PPFormBase *form)
 	else if(xobj_ref->classType() == PPTN_DICTIONARY) {
 		xobj_dict = (PPTDictionary *)xobj_ref;
 	}
-    xobj_ref = (PPTIndirectRef *)xobj_dict->objectForKey(*_name->_name);
+    xobj_ref = (PPTIndirectRef *)xobj_dict->objectForKey(_name);
     if (!xobj_ref) {
         cout << "Shading IndirectRef not found..." << PP_ENDL;
         return;
@@ -139,7 +174,7 @@ string PPEImage::ResourceKeyFor(const char *rsc_type)
 	if(key.length() > 0) {
 		return key;
 	}
-	return *_name->_name;
+	return _name;
 }
 
 

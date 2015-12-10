@@ -63,13 +63,13 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\Work\PDFPlus\zlib-x86;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Work\PDFPlus\jpeg-9a;C:\Work\PDFPlus\zlib-x86;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>C:\Work\PDFPlus\zlib-x86;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LibraryPath>C:\Work\PDFPlus\zlib-x86;$(LibraryPath)</LibraryPath>
+    <LibraryPath>C:\Work\PDFPlus\jpeg-9a\Release;C:\Work\PDFPlus\zlib-x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LibraryPath>C:\Work\PDFPlus\zlib-x86;$(LibraryPath)</LibraryPath>
@@ -101,7 +101,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>ZLib32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ZLib32.lib;jpeg.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -197,6 +197,7 @@
     <ClInclude Include="..\..\include\PPETextState.h" />
     <ClInclude Include="..\..\include\PPFormBase.h" />
     <ClInclude Include="..\..\include\PPGState.h" />
+    <ClInclude Include="..\..\include\PPImage.h" />
     <ClInclude Include="..\..\include\PPLayer.h" />
     <ClInclude Include="..\..\include\PPMatrix.h" />
     <ClInclude Include="..\..\include\PPPage.h" />
@@ -225,6 +226,7 @@
     <ClCompile Include="..\..\src\Element\Graphic\PPContext.cpp" />
     <ClCompile Include="..\..\src\Element\Graphic\PPDash.cpp" />
     <ClCompile Include="..\..\src\Element\Graphic\PPGState.cpp" />
+    <ClCompile Include="..\..\src\Element\Graphic\PPImage.cpp" />
     <ClCompile Include="..\..\src\Element\Graphic\PPMatrix.cpp" />
     <ClCompile Include="..\..\src\Element\Graphic\PPPath.cpp" />
     <ClCompile Include="..\..\src\Element\Graphic\PPPathItem.cpp" />
