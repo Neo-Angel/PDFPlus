@@ -5,6 +5,13 @@
 #include "PPContext.h"
 #include "PPTName.h"
 
+/* Example
+/F0 120 Tf
+BT
+0.707123 0.70709 -0.70709 0.707123 56.5731 197.989 Tm
+(A text layer!) Tj
+ET
+*/
 
 //  Text
 //
@@ -136,3 +143,13 @@ string PPEText::ResourceKeyFor(const char *rsc_type)
 	return ret_key;
 }
 
+
+void PPEText::SetFont(char *font_name, float font_size)
+{
+
+}
+
+void PPEText::DrawText(char *text)
+{
+
+}

@@ -23,6 +23,8 @@ public:
 	PPBase *Create() {return new PPTString();}
 	void CopyMembersTo(PPBase *obj);
 
+	void AppendString(PPTString *str);
+
 };
 /////////////////////////////////////////
 

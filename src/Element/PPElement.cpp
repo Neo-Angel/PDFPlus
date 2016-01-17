@@ -205,3 +205,8 @@ void PPElement::SetTransform(float a, float b, float c, float d, float x, float 
 	PPMatrix mtx(a, b, c, d, x, y); 
 	_gstate->setMatrix(mtx);
 }
+
+void PPElement::SetTransform(PPMatrix *mtx)
+{
+	_gstate->setMatrix(*mtx);
+}

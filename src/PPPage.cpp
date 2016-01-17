@@ -61,7 +61,7 @@ void PPPage::StoreResources()
 void PPPage::loadDictionary(PPTDictionary *page_dict)
 {
     _formDict = page_dict;
-	_context->ptMatrix()->rotate(rotate());
+	_context->ptMatrix()->Rotate(rotate());
 
 //    PPTIndirectObj *rcs_indir = (PPTIndirectObj *)_formDict->indirectObjectForKey("Resources");
 //    _resourceDict = rcs_indir->firstDictionary();

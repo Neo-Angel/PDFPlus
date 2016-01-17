@@ -54,3 +54,9 @@ void PPTString::CopyMembersTo(PPBase *obj)
 	PPTString *str = (PPTString *)obj;
 	str->_string = new string(*_string);
 }
+
+
+void PPTString::AppendString(PPTString *str)
+{
+	_string->append(*str->_string);
+}

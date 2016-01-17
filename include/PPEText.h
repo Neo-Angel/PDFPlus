@@ -26,6 +26,7 @@ public:
 	void CopyMembersTo(PPBase *);
 	void SetParser(PPParser *parser);
 
+	void SetFont(char *font_name, float font_size);
 
 	string commandString();
 	string makeCommandString();
@@ -40,7 +41,7 @@ public:
 	vector <const char *> ResourceTypeList();
 	string ResourceKeyFor(const char *rsc_type);
 
-
+	void DrawText(char *text);
 };
 
 

@@ -55,7 +55,7 @@ public:
 
 	PPLayer *AddLayerWithProperties(string property_name);
 	PPLayer *AddLayer(string layer_name);
-	PPLayer *LayerForName(string name);
+	PPLayer *LayerForName(string name, int *idx = NULL);
 
     void addElement(PPElement *element);
 	void AddElement(PPElement *element) {addElement(element);}
@@ -94,6 +94,9 @@ public:
 	PPLayer *BeginLayer(char *layerName);
 	void EndLayer();
 	void BeginReadLayer(char *layer_name);
+	void ReorderLayer(int to_idx, int from_idx);
+	void MergeLayer(string tar, string src);
+
 };
 
 #endif /* defined(__PDFPlusLib__PPFormBase__) */

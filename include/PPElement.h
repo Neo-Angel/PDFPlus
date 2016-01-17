@@ -129,6 +129,7 @@ public:
 	void SetFillColor(PPColor c) {_gstate->setFillColor(c);}
 
 	void SetTransform(float a, float b, float c, float d, float x, float y);
+	void SetTransform(PPMatrix *mtx);
 };
 
 

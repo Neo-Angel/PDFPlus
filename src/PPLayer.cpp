@@ -44,3 +44,14 @@ string PPLayer::Name()
 	}
 	return "";
 }
+
+void PPLayer::Merge(PPLayer *layer)
+{
+	int i, icnt = layer->_elements.size();
+	for(i=0;i<icnt;i++) {
+		PPElement *element = layer->_elements.at(i);
+		PPElement *copied_element = (PPElement *)element->Copy();
+		_elements.push_back(copied_element);
+		//layer->_elements.erase(layer->_elements.begin()+i);
+	}
+}

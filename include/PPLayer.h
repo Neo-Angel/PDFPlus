@@ -22,6 +22,8 @@ public:
 	void RemoveElementAtIndex(int idx);
 
 	string Name();
+
+	void Merge(PPLayer *layer);
 };
 
 

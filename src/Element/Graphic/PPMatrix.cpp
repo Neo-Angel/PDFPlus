@@ -13,7 +13,28 @@ string PPMatrix::pdfString()
     return retstr;
 }
 
-void PPMatrix::multiply(float &x, float &y)
+
+void PPMatrix::Scale(float x, float y)
+{
+	_a=x;
+	_d=y;
+}
+
+void PPMatrix::Rotate(float angle) 
+{
+	_a *= cos(angle);
+	_b *= sin(angle);
+	_c *= -sin(angle);
+	_d *= cos(angle);
+}
+
+void PPMatrix::Translate(float x, float y)
+{
+	_x += x; 
+	_y += y;
+}
+
+void PPMatrix::Multiply(float &x, float &y)
 {
 	x = _a * x + _c * y + _x;
 	y = _b * x + _d * y + _y;
@@ -25,7 +46,7 @@ void PPMatrix::multiply(float &x, float &y)
 
 
 
-void PPMatrix::multiply(PPMatrix mtx)
+void PPMatrix::Multiply(PPMatrix mtx)
 {
 	float a = _a * mtx._a + _b * mtx._c + 0 * mtx._x;
 	float b = _a * mtx._b + _b * mtx._d + 0 * mtx._y;

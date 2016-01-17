@@ -964,15 +964,53 @@ void PPFormBase::BeginReadLayer(char *layer_name)
 
 }
 
-PPLayer *PPFormBase::LayerForName(string name)
+PPLayer *PPFormBase::LayerForName(string name, int *idx)
 {
 	int i, icnt = _layers.size();
 	for(i=0;i<icnt;i++) {
 		PPLayer *layer = _layers[i];
 		if(layer->Name() == name) {
+			if (idx)
+				*idx = i;
 			return layer;
 		}
 	}
 	return NULL;
 }
 
+void PPFormBase::ReorderLayer(int to_idx, int from_idx)
+{
+	from_idx++;
+	to_idx++;
+	PPLayer *layer = _layers[from_idx];
+	_layers.erase(_layers.begin() + from_idx);
+	_layers.insert(_layers.begin()+to_idx, layer);
+}
+
+
+// 레이어 내의 요소들을 이동시키는 예제로도 활용 가능
+void PPFormBase::MergeLayer(string tar_name, string src_name)
+{
+	int src_idx;
+	int tar_idx;
+	PPLayer *tar = LayerForName(tar_name, &tar_idx);
+	PPLayer *src = LayerForName(src_name, &src_idx);
+
+	int i, icnt = src->_elements.size();
+	for(i=0;i<icnt;i++) {
+		PPElement *element = src->_elements[i];
+		if(element->getType() != PPET_MARKED_CONTENT
+			&& element->getType() != PPET_END_MARKED_CONTENT
+			&& element->getType() != PPET_BEGIN_MARKED_CONTENT) {
+				int tar_cnt = tar->_elements.size();
+				// src 레이어의 Marked Contents 관련 엘리먼트들을 제외하고
+				// tar 레이어의 마지막 바로 앞에 인서트를 한다.
+				// tar 레이어의 마지막에 있는 Marked content end  엘리먼트를 
+				// 유지해 줘야 하기 때문이다.
+				tar->_elements.insert(tar->_elements.begin() + tar_cnt - 1, element);
+		}
+	}
+
+	_layers.erase(_layers.begin() + src_idx);
+
+}

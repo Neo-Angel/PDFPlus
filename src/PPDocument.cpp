@@ -1247,11 +1247,93 @@ bool PPDocument::RenameLayer(string org_name, string new_name)
 	return false;
 }
 
-void PPDocument::ReorderLayer(int from_idx, int to_idx)
+void PPDocument::ReorderLayer(int to_idx, int from_idx)
 {
-	_layerOrders->Reorder(from_idx, to_idx);
+	_layerOrders->Reorder(to_idx, from_idx);
+	int i, icnt = _pages.size();
+	for(i=0;i<icnt;i++) {
+		PPPage *page = _pages[i];
+		page->ReorderLayer(to_idx, from_idx);
+	}
+}
+
+void PPDocument::MergeLayer(PPTDictionary *layer_dict1, PPTDictionary *layer_dict2)
+{
 
 }
+
+void PPDocument::RemoveRelatedObjects(PPTIndirectRef *ref)
+{
+
+
+}
+
+void PPDocument::MergeLayer(string layer1, string layer2)
+{
+	//PPTArray *_layerOrders;
+	PPTDictionary *layer_dict1 = NULL;
+	int l1 = -1;
+	int l2 = -1;
+	PPTDictionary *layer_dict2 = NULL;
+	int i, icnt = _layerOrders->_array.size();
+	for(i=0;i<icnt;i++) {
+		PPTIndirectRef *indir_ref = (PPTIndirectRef *)_layerOrders->_array[i];
+		PPTIndirectObj *indir_obj = indir_ref->targetObject();
+		PPTDictionary *layer_dict = indir_obj->FirstDictionary();
+		PPTString *layer_name = (PPTString *)layer_dict->ObjectForKey("Name");
+		if(*layer_name->_string == layer1) {
+			layer_dict1 = layer_dict;
+			l1 = i;
+		}
+		else if(*layer_name->_string == layer2) {
+			layer_dict2 = layer_dict;
+			l2 = i;
+		}
+	}
+	if(layer_dict1 == NULL) {
+		return;
+	}
+	if(layer_dict2 == NULL) {
+		return;
+	}
+	PPTString *layer1_name = (PPTString *)layer_dict1->ObjectForKey("Name");
+	PPTString *layer2_name = (PPTString *)layer_dict2->ObjectForKey("Name");
+	layer1_name->AppendString(layer2_name);
+	_layerOrders->RemoveAtIndex(l2);
+
+
+	icnt = _OCGs->_array.size();
+	for(i=0;i<icnt;i++) {
+		PPTIndirectRef *indir_ref = (PPTIndirectRef *)_OCGs->_array[i];
+		PPTIndirectObj *indir_obj = indir_ref->targetObject();
+		PPTDictionary *layer_dict = indir_obj->FirstDictionary();
+		PPTString *layer_name = (PPTString *)layer_dict->ObjectForKey("Name");
+		if(*layer_name->_string == layer2) {
+			_OCGs->RemoveAtIndex(i);
+			// remove related IndirectObjs
+			break;
+		}
+	}
+
+	icnt = _layersOn->_array.size();
+	for(i=0;i<icnt;i++) {
+		PPTIndirectRef *indir_ref = (PPTIndirectRef *)_layersOn->_array[i];
+		PPTIndirectObj *indir_obj = indir_ref->targetObject();
+		PPTDictionary *layer_dict = indir_obj->FirstDictionary();
+		PPTString *layer_name = (PPTString *)layer_dict->ObjectForKey("Name");
+		if(*layer_name->_string == layer2) {
+			_layersOn->RemoveAtIndex(i);
+			break;
+		}
+	}
+
+	icnt = _pages.size();
+	for(i=0;i<icnt;i++) {
+		PPPage *page = _pages[i];
+		page->MergeLayer(*layer1_name->_string, layer2);
+	}
+}
+
 
 void PPDocument::WriteOCProperties(PPTDictionary *properties)
 {
