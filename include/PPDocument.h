@@ -180,7 +180,7 @@ public:
 	PPLayer *NewLayerForName(string name);
 	bool AddLayer(string name);
 	bool RenameLayer(string org_name, string new_name);
-	void ReorderLayer(int to_idx, int from_idx);
+	void ReorderLayer(int from_idx, int to_idx);
 	void MergeLayer(string layer1, string layer2);
 	void MergeLayer(PPTDictionary *layer_dict1, PPTDictionary *layer_dict2);
 	void WriteOCProperties(PPTDictionary *properties);

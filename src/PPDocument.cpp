@@ -1247,7 +1247,7 @@ bool PPDocument::RenameLayer(string org_name, string new_name)
 	return false;
 }
 
-void PPDocument::ReorderLayer(int to_idx, int from_idx)
+void PPDocument::ReorderLayer(int from_idx, int to_idx)
 {
 	_layerOrders->Reorder(to_idx, from_idx);
 	int i, icnt = _pages.size();
