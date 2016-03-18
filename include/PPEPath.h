@@ -32,7 +32,7 @@ public:
 
 	void CopyMembersTo(PPBase *obj);
     string makeCommandString();
-    string xmlString(int level);
+    string XMLString(int level);
     
     void Stroke();
     void Fill();

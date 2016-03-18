@@ -53,7 +53,7 @@ public:
     void curveTo2(float cx1, float cy1, float x, float y);
     void rectangle(float x, float y, float w, float h);
 	void close(); void ClosePath() {close();}
-    string xmlString(int level);
+    string XMLString(int level);
 
 	size_t itemCount() {return _itemList.size();}
 	PPPathItem *itemAtIndex(size_t idx) {return _itemList.at(idx);}

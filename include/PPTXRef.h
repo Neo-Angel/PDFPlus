@@ -25,9 +25,9 @@ public:
     ~PPTXRef();
     void addXRef(unsigned int objnum, unsigned long long offset, int gennum, char type);
     size_t numberOfItems();
-    string xmlString(int level);
+    string XMLString(int level);
     string pdfString();
-    inline const char *classType() {return PPTN_XREF;}
+    inline const char *ClassType() {return PPTN_XREF;}
     void write(std::ostream &os);
     
     void merge(PPTXRef *trailer);

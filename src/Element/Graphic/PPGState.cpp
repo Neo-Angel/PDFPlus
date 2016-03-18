@@ -8,7 +8,7 @@
 #include "PPTName.h"
 
 extern PPCommandInfo PPCommandList[];
-string tabStr(int cnt);
+string PPTabStr(int cnt);
 
 
 
@@ -329,50 +329,13 @@ void PPGState::CopyMembersTo(PPBase *obj)
 //    clearGFlags();
     
 }
-//string PPGState::xmlString(int level)
-//{
-//    string retstr;
-//    ostringstream ostr;
-//    PPCommandInfo *cinfo;
-//    if(_gflag & PPGF_LINEWIDTH) {
-//        cinfo = &PPCommandList[PPC_LineWidth];
-//        ostr << tabStr(level) << "<LineWidth value=" << _lineWidth <<"/>" << PP_ENDL;
-//    }
-//    if(_gflag & PPGF_INTENT) {
-//        cinfo = &PPCommandList[PPC_Intent];
-//        ostr << tabStr(level) << "<Intent value=" << _intent <<"/>" << PP_ENDL;
-//    }
-//    if(_gflag & PPGF_FLATNESS) {
-//        cinfo = &PPCommandList[PPC_Flatness];
-//        ostr << tabStr(level) << "<Flatness value=" << _flatness <<"/>" << PP_ENDL;
-//    }
-//    if(_gflag & PPGF_MITERLIMIT) {
-//        cinfo = &PPCommandList[PPC_MiterLimit];
-//        ostr << tabStr(level) << "<MiterLimit value=" << _miterLimit <<"/>" << PP_ENDL;
-//    }
-//    if(_gflag & PPGF_LINECAP) {
-//        cinfo = &PPCommandList[PPC_LineCap];
-//        ostr << tabStr(level) << "<LineCap value=" << _lineCap <<"/>" << PP_ENDL;
-//    }
-//    if(_gflag & PPGF_LINEJOIN) {
-//        cinfo = &PPCommandList[PPC_LineJoin];
-//        ostr << tabStr(level) << "<LineJoin value=" << _lineJoin <<"/>" << PP_ENDL;
-//    }
-//    if(_gflag & PPGF_DICTNAME) {
-//        cinfo = &PPCommandList[PPC_DictName];
-//        ostr << "/" << _dictName << " " << cinfo->code << PP_ENDL;
-//        ostr << tabStr(level) << "<DictName value='" << _dictName <<"'/>" << PP_ENDL;
-//    }
-//    retstr = ostr.str();
-//    return retstr;
-//}
 
-string PPGState::xmlString(int level)
+string PPGState::XMLString(int level)
 {
     string retstr;
-    retstr += tabStr(level) + "<GState>\xa";
+    retstr += PPTabStr(level) + "<GState>\xa";
     retstr += makeCommandString() + "\xa";
-    retstr += tabStr(level) + "</GState>\xa";
+    retstr += PPTabStr(level) + "</GState>\xa";
     return retstr;
 }
 

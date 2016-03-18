@@ -16,18 +16,16 @@ PPTComment::~PPTComment()
     delete _comment;
 }
 
-string PPTComment::xmlString(int level)
+string PPTComment::XMLString(int level)
 {
     string retstr;
-    //    retstr += tabStr(level) + "<String><![CDATA[" +*_string + "]]></String>\xa";
-//    string nom_str = toNomalASCIIString(*_comment);
     
     wstring wstr;
-    stringToWString(wstr, *_comment);
+    PPstringToWString(*_comment, wstr);
     string utf8_str = PPwstrToUtf8(wstr);
     
-    retstr += tabStr(level) + "<Comment>" +utf8_str + "</Comment>\xa";
-    //    retstr += tabStr(level) + "<String>" +"*_string" + "</String>\xa";
+    retstr += PPTabStr(level) + "<Comment>" +utf8_str + "</Comment>\xa";
+    //    retstr += PPTabStr(level) + "<String>" +"*_string" + "</String>\xa";
     return retstr;
 }
 

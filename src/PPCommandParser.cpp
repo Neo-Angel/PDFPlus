@@ -145,7 +145,7 @@ PPCommandInfo PPCommandList[PP_NUM_OF_OPS] = {
 
 map <string, PPCommandInfo *> CommandDict;
 
-string tabStr(int cnt);
+string PPTabStr(int cnt);
 
 
 
@@ -178,21 +178,21 @@ PPTCommand::~PPTCommand()
     }
     _operands.clear();
 }
-string PPTCommand::xmlString(int level)
+string PPTCommand::XMLString(int level)
 {
     string retstr;
 //    PPCommandInfo &cmdinfo = PPCommandList[_type];
     if (_operands.size() == 0) {
-        retstr += tabStr(level) + "<"+_cmdInfo->name+"/>\xa";
+        retstr += PPTabStr(level) + "<"+_cmdInfo->name+"/>\xa";
     }
     else {
-        retstr += tabStr(level) + "<"+_cmdInfo->name+">\xa";
+        retstr += PPTabStr(level) + "<"+_cmdInfo->name+">\xa";
         int i, icnt = (int)_operands.size();
         for (i=0; i<icnt; i++) {
             PPToken *token = _operands.at(i);
-            retstr += token->xmlString(level+1);
+            retstr += token->XMLString(level+1);
         }
-        retstr += tabStr(level) + "</"+_cmdInfo->name+">\xa";
+        retstr += PPTabStr(level) + "</"+_cmdInfo->name+">\xa";
     }
     
     return retstr;
@@ -201,7 +201,7 @@ string PPTCommand::xmlString(int level)
 float PPTCommand::getFloatValue(int idx)
 {
     PPToken *token = _operands[idx];
-    if (token->classType() != PPTN_NUMBER) {
+    if (token->ClassType() != PPTN_NUMBER) {
         cout << "Error : Parameter Type Error.\xa";
         return 0;
     }
@@ -213,7 +213,7 @@ float PPTCommand::getFloatValue(int idx)
 int PPTCommand::getIntValue(int idx)
 {
     PPToken *token = _operands[idx];
-    if (token->classType() != PPTN_NUMBER) {
+    if (token->ClassType() != PPTN_NUMBER) {
         cout << "Error : Parameter Type Error.\xa";
         return 0;
     }
@@ -226,11 +226,11 @@ string PPTCommand::getStringValue(int idx)
 {
     string *ret = NULL;
     PPToken *token = _operands[idx];
-    if (token->classType() == PPTN_NAME) {
+    if (token->ClassType() == PPTN_NAME) {
         ret = ((PPTName *)token)->_name;
         return *ret;
     }
-    else if (token->classType() == PPTN_STRING) {
+    else if (token->ClassType() == PPTN_STRING) {
         ret = ((PPTString *)token)->_string;
         return *ret;
     }
@@ -241,11 +241,11 @@ string *PPTCommand::getStringPt(int idx)
 {
     string *ret = NULL;
     PPToken *token = _operands[idx];
-    if (token->classType() == PPTN_NAME) {
+    if (token->ClassType() == PPTN_NAME) {
         ret = ((PPTName *)token)->_name;
         return ret;
     }
-    else if (token->classType() == PPTN_STRING) {
+    else if (token->ClassType() == PPTN_STRING) {
         ret = ((PPTString *)token)->_string;
         return ret;
     }
@@ -285,7 +285,7 @@ string PPTCommand::pdfString()
     size_t i, icnt = _operands.size();
     for (i=0; i<icnt; i++) {
         PPToken *token = _operands.at(i);
-        retstr += token->pdfString();
+        retstr += token->PDFString();
         retstr += " ";
     }
     retstr += _cmdInfo->code;
@@ -320,10 +320,10 @@ bool PPCommandParser::parseStream(PPTStream &stream)
     _index = 0;
     _streamSize = stream._streamSize;
     _streamData = stream._streamData;
-    return parser.parseSource(*this, _operands);
+    return parser.ParseSource(*this, _operands);
 }
 
-const char *PPCommandParser::classType()
+const char *PPCommandParser::ClassType()
 {
     return PPTN_GRAPHIC_PARSER;
 }

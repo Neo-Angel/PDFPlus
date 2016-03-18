@@ -65,7 +65,7 @@ PPTIndirectObj *PPTDictionary::SetRefTokenAndKey(PPToken *token, string key, int
 	PPTIndirectRef *ref = new PPTIndirectRef(_parser, obj_num, 0);
 	SetTokenAndKey(ref, key);
 	PPTIndirectObj *obj = NULL;
-	if(token->classType() == PPTN_INDIRECTOBJ) {
+	if(token->ClassType() == PPTN_INDIRECTOBJ) {
 		obj = (PPTIndirectObj *)token;
 		obj->_objNum = obj_num; // ???
 	}
@@ -107,7 +107,7 @@ PPTName *PPTDictionary::nameForKey(const char *keyname)
 		return NULL;
     }
 
-    if (ret_name->typeName() == PPTN_ARRAY) {
+    if (ret_name->TypeName() == PPTN_ARRAY) {
 		PPTArray *arr = (PPTArray *)ret_name;
 		if(arr->size() == 0) {
 			return NULL;
@@ -121,7 +121,7 @@ PPTIndirectObj *PPTDictionary::indirectObjectForKey(string &keyname)
 {
     PPToken *ret = _dict[keyname];
     if (ret) {
-        if (ret->classType() == PPTN_INDIRECTREF) {
+        if (ret->ClassType() == PPTN_INDIRECTREF) {
             PPTIndirectRef *indref = (PPTIndirectRef *)ret;
             PPTIndirectObj *tar = indref->targetObject();
             return tar;
@@ -136,7 +136,7 @@ PPTIndirectObj *PPTDictionary::indirectObjectForKey(string &keyname)
 PPToken *PPTDictionary::valueObjectForKey(string &keyname)
 {
     PPToken *ret = _dict[keyname];
-    if (ret != NULL && ret->classType() == PPTN_INDIRECTREF) {
+    if (ret != NULL && ret->ClassType() == PPTN_INDIRECTREF) {
         PPTIndirectRef *indref = (PPTIndirectRef *)ret;
         PPTIndirectObj *tar = indref->targetObject();
         if (tar) {
@@ -151,7 +151,7 @@ PPToken *PPTDictionary::valueObjectForKey(string &keyname)
 }
 
 
-string PPTDictionary::description()
+string PPTDictionary::Description()
 {
     string str;
     str = "Dict {\xa";
@@ -160,43 +160,26 @@ string PPTDictionary::description()
     for(it_token_objs = _dict.begin(); it_token_objs != _dict.end(); it_token_objs++) {
         string name = it_token_objs->first;
         PPToken *token = (PPToken *)(it_token_objs->second);
-        string desc = token->description();
+        string desc = token->Description();
         str += "\t["+name + "] : [" + desc+"]\xa";
     }
     str += "}\xa";
     return str;
 }
 
-string PPTDictionary::internalXmlString(int level)
+string PPTDictionary::XMLString(int level)
 {
     string retstr;
-    retstr += tabStr(level) + "<Dict>\xa";
+    retstr += PPTabStr(level) + "<Dict>\xa";
     map <string, PPToken *> ::iterator it_token_objs;
     for(it_token_objs = _dict.begin(); it_token_objs != _dict.end(); it_token_objs++) {
         string name = it_token_objs->first;
-        retstr += tabStr(level+1) + "<Key>" + name + "</Key>\xa";
-        
-        PPToken *token = valueObjectForKey(name);
-        retstr += token->internalXmlString(level+1);
-    }
-    retstr += tabStr(level) + "</Dict>\xa";
-    
-    return retstr;
-}
-
-string PPTDictionary::xmlString(int level)
-{
-    string retstr;
-    retstr += tabStr(level) + "<Dict>\xa";
-    map <string, PPToken *> ::iterator it_token_objs;
-    for(it_token_objs = _dict.begin(); it_token_objs != _dict.end(); it_token_objs++) {
-        string name = it_token_objs->first;
-        retstr += tabStr(level+1) + "<Key>" + name + "</Key>\xa";
+        retstr += PPTabStr(level+1) + "<Key>" + name + "</Key>\xa";
         
         PPToken *token = (PPToken *)(it_token_objs->second);
-        retstr += token->xmlString(level+1);
+        retstr += token->XMLString(level+1);
     }
-    retstr += tabStr(level) + "</Dict>\xa";
+    retstr += PPTabStr(level) + "</Dict>\xa";
     
     return retstr;
 }
@@ -212,9 +195,9 @@ string PPTDictionary::pdfString()
         retstr += " ";
         PPToken *token = (PPToken *)(it_token_objs->second);
 		if(name == "Length") {
-			cout << "Length = " << token->pdfString() << ";" << PP_ENDL;
+			cout << "Length = " << token->PDFString() << ";" << PP_ENDL;
 		}
-        retstr += token->pdfString();
+        retstr += token->PDFString();
         retstr += "\xa";
     }
     retstr += ">>\xa";

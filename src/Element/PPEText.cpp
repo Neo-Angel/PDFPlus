@@ -92,20 +92,20 @@ void PPEText::SetGContext(PPContext *gcontext)
 	_gstate = gcontext->newGState();
 }
 
-string PPEText::xmlString(int level)
+string PPEText::XMLString(int level)
 {
     string retstr;
     ostringstream ostr;
-    ostr << tabStr(level) << "<Element type='Text'>" << PP_ENDL;
-    ostr << _gstate->xmlString(level+1);
-    ostr << tabStr(level+1) << "<Text>" << PP_ENDL;
+    ostr << PPTabStr(level) << "<Element type='Text'>" << PP_ENDL;
+    ostr << _gstate->XMLString(level+1);
+    ostr << PPTabStr(level+1) << "<Text>" << PP_ENDL;
     size_t i, icnt = _cmdList.size();
     for (i=0; i<icnt; i++) {
         PPTCommand *cmd = _cmdList.at(i);
         ostr << cmd->pdfString();
     }
-    ostr << tabStr(level+1) << "</Text>" << PP_ENDL;
-    ostr << tabStr(level) << "</Element>" << PP_ENDL;
+    ostr << PPTabStr(level+1) << "</Text>" << PP_ENDL;
+    ostr << PPTabStr(level) << "</Element>" << PP_ENDL;
     retstr = ostr.str();
     return retstr;
 }

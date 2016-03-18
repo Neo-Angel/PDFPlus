@@ -22,10 +22,10 @@ PPTBool::PPTBool()
 	_bool = false;
 }
 
-string PPTBool::xmlString(int level)
+string PPTBool::XMLString(int level)
 {
     string retstr;
-    retstr += tabStr(level) + "<Bool>" + boolStr(_bool) + "</Bool>\xa";
+    retstr += PPTabStr(level) + "<Bool>" + boolStr(_bool) + "</Bool>\xa";
     return retstr;
 }
 

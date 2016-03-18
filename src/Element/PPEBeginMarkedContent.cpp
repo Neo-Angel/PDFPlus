@@ -61,7 +61,7 @@ string PPEBeginMarkedContent::makeCommandString()
 {
     string retstr;
     if (_properties) {
-        retstr = _tag->pdfString() + " " + _properties->pdfString() + " BDC\xa";
+        retstr = _tag->pdfString() + " " + _properties->PDFString() + " BDC\xa";
     }
     else {
         retstr = _tag->pdfString() + " BMC\xa";
@@ -69,15 +69,15 @@ string PPEBeginMarkedContent::makeCommandString()
     return retstr;
 }
 
-string PPEBeginMarkedContent::xmlString(int level)
+string PPEBeginMarkedContent::XMLString(int level)
 {
     string retstr;
     ostringstream ostr;
-    ostr << tabStr(level) << "<Element type='BeginMarkedContent' tag='" << _tag->_name << "'>" << PP_ENDL;
+    ostr << PPTabStr(level) << "<Element type='BeginMarkedContent' tag='" << _tag->_name << "'>" << PP_ENDL;
     if (_properties) {
-        ostr << _properties->xmlString(level+1);
+        ostr << _properties->XMLString(level+1);
     }
-    ostr << tabStr(level) << "</Element>" << PP_ENDL;
+    ostr << PPTabStr(level) << "</Element>" << PP_ENDL;
     retstr = ostr.str();
     return retstr;
 }
@@ -96,7 +96,7 @@ void PPEBeginMarkedContent::willAddToParent(PPFormBase *form)
 /////////////////////////////////////////////////////  Multi Resource Handling
 bool PPEBeginMarkedContent::HasResource()
 {
-	if(_properties && _properties->classType() == PPTN_NAME)
+	if(_properties && _properties->ClassType() == PPTN_NAME)
 		return true;
 	return false;
 }

@@ -6,8 +6,8 @@
 //  Copyright (c) 2014년 #CORP#. All rights reserved.
 //
 
-#ifndef PDFPlusLib_PDFPlus_h
-#define PDFPlusLib_PDFPlus_h
+#ifndef __PDFPlusLib_PDFPlus__
+#define __PDFPlusLib_PDFPlus__
 
 #include <PPBase.h>
 #include <PPCommandParser.h>
@@ -57,6 +57,8 @@
 #include <PPPathItem.h>
 
 
+
 #endif
+
 
 void PDFPlusInit();

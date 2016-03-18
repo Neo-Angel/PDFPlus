@@ -17,11 +17,11 @@ string PPEEndMarkedContent::makeCommandString()
     return retstr;
 }
 
-string PPEEndMarkedContent::xmlString(int level)
+string PPEEndMarkedContent::XMLString(int level)
 {
     string retstr;
     ostringstream ostr;
-    ostr << tabStr(level) << "<Element type='EndMarkedContent'/>" << PP_ENDL;
+    ostr << PPTabStr(level) << "<Element type='EndMarkedContent'/>" << PP_ENDL;
     retstr = ostr.str();
     return retstr;
 }

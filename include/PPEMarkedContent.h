@@ -22,7 +22,7 @@ public:
 	void SetParser(PPParser *parser);
 
     string makeCommandString();
-    string xmlString(int level);
+    string XMLString(int level);
 	PPElementType getType() {return PPET_MARKED_CONTENT;}
 };
 

@@ -13,7 +13,15 @@
 
 #include "PPBase.h"
 
+/////////////////////////////////////////////
+//
+// 좌표와 관련된 유틸리티 클래스등의 모음
+//
+/////////////////////////////////////////////
 
+//    PPPoint Class
+//
+////////////////////////////
 class PPPoint : PPBase {
 public:
     float _x;
@@ -22,6 +30,10 @@ public:
     PPPoint(float x, float y);
 };
 
+
+//    PPSize Class
+//
+////////////////////////////
 class PPSize : PPBase {
 public:
     float _width;
@@ -31,9 +43,13 @@ public:
 };
 
 
-class PTRect;
 
-class PPRect : PPBase {
+//    PPRect Class
+//
+////////////////////////////
+class PTRect; // 바로 아래 선언되어 있음.
+
+class PPRect : PPBase {  // origin, size 등의 하위 클래스로 구성된 2중형 구조
 public:
     PPPoint _origin;
     PPSize _size;
@@ -80,12 +96,20 @@ public:
 	inline float Width(){return _size._width;}
 	inline float Height(){return _size._height;}
 
+	// this(PPRect)와 파라미터 rect가 겹치는 부분이 있으면 true 리턴
 	bool IntersectsRect(PPRect rect);
-	bool PPRect::IntersectRect(PPRect rect1, PPRect rect2);
+
+	// 클래스 메소드로 rect1와 rect2가 겹치는 부분이 있으면 true 리턴
+	bool PPRect::IntersectsRect(PPRect rect1, PPRect rect2);
+
+	// this(PPRect)와 파라미터 rect가 겹치는 영역을 PPRect로 리턴
 	PPRect IntersectRect(PPRect rect);
 };
 
-class PTRect : PPBase {
+//    PTRect Class
+//
+////////////////////////////
+class PTRect : PPBase {  // 네개의 좌표값만으로 구성된 단층형 구조
 
 public:
 	float x1;
@@ -106,7 +130,10 @@ public:
 };
 class PPTArray;
 
+// {x, y, w, h} 순으로 배열에서 가져와 PPRect를 만들어 리턴
 PPRect rectFromArray(PPTArray *array);
+
+//rect를  {x, y, w, h} 순으로 배열에 저장함
 void SetRectToArray(PPRect rect, PPTArray *array);
 
 

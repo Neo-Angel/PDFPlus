@@ -83,7 +83,7 @@ public:
     ~PPElement();
     virtual void willAddToParent(PPFormBase *form);
 	virtual string makeCommandString() {return "";}
-	virtual string xmlString(int level) {return "";}
+	virtual string XMLString(int level) {return "";}
 	virtual PPElementType getType() {return PPET_NONE;}
 	virtual PPRect getBBox() {return _bounds;}
 	virtual void SetParser(PPParser *parser) {};

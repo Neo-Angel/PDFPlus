@@ -119,7 +119,7 @@ public:
     bool isBuiltDocument();
     bool isBuiltElements();
     
-    string xmlString(int level);
+    string XMLString(int level);
     string elementXmlString(int level);
 
     string rawDataXML();

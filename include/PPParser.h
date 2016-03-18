@@ -55,8 +55,7 @@ class PPTComment;
 
 class PPParser : PPBase {
 protected:
-//    PPParserSource *_source;
-
+//    Internal Methods;
     PPTComment *parseComment(PPParserSource &source);
     PPTBool *parseBool(PPParserSource &source, char start_ch);
     PPTNumber *parseNumber(PPParserSource &source, char start_ch);
@@ -75,16 +74,15 @@ public:
     map <int, PPTIndirectObj *> _objDict;
     map <unsigned long long, PPToken *> _filePtDict; // IndirectObj, Trailer, XRef
     vector <PPTIndirectRef *> _ref_list;
-	vector <PPToken *> stream_list;
+	vector <PPToken *> _stream_list;
     
     ~PPParser();
     map <int, PPTIndirectObj *> &objectsDictionary();
-    PPToken *objectByID(int objid);
-	PPToken *ObjectForNumber(int num){return objectByID(num);}
-    PPToken *objectAtFilePosition(unsigned long long pos);
+	PPToken *ObjectForNumber(int num);
+    PPToken *ObjectAtFilePosition(unsigned long long pos);
+	void DecodeStreams(vector<PPToken *> &token_list);
 
-    bool parseSource(PPParserSource &source, vector<PPToken *> &token_list);  // startParse
-	void PPParser::DecodeStreams(vector<PPToken *> &token_list);
+    bool ParseSource(PPParserSource &source, vector<PPToken *> &token_list);  // start parsing
 };
 
 #endif /* defined(__PDFPlusLib__PPParser__) */

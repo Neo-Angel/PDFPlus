@@ -15,18 +15,18 @@ PPTIndirectRef::PPTIndirectRef(PPParser *parser, int num1, int num2):PPToken(par
     parser->_ref_list.push_back(this);
 }
 
-string PPTIndirectRef::description()
+string PPTIndirectRef::Description()
 {
     string retstr = "";
     retstr += "IndirectRef("+to_string((_Longlong)_objNum)+","+to_string((_Longlong)_genNum)+")";
     return retstr;
 }
 
-string PPTIndirectRef::xmlString(int level)
+string PPTIndirectRef::XMLString(int level)
 {
     string retstr;
     ostringstream ostr;
-    ostr <<tabStr(level)<<"<Ref ObjID='"<<_objNum<<"' Gen='"<<_genNum<< "'/>\xa";
+    ostr <<PPTabStr(level)<<"<Ref ObjID='"<<_objNum<<"' Gen='"<<_genNum<< "'/>\xa";
     retstr = ostr.str();
     return retstr;
 }
@@ -50,24 +50,9 @@ PPToken *PPTIndirectRef::valueObject()
     
 }
 
-string PPTIndirectRef::internalXmlString(int level)
-{
-    string retstr;
-    PPToken *obj = valueObject();
-//    if (obj->classType() == PPTN_DICTIONARY) {
-//        retstr += tabStr(level) + "<Dict>\xa";
-//        retstr += obj->internalXmlString(level+1);
-//        retstr += tabStr(level) + "</Dict>\xa";
-//    }
-//    else {
-        retstr += obj->internalXmlString(level);
-//    }
-    return retstr;
-}
-
 PPTIndirectObj *PPTIndirectRef::targetObject()
 {
-    PPTIndirectObj *ret = (PPTIndirectObj *)_parser->objectByID(_objNum);
+    PPTIndirectObj *ret = (PPTIndirectObj *)_parser->ObjectForNumber(_objNum);
     return ret;
 }
 

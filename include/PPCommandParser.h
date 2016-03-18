@@ -79,7 +79,7 @@ public:
     PPCommandInfo *_cmdInfo;
     
     ~PPTCommand();
-    string xmlString(int level);
+    string XMLString(int level);
     float getFloatValue(int idx);
     int getIntValue(int idx);
     void getDash(PPDash *dash);
@@ -118,7 +118,7 @@ public:
     void seekg(size_t pos);
     void read(char *buf, size_t size);
     void getline(char *buf, size_t size);
-    const char *classType();
+    const char *ClassType();
 
 };
 

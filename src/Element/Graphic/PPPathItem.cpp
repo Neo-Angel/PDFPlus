@@ -57,35 +57,35 @@ string PPPathItem::makeCommand()
     return ostr.str();
 }
 
-string PPPathItem::xmlString(int level)
+string PPPathItem::XMLString(int level)
 {
     string retstr;
     ostringstream ostr;
     switch (_op) {
         case PPC_MoveTo:
-            ostr << tabStr(level) << "<MoveTo X=" << _pt1._x <<" Y=" << _pt1._y << ">" << PP_ENDL;
+            ostr << PPTabStr(level) << "<MoveTo X=" << _pt1._x <<" Y=" << _pt1._y << ">" << PP_ENDL;
             break;
         case PPC_LineTo:
-            ostr << tabStr(level) << "<LineTo X=" << _pt1._x <<" Y=" << _pt1._y << ">" << PP_ENDL;
+            ostr << PPTabStr(level) << "<LineTo X=" << _pt1._x <<" Y=" << _pt1._y << ">" << PP_ENDL;
             break;
         case PPC_CurveTo1:
-            ostr << tabStr(level) << "<CurveTo1 X1=" << _pt1._x <<" Y1=" << _pt1._y
+            ostr << PPTabStr(level) << "<CurveTo1 X1=" << _pt1._x <<" Y1=" << _pt1._y
             << " X2=" << _pt2._x <<" Y2=" << _pt2._y << ">" << PP_ENDL;
             break;
         case PPC_CurveTo2:
-            ostr << tabStr(level) << "<CurveTo2 X1=" << _pt1._x <<" Y1=" << _pt1._y
+            ostr << PPTabStr(level) << "<CurveTo2 X1=" << _pt1._x <<" Y1=" << _pt1._y
             << " X2=" << _pt2._x <<" Y2=" << _pt2._y << ">" << PP_ENDL;
             break;
         case PPC_CurveTo:
-            ostr << tabStr(level) << "<CurveTo X1=" << _pt1._x <<" Y1=" << _pt1._y
+            ostr << PPTabStr(level) << "<CurveTo X1=" << _pt1._x <<" Y1=" << _pt1._y
             << " X2=" << _pt2._x <<" Y2=" << _pt2._y << " X3=" << _pt3._x <<" Y3=" << _pt3._y <<">" << PP_ENDL;
             break;
         case PPC_Rectangle:
-            ostr << tabStr(level) << "<Rectangle X1=" << _pt1._x <<" Y1=" << _pt1._y
+            ostr << PPTabStr(level) << "<Rectangle X1=" << _pt1._x <<" Y1=" << _pt1._y
             << " X2=" << _pt2._x <<" Y2=" << _pt2._y << ">" << PP_ENDL;
             break;
         case PPC_ClosePath:
-            ostr << tabStr(level) << "<ClosePath/>" << PP_ENDL;
+            ostr << PPTabStr(level) << "<ClosePath/>" << PP_ENDL;
             break;
 
         default:

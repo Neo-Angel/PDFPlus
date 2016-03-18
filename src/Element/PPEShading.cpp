@@ -52,18 +52,18 @@ string PPEShading::makeCommandString()
     return retstr;
 }
 
-string PPEShading::xmlString(int level)
+string PPEShading::XMLString(int level)
 {
     string retstr;
     ostringstream ostr;
-    ostr << tabStr(level) << "<Element type='Shading' name='" << *_name->_name << "'>" << PP_ENDL;
+    ostr << PPTabStr(level) << "<Element type='Shading' name='" << *_name->_name << "'>" << PP_ENDL;
     if (_sh_res) {
-        ostr << _sh_res->xmlString(level+1);
+        ostr << _sh_res->XMLString(level+1);
     }
 //    if (_dict) {
-//        ostr << _dict->xmlString(level+1);
+//        ostr << _dict->XMLString(level+1);
 //    }
-    ostr << tabStr(level) << "</Element>" << PP_ENDL;
+    ostr << PPTabStr(level) << "</Element>" << PP_ENDL;
     retstr = ostr.str();
     return retstr;
 }

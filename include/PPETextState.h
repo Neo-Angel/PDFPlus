@@ -28,7 +28,7 @@ public:
 
 	string commandString();
 	string makeCommandString();
-    string xmlString(int level);
+    string XMLString(int level);
 
 	void SetGContext(PPContext *gcontext);
     void addCommand(PPTCommand *cmd);

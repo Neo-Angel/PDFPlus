@@ -29,9 +29,9 @@ public:
 	PPTTrailer();
     ~PPTTrailer();
     
-    string xmlString(int level);
+    string XMLString(int level);
     string pdfString();
-    inline const char *classType(){return PPTN_TRAILER;};
+    inline const char *ClassType(){return PPTN_TRAILER;};
     PPTDictionary *getDictionary();
     void write(std::ostream &os);
 

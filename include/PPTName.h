@@ -17,9 +17,9 @@ public:
 	PPTName() {_name = NULL;}
     ~PPTName();
 //    string *getName();
-    string description();
-    string xmlString(int level);
-    inline const char *classType(){return PPTN_NAME;};
+    string Description();
+    string XMLString(int level);
+    inline const char *ClassType(){return PPTN_NAME;};
     string pdfString();
 
 	PPBase *Create() {return new PPTName();}

@@ -93,7 +93,7 @@ public:
 
     float rotate();
     
-    string xmlString(int level);
+    string XMLString(int level);
     string elementXmlString(int level);
 	PPMatrix *GetDefaultMatrix();
 	void BuildPDF();

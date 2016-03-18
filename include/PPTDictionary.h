@@ -40,9 +40,8 @@ public:
 	PPTIndirectObj *IndirectObjectForKey(const char *keyname){string str(keyname);return indirectObjectForKey(str);}
     PPToken *valueObjectForKey(const char *keyname){string str(keyname);return valueObjectForKey(str);}
 
-    string description();
-    string xmlString(int level);
-    string internalXmlString(int level);
+    string Description();
+    string XMLString(int level);
     string pdfString();
     
 	PPBase *Create() {return new PPTDictionary();}
@@ -50,7 +49,7 @@ public:
 	void SetParser(PPParser *parser);
 	void MoveInto(PPDocument *doc);
 
-    inline const char *classType(){return PPTN_DICTIONARY;};
+    inline const char *ClassType(){return PPTN_DICTIONARY;};
 };
 /////////////////////////////////////////
 

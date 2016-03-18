@@ -16,18 +16,17 @@ public:
     
 	PPTIndirectRef(){_objNum = 0; _genNum = 0;}
     PPTIndirectRef(PPParser *parser, int num1, int num2);
-    string description();
+    string Description();
 
-    string xmlString(int level);
+    string XMLString(int level);
     string pdfString();
-    string internalXmlString(int level);
     PPTIndirectObj *targetObject();
     PPToken *valueObject();
 
 	PPBase *Create() {return new PPTIndirectRef();}
 	void CopyMembersTo(PPBase *obj) ;
 
-    inline const char *classType(){return PPTN_INDIRECTREF;};
+    inline const char *ClassType(){return PPTN_INDIRECTREF;};
 
 	void MoveInto(PPDocument *doc);
 };

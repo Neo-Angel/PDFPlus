@@ -15,9 +15,9 @@ string PPEGSave::makeCommandString()
 }
 
 
-string PPEGSave::xmlString(int level)
+string PPEGSave::XMLString(int level)
 {
     string retstr;
-    retstr = tabStr(level) + "<Element type='GSave'/>\xa";
+    retstr = PPTabStr(level) + "<Element type='GSave'/>\xa";
     return retstr;
 }

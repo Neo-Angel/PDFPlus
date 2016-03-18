@@ -17,7 +17,7 @@ public:
 public:
     PPTBool(PPParser *parser, string &str);
 	PPTBool();
-    string xmlString(int level);
+    string XMLString(int level);
     string pdfString();
 
 	PPBase *Create() {return new PPTBool();}

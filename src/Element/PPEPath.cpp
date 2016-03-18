@@ -203,7 +203,7 @@ string PPEPath::makeCommandString()
 }
 
 
-string PPEPath::xmlString(int level)
+string PPEPath::XMLString(int level)
 {
     string retstr;
     ostringstream ostr;
@@ -211,14 +211,14 @@ string PPEPath::xmlString(int level)
     const char *fill_state = (_fillType != PPEP_NonFill ? "yes" : "no");
     const char *clipping_state = (_clipType > 0 ? "yes" : "no");
     
-    ostr << tabStr(level) << "<Element  type='Path' stroke='"<< stroke_state;
+    ostr << PPTabStr(level) << "<Element  type='Path' stroke='"<< stroke_state;
     ostr << "' fill='" << fill_state;
     ostr << "' clipping= '" << clipping_state << "'>" << PP_ENDL;
 
-    ostr << _gstate->xmlString(level+1);
-    ostr << _path->xmlString(level+1);
+    ostr << _gstate->XMLString(level+1);
+    ostr << _path->XMLString(level+1);
    
-    ostr << tabStr(level) << "</Element>" << PP_ENDL;
+    ostr << PPTabStr(level) << "</Element>" << PP_ENDL;
     retstr = ostr.str();
     return retstr;
 }

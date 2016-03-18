@@ -129,19 +129,19 @@ void PPPath::close()
     _itemList.push_back(path_item);
 }
 
-string PPPath::xmlString(int level)  // for Element
+string PPPath::XMLString(int level)  // for Element
 {
     string retstr;
     ostringstream ostr;
     
-    ostr << tabStr(level) << "<Path>" << PP_ENDL;
+    ostr << PPTabStr(level) << "<Path>" << PP_ENDL;
     size_t i, icnt = _itemList.size();
     for (i=0; i<icnt; i++) {
         PPPathItem *pitem = _itemList.at(i);
-        ostr << pitem->xmlString(level+1) ;
+        ostr << pitem->XMLString(level+1) ;
     }
     
-    ostr << tabStr(level) << "</Path>" << PP_ENDL;
+    ostr << PPTabStr(level) << "</Path>" << PP_ENDL;
     retstr = ostr.str();
     return retstr;
 }

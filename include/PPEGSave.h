@@ -18,7 +18,7 @@ public:
 	PPBase *Create(){return new PPEGSave;}
 
     string makeCommandString();
-    string xmlString(int level);
+    string XMLString(int level);
 	PPElementType getType() {return PPET_GSAVE;}
 };
 

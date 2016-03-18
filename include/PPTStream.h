@@ -40,7 +40,7 @@ public:
 	void SetDictionary(PPTDictionary *dict);
     void appendData(char *data, unsigned long length);
     inline char *getBuffer() { return _streamData;}
-    string xmlString(int indent);
+    string XMLString(int indent);
     size_t read(unsigned char **ptr, size_t length);
 //    void write(unsigned char *buf, size_t length);
     void writeTo(const char *tar_path);
@@ -48,7 +48,7 @@ public:
     unsigned long flateEncodeStream(char **strm_dat);
     bool isDecoded();
     bool z_eof();
-    inline const char *classType() {return PPTN_STREAM;}
+    inline const char *ClassType() {return PPTN_STREAM;}
     bool parseObjStm(vector<PPToken *> &token_list, PPParser *parser);
 
     

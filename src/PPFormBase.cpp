@@ -648,14 +648,14 @@ string PPFormBase::SubtypeFor(string name)
 			break;
 		}
 		PPTDictionary *xobj_dict = NULL;
-		if(xobj_ref->classType() == PPTN_INDIRECTREF) {
+		if(xobj_ref->ClassType() == PPTN_INDIRECTREF) {
 			xobj_dict = (PPTDictionary *)xobj_ref->valueObject();
 			if (!xobj_dict) {
 				cout << "Shading Dictionary not found..." << PP_ENDL;
 				break;
 			}
 		}
-		else if(xobj_ref->classType() == PPTN_DICTIONARY) {
+		else if(xobj_ref->ClassType() == PPTN_DICTIONARY) {
 			xobj_dict = (PPTDictionary *)xobj_ref;
 		}
 		xobj_ref = (PPTIndirectRef *)xobj_dict->objectForKey(name);
@@ -848,7 +848,7 @@ int PPFormBase::buildElements()
 					PPToken *properties = NULL;
 					if(cmd->_cmdInfo->type == PPC_BeginMarkedContentP) {
 						properties = (PPToken *)cmd->getTokenValue(1);
-						if(properties->classType() == PPTN_NAME) {
+						if(properties->ClassType() == PPTN_NAME) {
 							PPTName *property_name = (PPTName *)properties;
 							AddLayerWithProperties(*property_name->_name);
 						}

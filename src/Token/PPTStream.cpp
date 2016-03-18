@@ -22,7 +22,7 @@
 
 #include "PPDefines.h"
 
-string tabStr(int cnt);
+string PPTabStr(int cnt);
 
 
 ///////////////////////////////////////// PPStreamBuf Class Declation
@@ -148,7 +148,7 @@ string hexStr(unsigned char ch)
     return retstr;
 }
 
-string PPTStream::xmlString(int level)
+string PPTStream::XMLString(int level)
 {
     if (_decoded == false) {
         PPToken *val_obj = (PPToken *)_dict->valueObjectForKey("Length");
@@ -163,8 +163,8 @@ string PPTStream::xmlString(int level)
         }
     }
     string retstr;
-    retstr += tabStr(level) + "<Stream><![CDATA[";
-    //    retstr += tabStr(level) + "<String><![CDATA[" +*_string + "]]></String>\xa";
+    retstr += PPTabStr(level) + "<Stream><![CDATA[";
+    //    retstr += PPTabStr(level) + "<String><![CDATA[" +*_string + "]]></String>\xa";
     
     PPTName *filter = (PPTName *)_dict->objectForKey("Filter");
     if (_decoded && filter && *filter->_name == "FlateDecode") {
@@ -174,7 +174,7 @@ string PPTStream::xmlString(int level)
     else {
         int chidx = 0;
         unsigned long i;
-        retstr += tabStr(level + 1);
+        retstr += PPTabStr(level + 1);
         for (i=0; i<_streamSize; i++) {
             unsigned char ch = _streamData[i];
             retstr += hexStr(ch);
@@ -189,14 +189,14 @@ string PPTStream::xmlString(int level)
             if (chidx == 40) {
                 if (i < +_streamSize - 1) {
                     retstr += "\xa";
-                    retstr += tabStr(level + 1);
+                    retstr += PPTabStr(level + 1);
                 }
                 chidx = 0;
             }
         }
     }
     retstr += "\xa";
-    retstr += tabStr(level) + "]]></Stream>\xa";
+    retstr += PPTabStr(level) + "]]></Stream>\xa";
     
     return retstr;
 }
@@ -433,8 +433,6 @@ void PPTStream::writeTo(const char *tar_path)
    
 }
 
-size_t createComponents(string &str, char ch, vector<string *> &str_list);
-
 bool PPTStream::parseObjStm(vector<PPToken *> &token_list, PPParser *parser)
 {
     PPTNumber *first_num = (PPTNumber *)_dict->valueObjectForKey("First");
@@ -447,21 +445,21 @@ bool PPTStream::parseObjStm(vector<PPToken *> &token_list, PPParser *parser)
     
     string nums_str = nums_cstr;
     
-    vector<string *> str_list;
-    createComponents(nums_str, ' ', str_list);
+    vector<string> str_list;
+    PPComponentsSepratedByChar(nums_str, ' ', str_list);
     size_t num_idx = 0;
     _index = first_num->intValue();
     for (int i=0; i<cnt; i++) {
-        int obj_num = stoi(*str_list[num_idx++]);
-        int obj_start = stoi(*str_list[num_idx++]);
+        int obj_num = stoi(str_list[num_idx++]);
+        int obj_start = stoi(str_list[num_idx++]);
         _next = _streamSize;
         if (num_idx + 1 < str_list.size()) {
-            _next = first + stoi(*str_list[num_idx + 1]);
+            _next = first + stoi(str_list[num_idx + 1]);
         }
         vector<PPToken *> sub_tokens;
         _index = first + obj_start;
 
-        if (parser->parseSource(*this, sub_tokens) == false)
+        if (parser->ParseSource(*this, sub_tokens) == false)
             return false;
         PPTIndirectObj *indir_obj = new PPTIndirectObj(parser, sub_tokens, obj_num, 0);
         token_list.push_back(indir_obj);

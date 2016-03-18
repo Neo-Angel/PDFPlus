@@ -25,8 +25,8 @@ public:
 	int intValue();
     string stringValue();
     string pdfString() {return stringValue();}
-    string xmlString(int level);
-    inline const char *classType(){return PPTN_NUMBER;}
+    string XMLString(int level);
+    inline const char *ClassType(){return PPTN_NUMBER;}
 
 	PPBase *Create() {return new PPTNumber();}
 	void CopyMembersTo(PPBase *obj);

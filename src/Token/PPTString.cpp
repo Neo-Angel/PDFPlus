@@ -19,23 +19,23 @@ PPTString::~PPTString()
 string PPTString::utf8String()
 {
     string retstr;
-    PPstringToUTF8String(retstr, *_string);
+    PPstringToUTF8String(*_string, retstr);
     return retstr;
 }
 
-string PPTString::xmlString(int level)
+string PPTString::XMLString(int level)
 {
     string retstr;
     wstring wstr;
-    stringToWString(wstr, *_string);
+    PPstringToWString(*_string, wstr);
     string utf8_str = PPwstrToUtf8(wstr);
-    retstr += tabStr(level) + "<String><![CDATA[" + utf8_str + "]]></String>\xa";
+    retstr += PPTabStr(level) + "<String><![CDATA[" + utf8_str + "]]></String>\xa";
     return retstr;
 }
 string PPTString::pdfString()
 {
     string retstr = "<";
-	retstr += toHexStr(*_string);
+	retstr += PPToHexStr(*_string);
     retstr += ">";
     return retstr;
 

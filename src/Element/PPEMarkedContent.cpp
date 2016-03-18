@@ -53,15 +53,15 @@ string PPEMarkedContent::makeCommandString()
     return retstr;
 }
 
-string PPEMarkedContent::xmlString(int level)
+string PPEMarkedContent::XMLString(int level)
 {
     string retstr;
     ostringstream ostr;
-    ostr << tabStr(level) << "<Element type='MarkedContent' tag='" << _tag->_name << "'>" << PP_ENDL;
+    ostr << PPTabStr(level) << "<Element type='MarkedContent' tag='" << _tag->_name << "'>" << PP_ENDL;
     if (_property) {
-        ostr << _property->xmlString(level+1);
+        ostr << _property->XMLString(level+1);
     }
-    ostr << tabStr(level) << "</Element>" << PP_ENDL;
+    ostr << PPTabStr(level) << "</Element>" << PP_ENDL;
     retstr = ostr.str();
     return retstr;
 }

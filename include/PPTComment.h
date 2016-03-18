@@ -16,7 +16,7 @@ public:
     PPTComment(PPParser *parser, string *str);
 	PPTComment() {_comment = NULL;}
     ~PPTComment();
-    string xmlString(int level);
+    string XMLString(int level);
     string pdfString();
 
 	PPBase *Create() {return new PPTComment();}

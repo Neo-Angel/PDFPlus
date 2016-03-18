@@ -13,10 +13,10 @@ string PPEGRestore::makeCommandString()
 {
     return "Q\xa";
 }
-string PPEGRestore::xmlString(int level)
+string PPEGRestore::XMLString(int level)
 {
     string retstr;
-    retstr = tabStr(level) + "<Element type='GRestore'/>\xa";
+    retstr = PPTabStr(level) + "<Element type='GRestore'/>\xa";
 
     return retstr;
 }

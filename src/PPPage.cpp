@@ -19,7 +19,7 @@
 #include "PPTDictionary.h"
 #include "PPTIndirectRef.h"
 
-string tabStr(int cnt);
+string PPTabStr(int cnt);
 
 
 PPPage::PPPage(PPDocument *doc)  // this invokes PPFormBase() (default)constructor.
@@ -42,7 +42,7 @@ void PPPage::StoreResources()
 	for(it_rscs = rscs_map.begin(); it_rscs != rscs_map.end(); it_rscs++) {
 		string rsc_type = it_rscs->first;
 		PPToken *rsc_value = (PPTDictionary *)it_rscs->second;
-		if(rsc_value->classType() == PPTN_DICTIONARY) {
+		if(rsc_value->ClassType() == PPTN_DICTIONARY) {
 			PPTDictionary *rsc_dict = (PPTDictionary *)rsc_value;
 			map <string, PPToken *> &rsc_map = rsc_dict->_dict;
 			map <string, PPToken *> ::iterator it_rsc;
@@ -52,7 +52,7 @@ void PPPage::StoreResources()
 				_document->AddResource(rsc, rsc_type, rsc_key);
 			}
 		}
-		else if(rsc_value->classType() == PPTN_ARRAY) {
+		else if(rsc_value->ClassType() == PPTN_ARRAY) {
 			_document->AddResource(rsc_value, rsc_type);
 		}
 	} */
@@ -262,7 +262,7 @@ PPTStream *PPPage::contentAt(size_t i)
     PPTStream *ret_stream = NULL;
     
     PPToken *contents = _formDict->objectForKey(PPKN_CONTENTS);
-    if (contents->classType() == PPTN_ARRAY) {
+    if (contents->ClassType() == PPTN_ARRAY) {
         PPTArray *array = (PPTArray *)contents;
         if (array->size() > i) {
             PPTIndirectRef *ref = (PPTIndirectRef *)array->objectAtIndex(i);
@@ -270,7 +270,7 @@ PPTStream *PPPage::contentAt(size_t i)
             ret_stream = indirect->stream();
         }
     }
-    else if (contents->classType() == PPTN_INDIRECTREF){
+    else if (contents->ClassType() == PPTN_INDIRECTREF){
         PPTIndirectObj *indirect = ((PPTIndirectRef *)contents)->targetObject();
         ret_stream = indirect->stream();
     }
@@ -280,11 +280,11 @@ PPTStream *PPPage::contentAt(size_t i)
 size_t PPPage::contentsCount()
 {
     PPToken *contents = _formDict->objectForKey(PPKN_CONTENTS);
-    if (contents->classType() == PPTN_ARRAY) {
+    if (contents->ClassType() == PPTN_ARRAY) {
         PPTArray *array = (PPTArray *)contents;
         return array->size();
     }
-    else if (contents->classType() == PPTN_INDIRECTREF){
+    else if (contents->ClassType() == PPTN_INDIRECTREF){
         return 1;
     }
     return 0;
@@ -352,7 +352,7 @@ void PPPage::appendRectXmlString(ostringstream &ostr, string keyname, int level)
 {
     if (hasValueWithKey(keyname)) {
         PPRect rect = rectForKey(keyname);
-        ostr << tabStr(level) << "<" << keyname <<" X='" << rect._origin._x
+        ostr << PPTabStr(level) << "<" << keyname <<" X='" << rect._origin._x
         << "' Y='" <<  rect._origin._x
         << "' Width='" << rect._size._width
         << "' Height='" << rect._size._height << "'/>\xa";
@@ -360,27 +360,27 @@ void PPPage::appendRectXmlString(ostringstream &ostr, string keyname, int level)
     
 }
 
-string PPPage::xmlString(int level)
+string PPPage::XMLString(int level)
 {
     string retstr;
     ostringstream ostr;
-    ostr << tabStr(level) << "<Page>\xa";
+    ostr << PPTabStr(level) << "<Page>\xa";
     appendRectXmlString(ostr, "MediaBox", level+1);
     appendRectXmlString(ostr, "CropBox", level+1);
     appendRectXmlString(ostr, "BleedBox", level+1);
     appendRectXmlString(ostr, "TrimBox", level+1);
     appendRectXmlString(ostr, "ArtBox", level+1);
     if (hasValueWithKey("Rotate")) {
-        ostr << tabStr(level+1) << "<Rotate angle='" << rotate() << "'/>\xa";
+        ostr << PPTabStr(level+1) << "<Rotate angle='" << rotate() << "'/>\xa";
     }
-    ostr << tabStr(level+1) << "<Contents>\xa";
+    ostr << PPTabStr(level+1) << "<Contents>\xa";
     size_t icnt = _commands.size();
     for (size_t i=0; i<icnt; i++) {
         PPToken *token = _commands.at(i);
-        ostr << token->xmlString(level + 2);
+        ostr << token->XMLString(level + 2);
     }
-    ostr << tabStr(level+1) << "</Contents>\xa";
-    ostr << tabStr(level) << "</Page>\xa";
+    ostr << PPTabStr(level+1) << "</Contents>\xa";
+    ostr << PPTabStr(level) << "</Page>\xa";
     
     retstr = ostr.str();
     return retstr;
@@ -390,13 +390,13 @@ string PPPage::elementXmlString(int level)
 {
     string retstr;
     ostringstream ostr;
-    ostr << tabStr(level) << "<Page>\xa";
+    ostr << PPTabStr(level) << "<Page>\xa";
     size_t i, icnt = numberOfElements();
     for (i= 0; i<icnt; i++) {
         PPElement *element = elementAtIndex(i);
-        ostr << element->xmlString(level+1);
+        ostr << element->XMLString(level+1);
     }
-    ostr << tabStr(level) << "</Page>\xa";
+    ostr << PPTabStr(level) << "</Page>\xa";
     retstr = ostr.str();
     return retstr;
 }

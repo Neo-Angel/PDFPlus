@@ -17,11 +17,11 @@ string PPEEndCompatibility::makeCommandString()
     return retstr;
 }
 
-string PPEEndCompatibility::xmlString(int level)
+string PPEEndCompatibility::XMLString(int level)
 {
     string retstr;
     ostringstream ostr;
-    ostr << tabStr(level) << "<Element type='EndCompatibility'/>" << PP_ENDL;
+    ostr << PPTabStr(level) << "<Element type='EndCompatibility'/>" << PP_ENDL;
     retstr = ostr.str();
     return retstr;
 }

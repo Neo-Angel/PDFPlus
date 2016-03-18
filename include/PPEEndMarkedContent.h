@@ -17,7 +17,7 @@ public:
 	PPBase *Create(){return new PPEEndMarkedContent;}
 
 	string makeCommandString();
-    string xmlString(int level);
+    string XMLString(int level);
 	PPElementType getType() {return PPET_END_MARKED_CONTENT;}
 };
 

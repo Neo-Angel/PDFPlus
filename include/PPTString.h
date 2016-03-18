@@ -15,9 +15,9 @@ public:
 	PPTString() {_string = NULL;}
     PPTString(PPParser *parser, string *str);
     ~PPTString();
-    string xmlString(int level);
+    string XMLString(int level);
     string utf8String();
-    inline const char *classType(){return PPTN_STRING;};
+    inline const char *ClassType(){return PPTN_STRING;};
     string pdfString();
 
 	PPBase *Create() {return new PPTString();}

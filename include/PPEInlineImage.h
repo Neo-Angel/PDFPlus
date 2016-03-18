@@ -26,7 +26,7 @@ public:
     void setBeginImageObject(PPTCommand *cmd){}
     void setBeginImageData(PPTCommand *cmd){}
     string makeCommandString();
-    string xmlString(int level);
+    string XMLString(int level);
 	PPToken *getXObject();
 	PPElementType getType() {return PPET_INLINE_IMAGE;}
 

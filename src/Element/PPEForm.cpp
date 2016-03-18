@@ -63,14 +63,14 @@ string PPEForm::makeCommandString()
     return retstr;
 }
 
-string PPEForm::xmlString(int level)
+string PPEForm::XMLString(int level)
 {
     string retstr;
     ostringstream ostr;
-    ostr << tabStr(level) << "<Element type='Form'>" << PP_ENDL;
-    ostr << _gstate->xmlString(level+1);
-    ostr << _xobj->xmlString(level+1);
-    ostr << tabStr(level) << "</Element>" << PP_ENDL;
+    ostr << PPTabStr(level) << "<Element type='Form'>" << PP_ENDL;
+    ostr << _gstate->XMLString(level+1);
+    ostr << _xobj->XMLString(level+1);
+    ostr << PPTabStr(level) << "</Element>" << PP_ENDL;
     retstr = ostr.str();
     return retstr;
 }
@@ -112,14 +112,14 @@ void PPEForm::willAddToParent(PPFormBase *form)
         return;
     }
 	PPTDictionary *xobj_dict = NULL;
-	if(xobj_ref->classType() == PPTN_INDIRECTREF) {
+	if(xobj_ref->ClassType() == PPTN_INDIRECTREF) {
 		xobj_dict = (PPTDictionary *)xobj_ref->valueObject();
 		if (!xobj_dict) {
 			cout << "Shading Dictionary not found..." << PP_ENDL;
 			return;
 		}
 	}
-	else if(xobj_ref->classType() == PPTN_DICTIONARY) {
+	else if(xobj_ref->ClassType() == PPTN_DICTIONARY) {
 		xobj_dict = (PPTDictionary *)xobj_ref;
 	}
     xobj_ref = (PPTIndirectRef *)xobj_dict->objectForKey(*_name->_name);

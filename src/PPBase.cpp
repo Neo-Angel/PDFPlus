@@ -10,9 +10,12 @@
 #include <sstream>
 #include "PPBase.h"
 
-
-
-string stringFromInt(int n)
+///////////////////////////////
+//
+//    Utility Functions
+//
+///////////////////////////////
+string PPStringFromInt(int n)
 {
     ostringstream ostr;
     ostr << n;
@@ -20,7 +23,7 @@ string stringFromInt(int n)
     return sResult;
 }
 
-string stringFromFloat(float n)
+string PPStringFromFloat(float n)
 {
     ostringstream ostr;
     ostr << n;
@@ -28,7 +31,7 @@ string stringFromFloat(float n)
     return sResult;
 }
 
-string *newStringFromInt(int n)
+string *PPNewStringFromInt(int n)
 {
     string *sResult = new string();
     ostringstream ostr;
@@ -37,7 +40,7 @@ string *newStringFromInt(int n)
     return sResult;
 }
 
-string *newStringFromFloat(float n)
+string *PPNewStringFromFloat(float n)
 {
     string *sResult = new string();
     ostringstream ostr;
@@ -46,11 +49,12 @@ string *newStringFromFloat(float n)
     return sResult;
 }
 
-PPBase::~PPBase()
-{
-    
-}
-
+///////////////////////////////////
+//
+//    Class Methods Definition
+//
+//////////////////////////////////
+/*
 template<class T>
 bool PPBase::isKindOfClass()
 {
@@ -60,30 +64,38 @@ bool PPBase::isKindOfClass()
     }
     return false;
 }
+*/
 
-string PPBase::description()
+// 클래스에 대한 설명혹은 정보를 문자열로 리턴
+string PPBase::Description()
 {
     string retstr(typeid(this).name());
     retstr = retstr + " class";
     return retstr;
 }
 
-string PPBase::typeName()
-{
-    return string(classType());
-}
-
-const char *PPBase::classType()
+// class type 을 C string으로 변환해서 리턴
+// C++에서 클래스 타입을 알아낼 수 있는 표준화된 방법이 마땅치 않아 
+// 궁여지책으로 생각해 낸 방법
+const char *PPBase::ClassType()
 {
     return PPTN_BASE;
 }
 
+// class type 을 string으로 변환해서 리턴
+string PPBase::TypeName()
+{
+    return string(ClassType());
+}
 
+// 객체를 복사하기 위한 실제 함수
+// 객체 복사에 필요한 멤버 변수들을 복사하는 기능을 구현해야 함.
 void PPBase::CopyMembersTo(PPBase *obj)
 {
 
 }
 
+// 객체를 복사하기위한 기반함수. 상속할 팔요는 없음
 PPBase *PPBase::Copy()
 {
 	PPBase *new_obj = this->Create();

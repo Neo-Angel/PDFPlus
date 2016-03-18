@@ -27,7 +27,7 @@ public:
 	void SetParser(PPParser *parser);
 
     string makeCommandString();
-    string xmlString(int level);
+    string XMLString(int level);
     void willAddToParent(PPFormBase *form);
 	PPElementType getType() {return PPET_SHADING;}
 

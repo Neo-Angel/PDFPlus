@@ -118,7 +118,7 @@ public:
     void setGFlags(unsigned long flag){_gflag = flag;}
     
     string makeCommandString();
-    string xmlString(int level);
+    string XMLString(int level);
 	void setTransform(PPMatrix mtx){setMatrix(mtx);}
 
 	void SetStrokeColor(vector<PPToken *> &_operands);

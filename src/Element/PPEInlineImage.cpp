@@ -45,12 +45,12 @@ string PPEInlineImage::makeCommandString()
     return retstr;
 }
 
-string PPEInlineImage::xmlString(int level)
+string PPEInlineImage::XMLString(int level)
 {
     string retstr;
     ostringstream ostr;
-    ostr << tabStr(level) << "<Element type='InlineImage'>" << PP_ENDL;
-    ostr << tabStr(level) << "</Element>" << PP_ENDL;
+    ostr << PPTabStr(level) << "<Element type='InlineImage'>" << PP_ENDL;
+    ostr << PPTabStr(level) << "</Element>" << PP_ENDL;
     retstr = ostr.str();
     return retstr;
 }

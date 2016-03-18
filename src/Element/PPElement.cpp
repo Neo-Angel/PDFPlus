@@ -168,14 +168,14 @@ PPToken *PPElement::GetResource(const char *rsc_type)
         return NULL;
     }
 	PPTDictionary *res_dict = NULL;
-	if(res_ref->classType() == PPTN_INDIRECTREF) {
+	if(res_ref->ClassType() == PPTN_INDIRECTREF) {
 		res_dict = (PPTDictionary *)res_ref->valueObject();
 		if (!res_dict) {
 			cout << "Resource Dictionary not found..." << PP_ENDL;
 			return NULL;
 		}
 	}
-	else if(res_ref->classType() == PPTN_DICTIONARY) {
+	else if(res_ref->ClassType() == PPTN_DICTIONARY) {
 		res_dict = (PPTDictionary *)res_ref;
 	}
 

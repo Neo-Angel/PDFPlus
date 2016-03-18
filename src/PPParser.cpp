@@ -69,33 +69,24 @@ bool isWhiteSpace(unsigned char ch)
     }
     return false;
 }
-size_t createComponents(string &str, char ch, vector<string *> &str_list)
+
+size_t PPComponentsSepratedByChar(string &str, char ch, vector<string> &components)
 {
     size_t start = 0;
     size_t idx = str.find(ch);
     while (idx != string::npos) {
         string substr = str.substr(start, idx - start);
-        string *newsubstr = new string(substr);
-        str_list.push_back(newsubstr);
+        components.push_back(substr);
         start = idx+1;
         idx = str.find(ch, start);
     }
     size_t end = str.size();
     string substr = str.substr(start, end - start);
-    string *newsubstr = new string(substr);
-    str_list.push_back(newsubstr);
+    components.push_back(substr);
     
-    return str_list.size();
+    return components.size();
 }
 
-void deleteComponents(vector<string *> &str_list)
-{
-    size_t i, icnt = str_list.size();
-    for (i=0; i<icnt; i++) {
-        string *str = str_list.at(i);
-        delete str;
-    }
-}
 PPTComment *PPParser::parseComment(PPParserSource &source)
 {
     string *strbuf = new string;
@@ -336,7 +327,7 @@ PPTBool *PPParser::parseBool(PPParserSource &source, char start_ch)
 PPTArray *PPParser::parseArray(PPParserSource &source)
 {
     vector<PPToken *> token_list;
-    if(!parseSource(source, token_list))
+    if(!ParseSource(source, token_list))
         return NULL;
     PPTArray *ret = new PPTArray(this, token_list);
     return ret;
@@ -352,7 +343,7 @@ PPTDictionary *PPParser::parseDictionary(PPParserSource &source)
 //
 //    }
     vector<PPToken *> token_list;
-    if(!parseSource(source, token_list))  // recursive function call
+    if(!ParseSource(source, token_list))  // recursive function call
         return NULL;
     int i, icnt = (int)token_list.size();
     if (icnt % 2 != 0) {
@@ -520,7 +511,7 @@ PPTIndirectObj *PPParser::parseIndirectObj(PPParserSource &source, PPTNumber *nu
     if (num1->intValue() == 94)
         cout << "94" << PP_ENDL;
     vector<PPToken *> token_list;
-    if(!parseSource(source, token_list))
+    if(!ParseSource(source, token_list))
         return NULL;
     PPTIndirectObj *ret = new PPTIndirectObj(this, token_list, num1->intValue(), num2->intValue());
     return ret;
@@ -533,29 +524,22 @@ bool parseXRef(PPParserSource &source, PPTXRef *xref, int objnum, int count)
     int i;
     for (i=0; i<count; i++) {
         source.getline(numstr, 30);
-        vector<string *> str_list;
+        vector<string> str_list;
         string linestr = numstr;
-        createComponents(linestr, ' ', str_list);
+        PPComponentsSepratedByChar(linestr, ' ', str_list);
         if (str_list.size() != 3) {
             return false;
         }
-        string *offsetstr = str_list.at(0);
-        const char *offsetcstr = offsetstr->c_str(); //  .at(0).c_str;
+        const char *offsetcstr = str_list[0].c_str(); //  .at(0).c_str;
         unsigned long long offset = stoull(offsetcstr);
         
-        string *genstr = str_list.at(1);
-        const char *gencstr = genstr->c_str();
+        const char *gencstr = str_list[1].c_str();
         int gennum = stoi(gencstr);
         
-        string *typestr = str_list.at(2);
-        const char *typecstr = typestr->c_str();
+        const char *typecstr = str_list[2].c_str();
         char typec = typecstr[0];
         
-        xref->addXRef(objnum+i, offset, gennum, typec);
-        
-        delete offsetstr;
-        delete genstr;
-        delete typestr;
+        xref->addXRef(objnum+i, offset, gennum, typec);        
     }
     return true;
 }
@@ -592,14 +576,15 @@ bool isWordSeparator(char ch) {
 
 bool isKindOfNumber(PPToken *token)
 {
-    if (token->classType() == PPTN_NUMBER) {
+    if (token->ClassType() == PPTN_NUMBER) {
         return true;
     }
     return false;
 }
+
 bool isKindOfXRefIndirectObjType(PPToken *token)
 {
-    if (token->classType() != PPTN_INDIRECTOBJ) {
+    if (token->ClassType() != PPTN_INDIRECTOBJ) {
         return false;
     }
     PPTIndirectObj *indir = (PPTIndirectObj *)token;
@@ -613,7 +598,7 @@ bool isKindOfXRefIndirectObjType(PPToken *token)
 
 bool isKindOfTrailer(PPToken *token)
 {
-    if (token->classType() == PPTN_TRAILER) {
+    if (token->ClassType() == PPTN_TRAILER) {
         return true;
     }
     return false;
@@ -630,12 +615,8 @@ bool canSourceParseString(PPParserSource &source, string curstr)
     return false;
 }
 
-bool PPParser::parseSource(PPParserSource &source, vector<PPToken *> &token_list)
+bool PPParser::ParseSource(PPParserSource &source, vector<PPToken *> &token_list)
 {
-	
-
-//    PPParserState state = PPPS_None;
-
     PPTXRef *XRef = NULL;
     size_t filept = 0;
     unsigned long long wordoffset = 0;
@@ -669,21 +650,12 @@ bool PPParser::parseSource(PPParserSource &source, vector<PPToken *> &token_list
             break;
         }
         else if (ch == ']') { //  end of array
-//            if (curstr.length() > 1) { // if have any token before end.
-//                string tstr = curstr.substr(0, curstr.length()-1);
-//                if (source.canParseString(tstr)) {
-//                    if(!source.parseString(tstr, token_list, this)) {
-//                        return false;
-//                    }
-//                }
-//            }
             break;
         }
         else if (curstr.length() == 6 && curstr == "endobj") { //  end of indirect obj
             break;
         }
         else if(ch == '%') { // comment
-//            ignoreToEOL(file);  //  goto end of line.
             token_obj = (PPToken *)parseComment(source);
             if(token_obj) {
                 token_list.push_back(token_obj);
@@ -694,8 +666,7 @@ bool PPParser::parseSource(PPParserSource &source, vector<PPToken *> &token_list
             continue;
         }
         else if((curstr.length() == 4 && curstr == "true")
-                || (curstr.length() == 5 && curstr == "false")) { // ch == 't' || ch == 'T' || ch == 'f' || ch == 'F') {
-            //token_obj = (PPToken *)parseBool(source, ch);
+                || (curstr.length() == 5 && curstr == "false")) { 
             token_obj = new PPTBool(this, curstr);
             if(token_obj)
                 token_list.push_back(token_obj);
@@ -720,11 +691,6 @@ bool PPParser::parseSource(PPParserSource &source, vector<PPToken *> &token_list
                     else {
                         token_list.push_back(token_obj);
                     }
-//                    else if(XRef->numberOfItems() > 0){
-//                        token_list.push_back(XRef);
-//                        XRef = NULL;
-//                        token_list.push_back(token_obj);
-//                    }
                 }
                 else {
                     token_list.push_back(token_obj);
@@ -754,7 +720,6 @@ bool PPParser::parseSource(PPParserSource &source, vector<PPToken *> &token_list
             }
             else { // hex string
                 source.seekg(filept);
-//                token_obj = (PPToken *)parseHexString(source, ch);
                 token_obj = (PPToken *)parseHexString(source);
                 if(token_obj)
                     token_list.push_back(token_obj);
@@ -818,7 +783,7 @@ bool PPParser::parseSource(PPParserSource &source, vector<PPToken *> &token_list
                 PPTStream *stream = (PPTStream *)token_obj;
                 stream->_dict = dict;
                 token_list.push_back(token_obj);
-				stream_list.push_back(token_obj);
+				_stream_list.push_back(token_obj);
             }
         }
         else if(curstr.length() == 3 && curstr == "obj") {  //  indirect object
@@ -880,7 +845,7 @@ bool PPParser::parseSource(PPParserSource &source, vector<PPToken *> &token_list
         else if(curstr.length() == 9 && curstr == "startxref") {  //  indirect object
             skipToCRLF(source);
             PPTTrailer *last_token = (PPTTrailer *)token_list.at(token_list.size() - 1);
-            if (last_token->classType() != PPTN_TRAILER) {
+            if (last_token->ClassType() != PPTN_TRAILER) {
                 if (isKindOfXRefIndirectObjType(last_token)) { // check 'XRef' type. Adobe Style  or 40.pdf
                     PPTIndirectObj *indirect = (PPTIndirectObj *)last_token;
                     int cnt = (int)token_list.size();
@@ -894,11 +859,6 @@ bool PPParser::parseSource(PPParserSource &source, vector<PPToken *> &token_list
                     token_list.push_back(last_token);
                 }
             }
-//            else {
-//                PPTIndirectObj *last_indirobj = (PPTIndirectObj *)token_list.at(token_list.size() - 2);
-//                if (isKindOfXRefIndirectObjType(last_token)) { // check 'XRef' type. Adobe Style
-//                
-//            }
             char numstr[20];
             source.getline(numstr, 20);
             unsigned long long xref_loc = stoull(numstr);
@@ -911,7 +871,7 @@ bool PPParser::parseSource(PPParserSource &source, vector<PPToken *> &token_list
             _filePtDict[wordoffset] = XRef;
         }
         if (XRef != NULL && token_obj != NULL && !isKindOfNumber((PPTNumber *)token_obj)) {
-            if (token_obj->classType() == PPTN_TRAILER) {
+            if (token_obj->ClassType() == PPTN_TRAILER) {
                 PPTTrailer *trailer_obj = (PPTTrailer *)token_obj;
                 trailer_obj->_xrefObj = XRef;
                 XRef->_trailerObj = trailer_obj;
@@ -926,9 +886,6 @@ bool PPParser::parseSource(PPParserSource &source, vector<PPToken *> &token_list
         if (token_obj || isWordSeparator(ch)) {
             curstr = "";
         }
-//        else {
-//            curstr += ch;
-//        }
         prev_ch = ch;
     }
 
@@ -938,9 +895,9 @@ bool PPParser::parseSource(PPParserSource &source, vector<PPToken *> &token_list
 void PPParser::DecodeStreams(vector<PPToken *> &token_list)
 {
 		
-	int i, icnt = stream_list.size();
+	int i, icnt = _stream_list.size();
 	for(i=0;i<icnt;i++) {
-		PPTStream *stream = (PPTStream *)stream_list[i];
+		PPTStream *stream = (PPTStream *)_stream_list[i];
 		PPTDictionary *dict = stream->_dict;
 		PPToken *val_obj = (PPToken *)dict->valueObjectForKey("Length");
 		if (val_obj) {
@@ -977,16 +934,16 @@ map <int, PPTIndirectObj *> &PPParser::objectsDictionary()
     return _objDict;
 }
 
-PPToken *PPParser::objectByID(int objid)
+PPToken *PPParser::ObjectForNumber(int obj_num)
 {
-    PPToken *ret =_objDict[objid];
+    PPToken *ret =_objDict[obj_num];
     if (ret == NULL)
-        _objDict.erase(objid);
+        _objDict.erase(obj_num);
     return ret;
 }
 
 // 현재 딱 한 군데서 쓰임 : PPTDictionary *PPTTrailer::getDictionary()
-PPToken *PPParser::objectAtFilePosition(unsigned long long pos)
+PPToken *PPParser::ObjectAtFilePosition(unsigned long long pos)
 {
     PPToken *ret = _filePtDict[pos];
     return ret;

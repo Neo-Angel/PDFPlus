@@ -67,22 +67,22 @@ PPTTrailer::~PPTTrailer()
         delete _dict;
     }
 }
-string PPTTrailer::xmlString(int level)
+string PPTTrailer::XMLString(int level)
 {
     string retstr;
     ostringstream ostr;
-    ostr <<tabStr(level)<< "<Trailer>\xa";
+    ostr <<PPTabStr(level)<< "<Trailer>\xa";
     if (_xrefIndirect) {
-        ostr <<_xrefIndirect->xmlString(level+1);
+        ostr <<_xrefIndirect->XMLString(level+1);
     }
     if (_xrefObj) {
-        ostr <<_xrefObj->xmlString(level+1);
+        ostr <<_xrefObj->XMLString(level+1);
     }
     if (_dict) {
-        ostr <<_dict->xmlString(level+1);
+        ostr <<_dict->XMLString(level+1);
     }
-    ostr <<tabStr(level+1)<<"<StartXRef>"<<_startxref<<"</StartXRef>\xa";
-    ostr <<tabStr(level)<< "</Trailer>\xa";
+    ostr <<PPTabStr(level+1)<<"<StartXRef>"<<_startxref<<"</StartXRef>\xa";
+    ostr <<PPTabStr(level)<< "</Trailer>\xa";
     retstr = ostr.str();
     return retstr;
 }
@@ -121,8 +121,8 @@ PPTDictionary *PPTTrailer::getDictionary()
         return _dict;
     }
     if (_startxref > 0) {
-        PPToken *obj = _parser->objectAtFilePosition(_startxref);
-        if (obj != NULL && obj->classType() == PPTN_INDIRECTOBJ) {
+        PPToken *obj = _parser->ObjectAtFilePosition(_startxref);
+        if (obj != NULL && obj->ClassType() == PPTN_INDIRECTOBJ) {
             PPTIndirectObj *indobj = (PPTIndirectObj *)obj;
             PPTDictionary *dict = indobj->firstDictionary();
             return dict;
@@ -228,33 +228,12 @@ void PPTTrailer::write(std::ostream &os)
     
 }
 
-//PPToken *PPTTrailer::rootObject()
-//{
-//    if (_dict != NULL) {
-//        PPToken *ret = _dict->indirectObjectForKey(PPKN_ROOT); // Indirect Ref.
-//        return ret;
-//    }
-//    if (_startxref > 0) {
-//        PPToken *obj = _parser->objectAtFilePosition(_startxref);
-//        if (obj != NULL && obj->classType() == PPTN_INDIRECTOBJ) {
-//            PPTIndirectObj *indobj = (PPTIndirectObj *)obj;
-//            _dict = indobj->firstDictionary();
-//            if (_dict == NULL) {
-//                return NULL;
-//            }
-//            PPToken *ret = _dict->indirectObjectForKey(PPKN_ROOT);
-//            return ret;
-//        }
-//    }
-//    return NULL;
-//}
-
 void PPTTrailer::CopyMembersTo(PPBase *obj)
 {
 	PPToken::CopyMembersTo(obj);
 
 	PPTTrailer *trailer = (PPTTrailer *)obj;
-//	trailer->_startxref = _startxref;
+
 }
 
 void PPTTrailer::SetParser(PPParser *parser)

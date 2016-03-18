@@ -12,13 +12,13 @@ PPTNumber::PPTNumber(PPParser *parser, string *str):PPToken(parser)
 
 PPTNumber::PPTNumber(PPParser *parser, int num)
 {
-    _numstr = newStringFromInt(num);
+    _numstr = PPNewStringFromInt(num);
     _number = (double)num;
 }
 
 PPTNumber::PPTNumber(PPParser *parser, float num)
 {
-    _numstr = newStringFromFloat(num);
+    _numstr = PPNewStringFromFloat(num);
     _number = (double)num;
 }
 PPTNumber::~PPTNumber()
@@ -56,10 +56,10 @@ long PPTNumber::longValue()
     return (long)_number;
 }
 
-string PPTNumber::xmlString(int level)
+string PPTNumber::XMLString(int level)
 {
     string retstr;
-    retstr += tabStr(level) + "<Number>" +stringValue() + "</Number>\xa";
+    retstr += PPTabStr(level) + "<Number>" +stringValue() + "</Number>\xa";
     return retstr;
 }
 

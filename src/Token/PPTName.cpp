@@ -23,15 +23,15 @@ PPTName::~PPTName()
 //    return _name;
 //}
 
-string PPTName::description()
+string PPTName::Description()
 {
     return *_name;
 }
 
-string PPTName::xmlString(int level)
+string PPTName::XMLString(int level)
 {
     string retstr;
-    retstr += tabStr(level) + "<Name>" +*_name + "</Name>\xa";
+    retstr += PPTabStr(level) + "<Name>" +*_name + "</Name>\xa";
     return retstr;
 }
 
@@ -41,7 +41,7 @@ string PPTName::pdfString()
     string retstr = "/";
 	int i, icnt = _name->length();
 	for(i=0;i<icnt;i++) {
-		unsigned short ch = (*_name)[i];
+		char ch = (*_name)[i];
 		if(ch == ' ') {
 			retstr += "#20";
 		}

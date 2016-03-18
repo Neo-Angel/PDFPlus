@@ -30,14 +30,14 @@ public:
 	PPTIndirectObj() {_objNum=0;_genNum=0;}
     ~PPTIndirectObj();
 
-    string description();
-    string xmlString(int level);
+    string Description();
+    string XMLString(int level);
     string pdfString();
 //    string pdfString(std::ostream &os);
     
     bool isObjStream();
     bool isStream();
-    inline const char *classType(){return PPTN_INDIRECTOBJ;};
+    inline const char *ClassType(){return PPTN_INDIRECTOBJ;};
     PPTDictionary *firstDictionary();
 	PPTDictionary *FirstDictionary(){return firstDictionary();}
 	void AddObj(PPToken *obj);

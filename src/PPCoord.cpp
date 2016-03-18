@@ -13,6 +13,49 @@
 #include "PPTNumber.h"
 #include "PPTArray.h"
 
+
+////////////////////////////
+//
+//    Utility Functions
+//
+////////////////////////////
+
+// {x, y, w, h} 순으로 배열에서 가져와 PPRect를 만들어 리턴
+PPRect rectFromArray(PPTArray *array)
+{
+    PPRect ret;
+    if (array->_array.size() == 4) {
+        PPTNumber *num = (PPTNumber *)array->_array.at(0);
+        ret._origin._x = num->floatValue();
+        num = (PPTNumber *)array->_array.at(1);
+        ret._origin._y = num->floatValue();
+        num = (PPTNumber *)array->_array.at(2);
+        ret._size._width = num->floatValue();
+        num = (PPTNumber *)array->_array.at(3);
+        ret._size._height = num->floatValue();
+    }
+    
+    return ret;
+}
+
+//rect를  {x, y, w, h} 순으로 배열에 저장함
+void SetRectToArray(PPRect rect, PPTArray *array)
+{
+	PPTNumber *num;
+	num = new PPTNumber(array->_parser, rect.x1());
+	array->_array.push_back(num);
+	num = new PPTNumber(array->_parser, rect.y1());
+	array->_array.push_back(num);
+	num = new PPTNumber(array->_parser, rect.width());
+	array->_array.push_back(num);
+	num = new PPTNumber(array->_parser, rect.height());
+	array->_array.push_back(num);
+}
+
+//    PPPoint Class
+//
+////////////////////////////
+
 PPPoint::PPPoint()
 {
     _x = 0;
@@ -25,6 +68,9 @@ PPPoint::PPPoint(float x, float y)
     _y = y;
 }
 
+//    PPSize Class
+//
+////////////////////////////
 PPSize::PPSize()
 {
     _width = 0;
@@ -37,59 +83,9 @@ PPSize::PPSize(float w, float h)
     _height = h;
 }
 
-bool PPIntersectsLine(double v_x, double v_y1, double v_y2, double h_y, double h_x1, double h_x2) 
-{
-	if(v_x >= h_x1 && v_x <= h_x2) {
-		if(h_y >= v_y1 && h_y <= v_y2) {
-			return true;
-		}
-	}
-	return false;
-}
-
-bool PPIntersectsRect(PPRect &rect1, PPRect &rect2) 
-{
-	// rect2의 네개의 꼭지점 중에 rect1 안에 들어가 있는 게 있는지 체크
-	if(rect1.GetX1() <= rect2.GetX1() && rect1.GetX2() >= rect2.GetX1()) {
-		if(rect1.GetY1() <= rect2.GetY1() && rect1.GetY2() >= rect2.GetY1()) {
-			return true;
-		}
-		if(rect1.GetY1() <= rect2.GetY2() && rect1.GetY2() >= rect2.GetY2()) {
-			return true;
-		}
-	}
-	if(rect1.GetX1() <= rect2.GetX2() && rect1.GetX2() >= rect2.GetX2()) {
-		if(rect1.GetY1() <= rect2.GetY1() && rect1.GetY2() >= rect2.GetY1()) {
-			return true;
-		}
-		if(rect1.GetY1() <= rect2.GetY2() && rect1.GetY2() >= rect2.GetY2()) {
-			return true;
-		}
-	}
-	if(PPIntersectsLine(rect1.GetX1(), rect1.GetY1(), rect1.GetY2(), rect2.GetY1(), rect2.GetX1(), rect2.GetX2()))
-		return true;
-	if(PPIntersectsLine(rect1.GetX1(), rect1.GetY1(), rect1.GetY2(), rect2.GetY2(), rect2.GetX1(), rect2.GetX2()))
-		return true;
-	if(PPIntersectsLine(rect1.GetX2(), rect1.GetY1(), rect1.GetY2(), rect2.GetY1(), rect2.GetX1(), rect2.GetX2()))
-		return true;
-	if(PPIntersectsLine(rect1.GetX2(), rect1.GetY1(), rect1.GetY2(), rect2.GetY2(), rect2.GetX1(), rect2.GetX2()))
-		return true;
-
-	if(PPIntersectsLine(rect2.GetX1(), rect2.GetY1(), rect2.GetY2(), rect1.GetY1(), rect1.GetX1(), rect1.GetX2()))
-		return true;
-	if(PPIntersectsLine(rect2.GetX1(), rect2.GetY1(), rect2.GetY2(), rect1.GetY2(), rect1.GetX1(), rect1.GetX2()))
-		return true;
-	if(PPIntersectsLine(rect2.GetX2(), rect2.GetY1(), rect2.GetY2(), rect1.GetY1(), rect1.GetX1(), rect1.GetX2()))
-		return true;
-	if(PPIntersectsLine(rect2.GetX2(), rect2.GetY1(), rect2.GetY2(), rect1.GetY2(), rect1.GetX1(), rect1.GetX2()))
-		return true;
-
-
-	return false;
-}
-
-
-
+//    PPRect Class
+//
+////////////////////////////
 PPRect::PPRect()
 {
     _origin._x = 0;
@@ -116,47 +112,7 @@ PPRect::PPRect(PTRect ptrect)
 		_size._height = abs(ptrect.y2 - ptrect.y1);
 }
 
-PPRect rectFromArray(PPTArray *array)
-{
-    PPRect ret;
-    if (array->_array.size() == 4) {
-        PPTNumber *num = (PPTNumber *)array->_array.at(0);
-        ret._origin._x = num->floatValue();
-        num = (PPTNumber *)array->_array.at(1);
-        ret._origin._y = num->floatValue();
-        num = (PPTNumber *)array->_array.at(2);
-        ret._size._width = num->floatValue();
-        num = (PPTNumber *)array->_array.at(3);
-        ret._size._height = num->floatValue();
-    }
-    
-    return ret;
-}
-
-void SetRectToArray(PPRect rect, PPTArray *array)
-{
-	PPTNumber *num;
-	num = new PPTNumber(array->_parser, rect.x1());
-	array->_array.push_back(num);
-	num = new PPTNumber(array->_parser, rect.y1());
-	array->_array.push_back(num);
-	num = new PPTNumber(array->_parser, rect.width());
-	array->_array.push_back(num);
-	num = new PPTNumber(array->_parser, rect.height());
-	array->_array.push_back(num);
-}
-
-/*
-bool PPRect::IntersectsRect(PPRect rect)
-{
-	if(PPIntersectsRect(*this, rect)) {
-		return true;
-	}
-	// 순서를 바꿔서 또 한번 체크함 (rect1가 rect2에 완전히 포함되어 있는 경우)
-	return PPIntersectsRect(rect, *this);
-}
-*/
-
+// this(PPRect)와 파라미터 rect가 겹치는 영역을 PPRect로 리턴
 PPRect PPRect::IntersectRect(PPRect rect)
 {
 	PPRect ret_rect;
@@ -183,7 +139,8 @@ PPRect PPRect::IntersectRect(PPRect rect)
 	return ret_rect;
 }
 
-bool PPRect::IntersectRect(PPRect rect1, PPRect rect2)
+// 클래스 메소드로 rect1와 rect2가 겹치는 부분이 있으면 true 리턴
+bool PPRect::IntersectsRect(PPRect rect1, PPRect rect2)
 {
 	if(rect1.x1() < rect2.x1())
 		setX1(rect2.x1());
@@ -210,6 +167,7 @@ bool PPRect::IntersectRect(PPRect rect1, PPRect rect2)
 	return false;
 }
 
+// this(PPRect)와 파라미터 rect가 겹치는 부분이 있으면 true 리턴
 bool PPRect::IntersectsRect(PPRect rect)
 {
 	PPRect res_rect = IntersectRect(rect);
@@ -217,3 +175,5 @@ bool PPRect::IntersectsRect(PPRect rect)
 		return true;
 	return false;
 }
+
+
