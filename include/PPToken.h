@@ -70,20 +70,12 @@ static const char	*PPKN_PARENT =		"Parent";
 static const char *PPVN_CREATOR =		"PDFPlus"; // Key : "Creator"
 static const char *PPVN_CATALOG =		"Catalog";  // Key : "Type"
 
-
-// 문자열 관련 Utiility Functions
-void PPwstrToUtf8(const wstring& src, string& dest);
-string PPwstrToUtf8(const wstring& str);
-void PPstringToWString(string &src_str, wstring &dest_wstr);
-void PPstringToUTF8String(string &src_str, string &dest_utf8str);
-string PPTabStr(int cnt);
-
-///////////////////////////////////////// PPToken
-// PDF 자료구조의 기본을 이루는 각 종 객체들의 Base클래스
+///////////////////////////////////////////////////////////////// PPToken
+// PDF 자료구조를 이루는 각 종 객체들의 Base클래스
 //
 class PPToken : public PPBase {
 public:
-    PPParser *_parser;
+    PPParser *_parser; //
     unsigned long long _filepos; // PDF 파일상에 이 토큰의 물리적 위치(byte 단위)
 
     PPToken();
@@ -93,14 +85,13 @@ public:
 
     virtual string PDFString() {return "";}
     virtual string PDFString(ostream &os) {return PDFString();}
-    virtual void write(std::ostream &os);
-//	virtual PPToken *Copy(PPParser *parser);
+    virtual void Write(std::ostream &os);
 
-	// 모든 하위 토큰들을 통해 IndirectRef에서 IndirectObj 들을 doc 소속으로 변경함.
+	// 모든 하위 토큰들을 IndirectRef에서 IndirectObj 들을 doc 소속으로 변경함.
 	virtual void MoveInto(PPDocument *doc) {}; // 유일하게 PPDocument::WriteResource() 에서 쓰임
 	virtual void SetParser(PPParser *parser);
 //	PPBase *Create() {return new PPToken();} // 추상 클래스라서 사용할 수 없답니다. 
-//	PPBase *Copy() {return PPBase::Copy();};
+
 	const char *ClassType() {return PPTN_TOKEN;}
 
 	void CopyMembersTo(PPBase *obj) ; // Inherited from PPBase

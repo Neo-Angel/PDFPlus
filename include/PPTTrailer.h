@@ -33,7 +33,7 @@ public:
     string pdfString();
     inline const char *ClassType(){return PPTN_TRAILER;};
     PPTDictionary *getDictionary();
-    void write(std::ostream &os);
+    void Write(std::ostream &os);
 
     PPToken *rootObject();
     PPToken *infoObject();

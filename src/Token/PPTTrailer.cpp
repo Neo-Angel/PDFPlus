@@ -220,9 +220,9 @@ void PPTTrailer::merge(PPTTrailer *other_trailer)
     }
 }
 
-void PPTTrailer::write(std::ostream &os)
+void PPTTrailer::Write(std::ostream &os)
 {
-    PPToken::write(os);
+    PPToken::Write(os);
     _parser->_filePtDict[_filepos] = this;
     
     

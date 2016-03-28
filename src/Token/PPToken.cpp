@@ -133,7 +133,7 @@ PPToken::PPToken(PPParser *parser)
     _parser = parser;
 }
 
-void PPToken::write(std::ostream &os)
+void PPToken::Write(std::ostream &os)
 {
     _filepos = os.tellp();
         string pdfstr = PDFString();

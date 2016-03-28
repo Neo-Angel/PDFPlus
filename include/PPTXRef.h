@@ -28,7 +28,7 @@ public:
     string XMLString(int level);
     string pdfString();
     inline const char *ClassType() {return PPTN_XREF;}
-    void write(std::ostream &os);
+    void Write(std::ostream &os);
     
     void merge(PPTXRef *trailer);
     

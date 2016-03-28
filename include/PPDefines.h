@@ -6,8 +6,8 @@
 //  Copyright (c) 2014년 #CORP#. All rights reserved.
 //
 
-#ifndef PDFPlusLib_PPDefines_h
-#define PDFPlusLib_PPDefines_h
+#ifndef __PDFPlusLib_PPDefines_h__
+#define __PDFPlusLib_PPDefines_h__
 
 #include <string.h>
 #include <vector>
@@ -32,8 +32,10 @@ typedef unsigned short  word;
 // String Constants
 static const char	*PP_ENDL = "\x0a";
 
-
-// Util Fuctions
+//
+// Utility Fuctions
+//
+////////////////////////////////////////////////////////////
 
 // PPBase.cpp 에 있는 함수들
 // int 값을 string 값으로 변환함
@@ -60,4 +62,12 @@ string PPToHexStr(string &str);
 // (PPParser.cpp)
 size_t PPComponentsSepratedByChar(string &str, char ch, vector<string> &components);
 
+
+// UTF8 Converting
+void PPwstrToUtf8(const wstring& src, string& dest);
+string PPwstrToUtf8(const wstring& str);
+void PPstringToWString(string &src_str, wstring &dest_wstr);
+void PPstringToUTF8String(string &src_str, string &dest_utf8str);
+
 #endif  // PDFPlusLib_PPDefines_h
+

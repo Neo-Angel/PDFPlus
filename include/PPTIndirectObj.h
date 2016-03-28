@@ -47,7 +47,7 @@ public:
     void setObjNum(int num);
 	int getObjNum(){return _objNum;}
     
-    void write(std::ostream &os);
+    void Write(std::ostream &os);
     void merge(PPTIndirectObj *ohter_indir);
     
 	// CopyMembersTo 멤버를 계승 받기 위해선 Create 멤버함수를 구현해야함.

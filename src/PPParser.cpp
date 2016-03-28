@@ -31,6 +31,7 @@ const char *octalchrs = "01234567";
 const char *hexchrs = "0123456789ABCDEF";
 const char *stringescs = "nrtbf()\\";
 
+// source의 다음 End Of Line(CR or LF)이 나타랄 때까지 무의미하게 읽어들임
 bool ignoreToEOL(PPParserSource &source)
 {
     while (!source.eof()) {
@@ -47,7 +48,16 @@ typedef enum {
     
 }PPParserState;
 
+// if 'ch' is visible character?
+bool isWhiteSpace(unsigned char ch) 
+{
+    if (ch <= 32) {
+        return true;
+    }
+    return false;
+}
 
+// ch 가 숫자를 표시하는데 쓰이는 캐랙터인지 판단함.
 bool isNumberRange(char ch)
 {
     if (ch >= '0' && ch <= '9') {
@@ -59,17 +69,8 @@ bool isNumberRange(char ch)
     return false;
 }
 
-bool isWhiteSpace(unsigned char ch)
-{
-    if (ch == ' ') {
-        return true;
-    }
-    if (ch <= 27) {
-        return true;
-    }
-    return false;
-}
-
+// str을 ch를 기준으로 문자열들을 나누어 줌
+// 나누어진 문자열들은 components에 담아서 넘겨줌.
 size_t PPComponentsSepratedByChar(string &str, char ch, vector<string> &components)
 {
     size_t start = 0;
@@ -87,43 +88,56 @@ size_t PPComponentsSepratedByChar(string &str, char ch, vector<string> &componen
     return components.size();
 }
 
+
+//////////////////////////////////////////////////////////////////////////////
+// PPParser 클래스의 메소드들
+
+
+// 각 타입별 파싱 메소드
+//////////////////////////////////////////////////////////////////////////////
+
+// Parsing Comment
+//////////////////////////////////////////////////////////////////////////////
 PPTComment *PPParser::parseComment(PPParserSource &source)
 {
     string *strbuf = new string;
     while (!source.eof()) {
         char ch;
         source.get(ch);
-//		cout << "File Point : " << source.tellg() << PP_ENDL;
 		if(ch == 0x0d || ch == 0x0a)  // CR, LF
             break;;
         *strbuf += ch;
     }
-//	cout << "File Point : " << source.tellg() << PP_ENDL;
     PPTComment *ret = new PPTComment(this, strbuf);
     return ret;
 }
 
+// Parsing String
+//////////////////////////////////////////////////////////////////////////////
 
-char hex2num(char ch)
+// ascii로 표현되는 hex_ch를 숫자 값으로 변환함. 
+char hex2num(char hex_ch)
 {
-    if (ch >= '0' && ch <= '9') {
-        return (ch - '0');
+    if (hex_ch >= '0' && hex_ch <= '9') {
+        return (hex_ch - '0');
     }
-    else if (ch >= 'A' && ch <= 'F') {
-        return (ch - 'A' + 10);
+    else if (hex_ch >= 'A' && hex_ch <= 'F') {
+        return (hex_ch - 'A' + 10);
     }
-    else if (ch >= 'a' && ch <= 'f') {
-        return (ch - 'a' + 10);
+    else if (hex_ch >= 'a' && hex_ch <= 'f') {
+        return (hex_ch - 'a' + 10);
     }
     return 0;
 }
 
+// 두개의 개별 ascii hex 값을 조합해 하나의 문자 ASCII 값으로 변환함.
 char cvtHex2Ascii(char ch1, char ch2)
 {
     char ret_ch = hex2num(ch1) * 16 + hex2num(ch2);
     return ret_ch;
 }
 
+// 8진수 asscii 코드값을 한 개의 문자 코드값으로 변환함
 unsigned char cvtOct2Ascii(string octstr)
 {
     unsigned char ret = 0;
@@ -141,7 +155,7 @@ unsigned char cvtOct2Ascii(string octstr)
     return ret;
 }
 
-
+// 일반적인 스타일의 문자열을 파싱함.
 PPTString *PPParser::parseStringObj(PPParserSource &source)
 {
     string *strbuf = new string;
@@ -198,21 +212,16 @@ PPTString *PPParser::parseStringObj(PPParserSource &source)
                     *strbuf += oct_buf;
                 }
             }
-//            else if(ch == 0x0a || ch == 0x0d) {
-//                while (ch != 0x0a && ch != 0x0d) {
-//                    source.get(ch);
-//                }
-//            }
         }
         *strbuf += ch;
         prev_ch = ch;
         source.get(ch);
     }
-    //    cout << "string = " << *strbuf << PP_ENDL;
     PPTString *ret = new PPTString(this, strbuf);
     return ret;
 }
 
+// parse string that consist of hex.
 PPTString *PPParser::parseHexString(PPParserSource &source)
 {
     char ch1;
@@ -241,7 +250,8 @@ PPTString *PPParser::parseHexString(PPParserSource &source)
     return ret;
 }
 
-
+// Parsing Number
+//////////////////////////////////////////////////////////////////////////////
 PPTNumber *PPParser::parseNumber(PPParserSource &source, char start_ch)
 {
     char ch = start_ch;
@@ -262,6 +272,8 @@ PPTNumber *PPParser::parseNumber(PPParserSource &source, char start_ch)
 }
 
 
+// Parsing Name
+//////////////////////////////////////////////////////////////////////////////
 PPTName *PPParser::parseName(PPParserSource &source)
 {
     char ch = '\0';
@@ -300,6 +312,8 @@ PPTName *PPParser::parseName(PPParserSource &source)
     
 }
 
+// Parsing Bool
+//////////////////////////////////////////////////////////////////////////////
 PPTBool *PPParser::parseBool(PPParserSource &source, char start_ch)
 {
     char ch = start_ch;
@@ -323,25 +337,28 @@ PPTBool *PPParser::parseBool(PPParserSource &source, char start_ch)
     
 }
 
-
+// Parsing Array
+//////////////////////////////////////////////////////////////////////////////
 PPTArray *PPParser::parseArray(PPParserSource &source)
 {
     vector<PPToken *> token_list;
-    if(!ParseSource(source, token_list))
+    if(!ParseSource(source, token_list))  // 메인 함수인 ParseSource()를 재귀호출함. 
         return NULL;
-    PPTArray *ret = new PPTArray(this, token_list);
+    PPTArray *ret = new PPTArray(this, token_list); // Array용 토큰 객체로 재 생성함.
     return ret;
     
 }
 
+// Parsing Dictionary
+//////////////////////////////////////////////////////////////////////////////
 PPTDictionary *PPParser::parseDictionary(PPParserSource &source)
 {
- //   unsigned long long filept = file.tellg();
-//    cout << "Cur Pt = " << filept << PP_ENDL;
-//    if (filept >= 260248) {
-//        cout << "Breakpoint..." << PP_ENDL;
-//
-//    }
+	// Dictionary는 Array와 구성이 같음. 단지,
+	// 짝수번째 객체는 Key 값이고,
+	// 홀수번째 객체는 Value 임
+	// Key는 Name 토큰으로 되어있음.
+	// 그래서 우선 배열을 파싱한 다음 그 배열을 기반으로
+	// Dictionary를 구성함.
     vector<PPToken *> token_list;
     if(!ParseSource(source, token_list))  // recursive function call
         return NULL;
@@ -350,6 +367,7 @@ PPTDictionary *PPParser::parseDictionary(PPParserSource &source)
         return NULL;
     }
     
+	// Build dictionary from array 'token_list'.
     PPTDictionary *ret_dict = new PPTDictionary(this);
     icnt = icnt / 2;
     for (i=0; i<icnt; i++) {
@@ -362,10 +380,11 @@ PPTDictionary *PPParser::parseDictionary(PPParserSource &source)
         ret_dict->setTokenAndKey(token, *name->_name);
         delete name;
     }
-    return ret_dict;
-    
+    return ret_dict;  
 }
 
+// Parsing Stream
+//////////////////////////////////////////////////////////////////////////////
 void skipToCRLF(PPParserSource &source)
 {
     char ch;
@@ -380,7 +399,8 @@ void skipToCRLF(PPParserSource &source)
     source.seekg(filept-1);
 }
 
-
+// 굳이 멤버함수로 하지 않아도 되는 것들은 그냥 일반 C함수로 정의한다.
+// 멤버 함수에 비해 다루기가 쉽다.
 bool findWord(PPParserSource &source, const char *word)
 {
     bool ret = false;
@@ -417,13 +437,6 @@ PPTStream *PPParser::parseStream(PPParserSource &source, unsigned long length)
         delete ret;
         return NULL;
     }
-//    char endstream[10];
-//    file.get(endstream, 9);
-//    endstream[9] = NULL;
-//    if (strcmp(endstream, "endstream") != 0) {
-////        delete ret;
-////        return NULL;
-//    }
     return ret;
 }
 
@@ -440,8 +453,6 @@ PPTStream *PPParser::parseStream(PPParserSource &source)
     char ch;
     source.get(ch);
     while (true) {
-//        unsigned long long filept = file.tellg();
-
         buf[bufidx] = ch;
         bufidx ++;
         bytes_len ++;
@@ -452,9 +463,6 @@ PPTStream *PPParser::parseStream(PPParserSource &source)
         }
         
         if (ch == 0x0d || ch == 0x0a) {
-//            char hexbuf[100];
-//            sprintf(hexbuf, "0x%llx", filept);
-//            cout << hexbuf << PP_ENDL;
             char strline[10];
             if (bufidx >= 10) {
                 strncpy(strline, buf + bufidx - 10, 9);
@@ -466,7 +474,6 @@ PPTStream *PPParser::parseStream(PPParserSource &source)
                 strncpy(strline, prevbuf+prevbufidx, shortage);
                 strncpy(strline + shortage, buf, bufidx);
             }
-//            char *strline = buf + bufidx - 10;
             if (strncmp(strline, "endstream", 9) == 0) {
                 bytes_len -= 10;
                 if (bufidx <= 10) {
@@ -475,7 +482,6 @@ PPTStream *PPParser::parseStream(PPParserSource &source)
                 break;
             }
         }
-        
         source.get(ch);
         if (source.eof()) {
             // error
@@ -506,10 +512,10 @@ PPTStream *PPParser::parseStream(PPParserSource &source)
 }
 
 
+// Parsing IndirectObj
+//////////////////////////////////////////////////////////////////////////////
 PPTIndirectObj *PPParser::parseIndirectObj(PPParserSource &source, PPTNumber *num1, PPTNumber *num2)
 {
-    if (num1->intValue() == 94)
-        cout << "94" << PP_ENDL;
     vector<PPToken *> token_list;
     if(!ParseSource(source, token_list))
         return NULL;
@@ -517,6 +523,9 @@ PPTIndirectObj *PPParser::parseIndirectObj(PPParserSource &source, PPTNumber *nu
     return ret;
 }
 
+
+// Parsing XRef
+//////////////////////////////////////////////////////////////////////////////
 bool parseXRef(PPParserSource &source, PPTXRef *xref, int objnum, int count)
 {
     skipToCRLF(source);
@@ -543,6 +552,11 @@ bool parseXRef(PPParserSource &source, PPTXRef *xref, int objnum, int count)
     }
     return true;
 }
+
+// 메인함수(ParseSource()) 위한 보조 함수들
+//
+//////////////////////////////////////////////////////////////////////////////
+
 bool isAlphabet(char ch)
 {
     if ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || ch == '*') {
@@ -562,15 +576,6 @@ bool isLastCharAlphabet(string str)
     if (isAlphabet(ch1) && !isAlphabet(ch2)) {
         return true;
     }
-    return false;
-}
-
-
-bool isWordSeparator(char ch) {
-    if(ch == ' ')
-        return true;
-    if(ch <= 25)
-        return true;
     return false;
 }
 
@@ -615,6 +620,9 @@ bool canSourceParseString(PPParserSource &source, string curstr)
     return false;
 }
 
+//  Main Parsing Function
+//
+//////////////////////////////////////////////////////////////////////////////////
 bool PPParser::ParseSource(PPParserSource &source, vector<PPToken *> &token_list)
 {
     PPTXRef *XRef = NULL;
@@ -883,7 +891,7 @@ bool PPParser::ParseSource(PPParserSource &source, vector<PPToken *> &token_list
             XRef = NULL;
         }
         
-        if (token_obj || isWordSeparator(ch)) {
+        if (token_obj || isWhiteSpace(ch)) {
             curstr = "";
         }
         prev_ch = ch;
@@ -892,6 +900,9 @@ bool PPParser::ParseSource(PPParserSource &source, vector<PPToken *> &token_list
     return true;
 }
 
+
+// PPDocument.cpp에서 한 번 쓰임
+// token_list에 있는 스트림들 중 FlateDecode 방식들만 디코딩 함.
 void PPParser::DecodeStreams(vector<PPToken *> &token_list)
 {
 		
@@ -920,16 +931,10 @@ void PPParser::DecodeStreams(vector<PPToken *> &token_list)
 
 PPParser::~PPParser()
 {
-//    int i, icnt = (int)_tokens.size();
-//    for (i=0; i<icnt; i++) {
-//        PPToken *token = _tokens.at(i);
-//        delete token;
-//    }
-//    cout << "PPParser destructed..." << PP_ENDL;
 }
 
 
-map <int, PPTIndirectObj *> &PPParser::objectsDictionary()
+map <int, PPTIndirectObj *> &PPParser::ObjectsDictionary()
 {
     return _objDict;
 }

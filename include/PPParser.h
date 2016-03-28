@@ -14,6 +14,7 @@
 #include <map>
 #include "PPBase.h"
 #include "PPToken.h"
+#include "PPTBool.h"
 
 using namespace std;
 
@@ -27,6 +28,10 @@ typedef enum {
     
 }PPParserReturn;
 
+// PPParser 를 이용해 파싱하는데 있어서 각각의 용도(소스의 특성)에 맞게 
+// 코드를 핸들링 할 수 있도록 함. PPParser에서는 이 클래스의 인스턴스를
+// 이용해 파싱에 필요한 코드들을 공급받음.
+// 케이스 : 도큐먼트, 그래픽, 스트림, ...
 
 class PPParserSource { // : PPBase {
 public:
@@ -40,7 +45,9 @@ public:
     virtual void getline(char *buf, size_t size) = 0;
 };
 
-class PPTBool;
+// PPToken의 서브 클래스들
+// PPParser에 의해서 파싱될 객체들의 종류들
+//class PPTBool;
 class PPTNumber;
 class PPTString;
 class PPTName;
@@ -49,40 +56,45 @@ class PPTDictionary;
 class PPTStream;
 class PPTIndirectObj;
 class PPTIndirectRef;
-
-
 class PPTComment;
 
-class PPParser : PPBase {
-protected:
-//    Internal Methods;
-    PPTComment *parseComment(PPParserSource &source);
-    PPTBool *parseBool(PPParserSource &source, char start_ch);
-    PPTNumber *parseNumber(PPParserSource &source, char start_ch);
-    PPTString *parseHexString(PPParserSource &source);
-    PPTString *parseStringObj(PPParserSource &source);
-    PPTName *parseName(PPParserSource &source);
-    PPTArray *parseArray(PPParserSource &source);
-    PPTDictionary *parseDictionary(PPParserSource &source);
-    PPTStream *parseStream(PPParserSource &source, unsigned long length);
-    PPTStream *parseStream(PPParserSource &source);
-    PPTIndirectObj *parseIndirectObj(PPParserSource &source, PPTNumber *num1, PPTNumber *num2);
-    
-public:
-	void *_owner; // mainly PPDocument(?)
-    unsigned int _last_obj_idx;
-    map <int, PPTIndirectObj *> _objDict;
-    map <unsigned long long, PPToken *> _filePtDict; // IndirectObj, Trailer, XRef
-    vector <PPTIndirectRef *> _ref_list;
-	vector <PPToken *> _stream_list;
-    
-    ~PPParser();
-    map <int, PPTIndirectObj *> &objectsDictionary();
-	PPToken *ObjectForNumber(int num);
-    PPToken *ObjectAtFilePosition(unsigned long long pos);
-	void DecodeStreams(vector<PPToken *> &token_list);
 
-    bool ParseSource(PPParserSource &source, vector<PPToken *> &token_list);  // start parsing
+// PDF의 기본적인 신텍스 룰에 따라 파싱기능을 제공함.
+// 용도(혹은 ParseSource (PPParseSource의 서브클래스))에 따라 PDF 메인 코드들을 
+// 파싱하거나 스트림등의 지엽적인 부분들을 파싱할 수 있음.
+class PPParser : PPBase {
+	
+protected:
+    PPTBool									*parseBool(PPParserSource &source, char start_ch);
+	PPTNumber								*parseNumber(PPParserSource &source, char start_ch);
+    PPTString								*parseHexString(PPParserSource &source);
+    PPTString								*parseStringObj(PPParserSource &source);
+    PPTName									*parseName(PPParserSource &source);
+    PPTArray								*parseArray(PPParserSource &source);
+    PPTDictionary							*parseDictionary(PPParserSource &source);
+    PPTStream								*parseStream(PPParserSource &source, unsigned long length);
+    PPTStream								*parseStream(PPParserSource &source);
+    PPTIndirectObj							*parseIndirectObj(PPParserSource &source, PPTNumber *num1, PPTNumber *num2);
+    PPTComment								*parseComment(PPParserSource &source);
+
+public:
+	void *									_owner; // mainly PPDocument(?)
+    unsigned int							_last_obj_idx;
+    map <int, PPTIndirectObj *>				_objDict; // 오브젝 넘버를 키값으로 PPTIndirectObj 를 가져올 수 있는 hash map
+    map <unsigned long long, PPToken *>		_filePtDict; // IndirectObj, Trailer, XRef... 파일 위치를 키로 하는 토큰 객체 리스트
+    vector <PPTIndirectRef *>				_ref_list; 
+	vector <PPToken *>						_stream_list;
+
+public:
+											~PPParser(); // 소멸자		
+    map <int, PPTIndirectObj *> &			ObjectsDictionary(); // return _objDict
+	PPToken *								ObjectForNumber(int num); // _objDict를 이용한 함수.
+    PPToken *								ObjectAtFilePosition(unsigned long long pos);//_filePtDict를 이용한 함수
+	void									DecodeStreams(vector<PPToken *> &token_list);
+
+	// 메인 파서 함수. 
+	// source에서 데이터를 읽어들여 파싱한 후 token_list에 Array로 담아 냄.
+    bool									ParseSource(PPParserSource &source, vector<PPToken *> &token_list);  // start parsing
 };
 
 #endif /* defined(__PDFPlusLib__PPParser__) */

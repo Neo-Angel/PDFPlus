@@ -844,7 +844,7 @@ int PPDocument::write(char *out_path)
                 }
                 
             }
-            token->write(os);
+            token->Write(os);
         }
     }
     unsigned long long xref_pos = writeXRefs(os);
@@ -857,7 +857,7 @@ int PPDocument::write(char *out_path)
 
     master_trailer->build();
     master_trailer->_startxref = xref_pos;
-    master_trailer->write(os);
+    master_trailer->Write(os);
     fb.close();
     cout << out_path << " generated!!!!\xa";
     return 0;

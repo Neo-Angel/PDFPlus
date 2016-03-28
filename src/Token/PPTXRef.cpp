@@ -7,6 +7,10 @@
 
 //  ////////////////////////////////// PPTXRef
 #include "PPTIndirectObj.h"
+#include "PPDefines.h"
+
+
+
 PPTXRef::PPTXRef(PPParser *parser):PPToken(parser)
 {
     
@@ -79,9 +83,9 @@ string PPTXRef::pdfString()
     return retstr;
 }
 
-void PPTXRef::write(std::ostream &os)
+void PPTXRef::Write(std::ostream &os)
 {
-    PPToken::write(os);
+    PPToken::Write(os);
     _parser->_filePtDict[_filepos] = this;
 }
 

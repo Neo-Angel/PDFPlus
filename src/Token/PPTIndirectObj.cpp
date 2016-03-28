@@ -124,7 +124,7 @@ bool PPTIndirectObj::isStream()
     return false;
 }
 
-void PPTIndirectObj::write(ostream &os)
+void PPTIndirectObj::Write(ostream &os)
 {
     if(isObjStream()) {
         size_t i, icnt = _array.size();
@@ -169,7 +169,7 @@ void PPTIndirectObj::write(ostream &os)
         _parser->_objDict[_objNum] = this;
     }
     else {
-        PPToken::write(os);
+        PPToken::Write(os);
         
         _parser->_filePtDict[_filepos] = this;
         _parser->_objDict[_objNum] = this;
