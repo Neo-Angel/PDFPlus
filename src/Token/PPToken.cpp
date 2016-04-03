@@ -124,13 +124,13 @@ void PPstringToUTF8String(string &src_str, string &dest_utf8str)
 //////////////////////////////////// PPToken
 PPToken::PPToken()
 {
-    _parser = NULL;
+    _document = NULL;
 
 }
 
-PPToken::PPToken(PPParser *parser)
+PPToken::PPToken(PPDocument *doc)
 {
-    _parser = parser;
+    _document = doc;
 }
 
 void PPToken::Write(std::ostream &os)
@@ -143,9 +143,9 @@ void PPToken::Write(std::ostream &os)
         os << pdfstr << PP_ENDL;
 }
 
-void PPToken::SetParser(PPParser *parser)
+void PPToken::SetDocument(PPDocument *doc)
 {
-	_parser = parser;
+	_document = doc;
 }
 
 void PPToken::CopyMembersTo(PPBase *obj)
@@ -153,7 +153,7 @@ void PPToken::CopyMembersTo(PPBase *obj)
 	PPBase::CopyMembersTo(obj);
 	PPToken *token = (PPToken *)obj;
 
-	// 외부에 의해서 _parser다 다시 지정되기 전 까지는 
-	//이전 _parser(출처)를 가지고 있는다.
-	token->_parser = _parser; 
+	// 외부에 의해서 _document가 다시 지정되기 전 까지는 
+	//이전 _document(출처)를 가지고 있는다.
+	token->_document = _document; 
 }

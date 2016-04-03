@@ -17,12 +17,12 @@ PPEBeginMarkedContent::PPEBeginMarkedContent(PPTName *tag, PPToken *properties, 
 		_OCGInfo = NULL;
 }
 
-PPEBeginMarkedContent::PPEBeginMarkedContent(PPParser *parser, string properties, PPContext *gcontext) : PPElement(gcontext)
+PPEBeginMarkedContent::PPEBeginMarkedContent(PPDocument *doc, string properties, PPContext *gcontext) : PPElement(gcontext)
 {
 	string *tag_str = new string("OC");
-	_tag = new PPTName(parser, tag_str);
+	_tag = new PPTName(doc, tag_str);
 	string *new_properties = new string(properties);
-	_properties = new PPTName(parser, new_properties);
+	_properties = new PPTName(doc, new_properties);
 	_OCGInfo = NULL;
 }
 PPEBeginMarkedContent::PPEBeginMarkedContent(){
@@ -49,12 +49,12 @@ void PPEBeginMarkedContent::CopyMembersTo(PPBase *obj)
 		tar_obj->_tag = (PPTName *)_tag->Copy();
 }
 
-void PPEBeginMarkedContent::SetParser(PPParser *parser)
+void PPEBeginMarkedContent::SetDocument(PPDocument *doc)
 {
 	if(_properties)
-		_properties->_parser = parser;
+		_properties->_document = doc;
 	if(_tag)
-		_tag->_parser = parser;
+		_tag->_document = doc;
 }
 
 string PPEBeginMarkedContent::makeCommandString()

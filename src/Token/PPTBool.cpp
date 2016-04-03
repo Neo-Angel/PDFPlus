@@ -12,7 +12,7 @@ string boolStr(bool flag)
     return "false";
 }
 
-PPTBool::PPTBool(PPParser *parser, string &str):PPToken(parser)
+PPTBool::PPTBool(PPDocument *doc, string &str):PPToken(doc)
 {
     _bool = (str.compare("true") == 0);
 }

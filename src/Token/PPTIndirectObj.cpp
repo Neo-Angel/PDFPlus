@@ -13,14 +13,14 @@
 #include "PPTIndirectRef.h"
 
 //  ////////////////////////////////// PPTIndirectObj
-PPTIndirectObj::PPTIndirectObj(PPParser *parser, vector<PPToken *> token_list, int num1, int num2):PPToken(parser)
+PPTIndirectObj::PPTIndirectObj(PPDocument *doc, vector<PPToken *> token_list, int num1, int num2):PPToken(doc)
 {
     _objNum = num1;
     _genNum = num2;
     _array = token_list;
 }
 
-PPTIndirectObj::PPTIndirectObj(PPParser *parser, int num1, int num2):PPToken(parser)
+PPTIndirectObj::PPTIndirectObj(PPDocument *doc, int num1, int num2):PPToken(doc)
 {
 	_objNum = num1;
 	_genNum = num2;
@@ -133,8 +133,8 @@ void PPTIndirectObj::Write(ostream &os)
             if(token->ClassType() == PPTN_INDIRECTOBJ) {
                 PPTIndirectObj *indir_obj = (PPTIndirectObj *)token;
                 indir_obj->_filepos = os.tellp();
-                _parser->_filePtDict[indir_obj->_filepos] = indir_obj;
-                _parser->_objDict[indir_obj->_objNum] = indir_obj;
+                _document->_filePtDict[indir_obj->_filepos] = indir_obj;
+                _document->_objDict[indir_obj->_objNum] = indir_obj;
             }
             string pdfstr = token->PDFString();
             if (pdfstr.length() == 0) {
@@ -156,7 +156,7 @@ void PPTIndirectObj::Write(ostream &os)
         PPTStream *stream = (PPTStream *)_array[1];
         unsigned long len;
         string stream_pdfstr = stream->makePDFString(len);
-        PPTNumber *len_num = new PPTNumber(_parser, (int)len);
+        PPTNumber *len_num = new PPTNumber(_document, (int)len);
         dict->setTokenAndKey(len_num, "Length");
         
         ostr << dict->pdfString();
@@ -165,14 +165,14 @@ void PPTIndirectObj::Write(ostream &os)
         ostr << "endobj";// << PP_ENDL;
         os << ostr.str() << PP_ENDL;
         
-        _parser->_filePtDict[_filepos] = this;
-        _parser->_objDict[_objNum] = this;
+        _document->_filePtDict[_filepos] = this;
+        _document->_objDict[_objNum] = this;
     }
     else {
         PPToken::Write(os);
         
-        _parser->_filePtDict[_filepos] = this;
-        _parser->_objDict[_objNum] = this;
+        _document->_filePtDict[_filepos] = this;
+        _document->_objDict[_objNum] = this;
     }
 }
 
@@ -223,7 +223,7 @@ string PPTIndirectObj::pdfString()
 //    
 //    
 //    _parser->_filePtDict[_filepos] = this;
-//    _parser->_objDict[_objNum] = this;
+//    _document->_objDict[_objNum] = this;
 //    
 //}
 
@@ -255,15 +255,15 @@ void PPTIndirectObj::CopyMembersTo(PPBase *obj)
 	//_ref_list.clear();
 }
 
-void PPTIndirectObj::SetParser(PPParser *parser)
+void PPTIndirectObj::SetDocument(PPDocument *doc)
 {
-	PPToken::SetParser(parser);
+	PPToken::SetDocument(doc);
 
 	int i, icnt = _array.size();
 	for(i=0;i<icnt;i++) {
 		PPToken *token = _array.at(i);
-		if(parser != token->_parser)
-			token->SetParser(parser);
+		if(doc != token->_document)
+			token->SetDocument(doc);
 	}
 
 }
@@ -276,7 +276,7 @@ void PPTIndirectObj::MoveInto(PPDocument *doc)
 	int i, icnt = _array.size();
 	for(i=0;i<icnt;i++) {
 		PPToken *token = _array.at(i);
-		if(&(doc->_parser) != token->_parser) {
+		if(doc != token->_document) {
 			token->MoveInto(doc);
 		}
 	}

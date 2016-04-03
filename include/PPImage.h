@@ -14,7 +14,7 @@
 ///////////////////////////////////////////////////////////////
 
 class PPTDictionary;
-class PPParser;
+class PPDocument;
 class PPTStream;
 class PPTIndirectObj;
 
@@ -24,7 +24,7 @@ class PPImage : public PPBase {
 //	PPTStream *_stream;
 
 public:
-	PPImage(string path, PPParser *parser);
+	PPImage(string path, PPDocument *doc);
 
 	PPTIndirectObj *MakeIndirectObj(int obj_num);
 };

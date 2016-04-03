@@ -1,6 +1,7 @@
 
 #include "PPTDictionary.h"
 
+#include "PPDocument.h"
 #include "PPTName.h"
 #include "PPTArray.h"
 #include "PPTIndirectObj.h"
@@ -12,7 +13,7 @@
 // PPTDictionary //////////////////////////////////
 
 
-PPTDictionary::PPTDictionary(PPParser *parser) : PPToken(parser)
+PPTDictionary::PPTDictionary(PPDocument *doc) : PPToken(doc)
 {
     
 }
@@ -35,34 +36,34 @@ void PPTDictionary::setTokenAndKey(PPToken *token, string key)
 void PPTDictionary::SetTokenAndKey(string name, string key)
 {
 	string *name_ptr = new string(name);
-	PPTName *name_obj = new PPTName(_parser, name_ptr);
+	PPTName *name_obj = new PPTName(_document, name_ptr);
 	setTokenAndKey(name_obj, key);
 }
 
 void PPTDictionary::SetStringAndKey(string name, string key)
 {
 	string *name_ptr = new string(name);
-	PPTString *str_obj = new PPTString(_parser, name_ptr);
+	PPTString *str_obj = new PPTString(_document, name_ptr);
 	setTokenAndKey(str_obj, key);
 }
 
 void PPTDictionary::SetNameAndKey(string name, string key)
 {
 	string *name_ptr = new string(name);
-	PPTName *str_obj = new PPTName(_parser, name_ptr);
+	PPTName *str_obj = new PPTName(_document, name_ptr);
 	setTokenAndKey(str_obj, key);
 }
 
 
 void PPTDictionary::SetTokenAndKey(int num, string key)
 {
-	PPTNumber *num_obj = new PPTNumber(_parser, num);
+	PPTNumber *num_obj = new PPTNumber(_document, num);
 	SetTokenAndKey(num_obj, key);
 }
 
 PPTIndirectObj *PPTDictionary::SetRefTokenAndKey(PPToken *token, string key, int obj_num)
 {
-	PPTIndirectRef *ref = new PPTIndirectRef(_parser, obj_num, 0);
+	PPTIndirectRef *ref = new PPTIndirectRef(_document, obj_num, 0);
 	SetTokenAndKey(ref, key);
 	PPTIndirectObj *obj = NULL;
 	if(token->ClassType() == PPTN_INDIRECTOBJ) {
@@ -70,9 +71,9 @@ PPTIndirectObj *PPTDictionary::SetRefTokenAndKey(PPToken *token, string key, int
 		obj->_objNum = obj_num; // ???
 	}
 	else  {
-		obj = (PPTIndirectObj *)_parser->ObjectForNumber(obj_num);
+		obj = (PPTIndirectObj *)_document->ObjectForNumber(obj_num);
 		if(!obj) {
-			obj = new PPTIndirectObj(_parser, obj_num, 0);
+			obj = new PPTIndirectObj(_document, obj_num, 0);
 		}
 		obj->AddObj(token);  // 이 부분은 바로 위 if문안으로 들어가야 되는거 아닌지...
 	}
@@ -220,15 +221,15 @@ void PPTDictionary::CopyMembersTo(PPBase *obj)
 
 }
 
-void PPTDictionary::SetParser(PPParser *parser)
+void PPTDictionary::SetDocument(PPDocument *doc)
 {
-	PPToken::SetParser(parser);
+	PPToken::SetDocument(doc);
 
 	map <string, PPToken *> ::iterator it_token_objs;
     for(it_token_objs = _dict.begin(); it_token_objs != _dict.end(); it_token_objs++) {
         PPToken *token = (PPToken *)(it_token_objs->second);
-		if(parser != token->_parser)
-			token->SetParser(parser);
+		if(doc != token->_document)
+			token->SetDocument(doc);
     }
 }
 

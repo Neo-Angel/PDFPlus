@@ -8,11 +8,11 @@
 #include "PPTIndirectObj.h"
 #include "PPParser.h"
 
-PPTIndirectRef::PPTIndirectRef(PPParser *parser, int num1, int num2):PPToken(parser)
+PPTIndirectRef::PPTIndirectRef(PPDocument *doc, int num1, int num2):PPToken(doc)
 {
     _objNum = num1;
     _genNum = num2;
-    parser->_ref_list.push_back(this);
+    _document->_ref_list.push_back(this);
 }
 
 string PPTIndirectRef::Description()
@@ -52,7 +52,7 @@ PPToken *PPTIndirectRef::valueObject()
 
 PPTIndirectObj *PPTIndirectRef::targetObject()
 {
-    PPTIndirectObj *ret = (PPTIndirectObj *)_parser->ObjectForNumber(_objNum);
+    PPTIndirectObj *ret = (PPTIndirectObj *)_document->ObjectForNumber(_objNum);
     return ret;
 }
 
@@ -70,17 +70,17 @@ void PPTIndirectRef::CopyMembersTo(PPBase *obj)
 // 객체넘버를 다시 적용함.
 void PPTIndirectRef::MoveInto(PPDocument *doc)
 {
-	PPDocument *src_doc = (PPDocument *)_parser->_owner;
+//	PPDocument *src_doc = (PPDocument *)_parser->_owner;
 	PPTIndirectObj *copied_obj = NULL;
-	int src_id = src_doc->_docID << 24;
+	int src_id = _document->_docID << 24;
 	src_id += _objNum;
 
-	if(src_doc) {
+	if(_document) {
 		// 이전에 처리된 적이 있는 지 확인
 		copied_obj = doc->_srcIndirectObjs[src_id];
 	}
 	if(!copied_obj) {
-		PPTIndirectObj *obj = (PPTIndirectObj *)_parser->ObjectForNumber(_objNum);
+		PPTIndirectObj *obj = (PPTIndirectObj *)_document->ObjectForNumber(_objNum);
 		if(!obj)
 			return;
 		copied_obj = (PPTIndirectObj *)obj->Copy();

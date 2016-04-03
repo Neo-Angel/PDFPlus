@@ -6,7 +6,7 @@
 
 //  ////////////////////////////////// PPTString
 
-PPTString::PPTString(PPParser *parser, string *str):PPToken(parser)
+PPTString::PPTString(PPDocument *doc, string *str):PPToken(doc)
 {
     _string = str;
 }

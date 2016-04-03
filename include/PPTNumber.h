@@ -14,9 +14,9 @@ class PPTNumber : public PPToken {
     double _number;
     
 public:
-    PPTNumber(PPParser *parser, string *str);
-    PPTNumber(PPParser *parser, int num);
-	PPTNumber(PPParser *parser, float num);
+    PPTNumber(PPDocument *doc, string *str);
+    PPTNumber(PPDocument *doc, int num);
+	PPTNumber(PPDocument *doc, float num);
 	PPTNumber() {_numstr = NULL; _number = 0.0;}
     ~PPTNumber();
     float floatValue();

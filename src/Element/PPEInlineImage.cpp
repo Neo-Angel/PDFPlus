@@ -22,13 +22,13 @@ void PPEInlineImage::CopyMembersTo(PPBase *obj)
     }
 }
 
-void PPEInlineImage::SetParser(PPParser *parser)
+void PPEInlineImage::SetDocument(PPDocument *doc)
 {
     map <string, PPToken *>::iterator it_dict;
 	for(it_dict = _dict.begin(); it_dict != _dict.end(); it_dict++) {
         PPToken *token = it_dict->second;
 		if(token)
-			token->_parser = parser;
+			token->_document = doc;
     }
 }
 

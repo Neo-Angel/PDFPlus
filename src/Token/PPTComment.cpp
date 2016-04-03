@@ -6,7 +6,7 @@
 
 
 //  ////////////////////////////////// PPTComment
-PPTComment::PPTComment(PPParser *parser, string *str) : PPToken(parser)
+PPTComment::PPTComment(PPDocument *doc, string *str) : PPToken(doc)
 {
     _comment = str;
 }

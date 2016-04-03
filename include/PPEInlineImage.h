@@ -21,7 +21,7 @@ public:
 	PPBase *Create(){return new PPEInlineImage;}
 
 	void CopyMembersTo(PPBase *);
-	void SetParser(PPParser *parser);
+	void SetDocument(PPDocument *doc);
 
     void setBeginImageObject(PPTCommand *cmd){}
     void setBeginImageData(PPTCommand *cmd){}

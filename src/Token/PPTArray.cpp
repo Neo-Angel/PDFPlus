@@ -5,7 +5,7 @@
 
 // PPTArray //////////////////////////////////
 
-PPTArray::PPTArray(PPParser *parser, vector<PPToken *> token_list) : PPToken(parser)
+PPTArray::PPTArray(PPDocument *doc, vector<PPToken *> token_list) : PPToken(doc)
 {
     _array = token_list;
 }
@@ -57,7 +57,7 @@ string PPTArray::pdfString()
 
 void PPTArray::AddToken(int num) 
 {
-	AddToken((PPToken *)new PPTNumber(_parser, num));
+	AddToken((PPToken *)new PPTNumber(_document, num));
 }
 
 
@@ -76,15 +76,15 @@ void PPTArray::CopyMembersTo(PPBase *obj)
 	}
 }
 
-void PPTArray::SetParser(PPParser *parser)
+void PPTArray::SetDocument(PPDocument *doc)
 {
-	PPToken::SetParser(parser);
+	PPToken::SetDocument(doc);
 
 	int i, icnt = size();
 	for(i=0;i<icnt;i++) {
 		PPToken *token = objectAtIndex(i);
-		if(parser != token->_parser)
-			token->SetParser(parser);
+		if(doc != token->_document)
+			token->SetDocument(doc);
 	}
 }
 

@@ -11,8 +11,8 @@ class PPTArray : public PPToken {
 public:
     vector <PPToken *> _array;
     
-	PPTArray(PPParser *parser) : PPToken(parser) {};
-    PPTArray(PPParser *parser, vector<PPToken *> token_list);
+	PPTArray(PPDocument *doc) : PPToken(doc) {};
+    PPTArray(PPDocument *doc, vector<PPToken *> token_list);
 	PPTArray();
     ~PPTArray();
 
@@ -28,7 +28,7 @@ public:
 
 	PPBase *Create() {return new PPTArray;}
 	void CopyMembersTo(PPBase *obj) ;
-	void SetParser(PPParser *parser);
+	void SetDocument(PPDocument *doc);
 
 	void MoveInto(PPDocument *doc);
 

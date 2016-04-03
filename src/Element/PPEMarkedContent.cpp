@@ -33,12 +33,12 @@ void PPEMarkedContent::CopyMembersTo(PPBase *obj)
 		tar_obj->_property = (PPTDictionary *)_property->Copy();
 }
 
-void PPEMarkedContent::SetParser(PPParser *parser)
+void PPEMarkedContent::SetDocument(PPDocument *doc)
 {
 	if(_property)
-		_property->_parser = parser;
+		_property->_document = doc;
 	if(_tag)
-		_tag->_parser = parser;
+		_tag->_document = doc;
 }
 
 string PPEMarkedContent::makeCommandString()

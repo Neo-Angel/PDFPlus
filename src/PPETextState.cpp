@@ -31,13 +31,13 @@ void PPETextState::CopyMembersTo(PPBase *obj)
 
 }
 
-void PPETextState::SetParser(PPParser *parser)
+void PPETextState::SetDocument(PPDocument *doc)
 {
 	size_t i, icnt = _cmdList.size();
 	for(i=0;i<icnt;i++) {
 		PPTCommand *acmd = _cmdList.at(i);
 		if(acmd)
-			acmd->_parser = parser;
+			acmd->_document = doc;
 	}
 }
 

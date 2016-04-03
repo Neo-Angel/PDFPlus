@@ -13,7 +13,7 @@ class PPTComment : public PPToken {
     string *_comment;
     
 public:
-    PPTComment(PPParser *parser, string *str);
+    PPTComment(PPDocument *doc, string *str);
 	PPTComment() {_comment = NULL;}
     ~PPTComment();
     string XMLString(int level);

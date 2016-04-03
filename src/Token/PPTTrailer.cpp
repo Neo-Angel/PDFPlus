@@ -1,7 +1,7 @@
 
 #include <sstream>
 #include "PPTTrailer.h"
-#include "PPParser.h"
+#include "PPDocument.h"
 #include "PPTNumber.h"
 
 
@@ -24,7 +24,7 @@ PPTTrailer::PPTTrailer()
     _xrefObj = NULL;
 }
 
-PPTTrailer::PPTTrailer(PPParser *parser, PPTDictionary *dict, unsigned long long xref) : PPToken(parser)
+PPTTrailer::PPTTrailer(PPDocument *doc, PPTDictionary *dict, unsigned long long xref) : PPToken(doc)
 {
     _dict = dict;
     _xrefIndirect = NULL;
@@ -33,7 +33,7 @@ PPTTrailer::PPTTrailer(PPParser *parser, PPTDictionary *dict, unsigned long long
     _xrefObj = NULL;
 }
 
-PPTTrailer::PPTTrailer(PPParser *parser, PPTIndirectObj *indir, unsigned long long xref) : PPToken(parser)
+PPTTrailer::PPTTrailer(PPDocument *doc, PPTIndirectObj *indir, unsigned long long xref) : PPToken(doc)
 {
     _dict = NULL;
     _xrefIndirect = indir;
@@ -42,7 +42,7 @@ PPTTrailer::PPTTrailer(PPParser *parser, PPTIndirectObj *indir, unsigned long lo
     _xrefObj = NULL;
 }
 
-PPTTrailer::PPTTrailer(PPParser *parser, unsigned long long xref) : PPToken(parser)
+PPTTrailer::PPTTrailer(PPDocument *parser, unsigned long long xref) : PPToken(parser)
 {
     _dict = NULL;
     _xrefIndirect = NULL;
@@ -51,9 +51,9 @@ PPTTrailer::PPTTrailer(PPParser *parser, unsigned long long xref) : PPToken(pars
     _xrefObj = NULL;
 }
 
-PPTTrailer::PPTTrailer(PPParser *parser) : PPToken(parser)
+PPTTrailer::PPTTrailer(PPDocument *doc) : PPToken(doc)
 {
-    _dict = new PPTDictionary(_parser);//other_trailer->getDictionary();
+    _dict = new PPTDictionary(_document);//other_trailer->getDictionary();
     //    _dict = NULL;
     _xrefIndirect = NULL;
     _startxref = 0;
@@ -121,7 +121,7 @@ PPTDictionary *PPTTrailer::getDictionary()
         return _dict;
     }
     if (_startxref > 0) {
-        PPToken *obj = _parser->ObjectAtFilePosition(_startxref);
+        PPToken *obj = _document->ObjectAtFilePosition(_startxref);
         if (obj != NULL && obj->ClassType() == PPTN_INDIRECTOBJ) {
             PPTIndirectObj *indobj = (PPTIndirectObj *)obj;
             PPTDictionary *dict = indobj->firstDictionary();
@@ -166,8 +166,8 @@ PPToken *PPTTrailer::infoObject()
 
 void PPTTrailer::build()
 {
-    int obj_cnt = (int) _parser->_objDict.size();
-    _dict->_dict["Size"] = new PPTNumber(_parser, obj_cnt+1);
+    int obj_cnt = (int) _document->_objDict.size();
+    _dict->_dict["Size"] = new PPTNumber(_document, obj_cnt+1);
 }
 
 void PPTTrailer::merge(PPTTrailer *other_trailer)
@@ -186,16 +186,16 @@ void PPTTrailer::merge(PPTTrailer *other_trailer)
     }
     
     if (_dict == NULL) {
-        _dict = new PPTDictionary(_parser);//other_trailer->getDictionary();
+        _dict = new PPTDictionary(_document);//other_trailer->getDictionary();
     }
     
 //    map <string, PPToken *> _dict;
-    int obj_cnt = (int) _parser->_objDict.size();
+    int obj_cnt = (int) _document->_objDict.size();
     char buf[10];
     sprintf(buf, "%d", obj_cnt);
     
     string *numstr = new string(buf);
-    _dict->_dict["Size"] = new PPTNumber(_parser, numstr);
+    _dict->_dict["Size"] = new PPTNumber(_document, numstr);
     
 
     
@@ -223,7 +223,7 @@ void PPTTrailer::merge(PPTTrailer *other_trailer)
 void PPTTrailer::Write(std::ostream &os)
 {
     PPToken::Write(os);
-    _parser->_filePtDict[_filepos] = this;
+    _document->_filePtDict[_filepos] = this;
     
     
 }
@@ -236,9 +236,9 @@ void PPTTrailer::CopyMembersTo(PPBase *obj)
 
 }
 
-void PPTTrailer::SetParser(PPParser *parser)
+void PPTTrailer::SetDocument(PPDocument *doc)
 {
-	PPToken::SetParser(parser);
-	_dict->SetParser(parser);
-	_xrefObj->SetParser(parser);
+	PPToken::SetDocument(doc);
+	_dict->SetDocument(doc);
+	_xrefObj->SetDocument(doc);
 }

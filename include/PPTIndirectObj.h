@@ -25,8 +25,8 @@ public:
 	vector <PPTIndirectRef *> _ref_list;
 
     
-    PPTIndirectObj(PPParser *parser, vector<PPToken *> token_list, int num1, int num2);
-	PPTIndirectObj(PPParser *parser, int num1, int num2);
+    PPTIndirectObj(PPDocument *doc, vector<PPToken *> token_list, int num1, int num2);
+	PPTIndirectObj(PPDocument *doc, int num1, int num2);
 	PPTIndirectObj() {_objNum=0;_genNum=0;}
     ~PPTIndirectObj();
 
@@ -53,7 +53,7 @@ public:
 	// CopyMembersTo 멤버를 계승 받기 위해선 Create 멤버함수를 구현해야함.
 	PPBase *Create() {return new PPTIndirectObj();}
 	void CopyMembersTo(PPBase *obj) ;
-	void SetParser(PPParser *parser);
+	void SetDocument(PPDocument *doc);
 	void MoveInto(PPDocument *doc);
 };
 /////////////////////////////////////////

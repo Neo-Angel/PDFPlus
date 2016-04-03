@@ -4,19 +4,19 @@
 
 
 // PPTNumber //////////////////////////////////
-PPTNumber::PPTNumber(PPParser *parser, string *str):PPToken(parser)
+PPTNumber::PPTNumber(PPDocument *doc, string *str):PPToken(doc)
 {
     _numstr = str;
     _number = stod(*str);
 }
 
-PPTNumber::PPTNumber(PPParser *parser, int num)
+PPTNumber::PPTNumber(PPDocument *doc, int num)
 {
     _numstr = PPNewStringFromInt(num);
     _number = (double)num;
 }
 
-PPTNumber::PPTNumber(PPParser *parser, float num)
+PPTNumber::PPTNumber(PPDocument *doc, float num)
 {
     _numstr = PPNewStringFromFloat(num);
     _number = (double)num;

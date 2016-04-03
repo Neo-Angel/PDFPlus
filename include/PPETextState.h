@@ -23,7 +23,7 @@ public:
 	PPBase *Create(){return new PPETextState;}
 
 	void CopyMembersTo(PPBase *);
-	void SetParser(PPParser *parser);
+	void SetDocument(PPDocument *doc);
 
 
 	string commandString();

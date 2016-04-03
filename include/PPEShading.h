@@ -24,7 +24,7 @@ public:
 	PPBase *Create(){return new PPEShading;}
 
 	void CopyMembersTo(PPBase *);
-	void SetParser(PPParser *parser);
+	void SetDocument(PPDocument *doc);
 
     string makeCommandString();
     string XMLString(int level);

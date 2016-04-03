@@ -13,7 +13,7 @@ public:
     string *_string;
 
 	PPTString() {_string = NULL;}
-    PPTString(PPParser *parser, string *str);
+    PPTString(PPDocument *doc, string *str);
     ~PPTString();
     string XMLString(int level);
     string utf8String();

@@ -21,7 +21,7 @@ public:
     PPTTrailer *_trailerObj;
 
 	PPTXRef() {_trailerObj = NULL;}
-    PPTXRef(PPParser *parser);
+    PPTXRef(PPDocument *doc);
     ~PPTXRef();
     void addXRef(unsigned int objnum, unsigned long long offset, int gennum, char type);
     size_t numberOfItems();

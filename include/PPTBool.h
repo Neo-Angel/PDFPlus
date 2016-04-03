@@ -15,7 +15,7 @@ public:
     bool _bool;
 
 public:
-    PPTBool(PPParser *parser, string &str);
+    PPTBool(PPDocument *doc, string &str);
 	PPTBool();
     string XMLString(int level);
     string pdfString();

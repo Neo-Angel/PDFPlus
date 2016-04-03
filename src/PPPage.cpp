@@ -148,29 +148,29 @@ endobj
 	page_dict->SetTokenAndKey(0, "Rotate");
 	
 //	PPRect media_rect = GetMediaBox();
-//	PPTArray *rect_arr = media_rect.GetArray(&_document->_parser);
+//	PPTArray *rect_arr = media_rect.GetArray(_document);
 //	page_dict->SetTokenAndKey(rect_arr, "MediaBox");
 
 	if(_resourceDict == NULL) {
-		_resourceDict = new PPTDictionary(&_document->_parser);
+		_resourceDict = new PPTDictionary(_document);
 
-		PPTArray *proset_list = new PPTArray(&_document->_parser);
+		PPTArray *proset_list = new PPTArray(_document);
 
-		PPTName *pname = new PPTName(&_document->_parser, new string("PDF"));
+		PPTName *pname = new PPTName(_document, new string("PDF"));
 		proset_list->AddToken(pname);
-		pname = new PPTName(&_document->_parser, new string("Test"));
+		pname = new PPTName(_document, new string("Test"));
 		proset_list->AddToken(pname);
-		proset_list->AddToken(new PPTName(&_document->_parser, new string("ImageB")));
-		proset_list->AddToken(new PPTName(&_document->_parser, new string("ImageC")));
-		proset_list->AddToken(new PPTName(&_document->_parser, new string("ImageI")));
+		proset_list->AddToken(new PPTName(_document, new string("ImageB")));
+		proset_list->AddToken(new PPTName(_document, new string("ImageC")));
+		proset_list->AddToken(new PPTName(_document, new string("ImageI")));
 		_resourceDict->SetTokenAndKey(proset_list, "ProcSet");
 	}
 	PPTIndirectObj *rcs_obj = _document->SetRefTokenForKey(page_dict, _resourceDict, PPKN_RESOURCES);
 	/*
-	PPTDictionary *stream_dict = new PPTDictionary(&_document->_parser);
+	PPTDictionary *stream_dict = new PPTDictionary(_document);
 //	PPTIndirectObj *stream_obj = _document->SetRefTokenForKey(stream_dict, rcs_dict, PPKN_CONTENTS);
 	PPTIndirectObj *stream_obj = _document->SetRefTokenForKey(page_dict, stream_dict, PPKN_CONTENTS);
-	PPTStream *contents = new PPTStream(&_document->_parser);
+	PPTStream *contents = new PPTStream(_document);
 	contents->_dict = stream_dict;
 	stream_obj->AddObj(contents);
 	*/
@@ -178,7 +178,7 @@ endobj
 
 void PPPage::BuildPDF()
 {
-	PPTDictionary *stream_dict = new PPTDictionary(&_document->_parser);
+	PPTDictionary *stream_dict = new PPTDictionary(_document);
 
 	PPTIndirectObj *stream_obj = _document->SetRefTokenForKey(_formDict, stream_dict, PPKN_CONTENTS);
 	PPTStream *contents = BuildStream();
@@ -225,7 +225,7 @@ PPRect PPPage::rectForKey(string key)
 
 void PPPage::setRectForKey(PPRect rect, string key)
 {
-	PPTArray *num_list = new PPTArray(&_document->_parser);
+	PPTArray *num_list = new PPTArray(_document);
 	SetRectToArray(rect, num_list);
 	_formDict->setTokenAndKey(num_list, key);
 }

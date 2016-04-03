@@ -42,13 +42,13 @@ PPRect rectFromArray(PPTArray *array)
 void SetRectToArray(PPRect rect, PPTArray *array)
 {
 	PPTNumber *num;
-	num = new PPTNumber(array->_parser, rect.x1());
+	num = new PPTNumber(array->_document, rect.x1());
 	array->_array.push_back(num);
-	num = new PPTNumber(array->_parser, rect.y1());
+	num = new PPTNumber(array->_document, rect.y1());
 	array->_array.push_back(num);
-	num = new PPTNumber(array->_parser, rect.width());
+	num = new PPTNumber(array->_document, rect.width());
 	array->_array.push_back(num);
-	num = new PPTNumber(array->_parser, rect.height());
+	num = new PPTNumber(array->_document, rect.height());
 	array->_array.push_back(num);
 }
 

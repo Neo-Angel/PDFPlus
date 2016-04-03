@@ -31,7 +31,7 @@ public:
 	PPBase *Create(){return new PPEForm;}
 
 	void CopyMembersTo(PPBase *);
-	void SetParser(PPParser *parser);
+	void SetDocument(PPDocument *doc);
 
 //    void setStream(PPTStream *stream);
     string makeCommandString();

@@ -36,12 +36,12 @@ void PPEForm::CopyMembersTo(PPBase *obj)
 		tar_obj->_xobj = (PPTIndirectObj *)_xobj->Copy();
 }
 
-void PPEForm::SetParser(PPParser *parser)
+void PPEForm::SetDocument(PPDocument *doc)
 {
 	if(_name)
-		_name->_parser = parser;
+		_name->_document = doc;
 	if(_xobj)
-		_xobj->_parser = parser;
+		_xobj->_document = doc;
 }
 /*
 void PPEForm::setStream(PPTStream *stream)

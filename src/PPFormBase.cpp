@@ -25,7 +25,7 @@
 #include "PPEShading.h"
 #include "PPEBeginCompatibility.h"
 #include "PPEEndCompatibility.h"
-#include "PPParser.h"
+#include "PPDocument.h"
 
 #include "PPTString.h"
 #include "PPTName.h"
@@ -181,7 +181,7 @@ string PPFormBase::NameFromResourceObj(PPTIndirectObj *obj, string resource_type
 	int obj_num = obj->_objNum;
 	PPTDictionary *rsc_dict = ResourceDictForKey(resource_type);
 	if(rsc_dict == NULL) {
-		rsc_dict = new PPTDictionary(&_document->_parser);
+		rsc_dict = new PPTDictionary(_document);
 		_resourceDict->SetTokenAndKey(rsc_dict, resource_type);
 	}
 	map <string, PPToken *> *map_dict = &rsc_dict->_dict;
@@ -217,7 +217,7 @@ string PPFormBase::NameFromResourceObj(PPTIndirectObj *obj, string resource_type
 		}
 	}
 	
-	PPTIndirectRef *new_rsc_ref = new PPTIndirectRef(&_document->_parser, obj->_objNum, obj->_genNum);
+	PPTIndirectRef *new_rsc_ref = new PPTIndirectRef(_document, obj->_objNum, obj->_genNum);
 	rsc_dict->SetRefTokenAndKey(obj, pname, obj->_objNum);
 
 	return pname;
@@ -275,12 +275,12 @@ PPLayer *PPFormBase::AddLayer(string layer_name)
 {
 	// layer_name의 레이어가 없다고 간주하고 시작함.
 	PPTIndirectObj *layer_obj = _document->LayerObjForName(layer_name);
-	PPTIndirectRef *layer_ref = new PPTIndirectRef(&_document->_parser, layer_obj->_objNum, layer_obj->_genNum);
+	PPTIndirectRef *layer_ref = new PPTIndirectRef(_document, layer_obj->_objNum, layer_obj->_genNum);
 
 	PPLayer *ret_layer = NULL;
 	PPTDictionary *properties_dict = (PPTDictionary *)_resourceDict->ValueObjectForKey("Properties");
 	if(properties_dict == NULL) {
-		properties_dict = new PPTDictionary(&_document->_parser);
+		properties_dict = new PPTDictionary(_document);
 		_resourceDict->SetTokenAndKey(properties_dict, "Properties");
 	}
 
@@ -350,7 +350,7 @@ PPLayer *PPFormBase::BeginLayer(char *lname)
 	if(_curLayer == NULL) {
 		_curLayer = this->AddLayer(lname);
 	}
-	PPEBeginMarkedContent *begin_mark = new PPEBeginMarkedContent(&_document->_parser, _curLayer->_properties, ptContext());
+	PPEBeginMarkedContent *begin_mark = new PPEBeginMarkedContent(_document, _curLayer->_properties, ptContext());
 
 	writeElement(begin_mark);
 	return _curLayer;
@@ -415,7 +415,7 @@ void PPFormBase::writeElement(PPElement *src_element)
 				do {
 					PPTDictionary *rsc_dict = (PPTDictionary *)_resourceDict->objectForKey(rsc_type);
 					if(!rsc_dict) {
-						rsc_dict = new PPTDictionary(&_document->_parser);
+						rsc_dict = new PPTDictionary(_document);
 						_resourceDict->SetTokenAndKey(rsc_dict, rsc_type);
 					}
 					string rsc_key = src_element->ResourceKeyFor(rsc_type);
@@ -917,7 +917,7 @@ PPTStream *PPFormBase::BuildStream()
 		retstr += cmdstr;
 	}
 	unsigned long size = retstr.size();
-	PPTStream *stream = new PPTStream(&_document->_parser, size);
+	PPTStream *stream = new PPTStream(_document, size);
 	const char *cstr = retstr.c_str();
 	memcpy(stream->_streamData, cstr, size);
 	stream->_decoded = true;
@@ -940,7 +940,7 @@ void PPFormBase::AddXObjRef(PPTIndirectObj *xobj, string key)
 	_document->_xobjects[obj_num] = xobj;
     PPTDictionary *xobject_dict = (PPTDictionary *)_resourceDict->valueObjectForKey("XObject");
 	if(xobject_dict == NULL) {
-		xobject_dict = new PPTDictionary(&_document->_parser);
+		xobject_dict = new PPTDictionary(_document);
 		_resourceDict->SetTokenAndKey(xobject_dict, "XObject");
 	}
 

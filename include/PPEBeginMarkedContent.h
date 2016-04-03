@@ -16,14 +16,14 @@ class PPEBeginMarkedContent : public PPElement {
     PPTIndirectObj *_OCGInfo;
 public:
     PPEBeginMarkedContent(PPTName *tag, PPToken *properties, PPContext *gcontext);
-    PPEBeginMarkedContent(PPParser *parser, string properties, PPContext *gcontext);
+    PPEBeginMarkedContent(PPDocument *doc, string properties, PPContext *gcontext);
 
 	PPEBeginMarkedContent();
 	~PPEBeginMarkedContent();
 	PPBase *Create(){return new PPEBeginMarkedContent;}
 
 	void CopyMembersTo(PPBase *);
-	void SetParser(PPParser *parser);
+	void SetDocument(PPDocument *doc);
 
     string makeCommandString();
     string XMLString(int level);

@@ -75,11 +75,11 @@ static const char *PPVN_CATALOG =		"Catalog";  // Key : "Type"
 //
 class PPToken : public PPBase {
 public:
-    PPParser *_parser; //
+    PPDocument *_document; //
     unsigned long long _filepos; // PDF 파일상에 이 토큰의 물리적 위치(byte 단위)
 
     PPToken();
-    PPToken(PPParser *parser);
+    PPToken(PPDocument *doc);
 	// PDF 파일의 내용을 XML로 내보낼 경우 이 토큰의 XML 문자열 생성함.
     virtual string XMLString(int level) = 0; //  level : tap count
 
@@ -89,7 +89,7 @@ public:
 
 	// 모든 하위 토큰들을 IndirectRef에서 IndirectObj 들을 doc 소속으로 변경함.
 	virtual void MoveInto(PPDocument *doc) {}; // 유일하게 PPDocument::WriteResource() 에서 쓰임
-	virtual void SetParser(PPParser *parser);
+	virtual void SetDocument(PPDocument *doc);
 //	PPBase *Create() {return new PPToken();} // 추상 클래스라서 사용할 수 없답니다. 
 
 	const char *ClassType() {return PPTN_TOKEN;}

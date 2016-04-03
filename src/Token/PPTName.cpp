@@ -3,12 +3,12 @@
 
 
 // PPTName //////////////////////////////////
-PPTName::PPTName(PPParser *parser, string *str):PPToken(parser)
+PPTName::PPTName(PPDocument *doc, string *str):PPToken(doc)
 {
     _name = str;
 }
 
-PPTName::PPTName(PPParser *parser, string str):PPToken(parser)
+PPTName::PPTName(PPDocument *doc, string str):PPToken(doc)
 {	
 	string *new_str = new string(str);
     _name = new_str;

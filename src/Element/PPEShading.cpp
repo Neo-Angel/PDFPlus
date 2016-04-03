@@ -34,12 +34,12 @@ void PPEShading::CopyMembersTo(PPBase *obj)
 		tar_obj->_sh_res = (PPTIndirectObj *)_sh_res->Copy();
 }
 
-void PPEShading::SetParser(PPParser *parser)
+void PPEShading::SetDocument(PPDocument *doc)
 {
 	if (_name)
-		_name->_parser = parser;
+		_name->_document = doc;
 	if (_sh_res)
-		_sh_res->_parser = parser;
+		_sh_res->_document = doc;
 }
 
 string PPEShading::makeCommandString()

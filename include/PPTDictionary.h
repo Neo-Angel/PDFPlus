@@ -17,7 +17,7 @@ class PPTDictionary : public PPToken {
 public:
     map <string, PPToken *> _dict;
 
-    PPTDictionary(PPParser *parser);
+    PPTDictionary(PPDocument *doc);
 	PPTDictionary(){}
     ~PPTDictionary();
     void setTokenAndKey(PPToken *token, string key);
@@ -46,7 +46,7 @@ public:
     
 	PPBase *Create() {return new PPTDictionary();}
 	void CopyMembersTo(PPBase *obj) ;
-	void SetParser(PPParser *parser);
+	void SetDocument(PPDocument *doc);
 	void MoveInto(PPDocument *doc);
 
     inline const char *ClassType(){return PPTN_DICTIONARY;};

@@ -68,14 +68,10 @@ void PPEImage::CopyMembersTo(PPBase *obj)
 //		tar_obj->_stream = (PPTStream *)_stream->Copy();
 }
 
-void PPEImage::SetParser(PPParser *parser) 
+void PPEImage::SetDocument(PPDocument *doc) 
 {
-//	if(_name)
-//		_name->_parser = parser;
 	if(_xobj)
-		_xobj->_parser = parser;
-//	if(_stream)
-//		_stream->_parser = parser;
+		_xobj->_document = doc;
 }
 
 

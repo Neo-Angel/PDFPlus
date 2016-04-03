@@ -31,7 +31,7 @@ typedef enum {
 // PPParser 를 이용해 파싱하는데 있어서 각각의 용도(소스의 특성)에 맞게 
 // 코드를 핸들링 할 수 있도록 함. PPParser에서는 이 클래스의 인스턴스를
 // 이용해 파싱에 필요한 코드들을 공급받음.
-// 케이스 : 도큐먼트, 그래픽, 스트림, ...
+// 사용 예 : PDF 도큐먼트, 그래픽 코맨드, 오브젝 스트림, ...
 
 class PPParserSource { // : PPBase {
 public:
@@ -78,20 +78,10 @@ protected:
     PPTComment								*parseComment(PPParserSource &source);
 
 public:
-	void *									_owner; // mainly PPDocument(?)
-    unsigned int							_last_obj_idx;
-    map <int, PPTIndirectObj *>				_objDict; // 오브젝 넘버를 키값으로 PPTIndirectObj 를 가져올 수 있는 hash map
-    map <unsigned long long, PPToken *>		_filePtDict; // IndirectObj, Trailer, XRef... 파일 위치를 키로 하는 토큰 객체 리스트
-    vector <PPTIndirectRef *>				_ref_list; 
-	vector <PPToken *>						_stream_list;
+	PPDocument *							_document; // mainly PPDocument(?)
 
 public:
 											~PPParser(); // 소멸자		
-    map <int, PPTIndirectObj *> &			ObjectsDictionary(); // return _objDict
-	PPToken *								ObjectForNumber(int num); // _objDict를 이용한 함수.
-    PPToken *								ObjectAtFilePosition(unsigned long long pos);//_filePtDict를 이용한 함수
-	void									DecodeStreams(vector<PPToken *> &token_list);
-
 	// 메인 파서 함수. 
 	// source에서 데이터를 읽어들여 파싱한 후 token_list에 Array로 담아 냄.
     bool									ParseSource(PPParserSource &source, vector<PPToken *> &token_list);  // start parsing

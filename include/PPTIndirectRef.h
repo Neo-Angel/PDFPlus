@@ -15,7 +15,7 @@ public:
     int _genNum;
     
 	PPTIndirectRef(){_objNum = 0; _genNum = 0;}
-    PPTIndirectRef(PPParser *parser, int num1, int num2);
+    PPTIndirectRef(PPDocument *doc, int num1, int num2);
     string Description();
 
     string XMLString(int level);

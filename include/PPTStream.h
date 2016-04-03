@@ -33,8 +33,8 @@ public:
     bool _decodeFailed;
     PPTDictionary *_dict;
     
-    PPTStream(PPParser *parser);
-    PPTStream(PPParser *parser, unsigned long length);
+    PPTStream(PPDocument *doc);
+    PPTStream(PPDocument *doc, unsigned long length);
 	PPTStream();
     ~PPTStream();
 	void SetDictionary(PPTDictionary *dict);

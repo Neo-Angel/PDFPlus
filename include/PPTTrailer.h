@@ -22,10 +22,10 @@ public:
     PPTXRef *_xrefObj;
     PPTTrailer *_next;
     
-    PPTTrailer(PPParser *parser, PPTDictionary *dict, unsigned long long xref);
-    PPTTrailer(PPParser *parser, PPTIndirectObj *indir, unsigned long long xref);
-    PPTTrailer(PPParser *parser, unsigned long long xref);
-    PPTTrailer(PPParser *parser);
+    PPTTrailer(PPDocument *doc, PPTDictionary *dict, unsigned long long xref);
+    PPTTrailer(PPDocument *doc, PPTIndirectObj *indir, unsigned long long xref);
+    PPTTrailer(PPDocument *doc, unsigned long long xref);
+    PPTTrailer(PPDocument *doc);
 	PPTTrailer();
     ~PPTTrailer();
     
@@ -46,7 +46,7 @@ public:
 
 	PPBase *Create() {return new PPTTrailer();}
 	void CopyMembersTo(PPBase *obj);
-	void SetParser(PPParser *parser);
+	void SetDocument(PPDocument *doc);
 
 
 };

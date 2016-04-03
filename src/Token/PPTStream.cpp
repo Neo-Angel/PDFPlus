@@ -12,6 +12,7 @@
 
 #include <sstream>
 #include <assert.h>
+#include "PPDocument.h"
 #include "PPTStream.h"
 #include "zlib.h"
 #include "PPTNumber.h"
@@ -97,7 +98,7 @@ PPTStream::PPTStream()
 	_filterName = "None";
 }
 
-PPTStream::PPTStream(PPParser *parser) : PPToken(parser)
+PPTStream::PPTStream(PPDocument *doc) : PPToken(doc)
 {
     _streamData = NULL;
     _index = 0;
@@ -107,7 +108,7 @@ PPTStream::PPTStream(PPParser *parser) : PPToken(parser)
 	_filterName = "None";
 }
 
-PPTStream::PPTStream(PPParser *parser, unsigned long length) : PPToken(parser)
+PPTStream::PPTStream(PPDocument *doc, unsigned long length) : PPToken(doc)
 {
     _streamData = new char[length];
     //    bzero(_stream_data, length);
@@ -224,7 +225,7 @@ string PPTStream::pdfString()
     unsigned long length;
     string retstr = makePDFString(length);
     
-    PPTNumber *len_num = new PPTNumber(_parser, (int)length);
+    PPTNumber *len_num = new PPTNumber(_document, (int)length);
     _dict->setTokenAndKey(len_num, "Length");
     return retstr;
 }
@@ -461,12 +462,12 @@ bool PPTStream::parseObjStm(vector<PPToken *> &token_list, PPParser *parser)
 
         if (parser->ParseSource(*this, sub_tokens) == false)
             return false;
-        PPTIndirectObj *indir_obj = new PPTIndirectObj(parser, sub_tokens, obj_num, 0);
+        PPTIndirectObj *indir_obj = new PPTIndirectObj(parser->_document, sub_tokens, obj_num, 0);
         token_list.push_back(indir_obj);
         
         indir_obj->_filepos = -1;
-        parser->_filePtDict[indir_obj->_filepos] = indir_obj;
-        parser->_objDict[obj_num] = (PPTIndirectObj *)indir_obj;
+        parser->_document->_filePtDict[indir_obj->_filepos] = indir_obj;
+        parser->_document->_objDict[obj_num] = (PPTIndirectObj *)indir_obj;
         
     }
     delete [] nums_cstr;
@@ -496,7 +497,7 @@ PPToken *PPTStream::parseString(string str, vector <PPToken *> &tokens, PPParser
         if (isKindOfNumber((PPTNumber *)token1) && isKindOfNumber((PPTNumber *)token2)) {
             PPTNumber *num1 = (PPTNumber *)token1;
             PPTNumber *num2 = (PPTNumber *)token2;
-            PPToken *token_ref = (PPToken *)new PPTIndirectRef(parser, num1->intValue(), num2->intValue());
+			PPToken *token_ref = (PPToken *)new PPTIndirectRef(parser->_document, num1->intValue(), num2->intValue());
             if(token_ref) {
                 tokens.erase(tokens.begin() + (cnt-1));
                 tokens.erase(tokens.begin() + (cnt-2));

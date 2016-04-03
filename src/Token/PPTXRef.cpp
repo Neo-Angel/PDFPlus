@@ -1,7 +1,7 @@
 
 #include <sstream>
 #include "PPTXRef.h"
-#include "PPParser.h"
+#include "PPDocument.h"
 
 
 
@@ -11,7 +11,7 @@
 
 
 
-PPTXRef::PPTXRef(PPParser *parser):PPToken(parser)
+PPTXRef::PPTXRef(PPDocument *doc):PPToken(doc)
 {
     
 }
@@ -62,10 +62,10 @@ string PPTXRef::pdfString()
     string retstr;
     ostringstream ostr;
     ostr << "xref" << PP_ENDL;
-    ostr << "0 " << _parser->_last_obj_idx << PP_ENDL;
-    int i, icnt = _parser->_last_obj_idx;
+    ostr << "0 " << _document->_last_obj_idx << PP_ENDL;
+    int i, icnt = _document->_last_obj_idx;
     for (i=0; i<icnt; i++) {
-        PPTIndirectObj *obj = _parser->_objDict[i];
+        PPTIndirectObj *obj = _document->_objDict[i];
         char buf[20];
         if (i == 0) {
             sprintf(buf, "%010d %05d %c",0, 65535, 'f' );
@@ -86,7 +86,7 @@ string PPTXRef::pdfString()
 void PPTXRef::Write(std::ostream &os)
 {
     PPToken::Write(os);
-    _parser->_filePtDict[_filepos] = this;
+    _document->_filePtDict[_filepos] = this;
 }
 
 size_t PPTXRef::numberOfItems()

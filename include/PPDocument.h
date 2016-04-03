@@ -35,7 +35,7 @@ class PPParser;
 class PPTTrailer;
 class PPTXRef;
 
-class PPDocument : PPParserSource {
+class PPDocument : public PPParserSource { // PPParserSource 는 virtual class로 PPToken.h에 정의 되어 있음
     
 public:  //protected:
 	int _docID;
@@ -60,13 +60,13 @@ public:  //protected:
     PPTTrailer *_trailer;
     PPTXRef *_xref;
 
-	// 
+	// OCG : Optional Contents Group
 	PPTDictionary *_OCProperties;
 	PPTArray *_layerOrders;
 	PPTArray *_OCGs;
 	PPTArray *_layersOn;
     
-    // Info
+    // Metadata
     PPTString *_author;
     PPTString *_creator;
     PPTString *_creationDate;
@@ -87,6 +87,15 @@ public:  //protected:
     map <int, PPToken *> _xobjects; // images : PPToken => PPTIndirectObj
 	map <int, PPTIndirectObj *> _srcIndirectObjs;
 	map <string, PPTIndirectObj *> _images;
+
+
+	// Parsing Results
+    unsigned int							_last_obj_idx;
+    map <int, PPTIndirectObj *>				_objDict; // 오브젝 넘버를 키값으로 PPTIndirectObj 를 가져올 수 있는 hash map
+    map <unsigned long long, PPToken *>		_filePtDict; // IndirectObj, Trailer, XRef... 파일 위치를 키로 하는 토큰 객체 리스트
+    vector <PPTIndirectRef *>				_ref_list; 
+	vector <PPToken *>						_stream_list;
+
 
 public:
 	void readPage(PPTDictionary *page_dict);
@@ -191,6 +200,14 @@ public:
 	PPTIndirectObj *ImageFromPath(string path);
 
 	void RemoveRelatedObjects(PPTIndirectRef *ref);
+
+	// Query Parsing Results
+    map <int, PPTIndirectObj *> &			ObjectsDictionary(); // return _objDict
+	PPToken *								ObjectForNumber(int num); // _objDict를 이용한 함수.
+    PPToken *								ObjectAtFilePosition(unsigned long long pos);//_filePtDict를 이용한 함수
+	void									DecodeStreams(vector<PPToken *> &token_list);
+
+
 };
 
 #endif /* defined(__PDFPlusLib__PPDocument__) */

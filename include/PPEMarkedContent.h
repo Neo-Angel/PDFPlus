@@ -19,7 +19,7 @@ public:
 	PPBase *Create(){return new PPEMarkedContent;}
 
 	void CopyMembersTo(PPBase *);
-	void SetParser(PPParser *parser);
+	void SetDocument(PPDocument *doc);
 
     string makeCommandString();
     string XMLString(int level);

@@ -24,7 +24,7 @@ public:
 	PPBase *Create(){return new PPEText;}
 
 	void CopyMembersTo(PPBase *);
-	void SetParser(PPParser *parser);
+	void SetDocument(PPDocument *doc);
 
 	void SetFont(char *font_name, float font_size);
 
