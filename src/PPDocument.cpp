@@ -30,9 +30,13 @@
 #include "PPLayer.h"
 
 static unsigned int DOC_COUNT = 0;
+
 PPDocument::PPDocument(string filepath)
 {
+	// 도큐먼트가 오픈 될 때마다 1씩 증가시켜서 ID를 만듦
 	_docID = ++DOC_COUNT;
+
+	// Initialize member variables
 	_objNumber = 0;
 	_xobjNumber = 0;
     _version = NULL;
@@ -63,9 +67,11 @@ PPDocument::PPDocument(string filepath)
 	// 읽어들인 토큰들을 가지고 도큐먼트를 구성한다.
 	// 도큐먼트는 Document > Page(s) > Element(s) 구조가 된다. 
     buildDocument();
+
 	buildElements();
 }
 
+// 신규 도큐먼트(PDF)를 만들기 위해 빈 PDF 도큐먼트를 생성한다.
 PPDocument::PPDocument()
 {
 	_docID = ++DOC_COUNT;
@@ -91,8 +97,10 @@ PPDocument::PPDocument()
 	_OCGs = NULL;
 	_layersOn = NULL;
 
+	// 빈 도큐먼트에 기본적인 셋팅을 한다.
     PreBuildPDF();
 }
+
 PPDocument::~PPDocument()
 {
     _file.close();
@@ -105,6 +113,41 @@ PPDocument::~PPDocument()
     
 }
 
+
+// PPDocument.cpp에서 한 번 쓰임
+// 파싱된 스트림들 중 FlateDecode 방식들만 디코딩 함.
+void PPDocument::DecodeStreams(vector<PPToken *> &token_list)
+{
+	// _stream : 파싱중 발견된 스트림들만 모아놓음.	
+	int i, icnt = _stream_list.size();
+	for(i=0;i<icnt;i++) {
+		PPTStream *stream = (PPTStream *)_stream_list[i];
+		PPTDictionary *dict = stream->_dict;
+		PPToken *val_obj = (PPToken *)dict->valueObjectForKey("Length");
+		if (val_obj) {
+            PPTNumber *len_obj = (PPTNumber *)val_obj;
+            long length = len_obj->longValue();
+            PPTName *filter = (PPTName *)dict->nameForKey("Filter");
+			// FlateDecode 방식들만 디코딩 함.
+            if (filter != NULL && *filter->_name == "FlateDecode") {
+                stream->flateDecodeStream();
+                PPTName *type = (PPTName *)dict->objectForKey("Type");
+                if (type != NULL && *type->_name == "ObjStm") {
+					// 디코딩 한 스트림의 타입이 '오브젝 스트림'이면 도큐먼트의 _parser를 이용해 파싱을 함 
+					if(stream->parseObjStm(token_list, &_parser) == false) {
+                        return;
+                    }
+                 }
+			}
+		}
+	}
+
+}
+
+// 오픈시 기본 데이터(PPToken을 기반으로 하는)들을 구성한다.
+//  - _tokens 를 채운다.
+//  - FlateDecode Stream 들을 디코딩 한다. 그 중 ObjStm 들은 또 파싱한다.
+//  - IndirectObj와 IndirectRef 들의 관계를 정리한다.
 bool PPDocument::open(string filepath)
 {
     _file.open(filepath, std::ios::binary);
@@ -124,23 +167,33 @@ bool PPDocument::open(string filepath)
 
     _file.seekg( 0, std::ios::end );
     _fsize = _file.tellg() - _foffset;
-    //file.close();
 
     ///////////////////////////////////
 
     _file.seekg(0L, ios::beg);
 	_stream_list.clear();
+
+	// document 자신을 ParserSource로 파라미터를 넘겨서 _parser를 통해 파싱을 하고 
+	// _tokens에 자료구조(객체)들을 담아온다.
     if(!_parser.ParseSource(*this, _tokens)) {
         _state = PPDS_Parsing_Error;
         return false;
     }
+
+	//파싱된 스트림들 중 FlateDecode 방식들만 디코딩 함
 	DecodeStreams(_tokens);
+
+	// _ref_list : 파싱중 발견된 IndirectRef 들만 모은다.
     size_t i, icnt = _ref_list.size();
     for (i=0; i<icnt; i++) {
         PPTIndirectRef *indir_ref = _ref_list[i];
         int objnum = indir_ref->_objNum;
-        PPTIndirectObj *indir_obj = _objDict[objnum];
+
+		// _objDict : 파싱중 발견된 IndirectObj 들만 모아놓음.
+		// hash map으로 저장하여 object number 값으로 쉽게 찾을 수 있도록 함.
+        PPTIndirectObj *indir_obj = _objDict[objnum]; 
         if(indir_obj)
+
 			// indir_obj 에 자신을 참조한 ref 들을 모은다.
 			// 이는 추후 indir_obj의 objNum이 바뀔경우 자신을 참조한 ref들의 objNum를 
 			// 업데이트 해 주기 위해서 쓰인다.
@@ -149,10 +202,12 @@ bool PPDocument::open(string filepath)
             cout << "Cannot fount IndirectRef of " << objnum << PP_ENDL;
     }
 
+	// 도큐먼트의 상태를 '오픈됨' 상태로
     _state = PPDS_Opened;
 	return true;
 }
 
+// 도큐먼트의 상태를 알아낸다.
 bool PPDocument::isOpened()
 {
     return (_state >= PPDS_Opened);
@@ -168,7 +223,7 @@ bool PPDocument::isBuiltElements()
     return (_state >= PPDS_Built_Elements);
 }
 
-
+// PDF 계층 구조에서 최상위 딕셔너리를 가져옴
 PPTDictionary *PPDocument::RootDict()
 {
 	PPTIndirectObj *root_obj = (PPTIndirectObj *)_trailer->rootObject();
@@ -192,6 +247,8 @@ PPTDictionary *PPDocument::PagesDictionary()
 	return pages_dict;
 }
 
+// 페이지 리스트를 리턴한다. 
+// 각 페이지들은 주로 IndirectObj 가르키는IndirectRef 이다.(PPPage 가 아님) 
 PPTArray *PPDocument::PageArray()
 {
     PPTDictionary *pages_dict = PagesDictionary();
@@ -200,7 +257,8 @@ PPTArray *PPDocument::PageArray()
 	return page_list;
 }
 
-void PPDocument::SetPageCount(int cnt)
+// Private Method :AddPage() 함수 안에서만 사용됨.
+void PPDocument::setPageCount(int cnt)
 {
 	PPTDictionary *pages_dict = PagesDictionary();
 	PPTNumber *number = new PPTNumber(this, cnt);
@@ -208,14 +266,14 @@ void PPDocument::SetPageCount(int cnt)
 	pages_dict->SetTokenAndKey(number, "Count");
 }
 
-// 실질적인 PDF 내의 페이지 구성
+// PDF 내의 파리미터로 주어진 페이지를 추가함.
 void PPDocument::AddPage(PPPage *page)
 {
 	PPTArray *page_array = PageArray();
 	PPTIndirectRef *page_ref = new PPTIndirectRef(this, ++_objNumber, 0);
 	page_array->AddToken(page_ref);
 
-	SetPageCount(page_array->_array.size());
+	setPageCount(page_array->_array.size());
 
 	PPTIndirectObj *page_obj = new PPTIndirectObj(this, _objNumber, 0);
 	page_obj->addRefObj(page_ref);
@@ -233,13 +291,14 @@ void PPDocument::AddPage(PPPage *page)
 }
 
 // for generating
+// 새로운 빈 페이지를 생성해서 추가함
 PPPage *PPDocument::newPage(PPRect &rect)
 {
 	PPPage *page = new PPPage(this);
 
-	// AddPage() 에서 page->_formDict가 지정된단. 
-	// 그래야 page->SetMediaBox() 가 제대로 동작한다.
-	AddPage(page);
+	// 새로 생성된 빈 페이지를 추가한다.
+	AddPage(page); // AddPage() 에서 page->_formDict가 지정된단. 
+	               // 그래야 page->SetMediaBox() 가 제대로 동작한다.
 
 	page->SetMediaBox(rect);
 //	page->SetCropBox(rect);
@@ -260,7 +319,8 @@ void PPDocument::readPage(PPTDictionary *page_dict)
     _pages.push_back(page);
 }
 
-void PPDocument::loadPages(PPTDictionary *pages_dict)
+// 트리형식으로 분포된 모든 페이지들을 재귀호출 방식으로 읽어들임
+void PPDocument::CollectPages(PPTDictionary *pages_dict)
 {
     PPTArray *page_list = (PPTArray *)pages_dict->objectForKey("Kids");
     size_t i, icnt = page_list->_array.size();
@@ -273,7 +333,8 @@ void PPDocument::loadPages(PPTDictionary *pages_dict)
             readPage(child_dict);
         }
         else {
-            loadPages(child_dict);
+			// 재귀호출
+            CollectPages(child_dict);
         }
     }
 }
@@ -292,21 +353,21 @@ void PPDocument::WriteLoadedPages()
 /////////////////////////////////////////////////////////////////
 int PPDocument::buildDocument()
 {
-    if (isBuiltDocument()) {
+    if (isBuiltDocument()) { // 이미 빌드가 되어 있으면 무시한다.
         return 0;
     }
     
+	// first trailer를 찾고 다른 트레일러들과의 연결 고리를 찾아줌
     PPTTrailer *first_trailer = NULL;
     size_t i, icnt = _tokens.size();
-    
     for (i=0; i<icnt; i++) {
         PPToken *token = _tokens.at(icnt-i-1);
         if (token->ClassType() == PPTN_TRAILER) {
-            PPTTrailer *trailer = (PPTTrailer *)token;
+            PPTTrailer *trailer = (PPTTrailer *)token;//현재 트레일러
             PPTDictionary *trailer_dict = trailer->getDictionary();
             if (trailer_dict) {
                 PPTNumber *prev_num = (PPTNumber *)trailer_dict->objectForKey("Prev");
-                if (prev_num != NULL) {
+                if (prev_num != NULL) { // 이전 트레일러가 있으면
                     PPToken *token = _filePtDict[prev_num->intValue()];
                     if (token == NULL) {
                         // error!
@@ -314,8 +375,7 @@ int PPDocument::buildDocument()
                     }
                     else if( token->ClassType() == PPTN_TRAILER) {
                         PPTTrailer *prev_trailer = (PPTTrailer *)token;
-                        prev_trailer->_next = trailer;
-
+                        prev_trailer->_next = trailer; // 이전 트레일러의 '다음'트레일러를 현재 트레일러를
                     }
                     else if( token->ClassType() == PPTN_XREF) {
                         PPTXRef *xref = (PPTXRef *)token;
@@ -334,13 +394,15 @@ int PPDocument::buildDocument()
     if (first_trailer == NULL) {
         return -1;
     }
-    
-    PPTTrailer *lase_trailer = first_trailer;
-    while (lase_trailer != NULL) {
-        _trailer = lase_trailer;
-        lase_trailer = lase_trailer->_next;
+
+    // 마지막 트레일러를 찾아 _trailer 에 지정함.
+    PPTTrailer *last_trailer = first_trailer;
+    while (last_trailer != NULL) {
+        _trailer = last_trailer;
+        last_trailer = last_trailer->_next;
     }
     
+	//메타데이터 읽어오기
     PPTIndirectObj *info_obj = (PPTIndirectObj *)_trailer->infoObject();
     if (info_obj != NULL) {
         PPTDictionary *info_dict = info_obj->firstDictionary();
@@ -365,9 +427,12 @@ int PPDocument::buildDocument()
     if (root_dict == NULL) {
         return -3;
     }
+
     _version = (PPTName *)root_dict->valueObjectForKey("Version");
     _pageLayout = (PPTName *)root_dict->valueObjectForKey("PageLayout");
     _pageMode = (PPTName *)root_dict->valueObjectForKey("PageMode");
+
+	// Optional Contens 관련 데이터들을 읽어옴
     _OCProperties = (PPTDictionary *)root_dict->valueObjectForKey("OCProperties");
     PPTIndirectObj *pages = (PPTIndirectObj *)root_dict->IndirectObjectForKey("Pages");
     PPTDictionary *pages_dict = pages->firstDictionary();
@@ -379,7 +444,9 @@ int PPDocument::buildDocument()
 		}
 		_OCGs = (PPTArray *)_OCProperties->valueObjectForKey("OCGs");
 	}
-    loadPages(pages_dict);
+
+	// 페이지들을 읽어들임
+    CollectPages(pages_dict);
     _state = PPDS_Built_Document;
     return 0;
 }
@@ -1419,31 +1486,3 @@ PPToken *PPDocument::ObjectAtFilePosition(unsigned long long pos)
     return ret;
 }
 
-
-// PPDocument.cpp에서 한 번 쓰임
-// token_list에 있는 스트림들 중 FlateDecode 방식들만 디코딩 함.
-void PPDocument::DecodeStreams(vector<PPToken *> &token_list)
-{
-		
-	int i, icnt = _stream_list.size();
-	for(i=0;i<icnt;i++) {
-		PPTStream *stream = (PPTStream *)_stream_list[i];
-		PPTDictionary *dict = stream->_dict;
-		PPToken *val_obj = (PPToken *)dict->valueObjectForKey("Length");
-		if (val_obj) {
-            PPTNumber *len_obj = (PPTNumber *)val_obj;
-            long length = len_obj->longValue();
-            PPTName *filter = (PPTName *)dict->nameForKey("Filter");
-            if (filter != NULL && *filter->_name == "FlateDecode") {
-                stream->flateDecodeStream();
-                PPTName *type = (PPTName *)dict->objectForKey("Type");
-                if (type != NULL && *type->_name == "ObjStm") {
-					if(stream->parseObjStm(token_list, &_parser) == false) {
-                        return;
-                    }
-                 }
-			}
-		}
-	}
-
-}

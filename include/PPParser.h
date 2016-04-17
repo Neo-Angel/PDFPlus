@@ -78,7 +78,7 @@ protected:
     PPTComment								*parseComment(PPParserSource &source);
 
 public:
-	PPDocument *							_document; // mainly PPDocument(?)
+	PPDocument *							_document; // 현재 파싱이 진행중인 도큐먼트
 
 public:
 											~PPParser(); // 소멸자		
