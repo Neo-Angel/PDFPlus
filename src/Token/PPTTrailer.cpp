@@ -131,13 +131,13 @@ PPTDictionary *PPTTrailer::getDictionary()
     return _dict;
 }
 
-void PPTTrailer::setRootObject(PPTIndirectRef *indir_obj)
+void PPTTrailer::SetRootObject(PPTIndirectRef *indir_obj)
 {
     PPTDictionary *dict = getDictionary();
     dict->setTokenAndKey(indir_obj, PPKN_ROOT);
 }
 
-void PPTTrailer::setInfoObject(PPTIndirectRef *indir_obj)
+void PPTTrailer::SetInfoObject(PPTIndirectRef *indir_obj)
 {
     PPTDictionary *dict = getDictionary();
     dict->setTokenAndKey(indir_obj, PPKN_INFO);
@@ -164,7 +164,7 @@ PPToken *PPTTrailer::infoObject()
     return ret;
 }
 
-void PPTTrailer::build()
+void PPTTrailer::Build()
 {
     int obj_cnt = (int) _document->_objDict.size();
     _dict->_dict["Size"] = new PPTNumber(_document, obj_cnt+1);

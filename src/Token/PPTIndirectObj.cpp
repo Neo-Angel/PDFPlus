@@ -176,7 +176,7 @@ void PPTIndirectObj::Write(ostream &os)
     }
 }
 
-void PPTIndirectObj::addRefObj(PPTIndirectRef *ref)
+void PPTIndirectObj::AddRefObj(PPTIndirectRef *ref)
 {
     _ref_list.push_back(ref);
 }

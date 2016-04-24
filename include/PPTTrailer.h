@@ -37,11 +37,11 @@ public:
 
     PPToken *rootObject();
     PPToken *infoObject();
-    void setRootObject(PPTIndirectRef *indir_obj);
-    void setInfoObject(PPTIndirectRef *indir_obj);
+    void SetRootObject(PPTIndirectRef *indir_obj);
+    void SetInfoObject(PPTIndirectRef *indir_obj);
     
     void setFileID(PPTArray *idarr);
-    void build();
+    void Build();
     void merge(PPTTrailer *trailer);
 
 	PPBase *Create() {return new PPTTrailer();}

@@ -36,26 +36,7 @@ PPPage::PPPage(PPPage *page)
 
 
 void PPPage::StoreResources()
-{/*
-	map <string, PPToken *> &rscs_map = _resourceDict->_dict;
-	map <string, PPToken *> ::iterator it_rscs;
-	for(it_rscs = rscs_map.begin(); it_rscs != rscs_map.end(); it_rscs++) {
-		string rsc_type = it_rscs->first;
-		PPToken *rsc_value = (PPTDictionary *)it_rscs->second;
-		if(rsc_value->ClassType() == PPTN_DICTIONARY) {
-			PPTDictionary *rsc_dict = (PPTDictionary *)rsc_value;
-			map <string, PPToken *> &rsc_map = rsc_dict->_dict;
-			map <string, PPToken *> ::iterator it_rsc;
-			for(it_rsc = rsc_map.begin(); it_rsc != rsc_map.end(); it_rsc++) {
-				string rsc_key = it_rsc->first;
-				PPToken *rsc = it_rsc->second;
-				_document->AddResource(rsc, rsc_type, rsc_key);
-			}
-		}
-		else if(rsc_value->ClassType() == PPTN_ARRAY) {
-			_document->AddResource(rsc_value, rsc_type);
-		}
-	} */
+{
 }
 
 void PPPage::loadDictionary(PPTDictionary *page_dict)
@@ -166,22 +147,15 @@ endobj
 		_resourceDict->SetTokenAndKey(proset_list, "ProcSet");
 	}
 	PPTIndirectObj *rcs_obj = _document->SetRefTokenForKey(page_dict, _resourceDict, PPKN_RESOURCES);
-	/*
-	PPTDictionary *stream_dict = new PPTDictionary(_document);
-//	PPTIndirectObj *stream_obj = _document->SetRefTokenForKey(stream_dict, rcs_dict, PPKN_CONTENTS);
-	PPTIndirectObj *stream_obj = _document->SetRefTokenForKey(page_dict, stream_dict, PPKN_CONTENTS);
-	PPTStream *contents = new PPTStream(_document);
-	contents->_dict = stream_dict;
-	stream_obj->AddObj(contents);
-	*/
 }
 
+// 페이지의 내용을 스트림으로 빌드하고 페이지 정보를 정리한다.
 void PPPage::BuildPDF()
 {
 	PPTDictionary *stream_dict = new PPTDictionary(_document);
 
 	PPTIndirectObj *stream_obj = _document->SetRefTokenForKey(_formDict, stream_dict, PPKN_CONTENTS);
-	PPTStream *contents = BuildStream();
+	PPTStream *contents = BuildStream(); // 페이지의 drawing 코드들을 스트림으로 빌드한다.
 	stream_dict->SetTokenAndKey(contents->_streamSize, "Length");
 	stream_dict->SetTokenAndKey("FlateDecode", "Filter"); // Filter/FlateDecode
 	contents->SetDictionary(stream_dict);

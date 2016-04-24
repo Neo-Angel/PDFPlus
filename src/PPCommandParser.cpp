@@ -333,6 +333,7 @@ const char *PPCommandParser::ClassType()
 ////////////////////////////////////////////////
 bool PPCommandParser::canParseString(string str)
 {
+	// str이 코멘드 중에 하나면 파싱을 한다.
     PPCommandInfo *cinfo = CommandDict[str];
     if (cinfo) {
         return true;

@@ -91,5 +91,5 @@ void PPTIndirectRef::MoveInto(PPDocument *doc)
 		doc->_srcIndirectObjs[src_id] = copied_obj;
 	}
 	_objNum = copied_obj->_objNum;
-	copied_obj->addRefObj(this);
+	copied_obj->AddRefObj(this);
 }

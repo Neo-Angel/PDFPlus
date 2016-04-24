@@ -77,7 +77,7 @@ PPTIndirectObj *PPTDictionary::SetRefTokenAndKey(PPToken *token, string key, int
 		}
 		obj->AddObj(token);  // 이 부분은 바로 위 if문안으로 들어가야 되는거 아닌지...
 	}
-	obj->addRefObj(ref);
+	obj->AddRefObj(ref);
 	return obj;
 }
 

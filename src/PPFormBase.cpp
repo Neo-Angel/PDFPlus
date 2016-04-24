@@ -308,7 +308,7 @@ PPLayer *PPFormBase::AddLayer(string layer_name)
 	}
 
 	properties_dict->SetTokenAndKey(layer_ref, pname);
-	layer_obj->addRefObj(layer_ref);
+	layer_obj->AddRefObj(layer_ref);
 	PPTDictionary *layer_dict = (PPTDictionary *)layer_ref->valueObject();
 
 	ret_layer = new PPLayer();
@@ -818,27 +818,6 @@ int PPFormBase::buildElements()
 						addElement(form_element);
 					}
 					gcontext.clearGFlags();
-					/*
-                    int obj_num = GetXObjNumOf(name_str);  // Object Number for XObject named 'name'
-                    PPTIndirectObj *indir_obj = (PPTIndirectObj *)_document->_xobjects[obj_num];
-                    if(indir_obj) {
-                        PPTDictionary *obj_dict = indir_obj->firstDictionary();
-                        PPTName *subtype = (PPTName *)obj_dict->objectForKey("Subtype");
-                        if (*subtype->_name == "Image") {
-                            PPEImage *image_element = new PPEImage(obj_dict, &gcontext);
-                            addElement(image_element);
-							gcontext.clearGFlags();
-                        }
-                        else if(*subtype->_name == "Form") {
-                            PPEForm *form_element = new PPEForm(name, &gcontext);
-//                            form_element->_document = _document;
-//                            form_element->setStream(indir_obj->stream());
-//                            form_element->buildElements();
-                            addElement(form_element);
-							gcontext.clearGFlags();
-                        }
-                    }
-					*/
                 }
                 break;
                 

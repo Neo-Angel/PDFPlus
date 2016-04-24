@@ -43,7 +43,7 @@ public:
 	void AddObj(PPToken *obj);
     PPTStream *stream();
     
-    void addRefObj(PPTIndirectRef *ref);
+    void AddRefObj(PPTIndirectRef *ref);
     void setObjNum(int num);
 	int getObjNum(){return _objNum;}
     
