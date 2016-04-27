@@ -72,7 +72,7 @@ string PPEText::makeCommandString()
     size_t i, icnt = _cmdList.size();
     for (i=0; i<icnt; i++) {
         PPTCommand *cmd = _cmdList.at(i);
-        retstr += cmd->pdfString();
+        retstr += cmd->PDFString();
     }
 
     return retstr;
@@ -81,7 +81,7 @@ string PPEText::makeCommandString()
 void PPEText::addCommand(PPTCommand *cmd)
 {
     _cmdList.push_back(cmd);
-	if(cmd->_cmdInfo->type == PPC_FontAndSize) {
+	if(cmd->_cmdInfo->code == PPC_FontAndSize) {
 		PPTName *font_name = (PPTName *)cmd->_operands[0];
 		_fontKeyList.push_back(font_name->_name);
 	}
@@ -102,7 +102,7 @@ string PPEText::XMLString(int level)
     size_t i, icnt = _cmdList.size();
     for (i=0; i<icnt; i++) {
         PPTCommand *cmd = _cmdList.at(i);
-        ostr << cmd->pdfString();
+        ostr << cmd->PDFString();
     }
     ostr << PPTabStr(level+1) << "</Text>" << PP_ENDL;
     ostr << PPTabStr(level) << "</Element>" << PP_ENDL;

@@ -18,6 +18,8 @@
 
 #define PP_NUM_OF_OPS           73
 
+/* PDF Specification에 정의되어 있는 그래픽 명령어들 */
+
 // General graphics state        : w,J,j,M,d,ri, i,gs
 // Special graphics state        : q,Q,cm
 // Path construction             : m,l,c,v,y,h,re
@@ -36,20 +38,8 @@
 // Compatibility                 : BX, EX
 
 
-
-//enum PPCommandGroup {
-//      PPCG_GState,
-//    PPCG_SaveGState,
-//    PPCG_RestoreGState,
-//    PPCG_DrawPath,
-//    PPCG_FinishPath,
-//    PPCG_Clipping,
-//    PPCG_Shading,
-//    PPCG_BeginText,
-//    PPCG_EndText,
-//    PPCG_Text,
-//};
-
+// 모든 그래픽 명령어들을 사용하기 좋게 정리해 놓는다.
+//////////////////////////////////////////////////////////
 PPCommandInfo PPCommandList[PP_NUM_OF_OPS] = {
     {"w",PPC_LineWidth, PPCG_GState,1,"LineWidth"},
     {"J",PPC_LineCap, PPCG_GState,1,"LineCap"},
@@ -143,32 +133,39 @@ PPCommandInfo PPCommandList[PP_NUM_OF_OPS] = {
     {"EX",PPC_EndCompatibility, PPCG_EndCompatibility, 0,"EndCompatibility"}
 };
 
+// 위에 정리된 명령어 리스트들이 들어갈 해쉬 사전
 map <string, PPCommandInfo *> CommandDict;
 
+// cnt만큼의 탭문자들을 리턴한다.
 string PPTabStr(int cnt);
 
 
+////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////
+// PDF Plus Initialize
+////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////
 
+// PDF Plus 라이브러리를 사용하기 위해선 프로그램이 시작할 때
+// 반드시 호출해 줘야하는 초기화 함수.
 void PDFPlusInit()
 {
+	// CommandDict에 PPCommandList의 모든 내용들을 담는다.
     int i;
     for (i=0; i<PP_NUM_OF_OPS; i++) {
         PPCommandInfo *cmdinfo = &PPCommandList[i];
-        CommandDict[cmdinfo->code] = cmdinfo;
+        CommandDict[cmdinfo->command] = cmdinfo; // PPCommandInfo->command를 키로 한다.
     }
 }
 
 
 PPDash::~PPDash()
 {
-//    size_t i, icnt = _array.size();
-//    for (i=0; i<icnt; i++) {
-//        float *value = _array[i];
-//        delete value;
-//    }
 }
 
-
+////////////////////////////////////////////////////////////////
+//  PPCommandParser
+////////////////////////////////////////////////////////////////
 PPTCommand::~PPTCommand()
 {
     int i, icnt = (int)_operands.size();
@@ -178,6 +175,8 @@ PPTCommand::~PPTCommand()
     }
     _operands.clear();
 }
+
+// 선택함수
 string PPTCommand::XMLString(int level)
 {
     string retstr;
@@ -198,7 +197,9 @@ string PPTCommand::XMLString(int level)
     return retstr;
 }
 
-float PPTCommand::getFloatValue(int idx)
+// idx 번째 있는 오퍼랜드(인수값)을 리턴한다.
+// 타입에 따른 함수를 실행시켜준다.
+float PPTCommand::FloatValueAt(int idx)
 {
     PPToken *token = _operands[idx];
     if (token->ClassType() != PPTN_NUMBER) {
@@ -210,7 +211,7 @@ float PPTCommand::getFloatValue(int idx)
     return retvalue;
 }
 
-int PPTCommand::getIntValue(int idx)
+int PPTCommand::IntValueAt(int idx)
 {
     PPToken *token = _operands[idx];
     if (token->ClassType() != PPTN_NUMBER) {
@@ -222,7 +223,7 @@ int PPTCommand::getIntValue(int idx)
     return retvalue;
 }
 
-string PPTCommand::getStringValue(int idx)
+string PPTCommand::StringValueAt(int idx)
 {
     string *ret = NULL;
     PPToken *token = _operands[idx];
@@ -237,7 +238,7 @@ string PPTCommand::getStringValue(int idx)
     return *ret;
 }
 
-string *PPTCommand::getStringPt(int idx)
+string *PPTCommand::StringPtAt(int idx)
 {
     string *ret = NULL;
     PPToken *token = _operands[idx];
@@ -252,34 +253,20 @@ string *PPTCommand::getStringPt(int idx)
     return ret;
 }
 
-PPToken *PPTCommand::getTokenValue(int idx)
+PPToken *PPTCommand::TokenValueAt(int idx)
 {
     PPToken *token = _operands[idx];
     return token;
 }
 
-//void PPTCommand::getDash(PPDash *dash)
-//{
-//    dash->_array.clear();
-//    PPTArray *array = (PPTArray *)_operands[0];
-//    size_t i, icnt = array->size();
-//    for (i=0; i<icnt; i++) {
-//        PPTNumber *num = (PPTNumber *)array->_array[i];
-//        float *float_value = new float(num->floatValue());
-//        dash->_array.push_back(float_value);
-//        
-//    }
-//    PPTNumber *phase = (PPTNumber *)_operands[1];
-//    dash->_phase = phase->intValue();
-//}
-
-void PPTCommand::getDash(PPDash *dash)
+void PPTCommand::GetDash(PPDash *dash)
 {
     dash->_array = (PPTArray *)_operands[0];
     dash->_phase = (PPTNumber *)_operands[1];
 }
 
-string PPTCommand::pdfString()
+// Instance Variable 들을 이용해 PDF에 들어갈 문자열을 만든다.
+string PPTCommand::PDFString()
 {
     string retstr;
     size_t i, icnt = _operands.size();
@@ -288,11 +275,12 @@ string PPTCommand::pdfString()
         retstr += token->PDFString();
         retstr += " ";
     }
-    retstr += _cmdInfo->code;
+    retstr += _cmdInfo->command;
 	retstr += "\xa";
     return retstr;
 }
 
+// 복사를 위한 함수
 void PPTCommand::CopyMembersTo(PPBase *obj)
 {
 	PPTCommand *tar_cmd = (PPTCommand *)obj;
@@ -304,9 +292,9 @@ void PPTCommand::CopyMembersTo(PPBase *obj)
 
 	tar_cmd->_cmdInfo = _cmdInfo;
 }
+
+////////////////////////////////////////////////////////////////
 //  PPCommandParser
-//
-//
 ////////////////////////////////////////////////////////////////
 
 PPCommandParser::PPCommandParser(vector <PPToken *> *tokens)
@@ -314,18 +302,22 @@ PPCommandParser::PPCommandParser(vector <PPToken *> *tokens)
     _tokens = tokens;
 }
 
-bool PPCommandParser::parseStream(PPTStream &stream)
+bool PPCommandParser::ParseStream(PPTStream &stream)
 {
     PPParser parser;
     _index = 0;
     _streamSize = stream._streamSize;
     _streamData = stream._streamData;
+
+	// parser에 operands들을 담을 리스트를 넘겨준다.
+	// parser는 주로 operand들을 파싱하고 명령어들은 
+	// 이(this) 클래스(PPCommandParser)에서 한다.
     return parser.ParseSource(*this, _operands);
 }
 
 const char *PPCommandParser::ClassType()
 {
-    return PPTN_GRAPHIC_PARSER;
+    return PPTN_COMMAND_PARSER;
 }
 
 
@@ -346,12 +338,11 @@ bool PPCommandParser::canParseString(string str)
 
 PPToken *PPCommandParser::parseString(string str, vector <PPToken *> &tokens, PPParser *parser)
 {
+	// parser가 파싱하지 못한 문자열(str)을 파싱한다.
+	// tokens에는 operands가 담겨져 있다.
     PPCommandInfo *cinfo = CommandDict[str];
-	if(str == "scn") {
-		cout << "GState Command..." << PP_ENDL;
-	}
     if (cinfo) {
-        if (cinfo->type == PPC_BeginInlineImage) {
+        if (cinfo->code == PPC_BeginInlineImage) {
             // sorry. I will implement later.
             cout << "Inline Image not yet implemented." << PP_ENDL;
             bool flag = false;
@@ -398,7 +389,8 @@ PPToken *PPCommandParser::parseString(string str, vector <PPToken *> &tokens, PP
             return cmd;
 
         }
-        else {
+        else { 
+			// 코멘드 토큰을 생성해서 코멘드 정보(cinfo)를 담고
             PPTCommand *cmd = new PPTCommand;
             cmd->_cmdInfo = cinfo;
             int i, icnt = cinfo->numOfOperands;
@@ -409,11 +401,13 @@ PPToken *PPCommandParser::parseString(string str, vector <PPToken *> &tokens, PP
                 cout << "Error : Graphic Parsing Error (" << str << ")\xa";
                 return NULL;
             }
+			// 파싱된 오퍼랜드들을 가지고 온다.
             for (i=0; i<icnt; i++) {
                 PPToken *token = tokens.at(i);
                 cmd->_operands.push_back(token);
             }
             tokens.clear();
+			// 코멘드 토큰을 _tokens에 저장한다.
             _tokens->push_back(cmd);
             return cmd;
         }
@@ -422,6 +416,7 @@ PPToken *PPCommandParser::parseString(string str, vector <PPToken *> &tokens, PP
     return NULL;
 }
 
+// Stream Data를 파서에 공급하기 위한 함수들
 void PPCommandParser::get(char &ch)
 {
     if (_index < _streamSize) {

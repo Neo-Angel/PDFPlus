@@ -32,7 +32,7 @@
 #include "PPTDictionary.h"
 #include "PPTIndirectRef.h"
 #include "PPLayer.h"
-
+#include "PPCommandParser.h"
 // =========================================================== PPContext - E
 //
 //  FormBase
@@ -81,7 +81,7 @@ PPFormBase::PPFormBase(PPDocument *doc, PPTIndirectObj *indir):_graphicParser((v
 	if (*subtype_name->_name == "Form") {
 		PPTStream *stream = indir->stream();
 		if(stream) {
-			_graphicParser.parseStream(*stream);
+			_graphicParser.ParseStream(*stream);
 			buildElements();
 		}
 		else {
@@ -454,63 +454,64 @@ void PPFormBase::writeElement(PPElement *src_element)
 	}
 }
 
-// 여러 GState 의 값들 중에 cmd 내용에 부합하는 값을 변경한다.
+/* 여러 GState 의 값들 중에 cmd 내용에 부합하는 값을 변경한다. */
 void PPFormBase::SetValueToGState(PPTCommand *cmd, PPContext &gcontext)
 {
-    
-    switch (cmd->_cmdInfo->type) {
+	PPCommandInfo *cmdinfo = cmd->_cmdInfo;
+	unsigned int g_code = cmdinfo->code;
+    switch (g_code) {
         case PPC_LineWidth:
-            gcontext.setLineWidth(cmd->getFloatValue(0));
+            gcontext.setLineWidth(cmd->FloatValueAt(0));
             break;
         
         case PPC_LineCap:
-            gcontext.setLineCap(cmd->getIntValue(0));
+            gcontext.setLineCap(cmd->IntValueAt(0));
             break;
         
         case PPC_LineJoin:
-            gcontext.setLineJoin(cmd->getIntValue(0));
+            gcontext.setLineJoin(cmd->IntValueAt(0));
             break;
         
         case PPC_MiterLimit:
-            gcontext.setMiterLimit(cmd->getFloatValue(0));
+            gcontext.setMiterLimit(cmd->FloatValueAt(0));
             break;
         
         case PPC_Dash:
         {
             PPDash dash;
-            cmd->getDash(&dash);
+            cmd->GetDash(&dash);
             gcontext.setDash(dash);
             break;
         }
         
         case PPC_Intent:
-            gcontext.setIntent(cmd->getStringValue(0));
+            gcontext.setIntent(cmd->StringValueAt(0));
             break;
         
         case PPC_Flatness:
-            gcontext.setFlatness(cmd->getFloatValue(0));
+            gcontext.setFlatness(cmd->FloatValueAt(0));
             break;
         
         case PPC_DictName:
-            gcontext.setDictName(cmd->getStringValue(0));
+            gcontext.setDictName(cmd->StringValueAt(0));
             break;
         
         case PPC_Matrix:
         {
             PPMatrix mtx;
-            mtx._a = cmd->getFloatValue(0);
-            mtx._b = cmd->getFloatValue(1);
-            mtx._c = cmd->getFloatValue(2);
-            mtx._d = cmd->getFloatValue(3);
-            mtx._x = cmd->getFloatValue(4);
-            mtx._y = cmd->getFloatValue(5);
+            mtx._a = cmd->FloatValueAt(0);
+            mtx._b = cmd->FloatValueAt(1);
+            mtx._c = cmd->FloatValueAt(2);
+            mtx._d = cmd->FloatValueAt(3);
+            mtx._x = cmd->FloatValueAt(4);
+            mtx._y = cmd->FloatValueAt(5);
             gcontext.setMatrix(mtx);
             break;
         }
         
         case PPC_StrokeColorSpace:
 			{
-				string color_name = cmd->getStringValue(0);
+				string color_name = cmd->StringValueAt(0);
 
 				PPTDictionary *rsc_dict = (PPTDictionary *)_resourceDict->valueObjectForKey("ColorSpace");
 				PPTArray *rsc_arr = (PPTArray *)rsc_dict->valueObjectForKey(color_name);
@@ -520,7 +521,7 @@ void PPFormBase::SetValueToGState(PPTCommand *cmd, PPContext &gcontext)
         
         case PPC_NonStrokeColorSpace:
 			{
-				string color_name = cmd->getStringValue(0);
+				string color_name = cmd->StringValueAt(0);
 				PPTDictionary *rsc_dict = (PPTDictionary *)_resourceDict->valueObjectForKey("ColorSpace");
 				PPTArray *rsc_arr = (PPTArray *)rsc_dict->valueObjectForKey(color_name);
 				gcontext.SetUserFillColorSpace(color_name, rsc_arr);
@@ -539,13 +540,13 @@ void PPFormBase::SetValueToGState(PPTCommand *cmd, PPContext &gcontext)
 		 
             int n = gcontext.numberOfStrokeColorCoponents();
             if (n == 1) {
-                gcontext.setStrokeColor(cmd->getFloatValue(0));
+                gcontext.setStrokeColor(cmd->FloatValueAt(0));
             }
             else if(n == 3) {
-                gcontext.setStrokeColor(cmd->getFloatValue(0),cmd->getFloatValue(1),cmd->getFloatValue(2));
+                gcontext.setStrokeColor(cmd->FloatValueAt(0),cmd->FloatValueAt(1),cmd->FloatValueAt(2));
             }
             else if(n == 4) {
-                gcontext.setStrokeColor(cmd->getFloatValue(0),cmd->getFloatValue(1),cmd->getFloatValue(2), cmd->getFloatValue(3));
+                gcontext.setStrokeColor(cmd->FloatValueAt(0),cmd->FloatValueAt(1),cmd->FloatValueAt(2), cmd->FloatValueAt(3));
             }
 			
             break;
@@ -562,45 +563,45 @@ void PPFormBase::SetValueToGState(PPTCommand *cmd, PPContext &gcontext)
         {
             int n = gcontext.numberOfNonStrokeColorCoponents();
             if (n == 1) {
-                gcontext.setFillColor(cmd->getFloatValue(0));
+                gcontext.setFillColor(cmd->FloatValueAt(0));
             }
             else if(n == 3) {
-                gcontext.setFillColor(cmd->getFloatValue(0),cmd->getFloatValue(1),cmd->getFloatValue(2));
+                gcontext.setFillColor(cmd->FloatValueAt(0),cmd->FloatValueAt(1),cmd->FloatValueAt(2));
             }
             else if(n == 4) {
-                gcontext.setFillColor(cmd->getFloatValue(0),cmd->getFloatValue(1),cmd->getFloatValue(2), cmd->getFloatValue(3));
+                gcontext.setFillColor(cmd->FloatValueAt(0),cmd->FloatValueAt(1),cmd->FloatValueAt(2), cmd->FloatValueAt(3));
             }
             break;
         }
         */
         case PPC_DeviceGray:
             gcontext.setStrokeColorSpace(PPCSN_DeviceGray);
-            gcontext.setStrokeColor(cmd->getFloatValue(0));
+            gcontext.setStrokeColor(cmd->FloatValueAt(0));
             break;
         
         case PPC_DeviceRGB:
             gcontext.setStrokeColorSpace(PPCSN_DeviceRGB);
-            gcontext.setStrokeColor(cmd->getFloatValue(0),cmd->getFloatValue(1),cmd->getFloatValue(2));
+            gcontext.setStrokeColor(cmd->FloatValueAt(0),cmd->FloatValueAt(1),cmd->FloatValueAt(2));
             break;
         
         case PPC_DeviceCMYK:
             gcontext.setStrokeColorSpace(PPCSN_DeviceCMYK);
-            gcontext.setStrokeColor(cmd->getFloatValue(0),cmd->getFloatValue(1),cmd->getFloatValue(2), cmd->getFloatValue(3));
+            gcontext.setStrokeColor(cmd->FloatValueAt(0),cmd->FloatValueAt(1),cmd->FloatValueAt(2), cmd->FloatValueAt(3));
             break;
             
         case PPC_NonStrokeDeviceGray:
             gcontext.setFillColorSpace(PPCSN_DeviceGray);
-            gcontext.setFillColor(cmd->getFloatValue(0));
+            gcontext.setFillColor(cmd->FloatValueAt(0));
             break;
         
         case PPC_NonStrokeDeviceRGB:
             gcontext.setFillColorSpace(PPCSN_DeviceRGB);
-            gcontext.setFillColor(cmd->getFloatValue(0),cmd->getFloatValue(1),cmd->getFloatValue(2));
+            gcontext.setFillColor(cmd->FloatValueAt(0),cmd->FloatValueAt(1),cmd->FloatValueAt(2));
             break;
         
         case PPC_NonStrokeDeviceCMYK:
             gcontext.setFillColorSpace(PPCSN_DeviceCMYK);
-            gcontext.setFillColor(cmd->getFloatValue(0),cmd->getFloatValue(1),cmd->getFloatValue(2), cmd->getFloatValue(3));
+            gcontext.setFillColor(cmd->FloatValueAt(0),cmd->FloatValueAt(1),cmd->FloatValueAt(2), cmd->FloatValueAt(3));
             break;
         
         default:
@@ -610,28 +611,28 @@ void PPFormBase::SetValueToGState(PPTCommand *cmd, PPContext &gcontext)
 
 void PPFormBase::AddCommandToPath(PPTCommand *cmd, PPPath *path)
 {
-    switch (cmd->_cmdInfo->type) {
+    switch (cmd->_cmdInfo->code) {
         case PPC_MoveTo:
-            path->moveTo(cmd->getFloatValue(0), cmd->getFloatValue(1));
+            path->moveTo(cmd->FloatValueAt(0), cmd->FloatValueAt(1));
             break;
         case PPC_LineTo:
-            path->lineTo(cmd->getFloatValue(0), cmd->getFloatValue(1));
+            path->lineTo(cmd->FloatValueAt(0), cmd->FloatValueAt(1));
             break;
         case PPC_CurveTo:
-            path->curveTo(cmd->getFloatValue(0), cmd->getFloatValue(1), cmd->getFloatValue(2), 
-				cmd->getFloatValue(3), cmd->getFloatValue(4), cmd->getFloatValue(5));
+            path->curveTo(cmd->FloatValueAt(0), cmd->FloatValueAt(1), cmd->FloatValueAt(2), 
+				cmd->FloatValueAt(3), cmd->FloatValueAt(4), cmd->FloatValueAt(5));
             break;
         case PPC_CurveTo1:
-            path->curveTo1(cmd->getFloatValue(0), cmd->getFloatValue(1), cmd->getFloatValue(2), cmd->getFloatValue(3));
+            path->curveTo1(cmd->FloatValueAt(0), cmd->FloatValueAt(1), cmd->FloatValueAt(2), cmd->FloatValueAt(3));
             break;
         case PPC_CurveTo2:
-            path->curveTo2(cmd->getFloatValue(0), cmd->getFloatValue(1), cmd->getFloatValue(2), cmd->getFloatValue(3));
+            path->curveTo2(cmd->FloatValueAt(0), cmd->FloatValueAt(1), cmd->FloatValueAt(2), cmd->FloatValueAt(3));
             break;
         case PPC_ClosePath:
             path->close();
             break;
         case PPC_Rectangle:
-            path->rectangle(cmd->getFloatValue(0), cmd->getFloatValue(1), cmd->getFloatValue(2), cmd->getFloatValue(3));
+            path->rectangle(cmd->FloatValueAt(0), cmd->FloatValueAt(1), cmd->FloatValueAt(2), cmd->FloatValueAt(3));
             break;
         default:
             break;
@@ -755,7 +756,7 @@ int PPFormBase::buildElements()
                     opened_path = NULL; 
                 }
                 if (path_element != NULL) {
-                    path_element->setPaintingType(cmd->_cmdInfo->type);
+                    path_element->setPaintingType(cmd->_cmdInfo->code);
                 }
                 break;
                 
@@ -805,7 +806,7 @@ int PPFormBase::buildElements()
             
             case PPCG_XObject:
                 {
-					PPTName *name = (PPTName *)cmd->getTokenValue(0);
+					PPTName *name = (PPTName *)cmd->TokenValueAt(0);
 					string name_str = *name->_name;
 
 					string subtype = SubtypeFor(name_str);
@@ -823,10 +824,10 @@ int PPFormBase::buildElements()
                 
             case PPCG_BeginMarkedContent:
                 {
-					PPTName *tag = (PPTName *)cmd->getTokenValue(0);
+					PPTName *tag = (PPTName *)cmd->TokenValueAt(0);
 					PPToken *properties = NULL;
-					if(cmd->_cmdInfo->type == PPC_BeginMarkedContentP) {
-						properties = (PPToken *)cmd->getTokenValue(1);
+					if(cmd->_cmdInfo->code == PPC_BeginMarkedContentP) {
+						properties = (PPToken *)cmd->TokenValueAt(1);
 						if(properties->ClassType() == PPTN_NAME) {
 							PPTName *property_name = (PPTName *)properties;
 							AddLayerWithProperties(*property_name->_name);
@@ -839,8 +840,8 @@ int PPFormBase::buildElements()
                 break;
             case PPCG_MarkedContent:
                 {
-                    PPTName *tag = (PPTName *)cmd->getTokenValue(0);
-                    PPTDictionary *porpert = (PPTDictionary *)cmd->getTokenValue(1);
+                    PPTName *tag = (PPTName *)cmd->TokenValueAt(0);
+                    PPTDictionary *porpert = (PPTDictionary *)cmd->TokenValueAt(1);
                     PPEMarkedContent *marked_content_element = new PPEMarkedContent(tag, porpert, &gcontext);
                     addElement(marked_content_element);
                 }
@@ -855,7 +856,7 @@ int PPFormBase::buildElements()
             case PPCG_Shading:
                 {
                     PPEShading *shading_element = new PPEShading(&gcontext);
-					shading_element->_name = (PPTName *)cmd->getTokenValue(0)->Copy();
+					shading_element->_name = (PPTName *)cmd->TokenValueAt(0)->Copy();
                     addElement(shading_element);
 					gcontext.clearGFlags();
                 }
@@ -877,7 +878,7 @@ int PPFormBase::buildElements()
                 break;
                 
             default:
-				cout << " Unprocessed Command " << cmd->pdfString() << PP_ENDL;
+				cout << " Unprocessed Command " << cmd->PDFString() << PP_ENDL;
                 break;
         }
     }

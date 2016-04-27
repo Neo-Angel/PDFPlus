@@ -188,7 +188,7 @@ string PPEPath::makeCommandString()
 	}
 	retstr += PP_ENDL;
 	//PPCommandInfo *cinfo = &PPCommandList[_paintingType];
-	//retstr += (char *)(cinfo->code);
+	//retstr += (char *)(cinfo->command);
 	//retstr += PP_ENDL;
 	
 	/*

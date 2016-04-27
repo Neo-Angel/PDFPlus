@@ -22,6 +22,9 @@
 string PPTabStr(int cnt);
 
 
+///////////////////////////////////////////////////////////////////
+// Constructors / Destructor
+///////////////////////////////////////////////////////////////////
 PPPage::PPPage(PPDocument *doc)  // this invokes PPFormBase() (default)constructor.
 {
     _document = doc;
@@ -34,40 +37,33 @@ PPPage::PPPage(PPPage *page)
 	_formDict = (PPTDictionary *)page->_formDict->Copy();
 }
 
-
+// ????
 void PPPage::StoreResources()
 {
 }
 
-void PPPage::loadDictionary(PPTDictionary *page_dict)
+void PPPage::LoadDictionary(PPTDictionary *page_dict)
 {
     _formDict = page_dict;
 	_context->ptMatrix()->Rotate(rotate());
 
-//    PPTIndirectObj *rcs_indir = (PPTIndirectObj *)_formDict->indirectObjectForKey("Resources");
-//    _resourceDict = rcs_indir->firstDictionary();
     _resourceDict = (PPTDictionary *)_formDict->valueObjectForKey("Resources");
 
 	// 읽어들인 리소스들을 Document에 저장한다.
-	StoreResources();
+	StoreResources();// 아직 기능이 없음
 
-    
     PPTDictionary *font_dict = (PPTDictionary *)_resourceDict->valueObjectForKey("Font");
     if (font_dict) {
         map <string, PPToken *> &dict = font_dict->_dict;
        
         map <string, PPToken *> ::iterator it_token_objs;
         for(it_token_objs = dict.begin(); it_token_objs != dict.end(); it_token_objs++) {
-//            string name = it_token_objs->first;
             PPTIndirectRef *indir_ref = (PPTIndirectRef *)it_token_objs->second;
             int obj_num = indir_ref->_objNum;
             PPTIndirectObj *font_obj = (PPTIndirectObj *)_document->_fonts[obj_num];
             if (font_obj == NULL) {
-//                PPTIndirectRef *indir_ref = (PPTIndirectRef *)it_token_objs->second;
                 font_obj = indir_ref->targetObject();
                 _document->_fonts[obj_num] = font_obj;
-//                PPTDictionary *obj_dict = font_obj->firstDictionary();
-                
             }
         }
     }
@@ -75,29 +71,24 @@ void PPPage::loadDictionary(PPTDictionary *page_dict)
     PPTDictionary *xobject_dict = (PPTDictionary *)_resourceDict->valueObjectForKey("XObject");
     if (xobject_dict) {
         map <string, PPToken *> &dict = xobject_dict->_dict;
-        
         map <string, PPToken *> ::iterator it_token_objs;
         for(it_token_objs = dict.begin(); it_token_objs != dict.end(); it_token_objs++) {
-//            string name = it_token_objs->first;
             PPTIndirectRef *indir_ref = (PPTIndirectRef *)it_token_objs->second;
             int obj_num = indir_ref->_objNum;
             PPTIndirectObj *indir_obj = (PPTIndirectObj *)_document->_xobjects[obj_num];
             if (indir_obj == NULL) {
-//                PPTIndirectRef *indir_ref = (PPTIndirectRef *)it_token_objs->second;
                 indir_obj = indir_ref->targetObject();
                 _document->_xobjects[obj_num] = indir_obj;
                 indir_obj = (PPTIndirectObj *)_document->_xobjects[obj_num];
-//                PPTDictionary *obj_dict = indir_obj->firstDictionary();
             }
         }
     }
-    
 
     size_t icnt = contentsCount();
     for (size_t i=0; i<icnt; i++) {
         PPTStream *stream = contentAt(i);
         if (!stream->_decodeFailed) {
-            _graphicParser.parseStream(*stream);
+            _graphicParser.ParseStream(*stream);
         }
     }
 }
@@ -105,33 +96,10 @@ void PPPage::loadDictionary(PPTDictionary *page_dict)
 // Invoked by PPDocument::AddPage()
 void PPPage::WriteDictionary(PPTDictionary *page_dict) // -> PreBuildPDF
 {
-/* Ex)  
-371 0 obj
-<<
-	/ArtBox[86.7978 277.24 557.004 668.27]
-	/BleedBox[0.0 0.0 595.276 841.89]
-	/Contents[373 0 R 374 0 R 375 0 R 376 0 R 377 0 R 378 0 R 379 0 R 380 0 R]
-	/CropBox[0.0 0.0 595.276 841.89]
-	/Group 381 0 R
-	/LastModified(D:20150116185119+09'00')
-	/MediaBox[0.0 0.0 595.276 841.89]
-	/Parent 365 0 R
-	/PieceInfo<</Illustrator 382 0 R>>
-	/Resources<</ExtGState<</GS0 372 0 R>>>>
-	/Rotate 0
-	/TrimBox[0.0 0.0 595.276 841.89]
-	/Type/Page
->>
-endobj
-*/
 	_formDict = page_dict;
 	page_dict->SetTokenAndKey("Page", "Type");
 	page_dict->SetTokenAndKey(0, "Rotate");
 	
-//	PPRect media_rect = GetMediaBox();
-//	PPTArray *rect_arr = media_rect.GetArray(_document);
-//	page_dict->SetTokenAndKey(rect_arr, "MediaBox");
-
 	if(_resourceDict == NULL) {
 		_resourceDict = new PPTDictionary(_document);
 

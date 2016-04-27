@@ -255,7 +255,7 @@ void PPDocument::collectPages(PPTDictionary *pages_dict)
 void PPDocument::makePageWith(PPTDictionary *page_dict)
 {
     PPPage *page = new PPPage(this);
-    page->loadDictionary(page_dict);
+    page->LoadDictionary(page_dict);
     _pages.push_back(page);
 }
 

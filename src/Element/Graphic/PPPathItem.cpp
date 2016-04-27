@@ -46,10 +46,10 @@ string PPPathItem::makeCommand()
             break;
 		case PPC_Rectangle:
             ostr << _pt1._x << " " << _pt1._y << " " ;
-            ostr << _pt2._x << " " << _pt2._y << " " << PPCommandList[_op].code << PP_ENDL;
+            ostr << _pt2._x << " " << _pt2._y << " " << PPCommandList[_op].command << PP_ENDL;
 			break;
         default:
-            ostr << PPCommandList[_op].code << PP_ENDL;
+            ostr << PPCommandList[_op].command << PP_ENDL;
             break;
     }
     

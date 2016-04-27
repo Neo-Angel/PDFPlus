@@ -149,56 +149,56 @@ string PPGState::makeCommandString()
     PPCommandInfo *cinfo;
     if(_gflag & PPGF_LINEWIDTH) {
         cinfo = &PPCommandList[PPC_LineWidth];
-        ostr << _lineWidth << " " << cinfo->code << PP_ENDL;
+        ostr << _lineWidth << " " << cinfo->command << PP_ENDL;
     }
     if(_gflag & PPGF_INTENT) {
         cinfo = &PPCommandList[PPC_Intent];
-        ostr << "/" << _intent << " " << cinfo->code << PP_ENDL;
+        ostr << "/" << _intent << " " << cinfo->command << PP_ENDL;
     }
     if(_gflag & PPGF_FLATNESS) {
         cinfo = &PPCommandList[PPC_Flatness];
-        ostr << _flatness << " " << cinfo->code << PP_ENDL;
+        ostr << _flatness << " " << cinfo->command << PP_ENDL;
     }
     if(_gflag & PPGF_MITERLIMIT) {
         cinfo = &PPCommandList[PPC_MiterLimit];
-        ostr << _miterLimit << " " << cinfo->code << PP_ENDL;
+        ostr << _miterLimit << " " << cinfo->command << PP_ENDL;
     }
     if(_gflag & PPGF_LINECAP) {
         cinfo = &PPCommandList[PPC_LineCap];
-        ostr << _lineCap << " " << cinfo->code << PP_ENDL;
+        ostr << _lineCap << " " << cinfo->command << PP_ENDL;
     }
     if(_gflag & PPGF_LINEJOIN) {
         cinfo = &PPCommandList[PPC_LineJoin];
-        ostr << _lineJoin << " " << cinfo->code << PP_ENDL;
+        ostr << _lineJoin << " " << cinfo->command << PP_ENDL;
     }
     if(_gflag & PPGF_DICTNAME) {
         cinfo = &PPCommandList[PPC_DictName];
-        ostr << "/" << _dictName << " " << cinfo->code << PP_ENDL;
+        ostr << "/" << _dictName << " " << cinfo->command << PP_ENDL;
     }
     if(_gflag & PPGF_DASH) {
         cinfo = &PPCommandList[PPC_Dash];
-        ostr << _dash.pdfString() << " " << cinfo->code << PP_ENDL;
+        ostr << _dash.pdfString() << " " << cinfo->command << PP_ENDL;
     }
     if(_gflag & PPGF_MATRIX) {
         cinfo = &PPCommandList[PPC_Matrix];
-        ostr << _matrix.pdfString() << " " << cinfo->code << PP_ENDL;
+        ostr << _matrix.pdfString() << " " << cinfo->command << PP_ENDL;
     }
     if(_gflag & PPGF_STROKECOLOR) {
         if (_strokeColor._colorSpaceName == PPCSN_DeviceGray) {
             cinfo = &PPCommandList[PPC_DeviceGray];
-            ostr << _strokeColor._c1 << " " << cinfo->code << PP_ENDL;
+            ostr << _strokeColor._c1 << " " << cinfo->command << PP_ENDL;
         }
         else if (_strokeColor._colorSpaceName == PPCSN_DeviceRGB) {
             cinfo = &PPCommandList[PPC_DeviceRGB];
-            ostr << _strokeColor._c1 << " " << _strokeColor._c2 << " " << _strokeColor._c3 << " " << cinfo->code << PP_ENDL;
+            ostr << _strokeColor._c1 << " " << _strokeColor._c2 << " " << _strokeColor._c3 << " " << cinfo->command << PP_ENDL;
         }
         else if (_strokeColor._colorSpaceName == PPCSN_DeviceCMYK) {
             cinfo = &PPCommandList[PPC_DeviceCMYK];
-            ostr << _strokeColor._c1 << " " << _strokeColor._c2 << " " << _strokeColor._c3 << " " << _strokeColor._c4 << " " << cinfo->code << PP_ENDL;
+            ostr << _strokeColor._c1 << " " << _strokeColor._c2 << " " << _strokeColor._c3 << " " << _strokeColor._c4 << " " << cinfo->command << PP_ENDL;
         }
         else {
             cinfo = &PPCommandList[PPC_StrokeColorSpace];
-            ostr << _strokeColor._colorSpaceName << " " << cinfo->code << PP_ENDL;
+            ostr << _strokeColor._colorSpaceName << " " << cinfo->command << PP_ENDL;
             if (_strokeColor._colorSpaceName == PPCSN_CalGray
                 || _strokeColor._colorSpaceName == PPCSN_CalRGB
                 || _strokeColor._colorSpaceName == PPCSN_Indexed
@@ -206,10 +206,10 @@ string PPGState::makeCommandString()
                 ) {
                 cinfo = &PPCommandList[PPC_SetColor];
                 if (_strokeColor._colorSpaceName == PPCSN_CalGray || _strokeColor._colorSpaceName == PPCSN_Indexed) {
-                    ostr << _strokeColor._c1 << " " << cinfo->code << PP_ENDL;
+                    ostr << _strokeColor._c1 << " " << cinfo->command << PP_ENDL;
                 }
                 else if (_strokeColor._colorSpaceName == PPCSN_CalRGB || _strokeColor._colorSpaceName == PPCSN_Lab) {
-                    ostr << _strokeColor._c1 << " " << _strokeColor._c2 << " " << _strokeColor._c3 << " " << cinfo->code << PP_ENDL;
+                    ostr << _strokeColor._c1 << " " << _strokeColor._c2 << " " << _strokeColor._c3 << " " << cinfo->command << PP_ENDL;
                 }
             }
             else { // Separation, DeviceN, ICCBased
@@ -217,13 +217,13 @@ string PPGState::makeCommandString()
                 if (_strokeColor._colorSpaceName == PPCSN_Separation){
                     if (_strokeColor._alterColorSpaceName == PPCSN_ICCBased
                         || _strokeColor._alterColorSpaceName == PPCSN_DeviceGray) {
-                        ostr << _strokeColor._c1 << " " << cinfo->code << PP_ENDL;
+                        ostr << _strokeColor._c1 << " " << cinfo->command << PP_ENDL;
                     }
                     else if (_strokeColor._alterColorSpaceName == PPCSN_DeviceCMYK) {
-                        ostr << _strokeColor._c1 << " " << _strokeColor._c2 << " " << _strokeColor._c3 << " " << _strokeColor._c4 << " " << cinfo->code << PP_ENDL;
+                        ostr << _strokeColor._c1 << " " << _strokeColor._c2 << " " << _strokeColor._c3 << " " << _strokeColor._c4 << " " << cinfo->command << PP_ENDL;
                     }
                     else if (_strokeColor._alterColorSpaceName == PPCSN_DeviceRGB) {
-                        ostr << _strokeColor._c1 << " " << _strokeColor._c2 << " " << _strokeColor._c3 << " " << cinfo->code << PP_ENDL;
+                        ostr << _strokeColor._c1 << " " << _strokeColor._c2 << " " << _strokeColor._c3 << " " << cinfo->command << PP_ENDL;
                     }
                 }
             }
@@ -233,19 +233,19 @@ string PPGState::makeCommandString()
     if(_gflag & PPGF_FILLCOLOR) {
         if (_fillColor._colorSpaceName == PPCSN_DeviceGray) {
             cinfo = &PPCommandList[PPC_NonStrokeDeviceGray];
-            ostr << _fillColor._c1 << " " << cinfo->code << PP_ENDL;
+            ostr << _fillColor._c1 << " " << cinfo->command << PP_ENDL;
         }
         else if (_fillColor._colorSpaceName == PPCSN_DeviceRGB) {
             cinfo = &PPCommandList[PPC_NonStrokeDeviceRGB];
-            ostr << _fillColor._c1 << " " << _fillColor._c2 << " " << _fillColor._c3 << " " << cinfo->code << PP_ENDL;
+            ostr << _fillColor._c1 << " " << _fillColor._c2 << " " << _fillColor._c3 << " " << cinfo->command << PP_ENDL;
         }
         else if (_fillColor._colorSpaceName == PPCSN_DeviceCMYK) {
             cinfo = &PPCommandList[PPC_NonStrokeDeviceCMYK];
-            ostr << _fillColor._c1 << " " << _fillColor._c2 << " " << _fillColor._c3 << " " << _fillColor._c4 << " " << cinfo->code << PP_ENDL;
+            ostr << _fillColor._c1 << " " << _fillColor._c2 << " " << _fillColor._c3 << " " << _fillColor._c4 << " " << cinfo->command << PP_ENDL;
         }
         else {
             cinfo = &PPCommandList[PPC_NonStrokeColorSpace];
-            ostr << _fillColor._colorSpaceName << " " << cinfo->code << PP_ENDL;
+            ostr << _fillColor._colorSpaceName << " " << cinfo->command << PP_ENDL;
             if (_fillColor._colorSpaceName == PPCSN_CalGray
                 || _fillColor._colorSpaceName == PPCSN_CalRGB
                 || _fillColor._colorSpaceName == PPCSN_Indexed
@@ -253,10 +253,10 @@ string PPGState::makeCommandString()
                 ) {
                 cinfo = &PPCommandList[PPC_SetNonStrokeColor];
                 if (_fillColor._colorSpaceName == PPCSN_CalGray || _fillColor._colorSpaceName == PPCSN_Indexed) {
-                    ostr << _fillColor._c1 << " " << cinfo->code << PP_ENDL;
+                    ostr << _fillColor._c1 << " " << cinfo->command << PP_ENDL;
                 }
                 else if (_fillColor._colorSpaceName == PPCSN_CalRGB || _fillColor._colorSpaceName == PPCSN_Lab) {
-                    ostr << _fillColor._c1 << " " << _fillColor._c2 << " " << _fillColor._c3 << " " << cinfo->code << PP_ENDL;
+                    ostr << _fillColor._c1 << " " << _fillColor._c2 << " " << _fillColor._c3 << " " << cinfo->command << PP_ENDL;
                 }
             }
             else { // Separation, DeviceN, ICCBased
@@ -264,13 +264,13 @@ string PPGState::makeCommandString()
                 if (_fillColor._colorSpaceName == PPCSN_Separation){
                     if (_fillColor._alterColorSpaceName == PPCSN_ICCBased
                         || _fillColor._alterColorSpaceName == PPCSN_DeviceGray) {
-                        ostr << _fillColor._c1 << " " << cinfo->code << PP_ENDL;
+                        ostr << _fillColor._c1 << " " << cinfo->command << PP_ENDL;
                     }
                     else if (_fillColor._alterColorSpaceName == PPCSN_DeviceCMYK) {
-                        ostr << _fillColor._c1 << " " << _fillColor._c2 << " " << _fillColor._c3 << " " << _fillColor._c4 << " " << cinfo->code << PP_ENDL;
+                        ostr << _fillColor._c1 << " " << _fillColor._c2 << " " << _fillColor._c3 << " " << _fillColor._c4 << " " << cinfo->command << PP_ENDL;
                     }
                     else if (_fillColor._alterColorSpaceName == PPCSN_DeviceRGB) {
-                        ostr << _fillColor._c1 << " " << _fillColor._c2 << " " << _fillColor._c3 << " " << cinfo->code << PP_ENDL;
+                        ostr << _fillColor._c1 << " " << _fillColor._c2 << " " << _fillColor._c3 << " " << cinfo->command << PP_ENDL;
                     }
                 }
             }
@@ -278,29 +278,29 @@ string PPGState::makeCommandString()
     }
 	if(_gflag & PPGF_STROKECOLORSPC) {
 		cinfo = &PPCommandList[PPC_StrokeColorSpace];
-		ostr <<"/" <<  _strokeColor.UserColorSpaceName()  << " " << cinfo->code << PP_ENDL;
+		ostr <<"/" <<  _strokeColor.UserColorSpaceName()  << " " << cinfo->command << PP_ENDL;
 	}
 	if(_gflag & PPGF_FILLCOLORSPC) {
 		cinfo = &PPCommandList[PPC_NonStrokeColorSpace];
-		ostr << "/" << _fillColor.UserColorSpaceName()  << " " << cinfo->code << PP_ENDL;
+		ostr << "/" << _fillColor.UserColorSpaceName()  << " " << cinfo->command << PP_ENDL;
 	}
 
 	// Set Color (N)
 	if(_gflag & PPGF_SETSTROKECOLOR) {
 		cinfo = &PPCommandList[PPC_SetColor];
-		ostr << _strokeColor.StringOfColors()  << " " << cinfo->code << PP_ENDL;
+		ostr << _strokeColor.StringOfColors()  << " " << cinfo->command << PP_ENDL;
 	}
 	if(_gflag & PPGF_SETSTROKECOLORN) {
 		cinfo = &PPCommandList[PPC_SetColorN];
-		ostr << _strokeColor.StringOfColors()  << " " << cinfo->code << PP_ENDL;
+		ostr << _strokeColor.StringOfColors()  << " " << cinfo->command << PP_ENDL;
 	}
 	if(_gflag & PPGF_SETFILLCOLOR) {
 		cinfo = &PPCommandList[PPC_SetNonStrokeColor];
-		ostr << _fillColor.StringOfColors()  << " " << cinfo->code << PP_ENDL;
+		ostr << _fillColor.StringOfColors()  << " " << cinfo->command << PP_ENDL;
 	}
 	if(_gflag & PPGF_SETFILLCOLORN) {
 		cinfo = &PPCommandList[PPC_SetNonStrokeColorN];
-		ostr << _fillColor.StringOfColors()  << " " << cinfo->code << PP_ENDL;
+		ostr << _fillColor.StringOfColors()  << " " << cinfo->command << PP_ENDL;
 	}
 
     retstr = ostr.str();

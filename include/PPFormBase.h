@@ -7,6 +7,7 @@
 #include <PPCommandParser.h>
 #include <PPTIndirectObj.h>
 #include <PPContext.h>
+
 //
 //      PPEFormBase
 //
@@ -20,6 +21,9 @@ class PPTDictionary;
 class PPTCommand;
 class PPLayer;
 
+
+// PDF 스펙 중에 Form의 기능을 담당한다.
+// PPPage의 슈퍼클레스이기도 하다.
 class PPFormBase : public PPBase {
 protected:
 	PPContext *_context;

@@ -22,40 +22,9 @@ class PPDocument;
 class PPRect;
 class PPMatrix;
 
-class PPPage : public PPFormBase {
-public:
 
-/*	PageDict Example
-		<Dict>
-			<Key>Contents</Key>
-			<Ref ObjID='35' Gen='0'/>
-			<Key>MediaBox</Key>
-			<Array>
-				<Number>0</Number>
-				<Number>0</Number>
-				<Number>6803.15</Number>
-				<Number>3401.57</Number>
-			</Array>
-			<Key>Parent</Key>
-			<Ref ObjID='56' Gen='0'/>
-			<Key>Resources</Key>
-			<Dict>
-				<Key>ProcSet</Key>
-				<Array>
-					<Name>PDF</Name>
-					<Name>Text</Name>
-					<Name>ImageB</Name>
-					<Name>ImageC</Name>
-					<Name>ImageI</Name>
-				</Array>
-				<Key>XObject</Key>
-				<Ref ObjID='54' Gen='0'/>
-			</Dict>
-			<Key>Type</Key>
-			<Name>Page</Name>
-		</Dict>
-*/
-//    PPTDictionary *_pageDict;
+/* PPPage 클래스는 PPFormBase 의 서브클레스로서 기본적으로 Form의 특성을 갖는다.*/
+class PPPage : public PPFormBase {
 
 protected:
     
@@ -72,7 +41,7 @@ protected:
 public:
 	PPPage(PPPage *page);
     PPPage(PPDocument *doc);
-    void loadDictionary(PPTDictionary *page_dict);
+    void LoadDictionary(PPTDictionary *page_dict);
 	void WriteDictionary(PPTDictionary *page_dict);
 
 	PPTDictionary *ResourcesDict();
