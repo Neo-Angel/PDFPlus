@@ -75,10 +75,10 @@ string PPEForm::XMLString(int level)
     return retstr;
 }
 
-PPTIndirectObj *PPEForm::GetXObject()
+PPTIndirectObj *PPEForm::XObject()
 {
 	PPTIndirectObj *indir_obj = NULL;
-	int xobj_num = _parentForm->GetXObjNumOf(*_name->_name);
+	int xobj_num = _parentForm->XObjectNumberFor(*_name->_name);
 	if(xobj_num > 0) {
 		PPDocument *doc = _parentForm->_document;
 		indir_obj = (PPTIndirectObj *)doc->_xobjects[xobj_num];
@@ -89,7 +89,7 @@ PPTIndirectObj *PPEForm::GetXObject()
 PPFormBase *PPEForm::GetFormObj()  // Not Form Element
 {
 	PPFormBase *ret_form = NULL;
-	PPTIndirectObj *indir_obj = GetXObject();
+	PPTIndirectObj *indir_obj = XObject();
 	if(indir_obj) {
 //		PPTDictionary *dict = indir_obj->firstDictionary();
 		PPDocument *doc = _parentForm->_document;
@@ -122,7 +122,7 @@ void PPEForm::willAddToParent(PPFormBase *form)
 	else if(xobj_ref->ClassType() == PPTN_DICTIONARY) {
 		xobj_dict = (PPTDictionary *)xobj_ref;
 	}
-    xobj_ref = (PPTIndirectRef *)xobj_dict->objectForKey(*_name->_name);
+    xobj_ref = (PPTIndirectRef *)xobj_dict->ObjectForKey(*_name->_name);
     if (!xobj_ref) {
         cout << "Shading IndirectRef not found..." << PP_ENDL;
         return;

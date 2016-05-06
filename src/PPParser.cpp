@@ -313,9 +313,10 @@ PPTName *PPParser::parseName(PPParserSource &source)
     return ret;
     
 }
-
+/*
 // Parsing Bool
 //////////////////////////////////////////////////////////////////////////////
+*/
 PPTBool *PPParser::parseBool(PPParserSource &source, char start_ch)
 {
     char ch = start_ch;
@@ -596,7 +597,7 @@ bool isKindOfXRefIndirectObjType(PPToken *token)
     }
     PPTIndirectObj *indir = (PPTIndirectObj *)token;
     PPTDictionary *dict = indir->firstDictionary();
-    PPTName *type = (PPTName *)dict->valueObjectForKey("Type");
+    PPTName *type = (PPTName *)dict->ValueObjectForKey("Type");
     if (type != NULL && *type->_name == "XRef") {
         return true;
     }
@@ -762,7 +763,7 @@ bool PPParser::ParseSource(PPParserSource &source, vector<PPToken *> &token_list
         else if(curstr.length() == 6 && curstr == "stream") {
             int cnt = (int)token_list.size();
             PPTDictionary *dict = (PPTDictionary *)token_list[cnt-1];
-            PPToken *val_obj = (PPToken *)dict->valueObjectForKey("Length");
+            PPToken *val_obj = (PPToken *)dict->ValueObjectForKey("Length");
             if (val_obj) {
                 PPTNumber *len_obj = (PPTNumber *)val_obj;
                 long length = len_obj->longValue();
@@ -770,11 +771,11 @@ bool PPParser::ParseSource(PPParserSource &source, vector<PPToken *> &token_list
                 if (token_obj) {
                     PPTStream *stream = (PPTStream *)token_obj;
                     stream->_dict = dict;
-                    PPTName *filter = (PPTName *)dict->nameForKey("Filter");
+                    PPTName *filter = (PPTName *)dict->NameForKey("Filter");
                     bool stream_parsed = false;
                     if (filter != NULL && *filter->_name == "FlateDecode") {
                         stream->flateDecodeStream();
-                        PPTName *type = (PPTName *)dict->objectForKey("Type");
+                        PPTName *type = (PPTName *)dict->ObjectForKey("Type");
                         if (type != NULL && *type->_name == "ObjStm") {
                             if(stream->parseObjStm(token_list, this) == false) {
                                 return false;

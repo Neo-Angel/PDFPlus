@@ -30,18 +30,18 @@ void PPPath::checkBounds(float x, float y)
 	if (_bounds._origin._x == 0 && _bounds._size._width == 0) 
 		_bounds._origin._x = x;
 	else if (x < _bounds._origin._x)
-		_bounds.setX1(x);
+		_bounds.SetX1(x);
 
-	if (x > _bounds.getX2()) 
-		_bounds.setX2(x);
+	if (x > _bounds.X2()) 
+		_bounds.SetX2(x);
 
 	if (_bounds._origin._y == 0 && _bounds._size._height == 0) 
 		_bounds._origin._y = y;
 	else if (y < _bounds._origin._y)
-		_bounds.setY1(y);
+		_bounds.SetY1(y);
 
-	if (y > _bounds.getY2()) 
-		_bounds.setY2(y);
+	if (y > _bounds.Y2()) 
+		_bounds.SetY2(y);
 
 
 

@@ -81,7 +81,7 @@ PPTIndirectObj *PPTDictionary::SetRefTokenAndKey(PPToken *token, string key, int
 	return obj;
 }
 
-PPToken *PPTDictionary::objectForKey(string &keyname)
+PPToken *PPTDictionary::ObjectForKey(string &keyname)
 {
     PPToken *ret_token = _dict[keyname];
     if (ret_token == NULL) {
@@ -90,7 +90,7 @@ PPToken *PPTDictionary::objectForKey(string &keyname)
     return ret_token;
 }
 
-PPToken *PPTDictionary::objectForKey(const char *keyname)
+PPToken *PPTDictionary::ObjectForKey(const char *keyname)
 {
 	string key(keyname);
     PPToken *ret_token = _dict[key];
@@ -100,7 +100,7 @@ PPToken *PPTDictionary::objectForKey(const char *keyname)
     return ret_token;
 }
 
-PPTName *PPTDictionary::nameForKey(const char *keyname)
+PPTName *PPTDictionary::NameForKey(const char *keyname)
 {
     PPTName *ret_name = (PPTName *)_dict[keyname];
     if (ret_name == NULL) {
@@ -118,7 +118,7 @@ PPTName *PPTDictionary::nameForKey(const char *keyname)
     return ret_name;
 }
 
-PPTIndirectObj *PPTDictionary::indirectObjectForKey(string &keyname)
+PPTIndirectObj *PPTDictionary::IndirectObjectForKey(string &keyname)
 {
     PPToken *ret = _dict[keyname];
     if (ret) {
@@ -134,7 +134,7 @@ PPTIndirectObj *PPTDictionary::indirectObjectForKey(string &keyname)
     return NULL; //(PPTIndirectObj *)ret;
 }
 
-PPToken *PPTDictionary::valueObjectForKey(string &keyname)
+PPToken *PPTDictionary::ValueObjectForKey(string &keyname)
 {
     PPToken *ret = _dict[keyname];
     if (ret != NULL && ret->ClassType() == PPTN_INDIRECTREF) {

@@ -62,37 +62,22 @@ public:
 		_size._width = w; 
 		_size._height = h;
 	}
-	inline float getX1(){return _origin._x;}
-	inline float getY1(){return _origin._y;}
-	inline float getX2(){return (_origin._x + _size._width);}
-	inline float getY2(){return (_origin._y + _size._height);}
-	inline float GetX1(){return _origin._x;}
-	inline float GetY1(){return _origin._y;}
-	inline float GetX2(){return (_origin._x + _size._width);}
-	inline float GetY2(){return (_origin._y + _size._height);}
-	inline float x1(){return getX1();}
-	inline float y1(){return getY1();}
-	inline float x2(){return getX2();}
-	inline float y2(){return getY2();}
+	inline float X1(){return _origin._x;}
+	inline float Y1(){return _origin._y;}
+	inline float X2(){return (_origin._x + _size._width);}
+	inline float Y2(){return (_origin._y + _size._height);}
 
-	inline void setX1(float x) {
-		_size._width = getX2() - x;
+	inline void SetX1(float x) {
+		_size._width = X2() - x;
 		_origin._x = x;
 	}
-	inline void setY1(float y) {
-		_size._height = getY2() - y;
+	inline void SetY1(float y) {
+		_size._height = Y2() - y;
 		_origin._y = y;
 	}
-	inline void setX2(float x) {_size._width = (x - _origin._x);}
-	inline void setY2(float y) {_size._height = (y - _origin._y);}
+	inline void SetX2(float x) {_size._width = (x - _origin._x);}
+	inline void SetY2(float y) {_size._height = (y - _origin._y);}
 
-	inline void SetX1(float x) {setX1(x);}
-	inline void SetY1(float y) {setY1(y);}
-	inline void SetX2(float x) {setX2(x);}
-	inline void SetY2(float y) {setY2(y);}
-
-	inline float width(){return _size._width;}
-	inline float height(){return _size._height;}
 	inline float Width(){return _size._width;}
 	inline float Height(){return _size._height;}
 
@@ -112,26 +97,26 @@ public:
 class PTRect : PPBase {  // 네개의 좌표값만으로 구성된 단층형 구조
 
 public:
-	float x1;
-	float y1;
-	float x2;
-	float y2;
+	float _x1;
+	float _y1;
+	float _x2;
+	float _y2;
 
-	inline PTRect(float _x1, float _y1, float _x2, float _y2) {
-		x1 = _x1; y1 = _y1; x2 = _x2; y2 = _y2; 
+	inline PTRect(float x1, float y1, float x2, float y2) {
+		_x1 = x1; _y1 = y1; _x2 = x2; _y2 = y2; 
 	}
 	inline PTRect(PPRect pprect) {
-		x1 = pprect.GetX1(); 
-		y1 = pprect.GetY1();
-		x2 = pprect.GetX2();
-		y2 = pprect.GetY2();
+		_x1 = pprect.X1(); 
+		_y1 = pprect.Y1();
+		_x2 = pprect.X2();
+		_y2 = pprect.Y2();
 	}
 
 };
 class PPTArray;
 
 // {x, y, w, h} 순으로 배열에서 가져와 PPRect를 만들어 리턴
-PPRect rectFromArray(PPTArray *array);
+PPRect RectFromArray(PPTArray *array);
 
 //rect를  {x, y, w, h} 순으로 배열에 저장함
 void SetRectToArray(PPRect rect, PPTArray *array);

@@ -180,7 +180,7 @@ PPToken *PPElement::GetResource(const char *rsc_type)
 	}
 
 	string rsc_key = ResourceKeyFor(rsc_type);
-    res_ref = (PPTIndirectRef *)res_dict->objectForKey(rsc_key);
+    res_ref = (PPTIndirectRef *)res_dict->ObjectForKey(rsc_key);
     if (!res_ref) {
         cout << "Resource IndirectRef not found..." << PP_ENDL;
         return NULL;

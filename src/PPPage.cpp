@@ -47,12 +47,12 @@ void PPPage::LoadDictionary(PPTDictionary *page_dict)
     _formDict = page_dict;
 	_context->ptMatrix()->Rotate(rotate());
 
-    _resourceDict = (PPTDictionary *)_formDict->valueObjectForKey("Resources");
+    _resourceDict = (PPTDictionary *)_formDict->ValueObjectForKey("Resources");
 
 	// 읽어들인 리소스들을 Document에 저장한다.
 	StoreResources();// 아직 기능이 없음
 
-    PPTDictionary *font_dict = (PPTDictionary *)_resourceDict->valueObjectForKey("Font");
+    PPTDictionary *font_dict = (PPTDictionary *)_resourceDict->ValueObjectForKey("Font");
     if (font_dict) {
         map <string, PPToken *> &dict = font_dict->_dict;
        
@@ -68,7 +68,7 @@ void PPPage::LoadDictionary(PPTDictionary *page_dict)
         }
     }
 
-    PPTDictionary *xobject_dict = (PPTDictionary *)_resourceDict->valueObjectForKey("XObject");
+    PPTDictionary *xobject_dict = (PPTDictionary *)_resourceDict->ValueObjectForKey("XObject");
     if (xobject_dict) {
         map <string, PPToken *> &dict = xobject_dict->_dict;
         map <string, PPToken *> ::iterator it_token_objs;
@@ -158,9 +158,9 @@ void PPPage::AddResource(PPToken *res, char *type, char *key)
 PPRect PPPage::rectForKey(string key)
 {
     PPRect rect;
-    PPTArray *num_list = (PPTArray *)_formDict->objectForKey(key);
+    PPTArray *num_list = (PPTArray *)_formDict->ObjectForKey(key);
     if (num_list) {
-        return rectFromArray(num_list);
+        return RectFromArray(num_list);
     }
     return rect;
 }
@@ -175,7 +175,7 @@ void PPPage::setRectForKey(PPRect rect, string key)
 int PPPage::intValueForKey(string key)
 {
     int ret = 0;
-    PPTNumber *num = (PPTNumber *)_formDict->objectForKey(key);
+    PPTNumber *num = (PPTNumber *)_formDict->ObjectForKey(key);
     if (num) {
         return num->intValue();
     }
@@ -185,7 +185,7 @@ int PPPage::intValueForKey(string key)
 float PPPage::floatValueForKey(string key)
 {
     float ret = 0;
-    PPTNumber *num = (PPTNumber *)_formDict->objectForKey(key);
+    PPTNumber *num = (PPTNumber *)_formDict->ObjectForKey(key);
     if (num) {
         return num->floatValue();
     }
@@ -194,7 +194,7 @@ float PPPage::floatValueForKey(string key)
 
 bool PPPage::hasValueWithKey(string key)
 {
-    if(_formDict->objectForKey(key))
+    if(_formDict->ObjectForKey(key))
         return true;
     return false;
 }
@@ -203,7 +203,7 @@ PPTStream *PPPage::contentAt(size_t i)
 {
     PPTStream *ret_stream = NULL;
     
-    PPToken *contents = _formDict->objectForKey(PPKN_CONTENTS);
+    PPToken *contents = _formDict->ObjectForKey(PPKN_CONTENTS);
     if (contents->ClassType() == PPTN_ARRAY) {
         PPTArray *array = (PPTArray *)contents;
         if (array->size() > i) {
@@ -221,7 +221,7 @@ PPTStream *PPPage::contentAt(size_t i)
 
 size_t PPPage::contentsCount()
 {
-    PPToken *contents = _formDict->objectForKey(PPKN_CONTENTS);
+    PPToken *contents = _formDict->ObjectForKey(PPKN_CONTENTS);
     if (contents->ClassType() == PPTN_ARRAY) {
         PPTArray *array = (PPTArray *)contents;
         return array->size();
@@ -333,9 +333,9 @@ string PPPage::elementXmlString(int level)
     string retstr;
     ostringstream ostr;
     ostr << PPTabStr(level) << "<Page>\xa";
-    size_t i, icnt = numberOfElements();
+    size_t i, icnt = NumberOfElements();
     for (i= 0; i<icnt; i++) {
-        PPElement *element = elementAtIndex(i);
+        PPElement *element = ElementAtIndex(i);
         ostr << element->XMLString(level+1);
     }
     ostr << PPTabStr(level) << "</Page>\xa";

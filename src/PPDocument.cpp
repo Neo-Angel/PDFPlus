@@ -139,7 +139,7 @@ int PPDocument::buildDocument()
             PPTTrailer *trailer = (PPTTrailer *)token;//현재 트레일러
             PPTDictionary *trailer_dict = trailer->getDictionary();
             if (trailer_dict) {
-                PPTNumber *prev_num = (PPTNumber *)trailer_dict->objectForKey("Prev");
+                PPTNumber *prev_num = (PPTNumber *)trailer_dict->ObjectForKey("Prev");
                 if (prev_num != NULL) { // 이전 트레일러가 있으면
                     PPToken *token = _filePtDict[prev_num->intValue()];
                     if (token == NULL) {
@@ -180,14 +180,14 @@ int PPDocument::buildDocument()
     if (info_obj != NULL) {
         PPTDictionary *info_dict = info_obj->firstDictionary();
         if (info_dict != NULL) {
-            _author =  (PPTString *)info_dict->valueObjectForKey("Author");
-            _creator =  (PPTString *)info_dict->valueObjectForKey("Creator");
-            _creationDate =  (PPTString *)info_dict->valueObjectForKey("CreationDate");
-            _modDate =  (PPTString *)info_dict->valueObjectForKey("ModDate");
-            _keywords =  (PPTString *)info_dict->valueObjectForKey("Keywords");
-            _producer =  (PPTString *)info_dict->valueObjectForKey("Producer");
-            _subject =  (PPTString *)info_dict->valueObjectForKey("Subject");
-            _title =  (PPTString *)info_dict->valueObjectForKey("Title");
+            _author =  (PPTString *)info_dict->ValueObjectForKey("Author");
+            _creator =  (PPTString *)info_dict->ValueObjectForKey("Creator");
+            _creationDate =  (PPTString *)info_dict->ValueObjectForKey("CreationDate");
+            _modDate =  (PPTString *)info_dict->ValueObjectForKey("ModDate");
+            _keywords =  (PPTString *)info_dict->ValueObjectForKey("Keywords");
+            _producer =  (PPTString *)info_dict->ValueObjectForKey("Producer");
+            _subject =  (PPTString *)info_dict->ValueObjectForKey("Subject");
+            _title =  (PPTString *)info_dict->ValueObjectForKey("Title");
         }
     }
     
@@ -201,21 +201,21 @@ int PPDocument::buildDocument()
         return -3;
     }
 
-    _version = (PPTName *)root_dict->valueObjectForKey("Version");
-    _pageLayout = (PPTName *)root_dict->valueObjectForKey("PageLayout");
-    _pageMode = (PPTName *)root_dict->valueObjectForKey("PageMode");
+    _version = (PPTName *)root_dict->ValueObjectForKey("Version");
+    _pageLayout = (PPTName *)root_dict->ValueObjectForKey("PageLayout");
+    _pageMode = (PPTName *)root_dict->ValueObjectForKey("PageMode");
 
 	// Optional Contens 관련 데이터들을 읽어옴
-    _OCProperties = (PPTDictionary *)root_dict->valueObjectForKey("OCProperties");
+    _OCProperties = (PPTDictionary *)root_dict->ValueObjectForKey("OCProperties");
     PPTIndirectObj *pages = (PPTIndirectObj *)root_dict->IndirectObjectForKey("Pages");
     PPTDictionary *pages_dict = pages->firstDictionary();
 	if(_OCProperties) {
-		PPTDictionary *d_dict = (PPTDictionary *)_OCProperties->valueObjectForKey("D");
+		PPTDictionary *d_dict = (PPTDictionary *)_OCProperties->ValueObjectForKey("D");
 		if(d_dict) {
-			_layerOrders = (PPTArray *)d_dict->valueObjectForKey("Order");
-			_layersOn = (PPTArray *)d_dict->valueObjectForKey("ON");
+			_layerOrders = (PPTArray *)d_dict->ValueObjectForKey("Order");
+			_layersOn = (PPTArray *)d_dict->ValueObjectForKey("ON");
 		}
-		_OCGs = (PPTArray *)_OCProperties->valueObjectForKey("OCGs");
+		_OCGs = (PPTArray *)_OCProperties->ValueObjectForKey("OCGs");
 	}
 
 	// 페이지들을 읽어들임
@@ -233,13 +233,13 @@ bool PPDocument::IsBuiltDocument()
 // 트리형식으로 분포된 모든 페이지들을 재귀호출 방식으로 읽어들임
 void PPDocument::collectPages(PPTDictionary *pages_dict)
 {
-    PPTArray *page_list = (PPTArray *)pages_dict->objectForKey("Kids");
+    PPTArray *page_list = (PPTArray *)pages_dict->ObjectForKey("Kids");
     size_t i, icnt = page_list->_array.size();
     for (i=0; i<icnt; i++) {
         PPTIndirectRef *ref_obj = (PPTIndirectRef *)page_list->_array.at(i);
         PPTIndirectObj *page_obj = ref_obj->targetObject();
         PPTDictionary *child_dict = page_obj->firstDictionary();
-        PPTName *type = (PPTName *)child_dict->objectForKey("Type");
+        PPTName *type = (PPTName *)child_dict->ObjectForKey("Type");
         if (type && *type->_name == "Page") {
             makePageWith(child_dict);
         }
@@ -279,7 +279,7 @@ int PPDocument::buildElements()
     for (i=0; i<icnt; i++) {
         PPPage *page = _pages[i];
 		// 페이지 내의 드로윙 코드들을 정리해 Element 리스트로 만든다.
-        page->buildElements();
+        page->BuildElements();
     }
 
     _state = PPDS_Built_Elements;
@@ -301,15 +301,15 @@ void PPDocument::decodeStreams(vector<PPToken *> &token_list)
 	for(i=0;i<icnt;i++) {
 		PPTStream *stream = (PPTStream *)_stream_list[i];
 		PPTDictionary *dict = stream->_dict;
-		PPToken *val_obj = (PPToken *)dict->valueObjectForKey("Length");
+		PPToken *val_obj = (PPToken *)dict->ValueObjectForKey("Length");
 		if (val_obj) {
             PPTNumber *len_obj = (PPTNumber *)val_obj;
             long length = len_obj->longValue();
-            PPTName *filter = (PPTName *)dict->nameForKey("Filter");
+            PPTName *filter = (PPTName *)dict->NameForKey("Filter");
 			// FlateDecode 방식들만 디코딩 함.
             if (filter != NULL && *filter->_name == "FlateDecode") {
                 stream->flateDecodeStream();
-                PPTName *type = (PPTName *)dict->objectForKey("Type");
+                PPTName *type = (PPTName *)dict->ObjectForKey("Type");
                 if (type != NULL && *type->_name == "ObjStm") {
 					// 디코딩 한 스트림의 타입이 '오브젝 스트림'이면 도큐먼트의 _parser를 이용해 파싱을 함 
 					if(stream->parseObjStm(token_list, &_parser) == false) {
@@ -425,7 +425,7 @@ PPTArray *PPDocument::PageArray()
 {
     PPTDictionary *pages_dict = PagesDictionary();
 
-    PPTArray *page_list = (PPTArray *)pages_dict->objectForKey("Kids");
+    PPTArray *page_list = (PPTArray *)pages_dict->ObjectForKey("Kids");
 	return page_list;
 }
 
@@ -723,10 +723,10 @@ int PPDocument::Save(char *out_path)
 							indir_obj->AddRefObj(indir_ref);
                     }
                     else {
-                        PPTString *cdate = (PPTString *)dict->objectForKey("CreationDate");
-                        PPTString *mdate = (PPTString *)dict->objectForKey("ModDate");
-                        PPTString *producer = (PPTString *)dict->objectForKey("Producer");
-						PPTString *creator = (PPTString *)dict->objectForKey("Creator");
+                        PPTString *cdate = (PPTString *)dict->ObjectForKey("CreationDate");
+                        PPTString *mdate = (PPTString *)dict->ObjectForKey("ModDate");
+                        PPTString *producer = (PPTString *)dict->ObjectForKey("Producer");
+						PPTString *creator = (PPTString *)dict->ObjectForKey("Creator");
                         if(cdate || mdate || producer || creator) {
                             PPTIndirectRef *indir_ref = new PPTIndirectRef(this, indir_obj->_objNum, indir_obj->_genNum);
 							// master_trailer에 InfoObject 를 지정.
@@ -866,7 +866,7 @@ PPTName *PPDocument::AddFormObject(PPPage *page)
 	vector <PPToken *> token_list;
 	PPTDictionary *dict = new PPTDictionary(this);
 	// BBox : pages MediaBox
-	PPTArray *src_rect_arr = (PPTArray *)page->_formDict->objectForKey("MediaBox");
+	PPTArray *src_rect_arr = (PPTArray *)page->_formDict->ObjectForKey("MediaBox");
 	if(src_rect_arr) {
 		PPTArray *rect_array = (PPTArray *)src_rect_arr->Copy();
 		dict->setTokenAndKey(rect_array, "BBox");
@@ -885,7 +885,7 @@ PPTName *PPDocument::AddFormObject(PPPage *page)
 	matrix->AddToken(0);
 	dict->setTokenAndKey((PPToken *)matrix, "Matrix");
 	// Resources : Ref (ColorSpace, ExtGState, Properties, Shading)
-	PPToken *pg_rcs = page->_formDict->objectForKey("Resource");
+	PPToken *pg_rcs = page->_formDict->ObjectForKey("Resource");
 	if(pg_rcs) {
 		PPToken *resource = (PPToken *)pg_rcs->Copy();
 		dict->setTokenAndKey(resource, "Resource");
@@ -984,7 +984,7 @@ void PPDocument::SaveXObjectsToFolder(const char *folder) // Currently just Imag
         PPTIndirectObj *indir_obj = (PPTIndirectObj *)it_token_objs->second;
         if (indir_obj) {
             PPTDictionary *obj_dict = indir_obj->firstDictionary();
-            PPTName *filter = (PPTName *)obj_dict->objectForKey("Filter");
+            PPTName *filter = (PPTName *)obj_dict->ObjectForKey("Filter");
             cout << "Filter = " << *filter->_name << PP_ENDL;
             if (*filter->_name == "DCTDecode") {
                 PPTStream *stream = indir_obj->stream();
@@ -1086,6 +1086,8 @@ PPTDictionary *PPDocument::LayerDictForName(string name)
 	return NULL;
 }
 
+// 이름이 name인 layer_dict를 찾음.
+// 다른말로, "Name" 키을 value 값이 name과 같은 layer_dict를 찾음.
 PPTIndirectObj *PPDocument::LayerObjForName(string name) 
 {
 	int i, icnt = this->NumberOfLayers();
@@ -1109,7 +1111,7 @@ PPLayer *PPDocument::NewLayerForName(string name)
 }
 
 void PPDocument::BuildOCProperties() {
-    //_OCProperties = (PPTDictionary *)root_dict->valueObjectForKey("OCProperties");
+    //_OCProperties = (PPTDictionary *)root_dict->ValueObjectForKey("OCProperties");
 
 	_OCProperties = new PPTDictionary();
 	PPTDictionary *d_dict = new PPTDictionary();
@@ -1305,7 +1307,7 @@ PPToken *PPDocument::ObjectAtFilePosition(unsigned long long pos)
 
 // 페이지 순서대로 Token 기반의 XML 스트링을 만든다.
 //////////////////////////////////////////////////////////////////////////////
-string PPDocument::xobjectsXMLString(int level)
+string PPDocument::XObjectsXMLString(int level)
 {
     string retstr;
     ostringstream ostr;
@@ -1393,7 +1395,7 @@ string PPDocument::XMLString(int level)
     ostr << PPTabStr(level) << "</Pages>\xa";
 
     ostr << PPTabStr(level) << "<XObjects>\xa";
-    ostr << xobjectsXMLString(level+1);
+    ostr << XObjectsXMLString(level+1);
     ostr << PPTabStr(level) << "</XObjects>\xa";
 
     ostr << PPTabStr(level) << "<Fonts>\xa";

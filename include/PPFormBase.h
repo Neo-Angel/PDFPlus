@@ -31,9 +31,9 @@ public:
 	PPTName *_form_key;
 
     PPDocument *_document;
-    PPCommandParser _graphicParser;
+    PPCommandParser _graphicParser;  // form 마다 있는 그래픽 스트림을 파싱하기 위함.
 
-	size_t _cur_element_idx;
+	size_t _cur_element_idx; // next() 함수용. (현재 Layer)->_elements 내의 현재 인덱스 위치.
     PPTIndirectObj *_indirObj;  // XObject
 
 	// ExtGState, ColorSpace, Pattern, Shading, XObject, Font, ProcSet, Properties 
@@ -42,7 +42,12 @@ public:
 
     vector <PPTCommand *> _commands;
 
+	// _layers에는 최소한 하나의 레이어가 존재해야 한다.
 	vector <PPLayer *> _layers;
+
+	// _layers에 두개 이상의 레이어가 있을 경우 사용자(개발자)는 현재 레이어를 지정할 수 있다.
+	// AddElement등의 함수는 이 _curLayer에 적용된다.
+	// _curLayer 가 null일 경우 첫번째 레이어가 
 	PPLayer *_curLayer;
     
 public:
@@ -52,41 +57,47 @@ public:
 
 	~PPFormBase();
 
-	PPParser *documentParser();
-    virtual int buildElements();
+	PPParser *DocumentParser();
+
+	// virtual methods
+    virtual int BuildElements();
 	virtual PPToken *ResourceForKey(int obj_num);
 	virtual PPToken *WriteResource(PPToken *rcs, int obj_num);
 
+	// Layer Related Methods
 	PPLayer *AddLayerWithProperties(string property_name);
 	PPLayer *AddLayer(string layer_name);
 	PPLayer *LayerForName(string name, int *idx = NULL);
+	PPLayer *BeginLayer(char *layerName);
+	void EndLayer();
+	void BeginReadLayer(char *layer_name);
+	void ReorderLayer(int to_idx, int from_idx);
+	void MergeLayer(string tar, string src);
 
-    void addElement(PPElement *element);
-	void AddElement(PPElement *element) {addElement(element);}
-//	void AddXObj(PPTIndirectObj *xobj);
+	// Element Related Methods
+    void AddElement(PPElement *element);
+	void WriteElement(PPElement *element);
+	size_t NumberOfElements();
+	PPElement *ElementAtIndex(int idx);
+
 	void AddXObjRef(PPTIndirectObj *xobj, string key);
 	void AddFormObj(PPFormBase *form_obj);
-	void RemoveElementAtIndex(int idx);
 
-	size_t numberOfElements();
-	PPElement *elementAtIndex(int idx);
-
-	void initCurrentIndex() {_cur_element_idx = 0;}
+	void ResetCurrentIndex() {_cur_element_idx = 0;}
 	PPElement *next(); PPElement *Next() {return next();}
-	PPElement *first() {initCurrentIndex(); return next();} 
+	PPElement *first() {ResetCurrentIndex(); return next();} 
 
-	void writeElement(PPElement *element);
-	void WriteElement(PPElement *element) {writeElement(element);}
-	int getObjNum(){return _indirObj != NULL ? _indirObj->getObjNum() : 0;}
-	int GetObjNum(){return _indirObj != NULL ? _indirObj->getObjNum() : 0;}
-    int GetXObjNumOf(string name);
-	PPTIndirectObj *GetXObject();
+	int ObjectNumber(){return _indirObj != NULL ? _indirObj->getObjNum() : 0;}
+    int XObjectNumberFor(string name);
+	PPTIndirectObj *XObject();
+
+	// Resources Related Methods
 	PPTIndirectRef *ResourceForKey(string key);
 	PPTDictionary *ResourceDictForKey(string key);
 	PPTIndirectObj *ResourceObjForName(string name, string resource_type);
 	string NameFromResourceObj(PPTIndirectObj *obj, string resource_type);
 
-	bool HasElements() {return (numberOfElements() > 0 ? true : false);}
+	bool HasElements() {return (NumberOfElements() > 0 ? true : false);}
 
 	PPContext *ptContext() {return _context;}
 	void SetValueToGState(PPTCommand *cmd, PPContext &gcontext);
@@ -95,11 +106,8 @@ public:
 	PPFormBase *NewFormObj(PPFormBase *form_obj); //CutOpt: Additional.cpp 에서 사용중 
 
 	string SubtypeFor(string name);
-	PPLayer *BeginLayer(char *layerName);
-	void EndLayer();
-	void BeginReadLayer(char *layer_name);
-	void ReorderLayer(int to_idx, int from_idx);
-	void MergeLayer(string tar, string src);
+
+	// Layer Related Methods
 
 };
 

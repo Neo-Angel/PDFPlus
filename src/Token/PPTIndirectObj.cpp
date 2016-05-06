@@ -104,7 +104,7 @@ bool PPTIndirectObj::isObjStream()
     if (dict->ClassType() != PPTN_DICTIONARY)
         return false;
     
-    PPTName *type = (PPTName *)dict->objectForKey("Type");
+    PPTName *type = (PPTName *)dict->ObjectForKey("Type");
     if (type != NULL && *type->_name == "ObjStm") {
         return true;
     }
@@ -117,7 +117,7 @@ bool PPTIndirectObj::isStream()
     if (dict->ClassType() != PPTN_DICTIONARY)
         return false;
     
-    PPTName *filter = (PPTName *)dict->objectForKey("Filter");
+    PPTName *filter = (PPTName *)dict->ObjectForKey("Filter");
     if (filter != NULL && *filter->_name == "FlateDecode") {
         return true;
     }

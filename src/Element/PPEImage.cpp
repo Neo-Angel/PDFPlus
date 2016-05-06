@@ -129,7 +129,7 @@ void PPEImage::willAddToParent(PPFormBase *form)
 	else if(xobj_ref->ClassType() == PPTN_DICTIONARY) {
 		xobj_dict = (PPTDictionary *)xobj_ref;
 	}
-    xobj_ref = (PPTIndirectRef *)xobj_dict->objectForKey(_name);
+    xobj_ref = (PPTIndirectRef *)xobj_dict->ObjectForKey(_name);
     if (!xobj_ref) {
         cout << "Shading IndirectRef not found..." << PP_ENDL;
         return;

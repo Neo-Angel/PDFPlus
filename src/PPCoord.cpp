@@ -21,7 +21,7 @@
 ////////////////////////////
 
 // {x, y, w, h} 순으로 배열에서 가져와 PPRect를 만들어 리턴
-PPRect rectFromArray(PPTArray *array)
+PPRect RectFromArray(PPTArray *array)
 {
     PPRect ret;
     if (array->_array.size() == 4) {
@@ -42,13 +42,13 @@ PPRect rectFromArray(PPTArray *array)
 void SetRectToArray(PPRect rect, PPTArray *array)
 {
 	PPTNumber *num;
-	num = new PPTNumber(array->_document, rect.x1());
+	num = new PPTNumber(array->_document, rect.X1());
 	array->_array.push_back(num);
-	num = new PPTNumber(array->_document, rect.y1());
+	num = new PPTNumber(array->_document, rect.Y1());
 	array->_array.push_back(num);
-	num = new PPTNumber(array->_document, rect.width());
+	num = new PPTNumber(array->_document, rect.Width());
 	array->_array.push_back(num);
-	num = new PPTNumber(array->_document, rect.height());
+	num = new PPTNumber(array->_document, rect.Height());
 	array->_array.push_back(num);
 }
 
@@ -106,35 +106,35 @@ PPRect::PPRect(float x, float y, float w, float h)
 
 PPRect::PPRect(PTRect ptrect) 
 {
-		_origin._x = ptrect.x1;
-		_origin._y = ptrect.y1;
-		_size._width = abs(ptrect.x2 - ptrect.x1);
-		_size._height = abs(ptrect.y2 - ptrect.y1);
+		_origin._x = ptrect._x1;
+		_origin._y = ptrect._y1;
+		_size._width = abs(ptrect._x2 - ptrect._x1);
+		_size._height = abs(ptrect._y2 - ptrect._y1);
 }
 
 // this(PPRect)와 파라미터 rect가 겹치는 영역을 PPRect로 리턴
 PPRect PPRect::IntersectRect(PPRect rect)
 {
 	PPRect ret_rect;
-	if(x1() < rect.x1())
-		ret_rect.setX1(rect.x1());
+	if(X1() < rect.X1())
+		ret_rect.SetX1(rect.X1());
 	else
-		ret_rect.setX1(x1());
+		ret_rect.SetX1(X1());
 
-	if(x2() > rect.x2())
-		ret_rect.setX2(rect.x2());
+	if(X2() > rect.X2())
+		ret_rect.SetX2(rect.X2());
 	else 
-		ret_rect.setX2(x2());
+		ret_rect.SetX2(X2());
 
-	if(y1() < rect.y1())
-		ret_rect.setY1(rect.y1());
+	if(Y1() < rect.Y1())
+		ret_rect.SetY1(rect.Y1());
 	else
-		ret_rect.setY1(y1());
+		ret_rect.SetY1(Y1());
 
-	if(y2() > rect.y2())
-		ret_rect.setY2(rect.y2());
+	if(Y2() > rect.Y2())
+		ret_rect.SetY2(rect.Y2());
 	else 
-		ret_rect.setY2(y2());
+		ret_rect.SetY2(Y2());
 
 	return ret_rect;
 }
@@ -142,27 +142,27 @@ PPRect PPRect::IntersectRect(PPRect rect)
 // 클래스 메소드로 rect1와 rect2가 겹치는 부분이 있으면 true 리턴
 bool PPRect::IntersectsRect(PPRect rect1, PPRect rect2)
 {
-	if(rect1.x1() < rect2.x1())
-		setX1(rect2.x1());
+	if(rect1.X1() < rect2.X1())
+		SetX1(rect2.X1());
 	else
-		setX1(rect1.x1());
+		SetX1(rect1.X1());
 
-	if(rect1.x2() > rect2.x2())
-		setX2(rect2.x2());
+	if(rect1.X2() > rect2.X2())
+		SetX2(rect2.X2());
 	else 
-		setX2(rect1.x2());
+		SetX2(rect1.X2());
 
-	if(rect1.y1() < rect2.y1())
-		setY1(rect2.y1());
+	if(rect1.Y1() < rect2.Y1())
+		SetY1(rect2.Y1());
 	else
-		setY1(rect1.y1());
+		SetY1(rect1.Y1());
 
-	if(rect1.y2() > rect2.y2())
-		setY2(rect2.y2());
+	if(rect1.Y2() > rect2.Y2())
+		SetY2(rect2.Y2());
 	else 
-		setY2(rect1.y2());
+		SetY2(rect1.Y2());
 
-	if(width() > 0 && height() > 0)
+	if(Width() > 0 && Height() > 0)
 		return true;
 	return false;
 }
@@ -171,7 +171,7 @@ bool PPRect::IntersectsRect(PPRect rect1, PPRect rect2)
 bool PPRect::IntersectsRect(PPRect rect)
 {
 	PPRect res_rect = IntersectRect(rect);
-	if(res_rect.width() > 0 && res_rect.height() > 0)
+	if(res_rect.Width() > 0 && res_rect.Height() > 0)
 		return true;
 	return false;
 }

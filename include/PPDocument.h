@@ -201,7 +201,7 @@ public:
     string 									RawDataXML();
     string 									DocumentXML();
     string 									ElementsXML();
-    string									xobjectsXMLString(int level);
+    string									XObjectsXMLString(int level);
     string									fontsXMLString(int level);
     
 

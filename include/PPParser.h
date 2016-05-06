@@ -28,6 +28,7 @@ typedef enum {
     
 }PPParserReturn;
 
+// PPParserSource
 // PPParser 를 이용해 파싱하는데 있어서 각각의 용도(소스의 특성)에 맞게 
 // 코드를 핸들링 할 수 있도록 함. PPParser에서는 이 클래스의 인스턴스를
 // 이용해 파싱에 필요한 코드들을 공급받음.
@@ -64,7 +65,7 @@ class PPTComment;
 // 파싱하거나 스트림등의 지엽적인 부분들을 파싱할 수 있음.
 class PPParser : PPBase {
 	
-protected:
+protected:									/* 각 타입별 파싱 함수들 */
     PPTBool									*parseBool(PPParserSource &source, char start_ch);
 	PPTNumber								*parseNumber(PPParserSource &source, char start_ch);
     PPTString								*parseHexString(PPParserSource &source);
@@ -82,8 +83,9 @@ public:
 
 public:
 											~PPParser(); // 소멸자		
-	// 메인 파서 함수. 
-	// source에서 데이터를 읽어들여 파싱한 후 token_list에 Array로 담아 냄.
+
+											// 메인 파서 함수. 
+											// source에서 데이터를 읽어들여 파싱한 후 token_list에 Array로 담아 냄.
     bool									ParseSource(PPParserSource &source, vector<PPToken *> &token_list);  // start parsing
 };
 

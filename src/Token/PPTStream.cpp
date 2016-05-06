@@ -152,12 +152,12 @@ string hexStr(unsigned char ch)
 string PPTStream::XMLString(int level)
 {
     if (_decoded == false) {
-        PPToken *val_obj = (PPToken *)_dict->valueObjectForKey("Length");
+        PPToken *val_obj = (PPToken *)_dict->ValueObjectForKey("Length");
         if (val_obj) {
             PPTNumber *len_obj = (PPTNumber *)val_obj;
             unsigned long length = len_obj->longValue();
             _streamSize = length;
-            PPTName *filter = (PPTName *)_dict->objectForKey("Filter");
+            PPTName *filter = (PPTName *)_dict->ObjectForKey("Filter");
             if (filter != NULL && *filter->_name == "FlateDecode") {
                 flateDecodeStream();
             }
@@ -167,7 +167,7 @@ string PPTStream::XMLString(int level)
     retstr += PPTabStr(level) + "<Stream><![CDATA[";
     //    retstr += PPTabStr(level) + "<String><![CDATA[" +*_string + "]]></String>\xa";
     
-    PPTName *filter = (PPTName *)_dict->objectForKey("Filter");
+    PPTName *filter = (PPTName *)_dict->ObjectForKey("Filter");
     if (_decoded && filter && *filter->_name == "FlateDecode") {
         retstr.append(_streamData, _streamSize);
         //        retstr += _streamData;
@@ -205,7 +205,7 @@ string PPTStream::XMLString(int level)
 string PPTStream::makePDFString(unsigned long &length)
 {
     string retstr = "stream\xa";
-    PPTName *filter = (PPTName *)_dict->objectForKey("Filter");
+    PPTName *filter = (PPTName *)_dict->ObjectForKey("Filter");
     if (_decoded && filter && *filter->_name == "FlateDecode") {
         char *strm_buf;
         length = flateEncodeStream(&strm_buf);
@@ -436,8 +436,8 @@ void PPTStream::writeTo(const char *tar_path)
 
 bool PPTStream::parseObjStm(vector<PPToken *> &token_list, PPParser *parser)
 {
-    PPTNumber *first_num = (PPTNumber *)_dict->valueObjectForKey("First");
-    PPTNumber *cnt_num = (PPTNumber *)_dict->valueObjectForKey("N");
+    PPTNumber *first_num = (PPTNumber *)_dict->ValueObjectForKey("First");
+    PPTNumber *cnt_num = (PPTNumber *)_dict->ValueObjectForKey("N");
     int cnt = cnt_num->intValue();
     int first = first_num->intValue();
     char *nums_cstr = new char[first+1];

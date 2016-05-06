@@ -36,7 +36,7 @@ public:
 //    void setStream(PPTStream *stream);
     string makeCommandString();
     string XMLString(int level);
-	PPTIndirectObj *GetXObject();
+	PPTIndirectObj *XObject();
 	PPFormBase *GetFormObj();
 	PPElementType getType() {return PPET_FORM;}
 

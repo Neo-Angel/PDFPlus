@@ -27,18 +27,13 @@ public:
 	void SetStringAndKey(string name, string key);
 	void SetNameAndKey(string name, string key);
 	PPTIndirectObj *SetRefTokenAndKey(PPToken *token, string key, int obj_num);
-    PPToken *objectForKey(string &keyname);
-    PPToken *objectForKey(const char *keyname);
-	PPToken *ObjectForKey(const char *keyname){return objectForKey(keyname);}
-	PPToken *ObjectForKey(string keyname){return objectForKey(keyname);}
-	PPTName *nameForKey(const char *keyname);
-    PPTIndirectObj *indirectObjectForKey(string &keyname);
-    PPToken *valueObjectForKey(string &keyname);
-	PPToken *ValueObjectForKey(string &keyname){return valueObjectForKey(keyname);}
+    PPToken *ObjectForKey(string &keyname);
+    PPToken *ObjectForKey(const char *keyname);
+	PPTName *NameForKey(const char *keyname);
+    PPTIndirectObj *IndirectObjectForKey(string &keyname);
+    PPTIndirectObj *IndirectObjectForKey(const char *keyname){string str(keyname);return IndirectObjectForKey(str);}
+    PPToken *ValueObjectForKey(string &keyname);
 	PPToken *ValueObjectForKey(const char *keyname){string key(keyname); return ValueObjectForKey(key);}
-    PPTIndirectObj *indirectObjectForKey(const char *keyname){string str(keyname);return indirectObjectForKey(str);}
-	PPTIndirectObj *IndirectObjectForKey(const char *keyname){string str(keyname);return indirectObjectForKey(str);}
-    PPToken *valueObjectForKey(const char *keyname){string str(keyname);return valueObjectForKey(str);}
 
     string Description();
     string XMLString(int level);
