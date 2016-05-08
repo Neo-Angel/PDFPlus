@@ -38,19 +38,19 @@ PPPage::PPPage(PPPage *page)
 }
 
 // ????
-void PPPage::StoreResources()
-{
-}
+//void PPPage::StoreResources()
+//{
+//}
 
 void PPPage::LoadDictionary(PPTDictionary *page_dict)
 {
     _formDict = page_dict;
-	_context->ptMatrix()->Rotate(rotate());
+	_context->ptMatrix()->Rotate(Rotate());
 
     _resourceDict = (PPTDictionary *)_formDict->ValueObjectForKey("Resources");
 
 	// 읽어들인 리소스들을 Document에 저장한다.
-	StoreResources();// 아직 기능이 없음
+	//StoreResources();// 아직 기능이 없음
 
     PPTDictionary *font_dict = (PPTDictionary *)_resourceDict->ValueObjectForKey("Font");
     if (font_dict) {
@@ -84,9 +84,9 @@ void PPPage::LoadDictionary(PPTDictionary *page_dict)
         }
     }
 
-    size_t icnt = contentsCount();
+    size_t icnt = ContentsCount();
     for (size_t i=0; i<icnt; i++) {
-        PPTStream *stream = contentAt(i);
+        PPTStream *stream = ContentAt(i);
         if (!stream->_decodeFailed) {
             _graphicParser.ParseStream(*stream);
         }
@@ -118,7 +118,7 @@ void PPPage::WriteDictionary(PPTDictionary *page_dict) // -> PreBuildPDF
 }
 
 // 페이지의 내용을 스트림으로 빌드하고 페이지 정보를 정리한다.
-void PPPage::BuildPDF()
+void PPPage::BuildContents()
 {
 	PPTDictionary *stream_dict = new PPTDictionary(_document);
 
@@ -150,48 +150,14 @@ PPTDictionary *PPPage::ResourceDictForType(string type)
 	return NULL;
 }
 
+// Not Implemented  
 void PPPage::AddResource(PPToken *res, char *type, char *key)
 {
 
 }
 
-PPRect PPPage::rectForKey(string key)
-{
-    PPRect rect;
-    PPTArray *num_list = (PPTArray *)_formDict->ObjectForKey(key);
-    if (num_list) {
-        return RectFromArray(num_list);
-    }
-    return rect;
-}
-
-void PPPage::setRectForKey(PPRect rect, string key)
-{
-	PPTArray *num_list = new PPTArray(_document);
-	SetRectToArray(rect, num_list);
-	_formDict->setTokenAndKey(num_list, key);
-}
-
-int PPPage::intValueForKey(string key)
-{
-    int ret = 0;
-    PPTNumber *num = (PPTNumber *)_formDict->ObjectForKey(key);
-    if (num) {
-        return num->intValue();
-    }
-    return ret;
-}
-
-float PPPage::floatValueForKey(string key)
-{
-    float ret = 0;
-    PPTNumber *num = (PPTNumber *)_formDict->ObjectForKey(key);
-    if (num) {
-        return num->floatValue();
-    }
-    return ret;
-}
-
+// Protected Methods
+//////////////////////////////////////////////////////////////
 bool PPPage::hasValueWithKey(string key)
 {
     if(_formDict->ObjectForKey(key))
@@ -199,7 +165,27 @@ bool PPPage::hasValueWithKey(string key)
     return false;
 }
 
-PPTStream *PPPage::contentAt(size_t i)
+void PPPage::appendRectXmlString(ostringstream &ostr, string keyname, int level)
+{
+    if (hasValueWithKey(keyname)) {
+        PPRect rect = RectForKey(keyname);
+        ostr << PPTabStr(level) << "<" << keyname <<" X='" << rect._origin._x
+        << "' Y='" <<  rect._origin._x
+        << "' Width='" << rect._size._width
+        << "' Height='" << rect._size._height << "'/>\xa";
+    }
+    
+}
+///////////////////////////////////////////////////  End of Protected Methods
+
+
+//////////////////////////////////////////////////////////////////////
+//
+// public methods
+//
+//////////////////////////////////////////////////////////////////////
+
+PPTStream *PPPage::ContentAt(size_t i)
 {
     PPTStream *ret_stream = NULL;
     
@@ -219,7 +205,7 @@ PPTStream *PPPage::contentAt(size_t i)
     return ret_stream;
 }
 
-size_t PPPage::contentsCount()
+size_t PPPage::ContentsCount()
 {
     PPToken *contents = _formDict->ObjectForKey(PPKN_CONTENTS);
     if (contents->ClassType() == PPTN_ARRAY) {
@@ -232,76 +218,118 @@ size_t PPPage::contentsCount()
     return 0;
 }
 
-//
-// public methods
-//
+// Getting Methods
 //////////////////////////////////////////////////////////////////////
-PPRect PPPage::getMediaBox()
+int PPPage::IntValueForKey(string key)
 {
-    return rectForKey("MediaBox");
+    int ret = 0;
+    PPTNumber *num = (PPTNumber *)_formDict->ObjectForKey(key);
+    if (num) {
+        return num->intValue();
+    }
+    return ret;
 }
 
-PPRect PPPage::getCropBox()
+float PPPage::FloatValueForKey(string key)
 {
-    return rectForKey("CropBox");
+    float ret = 0;
+    PPTNumber *num = (PPTNumber *)_formDict->ObjectForKey(key);
+    if (num) {
+        return num->floatValue();
+    }
+    return ret;
 }
 
-PPRect PPPage::getBleedBox()
+PPRect PPPage::RectForKey(string key)
 {
-    return rectForKey("BleedBox");
+    PPRect rect;
+    PPTArray *num_list = (PPTArray *)_formDict->ObjectForKey(key);
+    if (num_list) {
+        return RectFromArray(num_list);
+    }
+    return rect;
 }
 
-PPRect PPPage::getTrimBox()
+PPRect PPPage::MediaBox()
 {
-    return rectForKey("TrimBox");
+    return RectForKey("MediaBox");
 }
 
-PPRect PPPage::getArtBox()
+PPRect PPPage::CropBox()
 {
-    return rectForKey("ArtBox");
+    return RectForKey("CropBox");
+}
+
+PPRect PPPage::BleedBox()
+{
+    return RectForKey("BleedBox");
+}
+
+PPRect PPPage::TrimBox()
+{
+    return RectForKey("TrimBox");
+}
+
+PPRect PPPage::ArtBox()
+{
+    return RectForKey("ArtBox");
+}
+
+float PPPage::Rotate()
+{
+    return FloatValueForKey("Rotate");
+}
+
+PPMatrix *PPPage::DefaultMatrix()
+{
+	return &_context->matrix();
+}
+
+// Setting Methods
+//////////////////////////////////////////////////////////////////////
+
+void PPPage::SetRectForKey(PPRect rect, string key)
+{
+	PPTArray *num_list = new PPTArray(_document);
+	SetRectToArray(rect, num_list);
+	_formDict->setTokenAndKey(num_list, key);
+}
+
+void PPPage::SetFloatValueForKey(float value, string key)
+{
+	PPTNumber *num = new PPTNumber(_document, value);
+	_formDict->setTokenAndKey(num, key);
 }
 
 void PPPage::SetMediaBox(PPRect rect)
 {
-	setRectForKey(rect, "MediaBox");
+	SetRectForKey(rect, "MediaBox");
 }
 void PPPage::SetCropBox(PPRect rect)
 {
-	setRectForKey(rect, "CropBox");
+	SetRectForKey(rect, "CropBox");
 }
 
 void PPPage::SetBleedBox(PPRect rect)
 {
-	setRectForKey(rect, "BleedBox");
+	SetRectForKey(rect, "BleedBox");
 }
 void PPPage::SetTrimBox(PPRect rect)
 {
-	setRectForKey(rect, "TrimBox");
+	SetRectForKey(rect, "TrimBox");
 }
 
 void PPPage::SetArtBox(PPRect rect)
 {
-	setRectForKey(rect, "ArtBox");
+	SetRectForKey(rect, "ArtBox");
 }
 
-
-float PPPage::rotate()
+void PPPage::SetRotate(float value)
 {
-    return floatValueForKey("Rotate");
+	SetFloatValueForKey(value, "Rotate");
 }
 
-void PPPage::appendRectXmlString(ostringstream &ostr, string keyname, int level)
-{
-    if (hasValueWithKey(keyname)) {
-        PPRect rect = rectForKey(keyname);
-        ostr << PPTabStr(level) << "<" << keyname <<" X='" << rect._origin._x
-        << "' Y='" <<  rect._origin._x
-        << "' Width='" << rect._size._width
-        << "' Height='" << rect._size._height << "'/>\xa";
-    }
-    
-}
-
+//////////////////////////////////////////////////////////////////////
 string PPPage::XMLString(int level)
 {
     string retstr;
@@ -313,7 +341,7 @@ string PPPage::XMLString(int level)
     appendRectXmlString(ostr, "TrimBox", level+1);
     appendRectXmlString(ostr, "ArtBox", level+1);
     if (hasValueWithKey("Rotate")) {
-        ostr << PPTabStr(level+1) << "<Rotate angle='" << rotate() << "'/>\xa";
+        ostr << PPTabStr(level+1) << "<Rotate angle='" << Rotate() << "'/>\xa";
     }
     ostr << PPTabStr(level+1) << "<Contents>\xa";
     size_t icnt = _commands.size();
@@ -328,7 +356,7 @@ string PPPage::XMLString(int level)
     return retstr;
 }
 
-string PPPage::elementXmlString(int level)
+string PPPage::ElementXmlString(int level)
 {
     string retstr;
     ostringstream ostr;
@@ -343,8 +371,3 @@ string PPPage::elementXmlString(int level)
     return retstr;
 }
 
-
-PPMatrix *PPPage::GetDefaultMatrix()
-{
-	return &_context->matrix();
-}

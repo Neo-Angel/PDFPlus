@@ -602,7 +602,7 @@ int PPDocument::postBuildPDF()
 	for(i=0;i<icnt;i++) {
 		PPPage *page = _pages[i];
 		// 페이지의 내용을 스트림으로 빌드하고 페이지 정보를 정리한다
-		page->BuildPDF();
+		page->BuildContents();
 	}
 	return 0;
 }
@@ -1432,7 +1432,7 @@ string PPDocument::ElementXmlString(int level)
     size_t icnt = _pages.size();
     for (size_t i=0; i<icnt; i++) {
         PPPage *page = _pages.at(i);
-        ostr << page->elementXmlString(level+1);
+        ostr << page->ElementXmlString(level+1);
     }
     ostr << PPTabStr(level) << "</Pages>\xa";
     retstr = ostr.str();
