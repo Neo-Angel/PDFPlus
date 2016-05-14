@@ -99,11 +99,11 @@ string PPTTrailer::pdfString()
 //    }
     if (_dict) {
         ostr << "trailer" << PP_ENDL;
-        ostr << _dict->pdfString() << PP_ENDL;
+        ostr << _dict->PDFString() << PP_ENDL;
     }
     else if (_xrefIndirect) { // for PDF 1.5 ^
         ostr << "trailer" << PP_ENDL;
-        ostr << _xrefIndirect->pdfString() << PP_ENDL;
+        ostr << _xrefIndirect->PDFString() << PP_ENDL;
     }
     ostr << "startxref" << PP_ENDL;
     ostr << _startxref << PP_ENDL;
@@ -115,7 +115,7 @@ string PPTTrailer::pdfString()
 PPTDictionary *PPTTrailer::getDictionary()
 {
     if (_xrefIndirect) {
-        return _xrefIndirect->firstDictionary();
+        return _xrefIndirect->FirstDictionary();
     }
     if (_dict) {
         return _dict;
@@ -124,7 +124,7 @@ PPTDictionary *PPTTrailer::getDictionary()
         PPToken *obj = _document->ObjectAtFilePosition(_startxref);
         if (obj != NULL && obj->ClassType() == PPTN_INDIRECTOBJ) {
             PPTIndirectObj *indobj = (PPTIndirectObj *)obj;
-            PPTDictionary *dict = indobj->firstDictionary();
+            PPTDictionary *dict = indobj->FirstDictionary();
             return dict;
         }
     }
@@ -134,19 +134,19 @@ PPTDictionary *PPTTrailer::getDictionary()
 void PPTTrailer::SetRootObject(PPTIndirectRef *indir_obj)
 {
     PPTDictionary *dict = getDictionary();
-    dict->setTokenAndKey(indir_obj, PPKN_ROOT);
+    dict->SetTokenAndKey(indir_obj, PPKN_ROOT);
 }
 
 void PPTTrailer::SetInfoObject(PPTIndirectRef *indir_obj)
 {
     PPTDictionary *dict = getDictionary();
-    dict->setTokenAndKey(indir_obj, PPKN_INFO);
+    dict->SetTokenAndKey(indir_obj, PPKN_INFO);
 }
 
 void PPTTrailer::setFileID(PPTArray *idarr)
 {
     PPTDictionary *dict = getDictionary();
-    dict->setTokenAndKey(idarr, PPKN_FILEID);
+    dict->SetTokenAndKey(idarr, PPKN_FILEID);
 }
 
 
@@ -176,7 +176,7 @@ void PPTTrailer::merge(PPTTrailer *other_trailer)
         if (!_xrefIndirect)
             _xrefIndirect = other_trailer->_xrefIndirect;
         else {
-            _xrefIndirect->merge(other_trailer->_xrefIndirect);
+            _xrefIndirect->Merge(other_trailer->_xrefIndirect);
         }
     }
     

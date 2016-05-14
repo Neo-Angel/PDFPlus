@@ -76,14 +76,14 @@ PPFormBase::PPFormBase(PPDocument *doc, PPTIndirectObj *indir):_graphicParser((v
 
 	_document = doc;
 	_indirObj = indir; 
-	_formDict = _indirObj->firstDictionary();
+	_formDict = _indirObj->FirstDictionary();
 	PPTName *subtype_name = (PPTName *)_formDict->ValueObjectForKey("Subtype"); 
 	_cur_element_idx = 0; // size_t 
 
 	_resourceDict = (PPTDictionary *)_formDict->ValueObjectForKey("Resources"); 
 
 	if (*subtype_name->_name == "Form") {
-		PPTStream *stream = _indirObj->stream();
+		PPTStream *stream = _indirObj->Stream();
 		if(stream) {
 			_graphicParser.ParseStream(*stream);
 			BuildElements();
@@ -299,7 +299,7 @@ PPLayer *PPFormBase::AddLayer(string layer_name)
 	// properties_dict 에 properties key 레이어 정보의 참조를 pname을 키로해서 저장.
 	properties_dict->SetTokenAndKey(layer_ref, pname);
 	layer_obj->AddRefObj(layer_ref);  // IndirectObj는 항상 자신을 참조한 ref를 저장해서 관리한다.
-	PPTDictionary *layer_dict = (PPTDictionary *)layer_ref->valueObject();
+	PPTDictionary *layer_dict = (PPTDictionary *)layer_ref->ValueObject();
 
 	ret_layer = new PPLayer();
 	ret_layer->_layer_dict = layer_dict; // 
@@ -348,7 +348,7 @@ PPLayer *PPFormBase::LayerForName(string name, int *idx)
 	return NULL;
 }
 
-void PPFormBase::ReorderLayer(int to_idx, int from_idx)
+void PPFormBase::ReorderLayer(int from_idx, int to_idx)
 {
 	from_idx++;
 	to_idx++;
@@ -665,7 +665,7 @@ string PPFormBase::SubtypeFor(string name)
 		}
 		PPTDictionary *xobj_dict = NULL;
 		if(xobj_ref->ClassType() == PPTN_INDIRECTREF) {
-			xobj_dict = (PPTDictionary *)xobj_ref->valueObject();
+			xobj_dict = (PPTDictionary *)xobj_ref->ValueObject();
 			if (!xobj_dict) {
 				cout << "Shading Dictionary not found..." << PP_ENDL;
 				break;
@@ -679,12 +679,12 @@ string PPFormBase::SubtypeFor(string name)
 			cout << "Shading IndirectRef not found..." << PP_ENDL;
 			break;
 		}
-		PPTIndirectObj *xobj = (PPTIndirectObj *)xobj_ref->targetObject();
+		PPTIndirectObj *xobj = (PPTIndirectObj *)xobj_ref->TargetObject();
 		if (!xobj) {
 			cout << "Shading Resource Object not found..." << PP_ENDL;
 			break;
 		}
-		xobj_dict = xobj->firstDictionary();
+		xobj_dict = xobj->FirstDictionary();
 		if(xobj_dict == NULL) {
 			break;
 		}
@@ -930,7 +930,7 @@ PPElement *PPFormBase::next()  // iterating
 
 void PPFormBase::AddXObjRef(PPTIndirectObj *xobj, string key) 
 {
-	 int obj_num = xobj->getObjNum();
+	 int obj_num = xobj->ObjNum();
 	_document->_xobjects[obj_num] = xobj;
     PPTDictionary *xobject_dict = (PPTDictionary *)_resourceDict->ValueObjectForKey("XObject");
 	if(xobject_dict == NULL) {
@@ -946,8 +946,8 @@ void PPFormBase::AddFormObj(PPFormBase *form_obj)
 	PPTIndirectObj *xobj = form_obj->XObject();
 //	form_obj->_document = _document;
 	PPTStream *stream = form_obj->BuildStream();
-	stream->_dict = (PPTDictionary *)xobj->_array[0];
-	stream->_dict->SetTokenAndKey(stream->_streamSize, "Length");
+	stream->_infoDict = (PPTDictionary *)xobj->_array[0];
+	stream->_infoDict->SetTokenAndKey(stream->_streamSize, "Length");
 	xobj->AddObj(stream);
 	AddXObjRef(xobj, *form_obj->_form_key->_name);
 	delete form_obj;

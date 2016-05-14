@@ -59,7 +59,7 @@ string PPEForm::makeCommandString()
 {
     string retstr;
 	retstr = PPElement::makeCommandString();
-    retstr += _name->pdfString() + " Do\xa";
+    retstr += _name->PDFString() + " Do\xa";
     return retstr;
 }
 
@@ -113,7 +113,7 @@ void PPEForm::willAddToParent(PPFormBase *form)
     }
 	PPTDictionary *xobj_dict = NULL;
 	if(xobj_ref->ClassType() == PPTN_INDIRECTREF) {
-		xobj_dict = (PPTDictionary *)xobj_ref->valueObject();
+		xobj_dict = (PPTDictionary *)xobj_ref->ValueObject();
 		if (!xobj_dict) {
 			cout << "Shading Dictionary not found..." << PP_ENDL;
 			return;
@@ -127,12 +127,12 @@ void PPEForm::willAddToParent(PPFormBase *form)
         cout << "Shading IndirectRef not found..." << PP_ENDL;
         return;
     }
-	_xobj = (PPTIndirectObj *)xobj_ref->targetObject();
+	_xobj = (PPTIndirectObj *)xobj_ref->TargetObject();
     if (!_xobj) {
         cout << "Shading Resource Object not found..." << PP_ENDL;
         return;
 	}
-	xobj_dict = _xobj->firstDictionary();
+	xobj_dict = _xobj->FirstDictionary();
 	if(xobj_dict == NULL) {
 		return;
 	}

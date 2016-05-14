@@ -62,7 +62,7 @@ void PPPage::LoadDictionary(PPTDictionary *page_dict)
             int obj_num = indir_ref->_objNum;
             PPTIndirectObj *font_obj = (PPTIndirectObj *)_document->_fonts[obj_num];
             if (font_obj == NULL) {
-                font_obj = indir_ref->targetObject();
+                font_obj = indir_ref->TargetObject();
                 _document->_fonts[obj_num] = font_obj;
             }
         }
@@ -77,7 +77,7 @@ void PPPage::LoadDictionary(PPTDictionary *page_dict)
             int obj_num = indir_ref->_objNum;
             PPTIndirectObj *indir_obj = (PPTIndirectObj *)_document->_xobjects[obj_num];
             if (indir_obj == NULL) {
-                indir_obj = indir_ref->targetObject();
+                indir_obj = indir_ref->TargetObject();
                 _document->_xobjects[obj_num] = indir_obj;
                 indir_obj = (PPTIndirectObj *)_document->_xobjects[obj_num];
             }
@@ -192,15 +192,15 @@ PPTStream *PPPage::ContentAt(size_t i)
     PPToken *contents = _formDict->ObjectForKey(PPKN_CONTENTS);
     if (contents->ClassType() == PPTN_ARRAY) {
         PPTArray *array = (PPTArray *)contents;
-        if (array->size() > i) {
-            PPTIndirectRef *ref = (PPTIndirectRef *)array->objectAtIndex(i);
-            PPTIndirectObj *indirect = ref->targetObject();
-            ret_stream = indirect->stream();
+        if (array->Size() > i) {
+            PPTIndirectRef *ref = (PPTIndirectRef *)array->ObjectAtIndex(i);
+            PPTIndirectObj *indirect = ref->TargetObject();
+            ret_stream = indirect->Stream();
         }
     }
     else if (contents->ClassType() == PPTN_INDIRECTREF){
-        PPTIndirectObj *indirect = ((PPTIndirectRef *)contents)->targetObject();
-        ret_stream = indirect->stream();
+        PPTIndirectObj *indirect = ((PPTIndirectRef *)contents)->TargetObject();
+        ret_stream = indirect->Stream();
     }
     return ret_stream;
 }
@@ -210,7 +210,7 @@ size_t PPPage::ContentsCount()
     PPToken *contents = _formDict->ObjectForKey(PPKN_CONTENTS);
     if (contents->ClassType() == PPTN_ARRAY) {
         PPTArray *array = (PPTArray *)contents;
-        return array->size();
+        return array->Size();
     }
     else if (contents->ClassType() == PPTN_INDIRECTREF){
         return 1;
@@ -292,13 +292,13 @@ void PPPage::SetRectForKey(PPRect rect, string key)
 {
 	PPTArray *num_list = new PPTArray(_document);
 	SetRectToArray(rect, num_list);
-	_formDict->setTokenAndKey(num_list, key);
+	_formDict->SetTokenAndKey(num_list, key);
 }
 
 void PPPage::SetFloatValueForKey(float value, string key)
 {
 	PPTNumber *num = new PPTNumber(_document, value);
-	_formDict->setTokenAndKey(num, key);
+	_formDict->SetTokenAndKey(num, key);
 }
 
 void PPPage::SetMediaBox(PPRect rect)

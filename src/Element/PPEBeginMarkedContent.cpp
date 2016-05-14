@@ -61,10 +61,10 @@ string PPEBeginMarkedContent::makeCommandString()
 {
     string retstr;
     if (_properties) {
-        retstr = _tag->pdfString() + " " + _properties->PDFString() + " BDC\xa";
+        retstr = _tag->PDFString() + " " + _properties->PDFString() + " BDC\xa";
     }
     else {
-        retstr = _tag->pdfString() + " BMC\xa";
+        retstr = _tag->PDFString() + " BMC\xa";
     }
     return retstr;
 }

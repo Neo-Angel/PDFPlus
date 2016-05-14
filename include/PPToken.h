@@ -70,25 +70,27 @@ static const char	*PPKN_PARENT =		"Parent";
 static const char *PPVN_CREATOR =		"PDFPlus"; // Key : "Creator"
 static const char *PPVN_CATALOG =		"Catalog";  // Key : "Type"
 
-///////////////////////////////////////////////////////////////// PPToken
-// PDF 자료구조를 이루는 각 종 객체들의 Base클래스
-//
+// PPToken
+///////////////////////////////////////////////////////////////
+// PDF 자료구조를 이루는 각 종 토큰 객체들의 기반 클래스
+/////////////////////////////////////////////////////////////////
 class PPToken : public PPBase {
 public:
     PPDocument *_document; //
     unsigned long long _filepos; // PDF 파일상에 이 토큰의 물리적 위치(byte 단위)
 
+public:
     PPToken();
     PPToken(PPDocument *doc);
 	// PDF 파일의 내용을 XML로 내보낼 경우 이 토큰의 XML 문자열 생성함.
     virtual string XMLString(int level) = 0; //  level : tap count
 
-    virtual string PDFString() {return "";}
+    virtual string PDFString() {return "";}  // 실제 PDF에 기록될 문자열을 리턴한다.
     virtual string PDFString(ostream &os) {return PDFString();}
     virtual void Write(std::ostream &os);
 
 	// 모든 하위 토큰들을 IndirectRef에서 IndirectObj 들을 doc 소속으로 변경함.
-	virtual void MoveInto(PPDocument *doc) {}; // 유일하게 PPDocument::WriteResource() 에서 쓰임
+	virtual void MoveInto(PPDocument *doc) {_document = doc;} // 유일하게 PPDocument::WriteResource() 에서 쓰임
 	virtual void SetDocument(PPDocument *doc);
 //	PPBase *Create() {return new PPToken();} // 추상 클래스라서 사용할 수 없답니다. 
 
@@ -97,9 +99,7 @@ public:
 	void CopyMembersTo(PPBase *obj) ; // Inherited from PPBase
 
 };
+
 /////////////////////////////////////////
-
-
-
 
 #endif /* defined(__PDFPlusLib__PPToken__) */

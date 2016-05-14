@@ -22,36 +22,35 @@ class PPTDictionary;
 
 ///////////////////////////////////////// PPTStream
 class PPTStream : public PPToken, public PPParserSource {
+protected:
+    unsigned long _cur_pos; // 현재 위치
+
 public:
-    unsigned long _index;
+	// stream 에 대한 기본적인 정보(Filter 명등..)를 담고있는 dictionary
+    PPTDictionary *_infoDict; 
+
     char *_streamData;
     unsigned long _streamSize;
-	string _filterName;
-    unsigned long _next;
+	string _filterName; // 인코딩 방식 이름
+    unsigned long _next; 
 
-    bool _decoded;
-    bool _decodeFailed;
-    PPTDictionary *_dict;
-    
+    bool _decoded; // 현재 스트림이 상태가 디코드된 상태인지.
+    bool _decodeFailed; //디코딩에 실패했는지...
+
+
+public:
     PPTStream(PPDocument *doc);
     PPTStream(PPDocument *doc, unsigned long length);
 	PPTStream();
     ~PPTStream();
-	void SetDictionary(PPTDictionary *dict);
-    void appendData(char *data, unsigned long length);
-    inline char *getBuffer() { return _streamData;}
-    string XMLString(int indent);
-    size_t read(unsigned char **ptr, size_t length);
-//    void write(unsigned char *buf, size_t length);
-    void writeTo(const char *tar_path);
-    void flateDecodeStream();
-    unsigned long flateEncodeStream(char **strm_dat);
-    bool isDecoded();
-    bool z_eof();
-    inline const char *ClassType() {return PPTN_STREAM;}
-    bool parseObjStm(vector<PPToken *> &token_list, PPParser *parser);
 
-    
+    string PDFString();
+    string MakePDFString(unsigned long &length);
+
+	PPBase *Create() {return new PPTStream();}
+	void CopyMembersTo(PPBase *obj) ;
+    inline const char *ClassType() {return PPTN_STREAM;}
+
     // PPParserSource overriding
     bool canParseString(string str);
     PPToken *parseString(string str, vector <PPToken *> &tokens, PPParser *parser);
@@ -62,13 +61,18 @@ public:
     void read(char *buf, size_t size);
     void getline(char *buf, size_t size);
 
-    string pdfString();
-    string makePDFString(unsigned long &length);
-
-	PPBase *Create() {return new PPTStream();}
-	void CopyMembersTo(PPBase *obj) ;
-
-
+	/* 자체 함수들... (코멘트에 '//'를 사용하면 문제발생)*/
+	void SetDictionary(PPTDictionary *dict);
+    void AppendData(char *data, unsigned long length);
+    inline char *Buffer() { return _streamData;}
+    string XMLString(int indent);
+    size_t GetReadPointer(unsigned char **ptr, size_t length);
+    void WriteTo(const char *tar_path);
+    void FlateDecodeStream();
+    unsigned long FlateEncodeStream(char **strm_dat);
+    bool IsDecoded();
+    bool IsZipEOF();
+    bool ParseObjStm(vector<PPToken *> &token_list, PPParser *parser);
 };
 
 

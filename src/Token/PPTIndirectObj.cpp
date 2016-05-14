@@ -67,7 +67,7 @@ string PPTIndirectObj::XMLString(int level)
     
     return retstr;
 }
-PPTDictionary *PPTIndirectObj::firstDictionary()
+PPTDictionary *PPTIndirectObj::FirstDictionary()
 {
     if (_array.size() == 0) {
         return NULL;
@@ -86,7 +86,8 @@ void PPTIndirectObj::AddObj(PPToken *obj)
 	}
 	_array.push_back(obj);
 }
-PPTStream *PPTIndirectObj::stream()
+
+PPTStream *PPTIndirectObj::Stream()
 {
     if (_array.size() != 2) {
         return NULL;
@@ -98,7 +99,7 @@ PPTStream *PPTIndirectObj::stream()
     return (PPTStream *)token;
 }
 
-bool PPTIndirectObj::isObjStream()
+bool PPTIndirectObj::IsObjStream()
 {
     PPTDictionary *dict = (PPTDictionary *)_array[0];
     if (dict->ClassType() != PPTN_DICTIONARY)
@@ -111,7 +112,7 @@ bool PPTIndirectObj::isObjStream()
     return false;
 }
 
-bool PPTIndirectObj::isStream()
+bool PPTIndirectObj::IsStream()
 {
     PPTDictionary *dict = (PPTDictionary *)_array[0];
     if (dict->ClassType() != PPTN_DICTIONARY)
@@ -126,7 +127,7 @@ bool PPTIndirectObj::isStream()
 
 void PPTIndirectObj::Write(ostream &os)
 {
-    if(isObjStream()) {
+    if(IsObjStream()) {
         size_t i, icnt = _array.size();
         for(i=1;i<icnt;i++) {
             PPToken *token = _array[i];
@@ -143,7 +144,7 @@ void PPTIndirectObj::Write(ostream &os)
             os << pdfstr << PP_ENDL;
         }
     }
-    else if (isStream()) {
+    else if (IsStream()) {
 		if(_array.size() == 1) {
 			cout << "Error : Stream must have 'stream' object!" << PP_ENDL;
 		}
@@ -155,11 +156,11 @@ void PPTIndirectObj::Write(ostream &os)
         PPTDictionary *dict = (PPTDictionary *)_array[0];
         PPTStream *stream = (PPTStream *)_array[1];
         unsigned long len;
-        string stream_pdfstr = stream->makePDFString(len);
+        string stream_pdfstr = stream->MakePDFString(len);
         PPTNumber *len_num = new PPTNumber(_document, (int)len);
-        dict->setTokenAndKey(len_num, "Length");
+        dict->SetTokenAndKey(len_num, "Length");
         
-        ostr << dict->pdfString();
+        ostr << dict->PDFString();
         ostr << stream_pdfstr;
 
         ostr << "endobj";// << PP_ENDL;
@@ -181,7 +182,7 @@ void PPTIndirectObj::AddRefObj(PPTIndirectRef *ref)
     _ref_list.push_back(ref);
 }
 
-void PPTIndirectObj::setObjNum(int num)
+void PPTIndirectObj::SetObjNum(int num)
 {
     _objNum = num;
     size_t i, icnt = _ref_list.size();
@@ -191,7 +192,7 @@ void PPTIndirectObj::setObjNum(int num)
     }
 }
 
-string PPTIndirectObj::pdfString()
+string PPTIndirectObj::PDFString()
 {
     ostringstream ostr;
     ostr << _objNum << " " << _genNum << " obj" << PP_ENDL;
@@ -209,25 +210,7 @@ string PPTIndirectObj::pdfString()
     return retstr;
 }
 
-//void PPTIndirectObj::write(std::ostream &os)
-//{
-//    PPToken::write(os);
-//    
-//    _filepos = os.tellp();
-//    string pdfstr = pdfString(os);
-//    if (pdfstr.length() == 0) {
-//        cout << "Zero PDF string for token " << TypeName() << PP_ENDL;
-//    }
-//    os << pdfstr << PP_ENDL;
-//    
-//    
-//    
-//    _parser->_filePtDict[_filepos] = this;
-//    _document->_objDict[_objNum] = this;
-//    
-//}
-
-void PPTIndirectObj::merge(PPTIndirectObj *ohter_indir)
+void PPTIndirectObj::Merge(PPTIndirectObj *ohter_indir)
 {
     
 }
@@ -248,11 +231,10 @@ void PPTIndirectObj::CopyMembersTo(PPBase *obj)
 		if(i == 1 && new_token->ClassType() == PPTN_STREAM) {
 			PPTDictionary *dict = (PPTDictionary *)indir_obj->_array.at(0);
 			PPTStream *stream = (PPTStream *)new_token;
-			stream->_dict = dict;
+			stream->_infoDict = dict;
 		}
 		indir_obj->AddObj(new_token);
 	}
-	//_ref_list.clear();
 }
 
 void PPTIndirectObj::SetDocument(PPDocument *doc)
@@ -268,11 +250,10 @@ void PPTIndirectObj::SetDocument(PPDocument *doc)
 
 }
 
-
-// 도큐먼트 파라미터는 나중에 PPParser 로 교체하자.
 //     _tokens 를 PPParser 클래스로 옮기기
 void PPTIndirectObj::MoveInto(PPDocument *doc)
 {
+	_document = doc;
 	int i, icnt = _array.size();
 	for(i=0;i<icnt;i++) {
 		PPToken *token = _array.at(i);

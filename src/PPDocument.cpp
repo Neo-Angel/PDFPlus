@@ -178,7 +178,7 @@ int PPDocument::buildDocument()
 	//메타데이터 읽어오기
     PPTIndirectObj *info_obj = (PPTIndirectObj *)_trailer->infoObject();
     if (info_obj != NULL) {
-        PPTDictionary *info_dict = info_obj->firstDictionary();
+        PPTDictionary *info_dict = info_obj->FirstDictionary();
         if (info_dict != NULL) {
             _author =  (PPTString *)info_dict->ValueObjectForKey("Author");
             _creator =  (PPTString *)info_dict->ValueObjectForKey("Creator");
@@ -196,7 +196,7 @@ int PPDocument::buildDocument()
     if (root_obj == NULL) {
         return -2; // error: Cannot find Root Object;
     }
-    PPTDictionary *root_dict = root_obj->firstDictionary();
+    PPTDictionary *root_dict = root_obj->FirstDictionary();
     if (root_dict == NULL) {
         return -3;
     }
@@ -208,7 +208,7 @@ int PPDocument::buildDocument()
 	// Optional Contens 관련 데이터들을 읽어옴
     _OCProperties = (PPTDictionary *)root_dict->ValueObjectForKey("OCProperties");
     PPTIndirectObj *pages = (PPTIndirectObj *)root_dict->IndirectObjectForKey("Pages");
-    PPTDictionary *pages_dict = pages->firstDictionary();
+    PPTDictionary *pages_dict = pages->FirstDictionary();
 	if(_OCProperties) {
 		PPTDictionary *d_dict = (PPTDictionary *)_OCProperties->ValueObjectForKey("D");
 		if(d_dict) {
@@ -237,8 +237,8 @@ void PPDocument::collectPages(PPTDictionary *pages_dict)
     size_t i, icnt = page_list->_array.size();
     for (i=0; i<icnt; i++) {
         PPTIndirectRef *ref_obj = (PPTIndirectRef *)page_list->_array.at(i);
-        PPTIndirectObj *page_obj = ref_obj->targetObject();
-        PPTDictionary *child_dict = page_obj->firstDictionary();
+        PPTIndirectObj *page_obj = ref_obj->TargetObject();
+        PPTDictionary *child_dict = page_obj->FirstDictionary();
         PPTName *type = (PPTName *)child_dict->ObjectForKey("Type");
         if (type && *type->_name == "Page") {
             makePageWith(child_dict);
@@ -300,7 +300,7 @@ void PPDocument::decodeStreams(vector<PPToken *> &token_list)
 	int i, icnt = _stream_list.size();
 	for(i=0;i<icnt;i++) {
 		PPTStream *stream = (PPTStream *)_stream_list[i];
-		PPTDictionary *dict = stream->_dict;
+		PPTDictionary *dict = stream->_infoDict;
 		PPToken *val_obj = (PPToken *)dict->ValueObjectForKey("Length");
 		if (val_obj) {
             PPTNumber *len_obj = (PPTNumber *)val_obj;
@@ -308,11 +308,11 @@ void PPDocument::decodeStreams(vector<PPToken *> &token_list)
             PPTName *filter = (PPTName *)dict->NameForKey("Filter");
 			// FlateDecode 방식들만 디코딩 함.
             if (filter != NULL && *filter->_name == "FlateDecode") {
-                stream->flateDecodeStream();
+                stream->FlateDecodeStream();
                 PPTName *type = (PPTName *)dict->ObjectForKey("Type");
                 if (type != NULL && *type->_name == "ObjStm") {
 					// 디코딩 한 스트림의 타입이 '오브젝 스트림'이면 도큐먼트의 _parser를 이용해 파싱을 함 
-					if(stream->parseObjStm(token_list, &_parser) == false) {
+					if(stream->ParseObjStm(token_list, &_parser) == false) {
                         return;
                     }
                  }
@@ -401,7 +401,7 @@ PPTDictionary *PPDocument::RootDict()
     if (root_obj == NULL) {
         return NULL; // error: Cannot find Root Object;
     }
-    PPTDictionary *root_dict = root_obj->firstDictionary();
+    PPTDictionary *root_dict = root_obj->FirstDictionary();
     if (root_dict == NULL) {
         return NULL;
     }
@@ -414,7 +414,7 @@ PPTDictionary *PPDocument::PagesDictionary()
 	PPTDictionary *root_dict = RootDict();
 
     PPTIndirectObj *pages = (PPTIndirectObj *)root_dict->IndirectObjectForKey("Pages");
-    PPTDictionary *pages_dict = pages->firstDictionary();
+    PPTDictionary *pages_dict = pages->FirstDictionary();
 	return pages_dict;
 }
 
@@ -541,7 +541,7 @@ int PPDocument::preBuildPDF()
 	_trailer = new PPTTrailer(this);
 
 	PPTIndirectRef *root_ref = new PPTIndirectRef(this,++_objNumber, 0);
-	_trailer->getDictionary()->setTokenAndKey(root_ref, PPKN_ROOT);
+	_trailer->getDictionary()->SetTokenAndKey(root_ref, PPKN_ROOT);
 	PPTIndirectObj *root_obj = new PPTIndirectObj(this, _objNumber, 0);
 	root_obj->AddRefObj(root_ref);
 	PushObj(root_obj, _objNumber);
@@ -551,7 +551,7 @@ int PPDocument::preBuildPDF()
 
 		// Pages
 		PPTIndirectRef *pages_ref = new PPTIndirectRef(this,++_objNumber, 0);
-		root_dict->setTokenAndKey(pages_ref, PPKN_PAGES);
+		root_dict->SetTokenAndKey(pages_ref, PPKN_PAGES);
 		PPTIndirectObj *pages_obj = new PPTIndirectObj(this, _objNumber, 0);
 		pages_obj->AddRefObj(pages_ref);
 
@@ -568,7 +568,7 @@ int PPDocument::preBuildPDF()
 	// End RootDict
 
 	PPTIndirectRef *info_ref = new PPTIndirectRef(this,++_objNumber, 0);
-	_trailer->getDictionary()->setTokenAndKey(info_ref, PPKN_INFO);
+	_trailer->getDictionary()->SetTokenAndKey(info_ref, PPKN_INFO);
 	PPTIndirectObj *info_obj = new PPTIndirectObj(this, _objNumber, 0);
 	info_obj->AddRefObj(info_ref);
 	PushObj(info_obj, _objNumber);
@@ -637,7 +637,7 @@ void PPDocument::doReorderingObjectNumbers()
 
 		// 이 indir_obj 를 참조하고 있던 모든 IndirectRef들의 
 		// Object Number값을 new_idx값으로 변경함
-        indir_obj->setObjNum(new_idx); 
+        indir_obj->SetObjNum(new_idx); 
         
         _objDict[new_idx] = indir_obj;
     }
@@ -869,11 +869,11 @@ PPTName *PPDocument::AddFormObject(PPPage *page)
 	PPTArray *src_rect_arr = (PPTArray *)page->_formDict->ObjectForKey("MediaBox");
 	if(src_rect_arr) {
 		PPTArray *rect_array = (PPTArray *)src_rect_arr->Copy();
-		dict->setTokenAndKey(rect_array, "BBox");
+		dict->SetTokenAndKey(rect_array, "BBox");
 	}
 	// Filter : FlateDecode
 	PPTName *name = new PPTName(this, new string("FlateDecode"));
-	dict->setTokenAndKey(name, "Filter");
+	dict->SetTokenAndKey(name, "Filter");
 	// Length : stream length <Number>
 	// Matrix : pages matrix <Array<Number>>
 	PPTArray *matrix = new PPTArray(this);
@@ -883,18 +883,18 @@ PPTName *PPDocument::AddFormObject(PPPage *page)
 	matrix->AddToken(1);
 	matrix->AddToken(0);
 	matrix->AddToken(0);
-	dict->setTokenAndKey((PPToken *)matrix, "Matrix");
+	dict->SetTokenAndKey((PPToken *)matrix, "Matrix");
 	// Resources : Ref (ColorSpace, ExtGState, Properties, Shading)
 	PPToken *pg_rcs = page->_formDict->ObjectForKey("Resource");
 	if(pg_rcs) {
 		PPToken *resource = (PPToken *)pg_rcs->Copy();
-		dict->setTokenAndKey(resource, "Resource");
+		dict->SetTokenAndKey(resource, "Resource");
 	}
 	// Subtype : Form <Name>
-	dict->setTokenAndKey((PPToken *)new PPTName(this,new string("Form")), "Subtype");
+	dict->SetTokenAndKey((PPToken *)new PPTName(this,new string("Form")), "Subtype");
 
 	// Type : XObject <Name>
-	dict->setTokenAndKey((PPToken *)new PPTName(this,new string("XObject")), "Type");
+	dict->SetTokenAndKey((PPToken *)new PPTName(this,new string("XObject")), "Type");
 
 	++_objNumber;
 	PPTIndirectObj *indirObj = new PPTIndirectObj(this, token_list, _objNumber, 0);
@@ -924,7 +924,7 @@ PPTIndirectObj *PPDocument::AddResource(PPToken *rsc, int num)
 		return (PPTIndirectObj *)rsc;
 	if(rsc->ClassType() == PPTN_INDIRECTREF) {
 		PPTIndirectRef *rsc_ref = (PPTIndirectRef *)rsc;
-		rsc = rsc_ref->targetObject();
+		rsc = rsc_ref->TargetObject();
 	}
 	if(rsc->ClassType() != PPTN_INDIRECTOBJ) {
 		PPTIndirectObj *container_obj = new PPTIndirectObj(this, 0, 0);
@@ -983,11 +983,11 @@ void PPDocument::SaveXObjectsToFolder(const char *folder) // Currently just Imag
         int obj_num = it_token_objs->first;
         PPTIndirectObj *indir_obj = (PPTIndirectObj *)it_token_objs->second;
         if (indir_obj) {
-            PPTDictionary *obj_dict = indir_obj->firstDictionary();
+            PPTDictionary *obj_dict = indir_obj->FirstDictionary();
             PPTName *filter = (PPTName *)obj_dict->ObjectForKey("Filter");
             cout << "Filter = " << *filter->_name << PP_ENDL;
             if (*filter->_name == "DCTDecode") {
-                PPTStream *stream = indir_obj->stream();
+                PPTStream *stream = indir_obj->Stream();
                 size_t folder_len = strlen(folder);
                 char filename[7];
 #ifdef _WIN32
@@ -1002,7 +1002,7 @@ void PPDocument::SaveXObjectsToFolder(const char *folder) // Currently just Imag
 #else
                 sprintf(tar_path, "%s/%s.jpg",folder, filename);
 #endif
-				stream->writeTo((const char *)tar_path);
+				stream->WriteTo((const char *)tar_path);
                 delete [] tar_path;
             }
         }
@@ -1044,7 +1044,7 @@ PPTIndirectObj *PPDocument::ImageFromPath(string path)
 int PPDocument::NumberOfLayers()
 {
 	if(_layerOrders)
-		return _layerOrders->size();
+		return _layerOrders->Size();
 	return 0;
 }
 
@@ -1054,7 +1054,7 @@ PPTDictionary *PPDocument::LayerInfoAtIndex(int idx)
 	PPToken *layer = _layerOrders->_array[idx];
 	if(layer->TypeName() == PPTN_INDIRECTREF) {
 		PPTIndirectRef *layer_ref = (PPTIndirectRef *)layer;
-		ret_dict = (PPTDictionary *)layer_ref->valueObject();
+		ret_dict = (PPTDictionary *)layer_ref->ValueObject();
 	}
 	else if(layer->TypeName() == PPTN_DICTIONARY) {
 		ret_dict = (PPTDictionary *)layer;
@@ -1068,7 +1068,7 @@ PPTIndirectObj *PPDocument::LayerObjAtIndex(int idx)
 	PPToken *layer = _layerOrders->_array[idx];
 	if(layer->TypeName() == PPTN_INDIRECTREF) {
 		PPTIndirectRef *layer_ref = (PPTIndirectRef *)layer;
-		ret_obj = (PPTIndirectObj *)layer_ref->targetObject();
+		ret_obj = (PPTIndirectObj *)layer_ref->TargetObject();
 	}
 	return ret_obj;
 }
@@ -1126,7 +1126,7 @@ void PPDocument::BuildOCProperties() {
 	_OCProperties->SetTokenAndKey(_OCGs, "OCGs");
 
 	PPTIndirectObj *root_obj = (PPTIndirectObj *)_trailer->rootObject();
-    PPTDictionary *root_dict = root_obj->firstDictionary();
+    PPTDictionary *root_dict = root_obj->FirstDictionary();
 	root_dict->SetTokenAndKey(_OCProperties, "OCProperties");
 
 }
@@ -1174,11 +1174,11 @@ bool PPDocument::RenameLayer(string org_name, string new_name)
 
 void PPDocument::ReorderLayer(int from_idx, int to_idx)
 {
-	_layerOrders->Reorder(to_idx, from_idx);
+	_layerOrders->Reorder(from_idx, to_idx);
 	int i, icnt = _pages.size();
 	for(i=0;i<icnt;i++) {
 		PPPage *page = _pages[i];
-		page->ReorderLayer(to_idx, from_idx);
+		page->ReorderLayer(from_idx, to_idx);
 	}
 }
 
@@ -1203,7 +1203,7 @@ void PPDocument::MergeLayer(string layer1, string layer2)
 	int i, icnt = _layerOrders->_array.size();
 	for(i=0;i<icnt;i++) {
 		PPTIndirectRef *indir_ref = (PPTIndirectRef *)_layerOrders->_array[i];
-		PPTIndirectObj *indir_obj = indir_ref->targetObject();
+		PPTIndirectObj *indir_obj = indir_ref->TargetObject();
 		PPTDictionary *layer_dict = indir_obj->FirstDictionary();
 		PPTString *layer_name = (PPTString *)layer_dict->ObjectForKey("Name");
 		if(*layer_name->_string == layer1) {
@@ -1224,17 +1224,17 @@ void PPDocument::MergeLayer(string layer1, string layer2)
 	PPTString *layer1_name = (PPTString *)layer_dict1->ObjectForKey("Name");
 	PPTString *layer2_name = (PPTString *)layer_dict2->ObjectForKey("Name");
 	layer1_name->AppendString(layer2_name);
-	_layerOrders->RemoveAtIndex(l2);
+	_layerOrders->RemoveTokenAtIndex(l2);
 
 
 	icnt = _OCGs->_array.size();
 	for(i=0;i<icnt;i++) {
 		PPTIndirectRef *indir_ref = (PPTIndirectRef *)_OCGs->_array[i];
-		PPTIndirectObj *indir_obj = indir_ref->targetObject();
+		PPTIndirectObj *indir_obj = indir_ref->TargetObject();
 		PPTDictionary *layer_dict = indir_obj->FirstDictionary();
 		PPTString *layer_name = (PPTString *)layer_dict->ObjectForKey("Name");
 		if(*layer_name->_string == layer2) {
-			_OCGs->RemoveAtIndex(i);
+			_OCGs->RemoveTokenAtIndex(i);
 			// remove related IndirectObjs
 			break;
 		}
@@ -1243,11 +1243,11 @@ void PPDocument::MergeLayer(string layer1, string layer2)
 	icnt = _layersOn->_array.size();
 	for(i=0;i<icnt;i++) {
 		PPTIndirectRef *indir_ref = (PPTIndirectRef *)_layersOn->_array[i];
-		PPTIndirectObj *indir_obj = indir_ref->targetObject();
+		PPTIndirectObj *indir_obj = indir_ref->TargetObject();
 		PPTDictionary *layer_dict = indir_obj->FirstDictionary();
 		PPTString *layer_name = (PPTString *)layer_dict->ObjectForKey("Name");
 		if(*layer_name->_string == layer2) {
-			_layersOn->RemoveAtIndex(i);
+			_layersOn->RemoveTokenAtIndex(i);
 			break;
 		}
 	}
@@ -1264,7 +1264,7 @@ void PPDocument::WriteOCProperties(PPTDictionary *properties)
 {
 	// root_obj (Type:Catalog)
     PPTIndirectObj *root_obj = (PPTIndirectObj *)_trailer->rootObject();
-    PPTDictionary *root_dict = root_obj->firstDictionary();
+    PPTDictionary *root_dict = root_obj->FirstDictionary();
 
 	_OCProperties = (PPTDictionary *)properties->Copy();
 	root_dict->SetTokenAndKey(_OCProperties, "OCProperties");
@@ -1317,7 +1317,7 @@ string PPDocument::XObjectsXMLString(int level)
         int obj_num = it_token_objs->first;
         ostr << PPTabStr(level) << "<XObject id ='" << obj_num << "'>\xa";
         PPTIndirectObj *indir_obj = (PPTIndirectObj *)it_token_objs->second;
-        PPTDictionary *obj_dict = indir_obj->firstDictionary();
+        PPTDictionary *obj_dict = indir_obj->FirstDictionary();
         ostr << obj_dict->XMLString(level+1);
         ostr << PPTabStr(level) << "</XObject>\xa";
     }
@@ -1336,7 +1336,7 @@ string PPDocument::fontsXMLString(int level)
         int obj_num = it_token_objs->first;
         ostr << PPTabStr(level) << "<Font name='" << obj_num << "'>\xa";
         PPTIndirectObj *indir_obj = (PPTIndirectObj *)it_token_objs->second;
-        PPTDictionary *obj_dict = indir_obj->firstDictionary();
+        PPTDictionary *obj_dict = indir_obj->FirstDictionary();
         ostr << obj_dict->XMLString(level+1);
         ostr << PPTabStr(level) << "</Font>\xa";
     }

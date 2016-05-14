@@ -13,7 +13,7 @@ class PPTNull : public PPToken {
 public:
 	PPTNull() {}
     string XMLString(int level);
-    string pdfString();
+    string PDFString();
 	PPBase *Create() {return new PPTNull();}
 };
 /////////////////////////////////////////

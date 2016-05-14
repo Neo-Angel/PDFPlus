@@ -5,7 +5,7 @@
 
 
 
-//  ////////////////////////////////// PPTComment
+//////////////////////////////////// PPTComment
 PPTComment::PPTComment(PPDocument *doc, string *str) : PPToken(doc)
 {
     _comment = str;
@@ -29,7 +29,7 @@ string PPTComment::XMLString(int level)
     return retstr;
 }
 
-string PPTComment::pdfString()
+string PPTComment::PDFString()
 {
     string retstr = "%";
     retstr += *_comment;
@@ -43,7 +43,11 @@ void PPTComment::CopyMembersTo(PPBase *obj)
 
 	PPTComment *comment = (PPTComment *)obj;
 	comment->_comment = new string(*_comment);
+}
 
-//	string *comment = (PPTName *)obj;
-//	_comment = new string(*comment->_name);
+
+void PPTComment::SetComment(string *str)
+{
+	delete _comment;
+	_comment = str;
 }

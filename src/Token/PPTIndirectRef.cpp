@@ -31,7 +31,7 @@ string PPTIndirectRef::XMLString(int level)
     return retstr;
 }
 
-string PPTIndirectRef::pdfString()
+string PPTIndirectRef::PDFString()
 {
     string retstr;
     ostringstream ostr;
@@ -40,9 +40,9 @@ string PPTIndirectRef::pdfString()
     return retstr;
 }
 
-PPToken *PPTIndirectRef::valueObject()
+PPToken *PPTIndirectRef::ValueObject()
 {
-    PPTIndirectObj *tar = targetObject();
+    PPTIndirectObj *tar = TargetObject();
     if (tar) {
         return tar->_array.size() > 0 ? tar->_array[0] : NULL;
     }
@@ -50,7 +50,7 @@ PPToken *PPTIndirectRef::valueObject()
     
 }
 
-PPTIndirectObj *PPTIndirectRef::targetObject()
+PPTIndirectObj *PPTIndirectRef::TargetObject()
 {
     PPTIndirectObj *ret = (PPTIndirectObj *)_document->ObjectForNumber(_objNum);
     return ret;

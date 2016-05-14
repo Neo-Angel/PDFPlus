@@ -45,10 +45,10 @@ string PPEMarkedContent::makeCommandString()
 {
     string retstr;
     if (_property) {
-        retstr = _tag->pdfString() + " " + _property->pdfString() + " DP\xa";
+        retstr = _tag->PDFString() + " " + _property->PDFString() + " DP\xa";
     }
     else {
-        retstr = _tag->pdfString() + " MP\xa";
+        retstr = _tag->PDFString() + " MP\xa";
     }
     return retstr;
 }

@@ -71,7 +71,7 @@ public:
 	PPLayer *BeginLayer(char *layerName);
 	void EndLayer();
 	void BeginReadLayer(char *layer_name);
-	void ReorderLayer(int to_idx, int from_idx);
+	void ReorderLayer(int from_idx, int to_idx);
 	void MergeLayer(string tar, string src);
 
 	// Element Related Methods
@@ -87,7 +87,7 @@ public:
 	PPElement *next(); PPElement *Next() {return next();}
 	PPElement *first() {ResetCurrentIndex(); return next();} 
 
-	int ObjectNumber(){return _indirObj != NULL ? _indirObj->getObjNum() : 0;}
+	int ObjectNumber(){return _indirObj != NULL ? _indirObj->ObjNum() : 0;}
     int XObjectNumberFor(string name);
 	PPTIndirectObj *XObject();
 

@@ -36,7 +36,7 @@ string PPTName::XMLString(int level)
 }
 
 
-string PPTName::pdfString()
+string PPTName::PDFString()
 {
     string retstr = "/";
 	int i, icnt = _name->length();

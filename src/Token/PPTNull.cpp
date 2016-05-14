@@ -9,6 +9,6 @@ string PPTNull::XMLString(int level)
     return retstr;
 }
 
-string PPTNull::pdfString() {
+string PPTNull::PDFString() {
     return "null";
 }

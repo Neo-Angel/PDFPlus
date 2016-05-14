@@ -9,8 +9,12 @@ class PPParser;
 
 
 ///////////////////////////////////////// PPTNumber
+// 숫자를 다루기 위한 클래스 
 class PPTNumber : public PPToken {
-    string *_numstr;
+public:
+	// 객체 외부에서 할당된 메모리를 사용하나
+	// 메모리 해제는 이 객체가 소멸될 때 같이 해제한다.
+    string *_numstr; 
     double _number;
     
 public:

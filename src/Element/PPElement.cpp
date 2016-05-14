@@ -169,7 +169,7 @@ PPToken *PPElement::GetResource(const char *rsc_type)
     }
 	PPTDictionary *res_dict = NULL;
 	if(res_ref->ClassType() == PPTN_INDIRECTREF) {
-		res_dict = (PPTDictionary *)res_ref->valueObject();
+		res_dict = (PPTDictionary *)res_ref->ValueObject();
 		if (!res_dict) {
 			cout << "Resource Dictionary not found..." << PP_ENDL;
 			return NULL;
@@ -185,7 +185,7 @@ PPToken *PPElement::GetResource(const char *rsc_type)
         cout << "Resource IndirectRef not found..." << PP_ENDL;
         return NULL;
     }
-	ret_res = (PPTIndirectObj *)res_ref->targetObject();
+	ret_res = (PPTIndirectObj *)res_ref->TargetObject();
     if (!ret_res) {
         cout << "Resource Resource Object not found..." << PP_ENDL;
         return NULL;

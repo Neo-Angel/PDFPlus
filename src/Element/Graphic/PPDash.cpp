@@ -7,7 +7,7 @@
 string PPDash::pdfString()
 {
     string retstr;
-    retstr = _array->pdfString() + " " + _phase->pdfString();
+    retstr = _array->PDFString() + " " + _phase->PDFString();
     return retstr;
 }
 

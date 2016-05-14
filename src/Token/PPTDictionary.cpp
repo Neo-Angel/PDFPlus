@@ -28,7 +28,7 @@ PPTDictionary::~PPTDictionary()
     _dict.clear();
 }
 
-void PPTDictionary::setTokenAndKey(PPToken *token, string key)
+void PPTDictionary::SetTokenAndKey(PPToken *token, string key)
 {
     _dict[key] = token;
 }
@@ -37,21 +37,21 @@ void PPTDictionary::SetTokenAndKey(string name, string key)
 {
 	string *name_ptr = new string(name);
 	PPTName *name_obj = new PPTName(_document, name_ptr);
-	setTokenAndKey(name_obj, key);
+	SetTokenAndKey(name_obj, key);
 }
 
 void PPTDictionary::SetStringAndKey(string name, string key)
 {
 	string *name_ptr = new string(name);
 	PPTString *str_obj = new PPTString(_document, name_ptr);
-	setTokenAndKey(str_obj, key);
+	SetTokenAndKey(str_obj, key);
 }
 
 void PPTDictionary::SetNameAndKey(string name, string key)
 {
 	string *name_ptr = new string(name);
 	PPTName *str_obj = new PPTName(_document, name_ptr);
-	setTokenAndKey(str_obj, key);
+	SetTokenAndKey(str_obj, key);
 }
 
 
@@ -110,10 +110,10 @@ PPTName *PPTDictionary::NameForKey(const char *keyname)
 
     if (ret_name->TypeName() == PPTN_ARRAY) {
 		PPTArray *arr = (PPTArray *)ret_name;
-		if(arr->size() == 0) {
+		if(arr->Size() == 0) {
 			return NULL;
 		}
-		ret_name = (PPTName *) arr->objectAtIndex(0);
+		ret_name = (PPTName *) arr->ObjectAtIndex(0);
     }
     return ret_name;
 }
@@ -124,7 +124,7 @@ PPTIndirectObj *PPTDictionary::IndirectObjectForKey(string &keyname)
     if (ret) {
         if (ret->ClassType() == PPTN_INDIRECTREF) {
             PPTIndirectRef *indref = (PPTIndirectRef *)ret;
-            PPTIndirectObj *tar = indref->targetObject();
+            PPTIndirectObj *tar = indref->TargetObject();
             return tar;
         }
     }
@@ -139,7 +139,7 @@ PPToken *PPTDictionary::ValueObjectForKey(string &keyname)
     PPToken *ret = _dict[keyname];
     if (ret != NULL && ret->ClassType() == PPTN_INDIRECTREF) {
         PPTIndirectRef *indref = (PPTIndirectRef *)ret;
-        PPTIndirectObj *tar = indref->targetObject();
+        PPTIndirectObj *tar = indref->TargetObject();
         if (tar) {
             return tar->_array.size() > 0 ? tar->_array[0] : NULL;
         }
@@ -185,7 +185,7 @@ string PPTDictionary::XMLString(int level)
     return retstr;
 }
 
-string PPTDictionary::pdfString()
+string PPTDictionary::PDFString()
 {
     string retstr = "<<";
     map <string, PPToken *> ::iterator it_token_objs;

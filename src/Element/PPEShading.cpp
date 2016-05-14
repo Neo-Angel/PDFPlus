@@ -46,7 +46,7 @@ string PPEShading::makeCommandString()
 {
     string retstr;
 	if(_name) {
-		retstr = _name->pdfString();
+		retstr = _name->PDFString();
 		retstr += " sh\xa";
 	}
     return retstr;

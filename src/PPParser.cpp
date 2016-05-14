@@ -380,7 +380,7 @@ PPTDictionary *PPParser::parseDictionary(PPParserSource &source)
             return NULL;
         }
         PPToken *token = token_list.at(i*2+1);
-        ret_dict->setTokenAndKey(token, *name->_name);
+        ret_dict->SetTokenAndKey(token, *name->_name);
         delete name;
     }
     return ret_dict;  
@@ -432,7 +432,7 @@ PPTStream *PPParser::parseStream(PPParserSource &source, unsigned long length)
     PPTStream *ret = new PPTStream(_document, length);
     skipToCRLF(source);
     if (length > 0) {
-        source.read(ret->getBuffer(), length);
+        source.read(ret->Buffer(), length);
     }
     
     bool res = findWord(source, "endstream");
@@ -507,7 +507,7 @@ PPTStream *PPParser::parseStream(PPParserSource &source)
         if(bytes_len < bufidx + copy_size) {
             copy_size = (int)bytes_len - bufidx;
         }
-        memcpy(ret_stream->getBuffer()+bufidx, buf,copy_size);
+        memcpy(ret_stream->Buffer()+bufidx, buf,copy_size);
         bufidx += PP_STREAM_BUF_SIZE;
         delete buf;
     }
@@ -596,7 +596,7 @@ bool isKindOfXRefIndirectObjType(PPToken *token)
         return false;
     }
     PPTIndirectObj *indir = (PPTIndirectObj *)token;
-    PPTDictionary *dict = indir->firstDictionary();
+    PPTDictionary *dict = indir->FirstDictionary();
     PPTName *type = (PPTName *)dict->ValueObjectForKey("Type");
     if (type != NULL && *type->_name == "XRef") {
         return true;
@@ -770,14 +770,14 @@ bool PPParser::ParseSource(PPParserSource &source, vector<PPToken *> &token_list
                 token_obj = (PPToken *)parseStream(source, length);
                 if (token_obj) {
                     PPTStream *stream = (PPTStream *)token_obj;
-                    stream->_dict = dict;
+                    stream->_infoDict = dict;
                     PPTName *filter = (PPTName *)dict->NameForKey("Filter");
                     bool stream_parsed = false;
                     if (filter != NULL && *filter->_name == "FlateDecode") {
-                        stream->flateDecodeStream();
+                        stream->FlateDecodeStream();
                         PPTName *type = (PPTName *)dict->ObjectForKey("Type");
                         if (type != NULL && *type->_name == "ObjStm") {
-                            if(stream->parseObjStm(token_list, this) == false) {
+                            if(stream->ParseObjStm(token_list, this) == false) {
                                 return false;
                             }
                             stream_parsed = true;
@@ -793,7 +793,7 @@ bool PPParser::ParseSource(PPParserSource &source, vector<PPToken *> &token_list
             else {
                 token_obj = (PPToken *)parseStream(source);
                 PPTStream *stream = (PPTStream *)token_obj;
-                stream->_dict = dict;
+                stream->_infoDict = dict;
                 token_list.push_back(token_obj);
 				_document->_stream_list.push_back(token_obj);
             }

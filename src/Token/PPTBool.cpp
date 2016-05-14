@@ -29,7 +29,7 @@ string PPTBool::XMLString(int level)
     return retstr;
 }
 
-string PPTBool::pdfString()
+string PPTBool::PDFString()
 {
     return boolStr(_bool);
 }

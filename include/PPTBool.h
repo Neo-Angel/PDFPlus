@@ -8,8 +8,10 @@
 
 
 
-
-///////////////////////////////////////// PPTBool
+// PPTBool
+/////////////////////////////////////////////////////////////
+// 'true'나 'false' 두개의 값 중 하나를 나타냄
+/////////////////////////////////////////////////////////////
 class PPTBool : public PPToken {
 public:
     bool _bool;
@@ -18,7 +20,7 @@ public:
     PPTBool(PPDocument *doc, string &str);
 	PPTBool();
     string XMLString(int level);
-    string pdfString();
+    string PDFString();
 
 	PPBase *Create() {return new PPTBool();}
 	void CopyMembersTo(PPBase *obj) ;
