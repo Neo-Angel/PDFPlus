@@ -137,7 +137,7 @@ int PPDocument::buildDocument()
         PPToken *token = _tokens.at(icnt-i-1);
         if (token->ClassType() == PPTN_TRAILER) {
             PPTTrailer *trailer = (PPTTrailer *)token;//현재 트레일러
-            PPTDictionary *trailer_dict = trailer->getDictionary();
+            PPTDictionary *trailer_dict = trailer->Dictionary();
             if (trailer_dict) {
                 PPTNumber *prev_num = (PPTNumber *)trailer_dict->ObjectForKey("Prev");
                 if (prev_num != NULL) { // 이전 트레일러가 있으면
@@ -176,7 +176,7 @@ int PPDocument::buildDocument()
     }
     
 	//메타데이터 읽어오기
-    PPTIndirectObj *info_obj = (PPTIndirectObj *)_trailer->infoObject();
+    PPTIndirectObj *info_obj = (PPTIndirectObj *)_trailer->InfoObject();
     if (info_obj != NULL) {
         PPTDictionary *info_dict = info_obj->FirstDictionary();
         if (info_dict != NULL) {
@@ -192,7 +192,7 @@ int PPDocument::buildDocument()
     }
     
 	// root_obj (Type:Catalog)
-    PPTIndirectObj *root_obj = (PPTIndirectObj *)_trailer->rootObject();
+    PPTIndirectObj *root_obj = (PPTIndirectObj *)_trailer->RootObject();
     if (root_obj == NULL) {
         return -2; // error: Cannot find Root Object;
     }
@@ -397,7 +397,7 @@ bool PPDocument::IsOpened()
 ///////////////////////////////////////////////////////////////////
 PPTDictionary *PPDocument::RootDict()
 {
-	PPTIndirectObj *root_obj = (PPTIndirectObj *)_trailer->rootObject();
+	PPTIndirectObj *root_obj = (PPTIndirectObj *)_trailer->RootObject();
     if (root_obj == NULL) {
         return NULL; // error: Cannot find Root Object;
     }
@@ -541,7 +541,7 @@ int PPDocument::preBuildPDF()
 	_trailer = new PPTTrailer(this);
 
 	PPTIndirectRef *root_ref = new PPTIndirectRef(this,++_objNumber, 0);
-	_trailer->getDictionary()->SetTokenAndKey(root_ref, PPKN_ROOT);
+	_trailer->Dictionary()->SetTokenAndKey(root_ref, PPKN_ROOT);
 	PPTIndirectObj *root_obj = new PPTIndirectObj(this, _objNumber, 0);
 	root_obj->AddRefObj(root_ref);
 	PushObj(root_obj, _objNumber);
@@ -568,7 +568,7 @@ int PPDocument::preBuildPDF()
 	// End RootDict
 
 	PPTIndirectRef *info_ref = new PPTIndirectRef(this,++_objNumber, 0);
-	_trailer->getDictionary()->SetTokenAndKey(info_ref, PPKN_INFO);
+	_trailer->Dictionary()->SetTokenAndKey(info_ref, PPKN_INFO);
 	PPTIndirectObj *info_obj = new PPTIndirectObj(this, _objNumber, 0);
 	info_obj->AddRefObj(info_ref);
 	PushObj(info_obj, _objNumber);
@@ -1125,7 +1125,7 @@ void PPDocument::BuildOCProperties() {
 	_OCGs = new PPTArray();
 	_OCProperties->SetTokenAndKey(_OCGs, "OCGs");
 
-	PPTIndirectObj *root_obj = (PPTIndirectObj *)_trailer->rootObject();
+	PPTIndirectObj *root_obj = (PPTIndirectObj *)_trailer->RootObject();
     PPTDictionary *root_dict = root_obj->FirstDictionary();
 	root_dict->SetTokenAndKey(_OCProperties, "OCProperties");
 
@@ -1263,7 +1263,7 @@ void PPDocument::MergeLayer(string layer1, string layer2)
 void PPDocument::WriteOCProperties(PPTDictionary *properties)
 {
 	// root_obj (Type:Catalog)
-    PPTIndirectObj *root_obj = (PPTIndirectObj *)_trailer->rootObject();
+    PPTIndirectObj *root_obj = (PPTIndirectObj *)_trailer->RootObject();
     PPTDictionary *root_dict = root_obj->FirstDictionary();
 
 	_OCProperties = (PPTDictionary *)properties->Copy();

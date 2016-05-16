@@ -13,15 +13,18 @@ class PPTIndirectObj;
 class PPTIndirectRef;
 class PPTXRef;
 
+// Root Object, Info Object, Cross Reference 등의 정보를 담고있다. 
 class PPTTrailer : public PPToken {
+protected:
     PPTDictionary *_dict;
 
 public:
     PPTIndirectObj *_xrefIndirect;
-    long long _startxref;  // 파일 상의 물리적 위치
+    long long _startxref;  // Cross Reference Table 의 파일 상의 물리적 위치
     PPTXRef *_xrefObj;
     PPTTrailer *_next;
-    
+
+public:
     PPTTrailer(PPDocument *doc, PPTDictionary *dict, unsigned long long xref);
     PPTTrailer(PPDocument *doc, PPTIndirectObj *indir, unsigned long long xref);
     PPTTrailer(PPDocument *doc, unsigned long long xref);
@@ -30,22 +33,23 @@ public:
     ~PPTTrailer();
     
     string XMLString(int level);
-    string pdfString();
+    string PDFString();
+	PPBase *Create() {return new PPTTrailer();}
+	void CopyMembersTo(PPBase *obj);
     inline const char *ClassType(){return PPTN_TRAILER;};
-    PPTDictionary *getDictionary();
+
+    PPTDictionary *Dictionary();
     void Write(std::ostream &os);
 
-    PPToken *rootObject();
-    PPToken *infoObject();
+    PPToken *RootObject();
+    PPToken *InfoObject();
     void SetRootObject(PPTIndirectRef *indir_obj);
     void SetInfoObject(PPTIndirectRef *indir_obj);
     
-    void setFileID(PPTArray *idarr);
+    void SetFileID(PPTArray *idarr);
     void Build();
-    void merge(PPTTrailer *trailer);
+    void Merge(PPTTrailer *trailer);
 
-	PPBase *Create() {return new PPTTrailer();}
-	void CopyMembersTo(PPBase *obj);
 	void SetDocument(PPDocument *doc);
 
 

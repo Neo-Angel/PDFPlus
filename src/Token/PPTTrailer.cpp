@@ -87,7 +87,7 @@ string PPTTrailer::XMLString(int level)
     return retstr;
 }
 
-string PPTTrailer::pdfString()
+string PPTTrailer::PDFString()
 {
     string retstr;
     ostringstream ostr;
@@ -112,7 +112,7 @@ string PPTTrailer::pdfString()
     return retstr;
 }
 
-PPTDictionary *PPTTrailer::getDictionary()
+PPTDictionary *PPTTrailer::Dictionary()
 {
     if (_xrefIndirect) {
         return _xrefIndirect->FirstDictionary();
@@ -133,33 +133,33 @@ PPTDictionary *PPTTrailer::getDictionary()
 
 void PPTTrailer::SetRootObject(PPTIndirectRef *indir_obj)
 {
-    PPTDictionary *dict = getDictionary();
+    PPTDictionary *dict = Dictionary();
     dict->SetTokenAndKey(indir_obj, PPKN_ROOT);
 }
 
 void PPTTrailer::SetInfoObject(PPTIndirectRef *indir_obj)
 {
-    PPTDictionary *dict = getDictionary();
+    PPTDictionary *dict = Dictionary();
     dict->SetTokenAndKey(indir_obj, PPKN_INFO);
 }
 
-void PPTTrailer::setFileID(PPTArray *idarr)
+void PPTTrailer::SetFileID(PPTArray *idarr)
 {
-    PPTDictionary *dict = getDictionary();
+    PPTDictionary *dict = Dictionary();
     dict->SetTokenAndKey(idarr, PPKN_FILEID);
 }
 
 
-PPToken *PPTTrailer::rootObject()
+PPToken *PPTTrailer::RootObject()
 {
-    PPTDictionary *dict = getDictionary();
+    PPTDictionary *dict = Dictionary();
     PPToken *ret = dict->IndirectObjectForKey(PPKN_ROOT); // Indirect Ref.
     return ret;
 }
 
-PPToken *PPTTrailer::infoObject()
+PPToken *PPTTrailer::InfoObject()
 {
-    PPTDictionary *dict = getDictionary();
+    PPTDictionary *dict = Dictionary();
     PPToken *ret = dict->IndirectObjectForKey(PPKN_INFO); // Indirect Ref.
     return ret;
 }
@@ -170,7 +170,7 @@ void PPTTrailer::Build()
     _dict->_dict["Size"] = new PPTNumber(_document, obj_cnt+1);
 }
 
-void PPTTrailer::merge(PPTTrailer *other_trailer)
+void PPTTrailer::Merge(PPTTrailer *other_trailer)
 {
     if(other_trailer->_xrefIndirect) {
         if (!_xrefIndirect)
@@ -181,7 +181,7 @@ void PPTTrailer::merge(PPTTrailer *other_trailer)
     }
     
 
-    if (other_trailer->getDictionary() == NULL) {
+    if (other_trailer->Dictionary() == NULL) {
         return;
     }
     
@@ -199,7 +199,7 @@ void PPTTrailer::merge(PPTTrailer *other_trailer)
     
 
     
-    map <string, PPToken *> other_dict = other_trailer->getDictionary()->_dict;
+    map <string, PPToken *> other_dict = other_trailer->Dictionary()->_dict;
     
     map <string, PPToken *> ::iterator it_token_objs;
     for(it_token_objs = other_dict.begin(); it_token_objs != other_dict.end(); it_token_objs++) {

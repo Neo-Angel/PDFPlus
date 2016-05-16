@@ -26,7 +26,7 @@ PPTXRef::~PPTXRef()
     _xreflist.clear();
 }
 
-void PPTXRef::addXRef(unsigned int objnum, unsigned long long offset, int gennum, char type)
+void PPTXRef::AddXRef(unsigned int objnum, unsigned long long offset, int gennum, char type)
 {
     XRefItem *item = new XRefItem;
     item->offset = offset;
@@ -57,7 +57,7 @@ string PPTXRef::XMLString(int level)
     return retstr;
 }
 
-string PPTXRef::pdfString()
+string PPTXRef::PDFString()
 {
     string retstr;
     ostringstream ostr;
@@ -89,12 +89,12 @@ void PPTXRef::Write(std::ostream &os)
     _document->_filePtDict[_filepos] = this;
 }
 
-size_t PPTXRef::numberOfItems()
+size_t PPTXRef::NumberOfItems()
 {
     return _xreflist.size();
 }
 
-void PPTXRef::merge(PPTXRef *trailer)
+void PPTXRef::Merge(PPTXRef *trailer)
 {
     
 }

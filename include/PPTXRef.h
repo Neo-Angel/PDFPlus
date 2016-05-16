@@ -15,6 +15,8 @@ typedef struct {
 
 class PPTTrailer;
 
+
+// 오브젝트들의 파일상의 위치 정보와 버전 정보를 가지고 있다.
 class PPTXRef : public PPToken {
 public:
     map <unsigned int, XRefItem *> _xreflist;
@@ -23,18 +25,19 @@ public:
 	PPTXRef() {_trailerObj = NULL;}
     PPTXRef(PPDocument *doc);
     ~PPTXRef();
-    void addXRef(unsigned int objnum, unsigned long long offset, int gennum, char type);
-    size_t numberOfItems();
+
     string XMLString(int level);
-    string pdfString();
+    string PDFString();
     inline const char *ClassType() {return PPTN_XREF;}
     void Write(std::ostream &os);
-    
-    void merge(PPTXRef *trailer);
     
 	PPBase *Create() {return new PPTXRef();}
 	void CopyMembersTo(PPBase *obj);
 
+    void AddXRef(unsigned int objnum, unsigned long long offset, int gennum, char type);
+    size_t NumberOfItems();
+    void Merge(PPTXRef *trailer);
+    
 };
 /////////////////////////////////////////
 

@@ -551,7 +551,7 @@ bool parseXRef(PPParserSource &source, PPTXRef *xref, int objnum, int count)
         const char *typecstr = str_list[2].c_str();
         char typec = typecstr[0];
         
-        xref->addXRef(objnum+i, offset, gennum, typec);        
+        xref->AddXRef(objnum+i, offset, gennum, typec);        
     }
     return true;
 }
