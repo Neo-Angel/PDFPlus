@@ -40,7 +40,7 @@ public:
 	PPFormBase *GetFormObj();
 	PPElementType getType() {return PPET_FORM;}
 
-	void willAddToParent(PPFormBase *form);
+	void WillAddToParent(PPFormBase *form);
 
 	bool HasResource();
 

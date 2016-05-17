@@ -75,10 +75,10 @@ void PPEImage::SetDocument(PPDocument *doc)
 }
 
 
-string PPEImage::makeCommandString()
+string PPEImage::MakeCommandString()
 {
     string retstr;
-	retstr = PPElement::makeCommandString();
+	retstr = PPElement::MakeCommandString();
 	if(_name.length())
 		retstr += "/"+_name + " Do\xa";
     return retstr;
@@ -98,9 +98,9 @@ string PPEImage::XMLString(int level)
 }
 
 
-void PPEImage::willAddToParent(PPFormBase *form)
+void PPEImage::WillAddToParent(PPFormBase *form)
 {
-    PPElement::willAddToParent(form);
+    PPElement::WillAddToParent(form);
 	if (_image_path) {
 		PPDocument *doc = form->_document;
 		_xobj = doc->ImageFromPath(_image_path);

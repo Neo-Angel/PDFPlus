@@ -45,7 +45,7 @@ PPPage::PPPage(PPPage *page)
 void PPPage::LoadDictionary(PPTDictionary *page_dict)
 {
     _formDict = page_dict;
-	_context->ptMatrix()->Rotate(Rotate());
+	_context->MatrixRef()->Rotate(Rotate());
 
     _resourceDict = (PPTDictionary *)_formDict->ValueObjectForKey("Resources");
 
@@ -282,7 +282,7 @@ float PPPage::Rotate()
 
 PPMatrix *PPPage::DefaultMatrix()
 {
-	return &_context->matrix();
+	return &_context->Matrix();
 }
 
 // Setting Methods

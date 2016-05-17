@@ -40,7 +40,7 @@ const char *PPRT_PROPERTIES = "Properties";
 
 PPElement::PPElement(PPContext *gcontext)
 {
-    _gstate = gcontext->newGState();
+    _gstate = gcontext->NewGState();
 	_parentForm = NULL;
 	_gflag = PPGF_NONE;
 	_bounds = PPRect(0,0,0,0);
@@ -68,18 +68,18 @@ PPElement::~PPElement()
     delete _gstate;
 }
 
-string PPElement::commandString()
+string PPElement::CommandString()
 {
     string cmd_str = "";
 	if(_gstate) {
-		cmd_str = _gstate->makeCommandString();
+		cmd_str = _gstate->MakeCommandString();
 	}
-	string cmd_wd = makeCommandString();
+	string cmd_wd = MakeCommandString();
     cmd_str += cmd_wd;
     return cmd_str;
 }
 
-void PPElement::willAddToParent(PPFormBase *form)
+void PPElement::WillAddToParent(PPFormBase *form)
 {
     _parentForm = form;
     
@@ -129,7 +129,7 @@ string PPElement::ResourceKeyFor(const char *rsc_type)
 {
 	string key;
 	if(rsc_type == PPRT_EXTSTATE) {
-		key = _gstate->dictName();
+		key = _gstate->DictName();
 	}
 	else if(rsc_type == PPRT_COLORSPC) {
 		if(_gstate->_gflag & PPGF_STROKECOLORSPC) {
@@ -194,7 +194,7 @@ PPToken *PPElement::GetResource(const char *rsc_type)
 }
 
 
-PPDocument *PPElement::GetDocument()
+PPDocument *PPElement::Document()
 {
 	return _parentForm->_document;
 }
@@ -203,10 +203,10 @@ PPDocument *PPElement::GetDocument()
 void PPElement::SetTransform(float a, float b, float c, float d, float x, float y)
 {
 	PPMatrix mtx(a, b, c, d, x, y); 
-	_gstate->setMatrix(mtx);
+	_gstate->SetMatrix(mtx);
 }
 
 void PPElement::SetTransform(PPMatrix *mtx)
 {
-	_gstate->setMatrix(*mtx);
+	_gstate->SetMatrix(*mtx);
 }

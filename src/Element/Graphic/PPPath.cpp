@@ -25,7 +25,7 @@ void PPPath::CopyMembersTo(PPBase *obj)
 	}
 }
 
-void PPPath::checkBounds(float x, float y)
+void PPPath::CheckBounds(float x, float y)
 {
 	if (_bounds._origin._x == 0 && _bounds._size._width == 0) 
 		_bounds._origin._x = x;
@@ -47,27 +47,27 @@ void PPPath::checkBounds(float x, float y)
 
 }
 
-void PPPath::moveTo(float x, float y)
+void PPPath::MoveTo(float x, float y)
 {
     PPPathItem *path_item = new PPPathItem;
     path_item->_op = PPPO_MoveTo;
     path_item->_pt1._x = x;
     path_item->_pt1._y = y;
     _itemList.push_back(path_item);
-	checkBounds(x, y);
+	CheckBounds(x, y);
 }
 
-void PPPath::lineTo(float x, float y)
+void PPPath::LineTo(float x, float y)
 {
     PPPathItem *path_item = new PPPathItem;
     path_item->_op = PPPO_LineTo;
     path_item->_pt1._x = x;
     path_item->_pt1._y = y;
     _itemList.push_back(path_item);
-	checkBounds(x, y);
+	CheckBounds(x, y);
 }
 
-void PPPath::curveTo(float cx1, float cy1, float cx2, float cy2, float x, float y)
+void PPPath::CurveTo(float cx1, float cy1, float cx2, float cy2, float x, float y)
 {
     PPPathItem *path_item = new PPPathItem;
     path_item->_op = PPPO_CurveTo;
@@ -78,12 +78,12 @@ void PPPath::curveTo(float cx1, float cy1, float cx2, float cy2, float x, float 
     path_item->_pt3._x = x;
     path_item->_pt3._y = y;
     _itemList.push_back(path_item);
-	checkBounds(cx1, cy1);
-	checkBounds(cx2, cy2);
-	checkBounds(x, y);
+	CheckBounds(cx1, cy1);
+	CheckBounds(cx2, cy2);
+	CheckBounds(x, y);
 }
 
-void PPPath::curveTo1(float cx2, float cy2, float x, float y)
+void PPPath::CurveTo1(float cx2, float cy2, float x, float y)
 {
     PPPathItem *path_item = new PPPathItem;
     path_item->_op = PPPO_CurveTo1;
@@ -92,11 +92,11 @@ void PPPath::curveTo1(float cx2, float cy2, float x, float y)
     path_item->_pt2._x = x;
     path_item->_pt2._y = y;
     _itemList.push_back(path_item);
-	checkBounds(cx2, cy2);
-	checkBounds(x, y);
+	CheckBounds(cx2, cy2);
+	CheckBounds(x, y);
 }
 
-void PPPath::curveTo2(float cx1, float cy1, float x, float y)
+void PPPath::CurveTo2(float cx1, float cy1, float x, float y)
 {
     PPPathItem *path_item = new PPPathItem;
     path_item->_op = PPPO_CurveTo2;
@@ -104,12 +104,12 @@ void PPPath::curveTo2(float cx1, float cy1, float x, float y)
     path_item->_pt1._y = cy1;
     path_item->_pt2._x = x;
     path_item->_pt2._y = y;
-	checkBounds(cx1, cy1);
-	checkBounds(x, y);
+	CheckBounds(cx1, cy1);
+	CheckBounds(x, y);
     _itemList.push_back(path_item);
 }
 
-void PPPath::rectangle(float x, float y, float w, float h)
+void PPPath::Rectangle(float x, float y, float w, float h)
 {
     PPPathItem *path_item = new PPPathItem;
     path_item->_op = PPPO_Rectangle;
@@ -117,12 +117,12 @@ void PPPath::rectangle(float x, float y, float w, float h)
     path_item->_pt1._y = y;
     path_item->_pt2._x = w;
     path_item->_pt2._y = h;
-	checkBounds(x, y);
-	checkBounds(x+w, y+h);
+	CheckBounds(x, y);
+	CheckBounds(x+w, y+h);
     _itemList.push_back(path_item);
 }
 
-void PPPath::close()
+void PPPath::Close()
 {
     PPPathItem *path_item = new PPPathItem;
     path_item->_op = (PPPathOperator)PPC_ClosePath;

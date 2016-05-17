@@ -26,9 +26,9 @@ public:
 	void SetDocument(PPDocument *doc);
 
     string makeCommandString();
-    string XMLString(int level);
+    string XMLString(int Slevel);
 	PPElementType getType() {return PPET_BEGIN_MARKED_CONTENT;}
-	void willAddToParent(PPFormBase *form);
+	void WillAddToParent(PPFormBase *form);
 
 	bool HasResource();
 	vector <const char *> ResourceTypeList();

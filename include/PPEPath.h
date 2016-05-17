@@ -59,15 +59,15 @@ public:
     void setPaintingType(int type);
 	PPElementType getType() {return PPET_PATH;}
 	PPPath *getPath() {return _path;}
-	PPRect getBBox() {return _path->getBBox();}
+	PPRect getBBox() {return _path->BBox();}
 
 	void AddRect(float x, float y, float w, float h);
-	void MoveTo(float x, float y) { _path->moveTo(x, y);}
-	void LineTo(float x, float y) { _path->lineTo(x, y);}
+	void MoveTo(float x, float y) { _path->MoveTo(x, y);}
+	void LineTo(float x, float y) { _path->LineTo(x, y);}
 	void CurveTo(float cx1, float cy1, float cx2, float cy2, float x, float y) {
-		_path->curveTo(cx1, cy1, cx2, cy2, x, y);
+		_path->CurveTo(cx1, cy1, cx2, cy2, x, y);
 	}
-	void ClosePath() { _path->ClosePath(); }
+	void Close() { _path->Close(); }
 
 
 

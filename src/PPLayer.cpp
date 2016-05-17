@@ -18,7 +18,7 @@ PPLayer::PPLayer(PPTDictionary *layer_dict)
 
 void PPLayer::AddElement(PPElement *element)
 {
-    element->willAddToParent(_parent);
+    element->WillAddToParent(_parent);
 	element->SetParser(&_parent->_document->_parser);
 	_elements.push_back(element);
 	// update _commands list from element 

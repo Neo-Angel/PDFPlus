@@ -28,7 +28,7 @@ public:
 
     string makeCommandString();
     string XMLString(int level);
-    void willAddToParent(PPFormBase *form);
+    void WillAddToParent(PPFormBase *form);
 	PPElementType getType() {return PPET_SHADING;}
 
 	bool HasResource();

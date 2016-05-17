@@ -21,7 +21,7 @@ void PPPathItem::CopyMembersTo(PPBase *obj)
 }
 
 
-string PPPathItem::makeCommand()
+string PPPathItem::MakeCommand()
 {
     ostringstream ostr;
     switch (_op) {

@@ -13,38 +13,38 @@ PPContext::PPContext()
 {
 }
 
-PPGState *PPContext::newGState()
+PPGState *PPContext::NewGState()
 {
 	PPGState *ret_gstate = (PPGState *)Copy();
     return ret_gstate;
 }
 
-void PPContext::setGState(PPGState *gstate)
+void PPContext::SetGState(PPGState *gstate)
 {
-    _lineWidth = gstate->lineWidth();
-    _intent = gstate->intent();
-    _flatness = gstate->flatness();
-    _miterLimit = gstate->miterLimit();
-    _lineCap = gstate->lineCap();
-    _lineJoin = gstate->lineJoin();
-    _dictName = gstate->dictName();
-    _dash = gstate->dash();
-    _matrix = gstate->matrix();
-    _strokeColor = gstate->getStrokeColor();
-    _fillColor = gstate->getFillColor();
+    _lineWidth = gstate->LineWidth();
+    _intent = gstate->Intent();
+    _flatness = gstate->Flatness();
+    _miterLimit = gstate->MiterLimit();
+    _lineCap = gstate->LineCap();
+    _lineJoin = gstate->LineJoin();
+    _dictName = gstate->DictName();
+    _dash = gstate->Dash();
+    _matrix = gstate->Matrix();
+    _strokeColor = gstate->StrokeColor();
+    _fillColor = gstate->FillColor();
 }
 
-void PPContext::saveGState()
+void PPContext::SaveGState()
 {
-    PPGState *new_gstate = newGState();
+    PPGState *new_gstate = NewGState();
     _gstats.push(new_gstate);
 }
 
 
-void PPContext::restoreGState()
+void PPContext::RestoreGState()
 {
     PPGState *new_gstate = _gstats.top();
-    setGState(new_gstate);
+    SetGState(new_gstate);
     _gstats.pop();
     delete new_gstate;
 }

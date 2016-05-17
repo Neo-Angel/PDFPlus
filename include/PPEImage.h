@@ -38,11 +38,11 @@ public:
 	void CopyMembersTo(PPBase *);
 	void SetDocument(PPDocument *doc);
 
-    string makeCommandString();
+    string MakeCommandString();
     string XMLString(int level);
 	PPElementType getType() {return PPET_IMAGE;}
 
-	void willAddToParent(PPFormBase *form);
+	void WillAddToParent(PPFormBase *form);
 
 	bool HasResource();
 

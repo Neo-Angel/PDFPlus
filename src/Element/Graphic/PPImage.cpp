@@ -6,48 +6,6 @@
 #include "PPTIndirectObj.h"
 #include <jpeglib.h>
 
-
-/*
-		<Dict>
-			<Key>BitsPerComponent</Key>
-			<Number>8</Number>
-			<Key>ColorSpace</Key>
-			<Ref ObjID='25' Gen='0'/>
-			<Key>Filter</Key>
-			<Name>DCTDecode</Name>
-			<Key>HRes</Key>
-			<Number>287</Number>
-			<Key>Height</Key>
-			<Number>600</Number>
-			<Key>Length</Key>
-			<Number>222405</Number>
-			<Key>Subtype</Key>
-			<Name>Image</Name>
-			<Key>Type</Key>
-			<Name>XObject</Name>
-			<Key>VRes</Key>
-			<Number>287</Number>
-			<Key>Width</Key>
-			<Number>400</Number>
-		</Dict>
-		<Stream><![CDATA[			FFD8FFE000104A46494600010201011F011F0000FFE10F234578696600004D4D002A000000080009
-
-*/
-
-
-//typedef enum {
-//	JCS_UNKNOWN,		/* error/unspecified */
-//	JCS_GRAYSCALE,		/* monochrome */
-//	JCS_RGB,		/* red/green/blue, standard RGB (sRGB) */
-//	JCS_YCbCr,		/* Y/Cb/Cr (also known as YUV), standard YCC */
-//	JCS_CMYK,		/* C/M/Y/K */
-//	JCS_YCCK,		/* Y/Cb/Cr/K */
-//	JCS_BG_RGB,		/* big gamut red/green/blue, bg-sRGB */
-//	JCS_BG_YCC		/* big gamut Y/Cb/Cr, bg-sYCC */
-//} J_COLOR_SPACE;
-//
-
-
 const char *ColorSpaceStrings[8] = {
 	"Unknown",
 	"DeviceGray",

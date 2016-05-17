@@ -13,6 +13,7 @@
 //
 ///////////////////////////////////////////////////////////////
 
+// 수정된 상태 정보 타입들의 bit mask 정의
 enum PPGStateFlag {
     PPGF_NONE               = 0x00000000,
     PPGF_LINEWIDTH          = 0x00000001,
@@ -36,7 +37,7 @@ enum PPGStateFlag {
     PPGF_SETSTROKECOLORN    = 0x00040000
 };
 
-
+// Graphic Context의 상태정보를 담고있다.
 class PPGState : public PPBase {
 public:
     float       _lineWidth;
@@ -55,71 +56,67 @@ public:
     PPColor     _strokeColor;
     PPColor     _fillColor;
     
-    unsigned long _gflag;
+    unsigned long _gflag; // 수정된 상태 정보들을 bit mask 형태로 보관한다.
+
 public:
     PPGState();
 	PPBase *Create() {return new PPGState();}
 
 	void CopyMembersTo(PPBase *obj);
 
-    void setLineWidth(float v);
-	void SetLineWidth(float v) {setLineWidth(v);}
-    float lineWidth(){return _lineWidth;}
-    void setIntent(string v);
-    string intent(){return _intent;};
-    void setFlatness(float v);
-    float flatness(){return _flatness;}
-    void setMiterLimit(float v);
-    float miterLimit(){return _miterLimit;}
-	void setStrokeOpacity(float v) {_stroke_opacity = v;}
-	float strokeOpacity(){return _stroke_opacity;}
-	void setFillOpacity(float v) {_fill_opacity = v;}
-	float fillOpacity(){return _fill_opacity;}
-	float GetFillOpacity() {return _fill_opacity;}
-    void setLineCap(byte v);
-    byte lineCap(){return _lineCap;}
-    void setLineJoin(byte v);
-    byte lineJoin(){return _lineJoin;}
-    void setDictName(string s);
-    string dictName(){return _dictName;}
-    void setDash(PPDash d);
-    PPDash dash(){return _dash;};
-    void setMatrix(PPMatrix m);
-    PPMatrix matrix(){return _matrix;}
-	PPMatrix GetCTM(){return _matrix;}
-	PPMatrix *getCTM(){return &_matrix;}
-	PPMatrix *ptMatrix(){return &_matrix;}
+	void SetLineWidth(float v);
+    float LineWidth(){return _lineWidth;}
+    void SetIntent(string v);
+    string Intent(){return _intent;};
+    void SetFlatness(float v);
+    float Flatness(){return _flatness;}
+    void SetMiterLimit(float v);
+    float MiterLimit(){return _miterLimit;}
+	void SetStrokeOpacity(float v) {_stroke_opacity = v;}
+	float StrokeOpacity(){return _stroke_opacity;}
+	void SetFillOpacity(float v) {_fill_opacity = v;}
+	float FillOpacity(){return _fill_opacity;}
+    void SetLineCap(byte v);
+    byte LineCap(){return _lineCap;}
+    void SetLineJoin(byte v);
+    byte LineJoin(){return _lineJoin;}
+    void SetDictName(string s);
+    string DictName(){return _dictName;}
+    void SetDash(PPDash d);
+    PPDash Dash(){return _dash;};
+    void SetMatrix(PPMatrix m);
+    PPMatrix Matrix(){return _matrix;}
+	PPMatrix CTM(){return _matrix;}
+	PPMatrix *CTMRef(){return &_matrix;}
+	PPMatrix *MatrixRef(){return &_matrix;}
     
-    int numberOfStrokeColorCoponents();
-    int numberOfNonStrokeColorCoponents();
-    void setStrokeColorSpace(string name);
+    int NumberOfStrokeColorComponents();
+    int NumberOfNonStrokeColorComponents();
+    void SetStrokeColorSpace(string name);
 	void SetUserStrokeColorSpace(string name, PPTArray *arr);
-    string strokeColorSpace(){return _strokeColor._colorSpaceName;}
-	void setStrokeColor(PPColor c);  
-	void SetStrokeColor(PPColor c) {setStrokeColor(c);}
-    void setStrokeColor(float c1, float c2 = -1, float c3 = -1, float c4 = -1);
+    string StrokeColorSpace(){return _strokeColor._colorSpaceName;}
+	void SetStrokeColor(PPColor c);  
+    void SetStrokeColor(float c1, float c2 = -1, float c3 = -1, float c4 = -1);
 
-    PPColor getStrokeColor(){return _strokeColor;}
-    PPColor GetStrokeColor(){return _strokeColor;}
-	PPColor *strokeColor(){return &_strokeColor;}
+    PPColor StrokeColor(){return _strokeColor;}
+	PPColor *StrokeColorRef(){return &_strokeColor;}
     
-    void setFillColorSpace(string name);
+    void SetFillColorSpace(string name);
 	void SetUserFillColorSpace(string name, PPTArray *arr);
-    string fillColorSpace(){return _fillColor._colorSpaceName;};
-	void setFillColor(PPColor c); 
-	void SetFillColor(PPColor c) {setFillColor(c);}
-    void setFillColor(float c1, float c2 = -1, float c3 = -1, float c4 = -1);
+    string FillColorSpace(){return _fillColor._colorSpaceName;};
+	void SetFillColor(PPColor c); 
+    void SetFillColor(float c1, float c2 = -1, float c3 = -1, float c4 = -1);
 
-	PPColor getFillColor(){return _fillColor;}
-    PPColor *fillColor(){return &_fillColor;}
+	PPColor FillColor(){return _fillColor;}
+    PPColor *FillColorRef(){return &_fillColor;}
     
-    void clearGFlags(){_gflag = PPGF_NONE;}
-    unsigned long gFlags(){return _gflag;}
-    void setGFlags(unsigned long flag){_gflag = flag;}
+    void ClearGFlags(){_gflag = PPGF_NONE;}
+    unsigned long GFlags(){return _gflag;}
+    void SetGFlags(unsigned long flag){_gflag = flag;}
     
-    string makeCommandString();
+    string MakeCommandString();
     string XMLString(int level);
-	void setTransform(PPMatrix mtx){setMatrix(mtx);}
+	void SetTransform(PPMatrix mtx){SetMatrix(mtx);}
 
 	void SetStrokeColor(vector<PPToken *> &_operands);
 	void SetStrokeColorN(vector<PPToken *> &_operands);

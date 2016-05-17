@@ -9,7 +9,7 @@
 
 
 //
-//      PPGState
+//      PPImage
 //
 ///////////////////////////////////////////////////////////////
 
@@ -20,8 +20,6 @@ class PPTIndirectObj;
 
 class PPImage : public PPBase {
 	PPTIndirectObj *_image_obj;
-//	PPTDictionary *_dict;
-//	PPTStream *_stream;
 
 public:
 	PPImage(string path, PPDocument *doc);

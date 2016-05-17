@@ -15,12 +15,13 @@ class PPContext : public PPGState {
 public:
     stack <PPGState *> _gstats;
 
+public:
 	PPContext();
-//    PPContext();
-    PPGState *newGState();
-    void saveGState();
-    void restoreGState();
-    void setGState(PPGState *gstate);
+
+	PPGState *NewGState(); // == Copy();
+    void SaveGState();
+    void RestoreGState();
+    void SetGState(PPGState *gstate);
     
 };
 

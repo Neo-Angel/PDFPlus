@@ -4,7 +4,7 @@
 #include "PPTNumber.h"
 #include "PPTArray.h"
 
-string PPDash::pdfString()
+string PPDash::PDFString()
 {
     string retstr;
     retstr = _array->PDFString() + " " + _phase->PDFString();

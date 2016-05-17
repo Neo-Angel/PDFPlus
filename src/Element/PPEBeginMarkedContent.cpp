@@ -82,9 +82,9 @@ string PPEBeginMarkedContent::XMLString(int level)
     return retstr;
 }
 
-void PPEBeginMarkedContent::willAddToParent(PPFormBase *form)
+void PPEBeginMarkedContent::WillAddToParent(PPFormBase *form)
 {
-    PPElement::willAddToParent(form);
+    PPElement::WillAddToParent(form);
 	_OCGInfo = (PPTIndirectObj *)PPElement::GetResource(PPRT_PROPERTIES);
     if (!_OCGInfo) {
         cout << "OCG Resource Object not found..." << PP_ENDL;

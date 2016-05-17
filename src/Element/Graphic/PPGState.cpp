@@ -17,49 +17,49 @@ PPGState::PPGState()
     _gflag = 0;
 }
 
-void PPGState::setLineWidth(float v)
+void PPGState::SetLineWidth(float v)
 {
     _lineWidth = v;
     _gflag |= PPGF_LINEWIDTH;
 }
-void PPGState::setIntent(string v)
+void PPGState::SetIntent(string v)
 {
     _intent = v;
     _gflag |= PPGF_INTENT;
 }
-void PPGState::setFlatness(float v)
+void PPGState::SetFlatness(float v)
 {
     _flatness = v;
     _gflag |= PPGF_FLATNESS;
 }
-void PPGState::setMiterLimit(float v)
+void PPGState::SetMiterLimit(float v)
 {
     _miterLimit = v;
     _gflag |= PPGF_MITERLIMIT;
 }
-void PPGState::setLineCap(byte v)
+void PPGState::SetLineCap(byte v)
 {
     _lineCap = v;
     _gflag |= PPGF_LINECAP;
 }
 
-void PPGState::setLineJoin(byte v)
+void PPGState::SetLineJoin(byte v)
 {
     _lineJoin = v;
     _gflag |= PPGF_LINEJOIN;
 }
-void PPGState::setDictName(string s)
+void PPGState::SetDictName(string s)
 {
     _dictName = s;
     _gflag |= PPGF_DICTNAME;
 }
 
-void PPGState::setDash(PPDash d)
+void PPGState::SetDash(PPDash d)
 {
     _dash = d;
     _gflag |= PPGF_DASH;
 }
-void PPGState::setMatrix(PPMatrix m)
+void PPGState::SetMatrix(PPMatrix m)
 {
     _matrix = m;
     _gflag |= PPGF_MATRIX;
@@ -68,26 +68,26 @@ void PPGState::setMatrix(PPMatrix m)
 
 
 
-int PPGState::numberOfStrokeColorCoponents()
+int PPGState::NumberOfStrokeColorComponents()
 {
     bool is_string;
-    return _strokeColor.numberOfCoponents(is_string);
+    return _strokeColor.NumberOfComponents(is_string);
 }
 
-int PPGState::numberOfNonStrokeColorCoponents()
+int PPGState::NumberOfNonStrokeColorComponents()
 {
     bool is_string;
-    return _fillColor.numberOfCoponents(is_string);
+    return _fillColor.NumberOfComponents(is_string);
 }
 
-void PPGState::setStrokeColor(PPColor c)
+void PPGState::SetStrokeColor(PPColor c)
 {
     _strokeColor = c;
     _gflag |= PPGF_STROKECOLOR;
 //    _gflag |= PPGF_FILLCOLORSPC;
 }
 
-void PPGState::setStrokeColor(float c1, float c2, float c3, float c4)
+void PPGState::SetStrokeColor(float c1, float c2, float c3, float c4)
 {
     _strokeColor._c1 = c1;
     _strokeColor._c2 = c2;
@@ -96,14 +96,14 @@ void PPGState::setStrokeColor(float c1, float c2, float c3, float c4)
 	_gflag |= PPGF_STROKECOLOR;
 }
 
-void PPGState::setFillColor(PPColor c)
+void PPGState::SetFillColor(PPColor c)
 {
     _fillColor = c;
     _gflag |= PPGF_FILLCOLOR;
 //    _gflag |= PPGF_FILLCOLORSPC;
 }
 
-void PPGState::setFillColor(float c1, float c2, float c3, float c4)
+void PPGState::SetFillColor(float c1, float c2, float c3, float c4)
 {
     _fillColor._c1 = c1;
     _fillColor._c2 = c2;
@@ -112,12 +112,12 @@ void PPGState::setFillColor(float c1, float c2, float c3, float c4)
     _gflag |= PPGF_FILLCOLOR;
 }
 
-void PPGState::setStrokeColorSpace(string name)
+void PPGState::SetStrokeColorSpace(string name)
 {
     _strokeColor.SetColorSpaceName(name);
 }
 
-void PPGState::setFillColorSpace(string name)
+void PPGState::SetFillColorSpace(string name)
 {
     _fillColor.SetColorSpaceName(name);
 }
@@ -142,7 +142,7 @@ void PPGState::SetUserFillColorSpace(string name, PPTArray *arr)
 	_gflag |= PPGF_COLORSPACE;
 }
 
-string PPGState::makeCommandString()
+string PPGState::MakeCommandString()
 {
     string retstr;
     ostringstream ostr;
@@ -177,11 +177,11 @@ string PPGState::makeCommandString()
     }
     if(_gflag & PPGF_DASH) {
         cinfo = &PPCommandList[PPC_Dash];
-        ostr << _dash.pdfString() << " " << cinfo->command << PP_ENDL;
+        ostr << _dash.PDFString() << " " << cinfo->command << PP_ENDL;
     }
     if(_gflag & PPGF_MATRIX) {
         cinfo = &PPCommandList[PPC_Matrix];
-        ostr << _matrix.pdfString() << " " << cinfo->command << PP_ENDL;
+        ostr << _matrix.PDFString() << " " << cinfo->command << PP_ENDL;
     }
     if(_gflag & PPGF_STROKECOLOR) {
         if (_strokeColor._colorSpaceName == PPCSN_DeviceGray) {
@@ -288,19 +288,19 @@ string PPGState::makeCommandString()
 	// Set Color (N)
 	if(_gflag & PPGF_SETSTROKECOLOR) {
 		cinfo = &PPCommandList[PPC_SetColor];
-		ostr << _strokeColor.StringOfColors()  << " " << cinfo->command << PP_ENDL;
+		ostr << _strokeColor.StringValue()  << " " << cinfo->command << PP_ENDL;
 	}
 	if(_gflag & PPGF_SETSTROKECOLORN) {
 		cinfo = &PPCommandList[PPC_SetColorN];
-		ostr << _strokeColor.StringOfColors()  << " " << cinfo->command << PP_ENDL;
+		ostr << _strokeColor.StringValue()  << " " << cinfo->command << PP_ENDL;
 	}
 	if(_gflag & PPGF_SETFILLCOLOR) {
 		cinfo = &PPCommandList[PPC_SetNonStrokeColor];
-		ostr << _fillColor.StringOfColors()  << " " << cinfo->command << PP_ENDL;
+		ostr << _fillColor.StringValue()  << " " << cinfo->command << PP_ENDL;
 	}
 	if(_gflag & PPGF_SETFILLCOLORN) {
 		cinfo = &PPCommandList[PPC_SetNonStrokeColorN];
-		ostr << _fillColor.StringOfColors()  << " " << cinfo->command << PP_ENDL;
+		ostr << _fillColor.StringValue()  << " " << cinfo->command << PP_ENDL;
 	}
 
     retstr = ostr.str();
@@ -311,21 +311,21 @@ void PPGState::CopyMembersTo(PPBase *obj)
 	PPBase::CopyMembersTo(obj);
     PPGState *ret_gstate = (PPGState *)obj;
 
-    ret_gstate->setLineWidth(_lineWidth);
-    ret_gstate->setIntent(_intent);
-    ret_gstate->setFlatness(_flatness);
-    ret_gstate->setMiterLimit(_miterLimit);
-    ret_gstate->setLineCap(_lineCap);
-    ret_gstate->setLineJoin(_lineJoin);
-    ret_gstate->setDictName(_dictName);
+    ret_gstate->SetLineWidth(_lineWidth);
+    ret_gstate->SetIntent(_intent);
+    ret_gstate->SetFlatness(_flatness);
+    ret_gstate->SetMiterLimit(_miterLimit);
+    ret_gstate->SetLineCap(_lineCap);
+    ret_gstate->SetLineJoin(_lineJoin);
+    ret_gstate->SetDictName(_dictName);
     
     // needs to delete
-    ret_gstate->setDash(_dash);
-    ret_gstate->setMatrix(_matrix);
-    ret_gstate->setStrokeColor(_strokeColor);
-    ret_gstate->setFillColor(_fillColor);
+    ret_gstate->SetDash(_dash);
+    ret_gstate->SetMatrix(_matrix);
+    ret_gstate->SetStrokeColor(_strokeColor);
+    ret_gstate->SetFillColor(_fillColor);
     
-    ret_gstate->setGFlags(_gflag);
+    ret_gstate->SetGFlags(_gflag);
 //    clearGFlags();
     
 }
@@ -334,7 +334,7 @@ string PPGState::XMLString(int level)
 {
     string retstr;
     retstr += PPTabStr(level) + "<GState>\xa";
-    retstr += makeCommandString() + "\xa";
+    retstr += MakeCommandString() + "\xa";
     retstr += PPTabStr(level) + "</GState>\xa";
     return retstr;
 }
@@ -345,23 +345,23 @@ string PPGState::XMLString(int level)
 void  PPGState::SetStrokeColor(vector<PPToken *> &_operands)
 {
 	_gflag |= PPGF_SETSTROKECOLOR;
-	_strokeColor.SetColos(_operands);
+	_strokeColor.SetComponents(_operands);
 }
 
 void  PPGState::SetStrokeColorN(vector<PPToken *> &_operands)
 {
 	_gflag |= PPGF_SETSTROKECOLORN;
-	_strokeColor.SetColos(_operands);
+	_strokeColor.SetComponents(_operands);
 }
 
 void  PPGState::SetFillColor(vector<PPToken *> &_operands)
 {
 	_gflag |= PPGF_SETFILLCOLOR;
-	_fillColor.SetColos(_operands);
+	_fillColor.SetComponents(_operands);
 }
 
 void  PPGState::SetFillColorN(vector<PPToken *> &_operands)
 {
 	_gflag |= PPGF_SETFILLCOLORN;
-	_fillColor.SetColos(_operands);
+	_fillColor.SetComponents(_operands);
 }

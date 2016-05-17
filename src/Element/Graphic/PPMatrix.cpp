@@ -3,7 +3,7 @@
 #include "PPMatrix.h"
 
 
-string PPMatrix::pdfString()
+string PPMatrix::PDFString()
 {
     ostringstream ostr;
     string retstr;

@@ -58,7 +58,7 @@ void PPEForm::setStream(PPTStream *stream)
 string PPEForm::makeCommandString()
 {
     string retstr;
-	retstr = PPElement::makeCommandString();
+	retstr = PPElement::MakeCommandString();
     retstr += _name->PDFString() + " Do\xa";
     return retstr;
 }
@@ -103,9 +103,9 @@ PPFormBase *PPEForm::GetFormObj()  // Not Form Element
 	return ret_form;
 }
 
-void PPEForm::willAddToParent(PPFormBase *form)
+void PPEForm::WillAddToParent(PPFormBase *form)
 {
-    PPElement::willAddToParent(form);
+    PPElement::WillAddToParent(form);
     PPTIndirectRef *xobj_ref = (PPTIndirectRef *)_parentForm->ResourceForKey("XObject");
     if (!xobj_ref) {
         cout << "XObje IndirectRef not found..." << PP_ENDL;

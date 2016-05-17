@@ -50,7 +50,7 @@ void PPColor::SetRGBColor(float r, float g, float b, float a)
 	_c1 = r; _c2 = g; _c3 = b; _c4 = a;
 }
 
-int PPColor::numberOfCoponents(bool &is_string)
+int PPColor::NumberOfComponents(bool &is_string)
 {
     is_string = false;
     if(_colorSpaceName == PPCSN_DeviceGray || _colorSpaceName == PPCSN_CalGray || _colorSpaceName == PPCSN_Indexed) {
@@ -79,40 +79,40 @@ int PPColor::numberOfCoponents(bool &is_string)
     
 }
 
-void PPColor::SetColos(vector<PPToken *> &colors) // &vector<PPToken *> _operands
+void PPColor::SetComponents(vector<PPToken *> &components) // &vector<PPToken *> _operands
 {
-	_numofcolors = colors.size();
-	if(_numofcolors >= 1) {
-		PPTNumber *number = (PPTNumber *)colors[0];
+	_num_of_components = components.size();
+	if(_num_of_components >= 1) {
+		PPTNumber *number = (PPTNumber *)components[0];
 		_c1 = number->floatValue();
 	}
-	if(_numofcolors >= 2) {
-		_c2 = ((PPTNumber *)colors[1])->floatValue();
+	if(_num_of_components >= 2) {
+		_c2 = ((PPTNumber *)components[1])->floatValue();
 	}
-	if(_numofcolors >= 3) {
-		_c3 = ((PPTNumber *)colors[2])->floatValue();
+	if(_num_of_components >= 3) {
+		_c3 = ((PPTNumber *)components[2])->floatValue();
 	}
-	if(_numofcolors >= 4) {
-		_c4 = ((PPTNumber *)colors[3])->floatValue();
+	if(_num_of_components >= 4) {
+		_c4 = ((PPTNumber *)components[3])->floatValue();
 	}
 
 }	
 
 
-string PPColor::StringOfColors()
+string PPColor::StringValue()
 {
 	ostringstream ostr;
 	string retstr = "";
-	if(_numofcolors >= 1) {
+	if(_num_of_components >= 1) {
 		ostr << _c1;
 	}
-	if(_numofcolors >= 2) {
+	if(_num_of_components >= 2) {
 		ostr << " " << _c2;
 	}
-	if(_numofcolors >= 3) {
+	if(_num_of_components >= 3) {
 		ostr << " " << _c3;
 	}
-	if(_numofcolors >= 4) {
+	if(_num_of_components >= 4) {
 		ostr << " " << _c4;
 	}
 

@@ -68,9 +68,9 @@ string PPEShading::XMLString(int level)
     return retstr;
 }
 
-void PPEShading::willAddToParent(PPFormBase *form)
+void PPEShading::WillAddToParent(PPFormBase *form)
 {
-    PPElement::willAddToParent(form);
+    PPElement::WillAddToParent(form);
 	_sh_res = (PPTIndirectObj *)PPElement::GetResource(PPRT_SHADING);
     if (!_sh_res) {
         cout << "Shading Resource Object not found..." << PP_ENDL;

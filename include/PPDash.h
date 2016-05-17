@@ -16,10 +16,11 @@ class PPDash : public PPBase {
     
 public:
     PPTArray *_array;
-//    vector<float *> _array;
     PPTNumber *_phase;
+
+public:
     ~PPDash();
-    string pdfString();
+    string PDFString();
 };
 
 

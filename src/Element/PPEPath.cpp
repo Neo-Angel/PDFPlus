@@ -96,7 +96,7 @@ void PPEPath::setPaintingType(int type)
             Stroke();
             break;
         case PPC_CloseStroke:
-            _path->close();
+            _path->Close();
             Stroke();
             break;
         case PPC_Fill:
@@ -117,12 +117,12 @@ void PPEPath::setPaintingType(int type)
             Stroke();
             break;
         case PPC_CloseFillStroke:
-            _path->close();
+            _path->Close();
             Fill();
             Stroke();
             break;
         case PPC_CloseEOFillStroke:
-            _path->close();
+            _path->Close();
             Fill();
             Stroke();
             break;
@@ -149,7 +149,7 @@ string PPEPath::makeCommandString()
     size_t i, icnt = _path->_itemList.size();
     for (i=0; i<icnt; i++) {
         PPPathItem *path_item = _path->_itemList.at(i);
-		string path_item_str = path_item->makeCommand();
+		string path_item_str = path_item->MakeCommand();
         retstr += path_item_str;
 		
 		if(path_item_str == "-4.346 -4.132 l\n") {
@@ -229,6 +229,6 @@ void PPEPath::AddRect(float x, float y, float w, float h)
 	_path->LineTo(x+w, y);
 	_path->LineTo(x+w, y+h);
 	_path->LineTo(x, y+h);
-	_path->ClosePath();
+	_path->Close();
 }
 

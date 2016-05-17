@@ -62,8 +62,9 @@ extern const char *PPRT_PROPERTIES;
 class PPFormBase;
 class PPContext;
 
-
 enum PPGStateFlag;
+
+// 서드파티 개발자들이 PDF를 다루기 쉽도록 도와주는 API 클래스
 
 class PPElement : public PPBase {
     
@@ -79,13 +80,13 @@ public:
     PPElement(PPContext *gcontext);
 	PPElement(PPGState *gstate);
 	PPElement();
-	
     ~PPElement();
-    virtual void willAddToParent(PPFormBase *form);
-	virtual string makeCommandString() {return "";}
+
+    virtual void WillAddToParent(PPFormBase *form);
+	virtual string MakeCommandString() {return "";}
 	virtual string XMLString(int level) {return "";}
-	virtual PPElementType getType() {return PPET_NONE;}
-	virtual PPRect getBBox() {return _bounds;}
+	virtual PPElementType Type() {return PPET_NONE;}
+	virtual PPRect BBox() {return _bounds;}
 	virtual void SetParser(PPParser *parser) {};
 
 	virtual bool HasResource();
@@ -94,39 +95,37 @@ public:
 	virtual int ResourceObjNum(const char *rsc_type);
 	virtual PPToken *GetResource(const char *rsc_type);
 	//virtual PPToken *GetRealResource(string rsc_type, string rsc_key);
-	virtual string commandString();
+	virtual string CommandString();
 
 	PPBase *Create() {return new PPElement();}
 	void CopyMembersTo(PPBase *obj);
 
 	PPGState *getGState(){return _gstate;}
 	PPGState *GetGState(){return _gstate;}
-	PPMatrix *getCTM() {return _gstate->getCTM();}
-	PPElementType GetType() {return getType();}
-	PPRect GetBBox() {return getBBox();}
-	PPDocument *GetDocument();
+	PPMatrix *CTM() {return _gstate->CTMRef();}
+	PPDocument *Document();
 
-	void SetLineWidth(float v) {_gstate->setLineWidth(v);}
+	void SetLineWidth(float v) {_gstate->SetLineWidth(v);}
     float LineWidth(){return _gstate->_lineWidth;}
-	void SetIntent(string v) {_gstate->setIntent(v);}
+	void SetIntent(string v) {_gstate->SetIntent(v);}
     string Intent(){return _gstate->_intent;};
-    void SetFlatness(float v) {_gstate->setFlatness(v);}
+    void SetFlatness(float v) {_gstate->SetFlatness(v);}
     float Flatness(){return _gstate->_flatness;}
-    void SetMiterLimit(float v){_gstate->setMiterLimit(v);}
+    void SetMiterLimit(float v){_gstate->SetMiterLimit(v);}
     float MiterLimit(){return _gstate->_miterLimit;}
 	void SetStrokeOpacity(float v) {_gstate->_stroke_opacity = v;}
 	float StrokeOpacity(){return _gstate->_stroke_opacity;}
 	void SetFillOpacity(float v) {_gstate->_fill_opacity = v;}
 	float FillOpacity(){return _gstate->_fill_opacity;}
-    void SetLineCap(byte v){_gstate->setLineCap(v);}
+    void SetLineCap(byte v){_gstate->SetLineCap(v);}
     byte LineCap(){return _gstate->_lineCap;}
-    void SetLineJoin(byte v){_gstate->setLineJoin(v);}
+    void SetLineJoin(byte v){_gstate->SetLineJoin(v);}
     byte LineJoin(){return _gstate->_lineJoin;}
-    void SetDash(PPDash d){_gstate->setDash(d);}
+    void SetDash(PPDash d){_gstate->SetDash(d);}
     PPDash Dash(){return _gstate->_dash;};
 
-	void SetStrokeColor(PPColor c) {_gstate->setStrokeColor(c);}
-	void SetFillColor(PPColor c) {_gstate->setFillColor(c);}
+	void SetStrokeColor(PPColor c) {_gstate->SetStrokeColor(c);}
+	void SetFillColor(PPColor c) {_gstate->SetFillColor(c);}
 
 	void SetTransform(float a, float b, float c, float d, float x, float y);
 	void SetTransform(PPMatrix *mtx);

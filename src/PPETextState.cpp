@@ -45,7 +45,7 @@ string PPETextState::commandString()
 {
     string cmd_str;
     
-	cmd_str += PPElement::commandString();
+	cmd_str += PPElement::CommandString();
     return cmd_str;
 }
 
@@ -73,7 +73,7 @@ void PPETextState::addCommand(PPTCommand *cmd)
 
 void PPETextState::SetGContext(PPContext *gcontext)
 {
-	_gstate = gcontext->newGState();
+	_gstate = gcontext->NewGState();
 }
 
 string PPETextState::XMLString(int level)

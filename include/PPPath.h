@@ -31,8 +31,7 @@ enum PPEP_ClipType {
 ///////////////////////////////////////////////////////////////
 class PPPathItem;
 
-class PPPath : public PPBase {
-    
+class PPPath : public PPBase { 
 public:
     vector<PPPathItem *> _itemList;
     PPRect _bounds;
@@ -43,21 +42,19 @@ public:
 
 	void CopyMembersTo(PPBase *obj);
 
-	void checkBounds(float x, float y);
-	void moveTo(float x, float y); void MoveTo(float x, float y) {moveTo(x, y);}
-	void lineTo(float x, float y); void LineTo(float x, float y) {lineTo(x, y);}
-    void curveTo(float cx1, float cy1, float cx2, float cy2, float x, float y);
-    void CurveTo(float cx1, float cy1, float cx2, float cy2, float x, float y)
-	{ curveTo(cx1, cy1, cx2, cy2, x, y);}
-    void curveTo1(float cx2, float cy2, float x, float y);
-    void curveTo2(float cx1, float cy1, float x, float y);
-    void rectangle(float x, float y, float w, float h);
-	void close(); void ClosePath() {close();}
+	void CheckBounds(float x, float y); // 주워진 x, y포인트를 포함한 path의 바우드 영역(_bounds)을 계산한다.
+	void MoveTo(float x, float y);
+	void LineTo(float x, float y);
+    void CurveTo(float cx1, float cy1, float cx2, float cy2, float x, float y);
+    void CurveTo1(float cx2, float cy2, float x, float y);
+    void CurveTo2(float cx1, float cy1, float x, float y);
+    void Rectangle(float x, float y, float w, float h);
+	void Close();
     string XMLString(int level);
 
-	size_t itemCount() {return _itemList.size();}
-	PPPathItem *itemAtIndex(size_t idx) {return _itemList.at(idx);}
-	PPRect getBBox(){return _bounds;}
+	size_t NumberOfItems() {return _itemList.size();}
+	PPPathItem *ItemAtIndex(size_t idx) {return _itemList.at(idx);}
+	PPRect BBox(){return _bounds;}
 };
 
 

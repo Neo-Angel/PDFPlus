@@ -60,7 +60,7 @@ string PPEText::commandString()
     string cmd_str;
     
 	cmd_str += "BT\xa";
-	cmd_str += PPElement::commandString();
+	cmd_str += PPElement::CommandString();
 	cmd_str += "ET\xa";
     return cmd_str;
 }
@@ -89,7 +89,7 @@ void PPEText::addCommand(PPTCommand *cmd)
 
 void PPEText::SetGContext(PPContext *gcontext)
 {
-	_gstate = gcontext->newGState();
+	_gstate = gcontext->NewGState();
 }
 
 string PPEText::XMLString(int level)
