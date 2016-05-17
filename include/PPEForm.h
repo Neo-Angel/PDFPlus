@@ -28,17 +28,18 @@ public:
 //    PPEForm(PPTDictionary *dict, PPContext *gcontext);
     PPEForm(PPTName *name, PPContext *gcontext); //  PPFormBase::BuildElement() 에서 쓰임.
 	PPEForm();
+
 	PPBase *Create(){return new PPEForm;}
 
 	void CopyMembersTo(PPBase *);
 	void SetDocument(PPDocument *doc);
 
 //    void setStream(PPTStream *stream);
-    string makeCommandString();
+    string MakeCommandString();
     string XMLString(int level);
 	PPTIndirectObj *XObject();
-	PPFormBase *GetFormObj();
-	PPElementType getType() {return PPET_FORM;}
+	PPFormBase *FormObj();
+	PPElementType Type() {return PPET_FORM;}
 
 	void WillAddToParent(PPFormBase *form);
 
@@ -46,7 +47,7 @@ public:
 
 	vector <const char *> ResourceTypeList();
 	string ResourceKeyFor(const char *rsc_type);
-	PPToken *GetResource(const char *rsc_type);
+	PPToken *ResourceObjectFor(const char *rsc_type);
 
 };
 

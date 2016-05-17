@@ -26,20 +26,17 @@ public:
 	void SetDocument(PPDocument *doc);
 
 
-	string commandString();
-	string makeCommandString();
+	string CommandString();
+	string MakeCommandString();
     string XMLString(int level);
-
-	void SetGContext(PPContext *gcontext);
-    void addCommand(PPTCommand *cmd);
-	PPElementType getType() {return PPET_TEXT_STATE;}
-
 
 	bool HasResource();
 	vector <const char *> ResourceTypeList();
 	string ResourceKeyFor(const char *rsc_type);
 
-
+	void SetGContext(PPContext *gcontext);
+    void AddCommand(PPTCommand *cmd);
+	PPElementType Type() {return PPET_TEXT_STATE;}
 };
 
 

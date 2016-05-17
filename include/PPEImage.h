@@ -4,10 +4,6 @@
 
 #include <PPElement.h>
 
-
-
-
-
 //
 //      PPEImage
 //
@@ -24,8 +20,6 @@ public:
 	string _subtype; // "Form", "Image"
 	PPImage *_image;
 	char *_image_path;
-//    PPTDictionary *_dict;
-//    PPTStream *_stream;
     
 public:
 	PPEImage(string name, PPContext *gcontext);
@@ -40,7 +34,7 @@ public:
 
     string MakeCommandString();
     string XMLString(int level);
-	PPElementType getType() {return PPET_IMAGE;}
+	PPElementType Type() {return PPET_IMAGE;}
 
 	void WillAddToParent(PPFormBase *form);
 
@@ -48,7 +42,7 @@ public:
 
 	vector <const char *> ResourceTypeList();
 	string ResourceKeyFor(const char *rsc_type);
-	PPToken *GetResource(const char *rsc_type);
+	PPToken *ResourceObjectFor(const char *rsc_type);
 
 };
 

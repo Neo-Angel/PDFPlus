@@ -88,7 +88,7 @@ void PPEPath::EOClip()
 //PPC_CloseFillStroke, PPC_CloseEOFillStroke, PPC_NoPaint,
 //PPC_Clip, PPC_EOClip,
 
-void PPEPath::setPaintingType(int type)
+void PPEPath::SetPaintingType(int type)
 {
 	_paintingType = type;
     switch (type) {
@@ -142,7 +142,7 @@ void PPEPath::setPaintingType(int type)
     }
 }
 
-string PPEPath::makeCommandString()
+string PPEPath::MakeCommandString()
 {
 //    _gstate->makeCommandString();
     string retstr;
@@ -151,13 +151,6 @@ string PPEPath::makeCommandString()
         PPPathItem *path_item = _path->_itemList.at(i);
 		string path_item_str = path_item->MakeCommand();
         retstr += path_item_str;
-		
-		if(path_item_str == "-4.346 -4.132 l\n") {
-			cout << "-4.346 -4.132 l" << PP_ENDL;
-		}
-		if(path_item_str == "173.301 279.635 l\n") {
-			cout << "173.301 279.635 l" << PP_ENDL;
-		}
     }
 	if(_clipType == PPEP_Clip) {
 		retstr += "W ";
@@ -187,18 +180,6 @@ string PPEPath::makeCommandString()
 		}
 	}
 	retstr += PP_ENDL;
-	//PPCommandInfo *cinfo = &PPCommandList[_paintingType];
-	//retstr += (char *)(cinfo->command);
-	//retstr += PP_ENDL;
-	
-	/*
-	if(_strokeType == PPEP_NonStroke && _fillType == PPEP_NonFill) {
-		retstr += "n";
-		retstr += PP_ENDL;
-	}
-	else if(_strokeType == PPEP_Stroke && _fillType == PPEP_NonFill) {
-	}
-	*/
     return retstr;
 }
 

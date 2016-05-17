@@ -174,12 +174,12 @@ string PPEImage::ResourceKeyFor(const char *rsc_type)
 }
 
 
-PPToken *PPEImage::GetResource(const char *rsc_type)
+PPToken *PPEImage::ResourceObjectFor(const char *rsc_type)
 {
 	if(rsc_type == PPRT_XOBJECT) {
 		if(_xobj)
 			return _xobj;
 	}
 
-	return PPElement::GetResource(rsc_type);
+	return PPElement::ResourceObjectFor(rsc_type);
 }

@@ -26,16 +26,16 @@ public:
 	void CopyMembersTo(PPBase *);
 	void SetDocument(PPDocument *doc);
 
-    string makeCommandString();
+    string MakeCommandString();
     string XMLString(int level);
     void WillAddToParent(PPFormBase *form);
-	PPElementType getType() {return PPET_SHADING;}
+	PPElementType Type() {return PPET_SHADING;}
 
 	bool HasResource();
 
 	vector <const char *> ResourceTypeList();
 	string ResourceKeyFor(const char *rsc_type);
-	PPToken *GetResource(const char *rsc_type);
+	PPToken *ResourceObjectFor(const char *rsc_type);
 };
 
 

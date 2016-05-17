@@ -41,7 +41,7 @@ void PPEMarkedContent::SetDocument(PPDocument *doc)
 		_tag->_document = doc;
 }
 
-string PPEMarkedContent::makeCommandString()
+string PPEMarkedContent::MakeCommandString()
 {
     string retstr;
     if (_property) {

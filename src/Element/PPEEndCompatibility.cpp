@@ -10,7 +10,7 @@
 //  End Compatibility
 //
 ///////////////////////////////////////////////////////
-string PPEEndCompatibility::makeCommandString()
+string PPEEndCompatibility::MakeCommandString()
 {
     string retstr;
     retstr = "EX\xa";

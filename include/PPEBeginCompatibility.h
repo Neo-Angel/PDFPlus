@@ -10,9 +10,9 @@ public:
 
 	PPBase *Create(){return new PPEBeginCompatibility;}
 
-	string makeCommandString();
+	string MakeCommandString();
     string XMLString(int level);
-	PPElementType getType() {return PPET_BEGIN_COMPATIBILITY;}
+	PPElementType Type() {return PPET_BEGIN_COMPATIBILITY;}
 
 };
 

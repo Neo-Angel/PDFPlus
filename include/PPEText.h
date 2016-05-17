@@ -4,9 +4,6 @@
 
 #include <PPElement.h>
 
-
-
-
 //
 //      PPEText
 //
@@ -28,18 +25,17 @@ public:
 
 	void SetFont(char *font_name, float font_size);
 
-	string commandString();
-	string makeCommandString();
+	string CommandString();
+	string MakeCommandString();
     string XMLString(int level);
-
-	void SetGContext(PPContext *gcontext);
-    void addCommand(PPTCommand *cmd);
-	PPElementType getType() {return PPET_TEXT;}
-
 
 	bool HasResource();
 	vector <const char *> ResourceTypeList();
 	string ResourceKeyFor(const char *rsc_type);
+
+	void SetGContext(PPContext *gcontext);
+    void AddCommand(PPTCommand *cmd);
+	PPElementType Type() {return PPET_TEXT;}
 
 	void DrawText(char *text);
 };

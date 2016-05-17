@@ -17,9 +17,9 @@ public:
 	PPBase *Create(){return new PPEGRestore;}
 
 
-    string makeCommandString();
+    string MakeCommandString();
     string XMLString(int level);
-	PPElementType getType() {return PPET_GRESTORE;}
+	PPElementType Type() {return PPET_GRESTORE;}
 
 };
 

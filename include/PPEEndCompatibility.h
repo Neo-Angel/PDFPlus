@@ -12,9 +12,9 @@ public:
 
 	PPBase *Create(){return new PPEEndCompatibility;}
 
-	string makeCommandString();
+	string MakeCommandString();
     string XMLString(int level);
-	PPElementType getType() {return PPET_END_COMPATIBILITY;}
+	PPElementType Type() {return PPET_END_COMPATIBILITY;}
 
 };
 

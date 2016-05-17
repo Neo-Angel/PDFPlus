@@ -9,7 +9,7 @@
 //
 //////////////////////////////////////////////////////////
 
-string PPEGRestore::makeCommandString()
+string PPEGRestore::MakeCommandString()
 {
     return "Q\xa";
 }

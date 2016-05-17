@@ -93,14 +93,13 @@ public:
 	virtual vector <const char *> ResourceTypeList();
 	virtual string ResourceKeyFor(const char *rsc_type);
 	virtual int ResourceObjNum(const char *rsc_type);
-	virtual PPToken *GetResource(const char *rsc_type);
+	virtual PPToken *ResourceObjectFor(const char *rsc_type);
 	//virtual PPToken *GetRealResource(string rsc_type, string rsc_key);
 	virtual string CommandString();
 
 	PPBase *Create() {return new PPElement();}
 	void CopyMembersTo(PPBase *obj);
 
-	PPGState *getGState(){return _gstate;}
 	PPGState *GetGState(){return _gstate;}
 	PPMatrix *CTM() {return _gstate->CTMRef();}
 	PPDocument *Document();

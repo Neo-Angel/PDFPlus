@@ -55,7 +55,7 @@ void PPEText::SetDocument(PPDocument *doc)
 	}
 }
 
-string PPEText::commandString()
+string PPEText::CommandString()
 {
     string cmd_str;
     
@@ -65,7 +65,7 @@ string PPEText::commandString()
     return cmd_str;
 }
 
-string PPEText::makeCommandString()
+string PPEText::MakeCommandString()
 {
     string retstr;
 
@@ -78,7 +78,7 @@ string PPEText::makeCommandString()
     return retstr;
 }
 
-void PPEText::addCommand(PPTCommand *cmd)
+void PPEText::AddCommand(PPTCommand *cmd)
 {
     _cmdList.push_back(cmd);
 	if(cmd->_cmdInfo->code == PPC_FontAndSize) {

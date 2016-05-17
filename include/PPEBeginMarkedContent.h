@@ -25,15 +25,15 @@ public:
 	void CopyMembersTo(PPBase *);
 	void SetDocument(PPDocument *doc);
 
-    string makeCommandString();
+    string MakeCommandString();
     string XMLString(int Slevel);
-	PPElementType getType() {return PPET_BEGIN_MARKED_CONTENT;}
+	PPElementType Type() {return PPET_BEGIN_MARKED_CONTENT;}
 	void WillAddToParent(PPFormBase *form);
 
 	bool HasResource();
 	vector <const char *> ResourceTypeList();
 	string ResourceKeyFor(const char *rsc_type);
-	PPToken *GetResource(const char *rsc_type);
+	PPToken *ResourceObjectFor(const char *rsc_type);
 };
 
 

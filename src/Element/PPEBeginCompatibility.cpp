@@ -10,7 +10,7 @@
 //  Begin Compatibility
 //
 ///////////////////////////////////////////////////////
-string PPEBeginCompatibility::makeCommandString()
+string PPEBeginCompatibility::MakeCommandString()
 {
     string retstr;
     retstr = "BX\xa";

@@ -10,7 +10,7 @@
 //  End Mark Content
 //
 ///////////////////////////////////////////////////////
-string PPEEndMarkedContent::makeCommandString()
+string PPEEndMarkedContent::MakeCommandString()
 {
     string retstr;
     retstr = "EMC\xa";

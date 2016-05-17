@@ -23,12 +23,12 @@ public:
 	void CopyMembersTo(PPBase *);
 	void SetDocument(PPDocument *doc);
 
-    void setBeginImageObject(PPTCommand *cmd){}
-    void setBeginImageData(PPTCommand *cmd){}
-    string makeCommandString();
+    void SetBeginImageObject(PPTCommand *cmd){}
+    void SetBeginImageData(PPTCommand *cmd){}
+    string MakeCommandString();
     string XMLString(int level);
-	PPToken *getXObject();
-	PPElementType getType() {return PPET_INLINE_IMAGE;}
+	PPToken *XObject();
+	PPElementType Type() {return PPET_INLINE_IMAGE;}
 
 };
 

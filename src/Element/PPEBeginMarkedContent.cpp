@@ -57,7 +57,7 @@ void PPEBeginMarkedContent::SetDocument(PPDocument *doc)
 		_tag->_document = doc;
 }
 
-string PPEBeginMarkedContent::makeCommandString()
+string PPEBeginMarkedContent::MakeCommandString()
 {
     string retstr;
     if (_properties) {
@@ -85,7 +85,7 @@ string PPEBeginMarkedContent::XMLString(int level)
 void PPEBeginMarkedContent::WillAddToParent(PPFormBase *form)
 {
     PPElement::WillAddToParent(form);
-	_OCGInfo = (PPTIndirectObj *)PPElement::GetResource(PPRT_PROPERTIES);
+	_OCGInfo = (PPTIndirectObj *)PPElement::ResourceObjectFor(PPRT_PROPERTIES);
     if (!_OCGInfo) {
         cout << "OCG Resource Object not found..." << PP_ENDL;
         return;
@@ -121,12 +121,12 @@ string PPEBeginMarkedContent::ResourceKeyFor(const char *rsc_type)
 }
 
 
-PPToken *PPEBeginMarkedContent::GetResource(const char *rsc_type)
+PPToken *PPEBeginMarkedContent::ResourceObjectFor(const char *rsc_type)
 {
 	if(rsc_type == PPRT_PROPERTIES) {
 		if(_OCGInfo)
 			return _OCGInfo;
 	}
 
-	return PPElement::GetResource(rsc_type);
+	return PPElement::ResourceObjectFor(rsc_type);
 }

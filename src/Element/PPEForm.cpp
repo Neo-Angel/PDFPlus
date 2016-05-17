@@ -55,7 +55,7 @@ void PPEForm::setStream(PPTStream *stream)
     }
 }
 */
-string PPEForm::makeCommandString()
+string PPEForm::MakeCommandString()
 {
     string retstr;
 	retstr = PPElement::MakeCommandString();
@@ -86,7 +86,7 @@ PPTIndirectObj *PPEForm::XObject()
 	return indir_obj;
 }
 
-PPFormBase *PPEForm::GetFormObj()  // Not Form Element
+PPFormBase *PPEForm::FormObj()  // Not Form Element
 {
 	PPFormBase *ret_form = NULL;
 	PPTIndirectObj *indir_obj = XObject();
@@ -166,12 +166,12 @@ string PPEForm::ResourceKeyFor(const char *rsc_type)
 }
 
 
-PPToken *PPEForm::GetResource(const char *rsc_type)
+PPToken *PPEForm::ResourceObjectFor(const char *rsc_type)
 {
 	if(rsc_type == PPRT_XOBJECT) {
 		if(_xobj)
 			return _xobj;
 	}
 
-	return PPElement::GetResource(rsc_type);
+	return PPElement::ResourceObjectFor(rsc_type);
 }

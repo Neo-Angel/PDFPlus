@@ -42,7 +42,7 @@ void PPEShading::SetDocument(PPDocument *doc)
 		_sh_res->_document = doc;
 }
 
-string PPEShading::makeCommandString()
+string PPEShading::MakeCommandString()
 {
     string retstr;
 	if(_name) {
@@ -71,7 +71,7 @@ string PPEShading::XMLString(int level)
 void PPEShading::WillAddToParent(PPFormBase *form)
 {
     PPElement::WillAddToParent(form);
-	_sh_res = (PPTIndirectObj *)PPElement::GetResource(PPRT_SHADING);
+	_sh_res = (PPTIndirectObj *)PPElement::ResourceObjectFor(PPRT_SHADING);
     if (!_sh_res) {
         cout << "Shading Resource Object not found..." << PP_ENDL;
         return;
@@ -102,12 +102,12 @@ string PPEShading::ResourceKeyFor(const char *rsc_type)
 }
 
 
-PPToken *PPEShading::GetResource(const char *rsc_type)
+PPToken *PPEShading::ResourceObjectFor(const char *rsc_type)
 {
 	if(rsc_type == PPRT_SHADING) {
 		if(_sh_res)
 			return _sh_res;
 	}
 
-	return PPElement::GetResource(rsc_type);
+	return PPElement::ResourceObjectFor(rsc_type);
 }

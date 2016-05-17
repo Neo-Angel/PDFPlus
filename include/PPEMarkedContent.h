@@ -21,9 +21,9 @@ public:
 	void CopyMembersTo(PPBase *);
 	void SetDocument(PPDocument *doc);
 
-    string makeCommandString();
+    string MakeCommandString();
     string XMLString(int level);
-	PPElementType getType() {return PPET_MARKED_CONTENT;}
+	PPElementType Type() {return PPET_MARKED_CONTENT;}
 };
 
 

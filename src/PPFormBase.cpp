@@ -476,7 +476,7 @@ void PPFormBase::WriteElement(PPElement *src_element)
 					}
 					else  {
 						// 없으면 리소스 복사
-						PPToken *src_rsc = src_element->GetResource(rsc_type);
+						PPToken *src_rsc = src_element->ResourceObjectFor(rsc_type);
 						if(src_rsc) {
 							rsc = WriteResource(src_rsc, src_obj_num);  // _resources
 							if(rsc) {
@@ -725,7 +725,7 @@ int PPFormBase::BuildElements()
         switch (cmd->_cmdInfo->group) {
             case PPCG_GState:
 				if(text_element) {
-					text_element->addCommand(cmd);
+					text_element->AddCommand(cmd);
 				}
 				else {
 					SetValueToGState(cmd, gcontext);
@@ -770,7 +770,7 @@ int PPFormBase::BuildElements()
                     opened_path = NULL; 
                 }
                 if (path_element != NULL) {
-                    path_element->setPaintingType(cmd->_cmdInfo->code);
+                    path_element->SetPaintingType(cmd->_cmdInfo->code);
                 }
                 break;
                 
@@ -781,7 +781,7 @@ int PPFormBase::BuildElements()
 				if(text_element == NULL) {
 					text_element = new PPEText();
 				}
-                text_element->addCommand(cmd);
+                text_element->AddCommand(cmd);
                 break;
             case PPCG_EndText:
                 //                delete text_element;  //  You don't need to delete
@@ -795,22 +795,22 @@ int PPFormBase::BuildElements()
                 break;
             case PPCG_TextState:
 				if(text_element) {
-					text_element->addCommand(cmd);
+					text_element->AddCommand(cmd);
 				}
 				else {
 					if(textstate_element == NULL) {
 						textstate_element = new PPETextState();
 					}
-					textstate_element->addCommand(cmd);
+					textstate_element->AddCommand(cmd);
 				}
                 break;
             
             case PPCG_BeginInlineImage:
                 inline_img_element = new PPEInlineImage(&gcontext);
-                inline_img_element->setBeginImageObject(cmd);
+                inline_img_element->SetBeginImageObject(cmd);
                 break;
             case PPCG_InlineImage:
-                inline_img_element->setBeginImageData(cmd);
+                inline_img_element->SetBeginImageData(cmd);
                 break;
             case PPCG_EndInlineImage:
                 AddElement(inline_img_element);

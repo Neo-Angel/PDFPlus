@@ -32,7 +32,7 @@ void PPEInlineImage::SetDocument(PPDocument *doc)
     }
 }
 
-string PPEInlineImage::makeCommandString()
+string PPEInlineImage::MakeCommandString()
 {
     string retstr;
     ostringstream ostr;
