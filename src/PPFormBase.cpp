@@ -316,7 +316,7 @@ PPLayer *PPFormBase::BeginLayer(char *lname)
 	if(_curLayer == NULL) {
 		_curLayer = this->AddLayer(lname);
 	}
-	PPEBeginMarkedContent *begin_mark = new PPEBeginMarkedContent(_document, _curLayer->_properties, ptContext());
+	PPEBeginMarkedContent *begin_mark = new PPEBeginMarkedContent(_document, _curLayer->_properties, ContextRef());
 
 	WriteElement(begin_mark);
 	return _curLayer;
@@ -324,7 +324,7 @@ PPLayer *PPFormBase::BeginLayer(char *lname)
 
 void PPFormBase::EndLayer()
 {
-	PPEEndMarkedContent *end_mark = new PPEEndMarkedContent(ptContext());
+	PPEEndMarkedContent *end_mark = new PPEEndMarkedContent(ContextRef());
 	WriteElement(end_mark);
 	_curLayer = NULL;
 }

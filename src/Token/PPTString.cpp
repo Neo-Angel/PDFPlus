@@ -32,7 +32,7 @@ string PPTString::XMLString(int level)
     retstr += PPTabStr(level) + "<String><![CDATA[" + utf8_str + "]]></String>\xa";
     return retstr;
 }
-string PPTString::pdfString()
+string PPTString::PDFString()
 {
     string retstr = "<";
 	retstr += PPToHexStr(*_string);

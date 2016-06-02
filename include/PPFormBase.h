@@ -1,4 +1,4 @@
-
+ï»¿
 
 #ifndef __PDFPlusLib__PPFormBase__
 #define __PDFPlusLib__PPFormBase__
@@ -22,8 +22,8 @@ class PPTCommand;
 class PPLayer;
 
 
-// PDF ½ºÆå Áß¿¡ FormÀÇ ±â´ÉÀ» ´ã´çÇÑ´Ù.
-// PPPageÀÇ ½´ÆÛÅ¬·¹½ºÀÌ±âµµ ÇÏ´Ù.
+// PDF ìŠ¤í™ ì¤‘ì— Formì˜ ê¸°ëŠ¥ì„ ë‹´ë‹¹í•œë‹¤.
+// PPPageì˜ ìŠˆí¼í´ë ˆìŠ¤ì´ê¸°ë„ í•˜ë‹¤.
 class PPFormBase : public PPBase {
 protected:
 	PPContext *_context;
@@ -31,9 +31,9 @@ public:
 	PPTName *_form_key;
 
     PPDocument *_document;
-    PPCommandParser _graphicParser;  // form ¸¶´Ù ÀÖ´Â ±×·¡ÇÈ ½ºÆ®¸²À» ÆÄ½ÌÇÏ±â À§ÇÔ.
+    PPCommandParser _graphicParser;  // form ë§ˆë‹¤ ìˆëŠ” ê·¸ë˜í”½ ìŠ¤íŠ¸ë¦¼ì„ íŒŒì‹±í•˜ê¸° ìœ„í•¨.
 
-	size_t _cur_element_idx; // next() ÇÔ¼ö¿ë. (ÇöÀç Layer)->_elements ³»ÀÇ ÇöÀç ÀÎµ¦½º À§Ä¡.
+	size_t _cur_element_idx; // next() í•¨ìˆ˜ìš©. (í˜„ì¬ Layer)->_elements ë‚´ì˜ í˜„ì¬ ì¸ë±ìŠ¤ ìœ„ì¹˜.
     PPTIndirectObj *_indirObj;  // XObject
 
 	// ExtGState, ColorSpace, Pattern, Shading, XObject, Font, ProcSet, Properties 
@@ -42,12 +42,12 @@ public:
 
     vector <PPTCommand *> _commands;
 
-	// _layers¿¡´Â ÃÖ¼ÒÇÑ ÇÏ³ªÀÇ ·¹ÀÌ¾î°¡ Á¸ÀçÇØ¾ß ÇÑ´Ù.
+	// _layersì—ëŠ” ìµœì†Œí•œ í•˜ë‚˜ì˜ ë ˆì´ì–´ê°€ ì¡´ì¬í•´ì•¼ í•œë‹¤.
 	vector <PPLayer *> _layers;
 
-	// _layers¿¡ µÎ°³ ÀÌ»óÀÇ ·¹ÀÌ¾î°¡ ÀÖÀ» °æ¿ì »ç¿ëÀÚ(°³¹ßÀÚ)´Â ÇöÀç ·¹ÀÌ¾î¸¦ ÁöÁ¤ÇÒ ¼ö ÀÖ´Ù.
-	// AddElementµîÀÇ ÇÔ¼ö´Â ÀÌ _curLayer¿¡ Àû¿ëµÈ´Ù.
-	// _curLayer °¡ nullÀÏ °æ¿ì Ã¹¹øÂ° ·¹ÀÌ¾î°¡ 
+	// _layersì— ë‘ê°œ ì´ìƒì˜ ë ˆì´ì–´ê°€ ìˆì„ ê²½ìš° ì‚¬ìš©ì(ê°œë°œì)ëŠ” í˜„ì¬ ë ˆì´ì–´ë¥¼ ì§€ì •í•  ìˆ˜ ìˆë‹¤.
+	// AddElementë“±ì˜ í•¨ìˆ˜ëŠ” ì´ _curLayerì— ì ìš©ëœë‹¤.
+	// _curLayer ê°€ nullì¼ ê²½ìš° ì²«ë²ˆì§¸ ë ˆì´ì–´ê°€ 
 	PPLayer *_curLayer;
     
 public:
@@ -99,11 +99,11 @@ public:
 
 	bool HasElements() {return (NumberOfElements() > 0 ? true : false);}
 
-	PPContext *ptContext() {return _context;}
+	PPContext *ContextRef() {return _context;}
 	void SetValueToGState(PPTCommand *cmd, PPContext &gcontext);
 	void AddCommandToPath(PPTCommand *cmd, PPPath *path);
 	PPTStream *BuildStream();
-	PPFormBase *NewFormObj(PPFormBase *form_obj); //CutOpt: Additional.cpp ¿¡¼­ »ç¿ëÁß 
+	PPFormBase *NewFormObj(PPFormBase *form_obj); //CutOpt: Additional.cpp ì—ì„œ ì‚¬ìš©ì¤‘ 
 
 	string SubtypeFor(string name);
 

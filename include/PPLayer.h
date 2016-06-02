@@ -1,4 +1,4 @@
-
+﻿
 
 #ifndef __PDFPlusLib__PPLayer__
 #define __PDFPlusLib__PPLayer__

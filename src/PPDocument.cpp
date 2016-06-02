@@ -685,7 +685,7 @@ unsigned long long PPDocument::writeXRefs(std::ostream &os)
 }
 
 // PPDocument 내용을 PDF로 저장하는 함수.
-int PPDocument::Save(char *out_path)
+int PPDocument::Save(string out_path)
 {
     std::filebuf fb;
 

@@ -5,6 +5,6 @@
 To Do List
 ==========
 
-- Trailer->_dict->_dict : PPTDictionary 랑 map <int, PPToken *> 이랑 똑같이 _dict... 헷갈림.
+- Trailer->_dict->_dict : PPTDictionary 랑 map <int, PPToken *> 이랑 똑같이 _dict. 개선 필요.
 
 - 

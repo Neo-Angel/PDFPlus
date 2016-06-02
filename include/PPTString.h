@@ -18,7 +18,7 @@ public:
     string XMLString(int level);
     string utf8String();
     inline const char *ClassType(){return PPTN_STRING;};
-    string pdfString();
+    string PDFString();
 
 	PPBase *Create() {return new PPTString();}
 	void CopyMembersTo(PPBase *obj);

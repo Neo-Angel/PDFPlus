@@ -145,6 +145,10 @@ string PPElement::ResourceKeyFor(const char *rsc_type)
 int PPElement::ResourceObjNum(const char *rsc_type)
 {
 	PPTIndirectObj *rsc_obj = (PPTIndirectObj *)ResourceObjectFor(rsc_type);
+	if(rsc_obj == NULL) {
+		cout << " Resource Object is NULL." << PP_ENDL;
+		return 0;
+	}
 
 	// 동시에 두개 이상의 도큐먼트를 열어놓고 작업 할때를 대비해서
 	// ResourceObjNum 는 도큐먼트 ID 와 조합으로 만들어 낸다.

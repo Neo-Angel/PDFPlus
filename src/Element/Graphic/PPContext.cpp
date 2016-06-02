@@ -19,6 +19,7 @@ PPGState *PPContext::NewGState()
     return ret_gstate;
 }
 
+// 현재의 gstate 값들을 대치시킨다.
 void PPContext::SetGState(PPGState *gstate)
 {
     _lineWidth = gstate->LineWidth();
@@ -34,13 +35,14 @@ void PPContext::SetGState(PPGState *gstate)
     _fillColor = gstate->FillColor();
 }
 
+// 현재의 gstate값을 복사해 스택에 저장한다.
 void PPContext::SaveGState()
 {
     PPGState *new_gstate = NewGState();
     _gstats.push(new_gstate);
 }
 
-
+// 스택의 값을 가져와 현재의 값을 대치시킨다.
 void PPContext::RestoreGState()
 {
     PPGState *new_gstate = _gstats.top();

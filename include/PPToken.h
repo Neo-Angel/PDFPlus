@@ -1,4 +1,4 @@
-//
+﻿//
 //  PPToken.h
 //  PDFPlusLib
 //

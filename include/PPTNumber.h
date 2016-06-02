@@ -28,7 +28,7 @@ public:
     long longValue();
 	int intValue();
     string stringValue();
-    string pdfString() {return stringValue();}
+    string PDFString() {return stringValue();}
     string XMLString(int level);
     inline const char *ClassType(){return PPTN_NUMBER;}
 

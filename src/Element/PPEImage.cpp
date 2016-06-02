@@ -15,7 +15,7 @@ PPEImage::PPEImage(PPTName *name, PPContext *gcontext) : PPElement(gcontext)
 {
 	_name = *name->_name;
 	_image = NULL;
-	_image_path = NULL;
+//	_image_path = NULL;
 //	_dict = dict;
 //	_stream = NULL;
 }
@@ -24,7 +24,7 @@ PPEImage::PPEImage(PPTDictionary *dict, PPContext *gcontext) : PPElement(gcontex
 {
 //	_name = NULL;
 	_image = NULL;
-	_image_path = NULL;
+//	_image_path = NULL;
 //	_dict = dict;
 //	_stream = NULL;
 }
@@ -34,7 +34,7 @@ PPEImage::PPEImage(string name, PPContext *gcontext) : PPElement(gcontext)
 //	_name = name;
 	_xobj = NULL;
 	_image = NULL;
-	_image_path = NULL;
+	_image_path = name;
 }
 
 
@@ -101,7 +101,7 @@ string PPEImage::XMLString(int level)
 void PPEImage::WillAddToParent(PPFormBase *form)
 {
     PPElement::WillAddToParent(form);
-	if (_image_path) {
+	if (_image_path.length()) {
 		PPDocument *doc = form->_document;
 		_xobj = doc->ImageFromPath(_image_path);
 		if(_xobj) {
@@ -109,7 +109,7 @@ void PPEImage::WillAddToParent(PPFormBase *form)
 			
 			_subtype = "Image";
 		}
-		_image_path = NULL;
+		_image_path = "";
 		return;
 	}
 

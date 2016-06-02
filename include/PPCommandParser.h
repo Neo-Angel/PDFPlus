@@ -1,4 +1,4 @@
-//
+﻿//
 //  PPCommandParser.h
 //  PDFPlusLib
 //

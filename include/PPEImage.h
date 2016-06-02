@@ -19,7 +19,7 @@ public:
 	PPTIndirectObj *_xobj;
 	string _subtype; // "Form", "Image"
 	PPImage *_image;
-	char *_image_path;
+	string _image_path;
     
 public:
 	PPEImage(string name, PPContext *gcontext);
