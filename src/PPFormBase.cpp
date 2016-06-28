@@ -7,6 +7,7 @@
 
 #include "PPFormBase.h"
 #include "PPToken.h"
+#include "PPImage.h"
 #include "PPElement.h"
 #include "PPTStream.h"
 #include "PPContext.h"
@@ -50,6 +51,9 @@ PPFormBase::PPFormBase():_graphicParser((vector <PPToken *> *)&_commands) // _gr
 	// 기본적으로 최소한 1개의 레이어가 있어야 한다.
 	PPLayer *layer = new PPLayer(); // 사실 레이어라기보다 OCG 임 
 	_layers.push_back(layer);
+
+	_context = new PPContext;
+
 }
 
 PPFormBase::PPFormBase(PPFormBase *form_base):_graphicParser((vector <PPToken *> *)&_commands)
@@ -66,6 +70,7 @@ PPFormBase::PPFormBase(PPFormBase *form_base):_graphicParser((vector <PPToken *>
 	PPLayer *layer = new PPLayer();
 	_layers.push_back(layer);
 
+	_context = new PPContext;
 }
 
 PPFormBase::PPFormBase(PPDocument *doc, PPTIndirectObj *indir):_graphicParser((vector <PPToken *> *)&_commands)
@@ -93,6 +98,8 @@ PPFormBase::PPFormBase(PPDocument *doc, PPTIndirectObj *indir):_graphicParser((v
 		}
 	}
 	_curLayer = NULL;
+
+	_context = new PPContext;
 }
 
 PPFormBase::~PPFormBase()
@@ -105,6 +112,7 @@ PPFormBase::~PPFormBase()
 		PPLayer *layer = _layers[i];
 		delete layer;
 	}
+	delete _context;
 }
 
 // form_obj를 기반으로 새로운 Form 객체를 만든다. 
@@ -761,7 +769,6 @@ int PPFormBase::BuildElements()
                 break;
             case PPCG_FinishPath:
             case PPCG_Clipping:
-            
                 if (opened_path != NULL) {
                     // make path element and add to element list
                     path_element = new PPEPath(opened_path, &gcontext);
@@ -770,7 +777,7 @@ int PPFormBase::BuildElements()
                     opened_path = NULL; 
                 }
                 if (path_element != NULL) {
-                    path_element->SetPaintingType(cmd->_cmdInfo->code);
+					path_element->SetPaintingType(cmd->_cmdInfo->code);
                 }
                 break;
                 
@@ -918,7 +925,7 @@ PPTStream *PPFormBase::BuildStream()
 	return stream;
 }
 
-PPElement *PPFormBase::next()  // iterating
+PPElement *PPFormBase::Next()  // iterating
 {
 	if (NumberOfElements() > 0 && _cur_element_idx < NumberOfElements()) {
 		return ElementAtIndex(_cur_element_idx++);
@@ -948,7 +955,65 @@ void PPFormBase::AddFormObj(PPFormBase *form_obj)
 	PPTStream *stream = form_obj->BuildStream();
 	stream->_infoDict = (PPTDictionary *)xobj->_array[0];
 	stream->_infoDict->SetTokenAndKey(stream->_streamSize, "Length");
+	stream->_parentObj = xobj;
 	xobj->AddObj(stream);
 	AddXObjRef(xobj, *form_obj->_form_key->_name);
 	delete form_obj;
+}
+
+// Editing
+void PPFormBase::AddImage(PPRect rect, PPImage *image)
+{
+//	_document->AddImage(image);
+	PPEImage *ie = new PPEImage(image->ImagePath(), this->ContextRef());
+	ie->SetTransform(rect.Width(), 0, 0, rect.Height(), rect.X1(), rect.Y1());
+	this->WriteElement(ie);
+}
+
+void PPFormBase::AddImage(PPRect rect, string path)
+{
+	PPEImage *ie = new PPEImage(path, this->ContextRef());
+	ie->SetTransform(rect.Width(), 0, 0, rect.Height(), rect.X1(), rect.Y1());
+	this->WriteElement(ie);
+}
+
+void PPFormBase::AddText(PPRect rect, string text)
+{
+
+}
+
+void PPFormBase::ReplaceString(string org_str, string new_str)
+{
+    size_t i, icnt = _commands.size();
+    for (i=0; i<icnt; i++) {
+		size_t idx = icnt - i - 1;
+        PPTCommand *cmd = _commands.at(idx);
+		string str;
+		if(cmd->_cmdInfo->code == PPC_ShowText) {
+			str = cmd->StringValueAt(0);
+		}
+		else if(cmd->_cmdInfo->code == PPC_ShowMultiText) {
+			PPTArray *str_arr = (PPTArray *)cmd->TokenValueAt(0);
+			size_t j, jcnt = str_arr->_array.size();
+			for(j=0;j<jcnt;j++) {
+				PPToken *token = str_arr->ObjectAtIndex(j);
+				if(token->ClassType() == PPTN_STRING) {
+					PPTString *str_token = (PPTString *)token;
+					str += *(str_token->_string);
+				}
+			}
+		}
+		if(str.length() > 0) {
+			if(str == org_str) {
+				_commands.erase(_commands.begin() + idx);
+				PPTCommand *new_txt_cmd = new PPTCommand;
+				new_txt_cmd->_cmdInfo = &PPCommandList[PPC_ShowText];
+				PPTString *str_token = new PPTString(_document, &str);
+				new_txt_cmd->_operands.push_back(str_token);
+				_commands.insert(_commands.begin() + idx, new_txt_cmd);
+
+			}
+		}
+    }
+
 }

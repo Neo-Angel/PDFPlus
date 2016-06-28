@@ -31,6 +31,7 @@ PPImage::PPImage(string path, PPDocument *doc)
 	struct jpeg_decompress_struct cinfo;
 	struct jpeg_error_mgr jerr;
 	//JSAMPARRAY buffer;	
+	_path = path;
 
    // Error handler
    cinfo.err = jpeg_std_error(&jerr);
@@ -82,6 +83,7 @@ PPImage::PPImage(string path, PPDocument *doc)
 	fclose(infile);
 
 	_image_obj->_array.push_back(_stream);
+	_stream->_parentObj = _image_obj;
 }
 
 PPTIndirectObj *PPImage::MakeIndirectObj(int obj_num)

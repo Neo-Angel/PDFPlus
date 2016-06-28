@@ -62,8 +62,8 @@ string PPTXRef::PDFString()
     string retstr;
     ostringstream ostr;
     ostr << "xref" << PP_ENDL;
-    ostr << "0 " << _document->_last_obj_idx << PP_ENDL;
-    int i, icnt = _document->_last_obj_idx;
+    ostr << "0 " << _document->_objNumber << PP_ENDL;
+    int i, icnt = _document->_objNumber;
     for (i=0; i<icnt; i++) {
         PPTIndirectObj *obj = _document->_objDict[i];
         char buf[20];

@@ -61,18 +61,24 @@ void PPTDictionary::SetTokenAndKey(int num, string key)
 	SetTokenAndKey(num_obj, key);
 }
 
+// IndirectObj를 만들고 token을 넣고 IndirectRef를 만들고 key로 Set 함.
 PPTIndirectObj *PPTDictionary::SetRefTokenAndKey(PPToken *token, string key, int obj_num)
 {
 	PPTIndirectRef *ref = new PPTIndirectRef(_document, obj_num, 0);
 	SetTokenAndKey(ref, key);
 	PPTIndirectObj *obj = NULL;
+//	obj_num = _document->NextObjectNumber(); // 속도문제로 사용 자제
 	if(token->ClassType() == PPTN_INDIRECTOBJ) {
 		obj = (PPTIndirectObj *)token;
 		obj->_objNum = obj_num; // ???
 	}
 	else  {
 		obj = (PPTIndirectObj *)_document->ObjectForNumber(obj_num);
-		if(!obj) {
+		if(obj) {
+			PP_ERR << "Object must not exists." << PP_ENDL;
+			return NULL;
+		}
+		else {
 			obj = new PPTIndirectObj(_document, obj_num, 0);
 		}
 		obj->AddObj(token);  // 이 부분은 바로 위 if문안으로 들어가야 되는거 아닌지...

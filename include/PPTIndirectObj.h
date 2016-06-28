@@ -49,6 +49,7 @@ public:
     bool IsStream();
     PPTDictionary *FirstDictionary();
 	void AddObj(PPToken *obj);
+	void SetFirstObject(PPToken *obj);
     PPTStream *Stream();
     
     void AddRefObj(PPTIndirectRef *ref);
@@ -58,6 +59,7 @@ public:
     void Write(std::ostream &os);
     void Merge(PPTIndirectObj *ohter_indir);
     
+	void Clear();
 };
 /////////////////////////////////////////
 

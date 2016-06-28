@@ -86,7 +86,7 @@ public:
 
 											// 메인 파서 함수. 
 											// source에서 데이터를 읽어들여 파싱한 후 token_list에 Array로 담아 냄.
-    bool									ParseSource(PPParserSource &source, vector<PPToken *> &token_list);  // start parsing
+    bool									ParseSource(PPParserSource &source, vector<PPToken *> &token_list, PPToken *parent_token = NULL);  // start parsing
 };
 
 #endif /* defined(__PDFPlusLib__PPParser__) */

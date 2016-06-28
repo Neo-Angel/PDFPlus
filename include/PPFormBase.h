@@ -12,6 +12,9 @@
 //      PPEFormBase
 //
 ///////////////////////////////////////////////////////////////
+class PPRect;
+class PPImage;
+
 class PPToken;
 class PPDocument;
 class PPElement;
@@ -84,8 +87,8 @@ public:
 	void AddFormObj(PPFormBase *form_obj);
 
 	void ResetCurrentIndex() {_cur_element_idx = 0;}
-	PPElement *next(); PPElement *Next() {return next();}
-	PPElement *first() {ResetCurrentIndex(); return next();} 
+	PPElement *Next();
+	PPElement *First() {ResetCurrentIndex(); return Next();} 
 
 	int ObjectNumber(){return _indirObj != NULL ? _indirObj->ObjNum() : 0;}
     int XObjectNumberFor(string name);
@@ -107,7 +110,13 @@ public:
 
 	string SubtypeFor(string name);
 
-	// Layer Related Methods
+	// Editing
+
+	void AddImage(PPRect rect, PPImage *image);
+	void AddImage(PPRect rect, string path);
+	void AddText(PPRect rect, string text);
+	void ReplaceString(string org_str, string new_str);
+
 
 };
 

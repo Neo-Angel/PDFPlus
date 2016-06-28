@@ -387,10 +387,12 @@ void PPTStream::FlateDecodeStream()
     delete[] _streamData;
     _streamSize = stream_buf->TotalLength();
     _cur_pos = 0;
-    _streamData = new char[_streamSize];
+    _streamData = new char[_streamSize+1];
     
     // decoding 하면서 나눠졌던 데이터들을 하나로 모음
     stream_buf->Collect(_streamData);
+	_streamData[_streamSize] = NULL;
+	cout << "SteamData: " << _streamData << PP_ENDL;
     _decoded = true;
     
     delete stream_buf;
@@ -459,24 +461,28 @@ bool PPTStream::ParseObjStm(vector<PPToken *> &token_list, PPParser *parser)
     size_t num_idx = 0;
     _cur_pos = first_num->intValue();
     for (int i=0; i<cnt; i++) {
-        int obj_num = stoi(str_list[num_idx++]);
-        int obj_start = stoi(str_list[num_idx++]);
+        unsigned int obj_num = stoi(str_list[num_idx++]);
+        unsigned int obj_start = stoi(str_list[num_idx++]);
         _next = _streamSize;
         if (num_idx + 1 < str_list.size()) {
             _next = first + stoi(str_list[num_idx + 1]);
         }
-        vector<PPToken *> sub_tokens;
+        PPTIndirectObj *indir_obj = new PPTIndirectObj(parser->_document, obj_num, 0);
         _cur_pos = first + obj_start;
 
-        if (parser->ParseSource(*this, sub_tokens) == false)
+		if (parser->ParseSource(*this, indir_obj->_array, indir_obj) == false) {
+			delete indir_obj;
             return false;
-        PPTIndirectObj *indir_obj = new PPTIndirectObj(parser->_document, sub_tokens, obj_num, 0);
-        token_list.push_back(indir_obj);
+		}
+        //token_list.push_back(indir_obj);
         
         indir_obj->_filepos = -1;
         parser->_document->_filePtDict[indir_obj->_filepos] = indir_obj;
-        parser->_document->_objDict[obj_num] = (PPTIndirectObj *)indir_obj;
-        
+//        parser->_document->_objDict[obj_num] = (PPTIndirectObj *)indir_obj;
+        if (parser->_document->_objNumber < obj_num) {
+			_document->_objNumber = obj_num;
+		}
+		parser->_document->PushObj(indir_obj);
     }
     delete [] nums_cstr;
     return true;

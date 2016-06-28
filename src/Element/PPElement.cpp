@@ -168,7 +168,7 @@ PPToken *PPElement::ResourceObjectFor(const char *rsc_type)
 	}
     PPTIndirectRef *res_ref = (PPTIndirectRef *)_parentForm->ResourceForKey(rsc_type);
     if (!res_ref) {
-        cout << "Resource IndirectRef not found..." << PP_ENDL;
+        cout << "Resource IndirectRef for type '"<< rsc_type << "' not found..." << PP_ENDL;
         return NULL;
     }
 	PPTDictionary *res_dict = NULL;
@@ -186,7 +186,7 @@ PPToken *PPElement::ResourceObjectFor(const char *rsc_type)
 	string rsc_key = ResourceKeyFor(rsc_type);
     res_ref = (PPTIndirectRef *)res_dict->ObjectForKey(rsc_key);
     if (!res_ref) {
-        cout << "Resource IndirectRef not found..." << PP_ENDL;
+        cout << "Resource IndirectRef for key'" << rsc_key << "'not found..." << PP_ENDL;
         return NULL;
     }
 	ret_res = (PPTIndirectObj *)res_ref->TargetObject();

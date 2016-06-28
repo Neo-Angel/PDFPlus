@@ -13,6 +13,7 @@
 
 #include <fstream>
 #include <sstream>
+#include <direct.h>
 
 #include "PPDocument.h"
 #include "PPToken.h"
@@ -330,9 +331,13 @@ void PPDocument::decodeStreams(vector<PPToken *> &token_list)
 bool PPDocument::open(string filepath)
 {
     _file.open(filepath, std::ios::binary);
-	cout << "Openning path : " << filepath << PP_ENDL;
+	PP_DBG << "Openning path : " << filepath << PP_ENDL;
     if (!_file.is_open()) {
         _state = PPDS_Cannot_Open;
+		char dirpath[1024];
+		_getcwd(dirpath, 1024);
+		PP_ERR << "Cannot open file '"<< filepath<< "'."<<PP_ENDL;
+		PP_ERR << "Current working dir is '"<< dirpath<< "'."<<PP_ENDL;
         return false;
     }
 	
@@ -429,6 +434,11 @@ PPTArray *PPDocument::PageArray()
 	return page_list;
 }
 
+PPPage *PPDocument::GetPage(int page_no) 
+{
+	return _pages.at(page_no-1);
+}
+
 // Private Method :AddPage() 함수 안에서만 사용됨.
 ///////////////////////////////////////////////////////////////////
 void PPDocument::setPageCount(int cnt)
@@ -499,26 +509,29 @@ void PPDocument::writeLoadedPages()
 ///////////////////////////////////////////////////////////////////
 void PPDocument::PushObj(PPTIndirectObj *obj, int obj_num)
 {
-	if(_objDict[obj_num] != NULL) {
-		_objDict.erase(obj_num);
-		return;
+	PPTIndirectObj *pre_obj = _objDict[obj_num];
+	if(pre_obj != NULL && pre_obj != obj) {
+		delete pre_obj;
 	}
+	_objDict[obj_num] = obj;
+
 	_tokens.push_back(obj);
 	obj->SetDocument(this);
-	_objDict[obj_num] = obj;
 	
 }
 
 void PPDocument::PushObj(PPTIndirectObj *obj)
 {
 	int obj_num = obj->_objNum;
-	if(_objDict[obj_num] != NULL) {
-		_objDict.erase(obj_num);
-		return;
+	PPTIndirectObj *pre_obj = _objDict[obj_num];
+	if(pre_obj != NULL && pre_obj != obj) {
+		delete pre_obj;
 	}
+	_objDict[obj_num] = obj;
+
 	_tokens.push_back(obj);
 	obj->SetDocument(this);
-	_objDict[obj_num] = obj;
+
 	
 }
 
@@ -620,6 +633,7 @@ void PPDocument::doReorderingObjectNumbers()
     int new_idx = 0;
     
 	// 모든 IndirectObj들을 indir_objs에 차례대로 저장
+	/*
     map <int, PPTIndirectObj *> ::iterator it_indir_objs;
     for(it_indir_objs = _objDict.begin(); it_indir_objs != _objDict.end(); it_indir_objs++) {
         //        int obj_num = it_indir_objs->first;
@@ -628,8 +642,19 @@ void PPDocument::doReorderingObjectNumbers()
             indir_objs.push_back(indir_obj);
         }
     }
+	*/
     
-    size_t i, icnt = indir_objs.size();
+	size_t i, icnt = _tokens.size(), m = 0;
+	for(i=0;i<icnt;i++) {
+		PPToken *token = _tokens[i];
+		if(token->ClassType() == PPTN_INDIRECTOBJ) {
+			indir_objs.push_back((PPTIndirectObj *)token);
+		}
+	}
+
+
+
+    icnt = indir_objs.size();
     _objDict.clear(); // 멤버 인스턴스를 클리어
     for (i=0; i < icnt; i++) {
         PPTIndirectObj *indir_obj = indir_objs[i];
@@ -641,13 +666,13 @@ void PPDocument::doReorderingObjectNumbers()
         
         _objDict[new_idx] = indir_obj;
     }
-    _last_obj_idx = new_idx;
+    _objNumber = new_idx;
 }
 
 // PDF 구성 요소중에 하나인 'xref' 값들을 저장하는 함수
 unsigned long long PPDocument::writeXRefs(std::ostream &os)
 {
-    size_t obj_cnt = _last_obj_idx+1; //objNumber starts from 1.
+    size_t obj_cnt = _objNumber+1; //objNumber starts from 1.
     unsigned long long ret_pos = os.tellp();
     os << "xref" << PP_ENDL;
     os << "0 " << obj_cnt << PP_ENDL;
@@ -906,9 +931,19 @@ PPTName *PPDocument::AddFormObject(PPPage *page)
 }
 
 
-PPTIndirectObj *PPDocument::SetRefTokenForKey(PPTDictionary *dict, PPToken *token, string key)
+PPTIndirectObj *PPDocument::SetRefTokenForKey(PPTDictionary *dict, PPToken *new_token, string key)
 {
-	PPTIndirectObj *obj = dict->SetRefTokenAndKey(token, key, ++_objNumber);  // return new PPTIndirectObj
+	PPToken *old_token = dict->ObjectForKey(key);
+	if(old_token) { // 기존에 key해당하는 객체가 있으면
+		if(old_token->ClassType() == PPTN_INDIRECTREF) { // 그리고 그 객체가 PPTIndirectRef라면
+			// PPTIndirectObj를 알아내서 내용물을 new_token으로 대체한다.
+			PPTIndirectRef *old_ref = (PPTIndirectRef *)old_token;
+			PPTIndirectObj *old_obj = (PPTIndirectObj *)ObjectForNumber(old_ref->_objNum);
+			old_obj->SetFirstObject(new_token);
+			return old_obj;
+		}
+	}
+	PPTIndirectObj *obj = dict->SetRefTokenAndKey(new_token, key, ++_objNumber);  // return new PPTIndirectObj
 	PushObj(obj, _objNumber);
 //	_tokens.push_back(obj);
 	return obj;
@@ -1033,7 +1068,18 @@ PPTIndirectObj *PPDocument::ImageFromPath(string path)
 	return ret_obj;
 }
 
-
+PPTIndirectObj *PPDocument::AddImage(PPImage *image)
+{
+	string path = image->ImagePath();
+	PPTIndirectObj *ret_obj = _images[path];
+	if(ret_obj == NULL) {
+		int obj_num = NewObjNum();
+		PPTIndirectObj *ret_obj = image->MakeIndirectObj(obj_num);
+		PushObj(ret_obj);
+		_images[path] = ret_obj;
+	}
+	return ret_obj;
+}
 /////////////////////////////////////////////////////////////
 //  Layer(OCG) Related Methods
 /////////////////////////////////////////////////////////////
@@ -1300,6 +1346,13 @@ PPToken *PPDocument::ObjectAtFilePosition(unsigned long long pos)
     return ret;
 }
 
+int PPDocument::NextObjectNumber()
+{
+	while(this->ObjectForNumber(_objNumber) != NULL) {
+		_objNumber++;
+	}
+	return _objNumber;
+}
 
 //////////////////////////////////////////////////////////////////////////////
 // XML 만들기 관련 Methods. 편의를 위해 만든 함수들로 필수는 아님

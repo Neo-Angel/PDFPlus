@@ -28,7 +28,6 @@ string PPTabStr(int cnt);
 PPPage::PPPage(PPDocument *doc)  // this invokes PPFormBase() (default)constructor.
 {
     _document = doc;
-	_context = new PPContext;
 }
 
 PPPage::PPPage(PPPage *page)
@@ -122,12 +121,14 @@ void PPPage::BuildContents()
 {
 	PPTDictionary *stream_dict = new PPTDictionary(_document);
 
+	// stream_dict로 IndirectObj와 IndirectRef 를 만들어서 _formDict 에 PPKN_CONTENTS 키로 셋한다.
 	PPTIndirectObj *stream_obj = _document->SetRefTokenForKey(_formDict, stream_dict, PPKN_CONTENTS);
 	PPTStream *contents = BuildStream(); // 페이지의 drawing 코드들을 스트림으로 빌드한다.
 	stream_dict->SetTokenAndKey(contents->_streamSize, "Length");
 	stream_dict->SetTokenAndKey("FlateDecode", "Filter"); // Filter/FlateDecode
 	contents->SetDictionary(stream_dict);
 	contents->_decoded = true; 
+	contents->_parentObj = stream_obj;
 	stream_obj->AddObj(contents);
 }
 

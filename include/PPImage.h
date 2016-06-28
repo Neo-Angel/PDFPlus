@@ -19,12 +19,14 @@ class PPTStream;
 class PPTIndirectObj;
 
 class PPImage : public PPBase {
+	string _path;
 	PPTIndirectObj *_image_obj;
 
 public:
 	PPImage(string path, PPDocument *doc);
 
 	PPTIndirectObj *MakeIndirectObj(int obj_num);
+	string ImagePath(){return _path;}
 };
 
 

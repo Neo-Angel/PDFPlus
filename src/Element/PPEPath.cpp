@@ -179,6 +179,9 @@ string PPEPath::MakeCommandString()
 			}
 		}
 	}
+	if (_paintingType == PPC_NoPaint) {
+		retstr += " n";
+	}
 	retstr += PP_ENDL;
     return retstr;
 }

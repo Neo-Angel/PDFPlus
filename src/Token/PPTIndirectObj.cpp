@@ -26,14 +26,19 @@ PPTIndirectObj::PPTIndirectObj(PPDocument *doc, int num1, int num2):PPToken(doc)
 	_genNum = num2;
 }
 
-
-PPTIndirectObj::~PPTIndirectObj()
+void PPTIndirectObj::Clear()
 {
     int i, icnt = (int)_array.size();
     for (i=0; i<icnt; i++) {
         PPToken *token = _array.at(i);
         delete token;
     }
+	_array.clear();
+}
+
+PPTIndirectObj::~PPTIndirectObj()
+{
+	this->Clear();
 }
 
 string PPTIndirectObj::Description()
@@ -82,11 +87,22 @@ PPTDictionary *PPTIndirectObj::FirstDictionary()
 void PPTIndirectObj::AddObj(PPToken *obj)
 {
 	if(obj == this) {
-		cout << "obj == this" << PP_ENDL;
+		PP_ERR << "obj == this" << PP_ENDL;
 	}
 	_array.push_back(obj);
 }
 
+void PPTIndirectObj::AddRefObj(PPTIndirectRef *ref)
+{
+    _ref_list.push_back(ref);
+}
+
+void PPTIndirectObj::SetFirstObject(PPToken *obj) 
+{
+	this->Clear();
+	this->AddObj(obj);
+}
+	
 PPTStream *PPTIndirectObj::Stream()
 {
     if (_array.size() != 2) {
@@ -146,7 +162,7 @@ void PPTIndirectObj::Write(ostream &os)
     }
     else if (IsStream()) {
 		if(_array.size() == 1) {
-			cout << "Error : Stream must have 'stream' object!" << PP_ENDL;
+			PP_ERR << "Stream must have 'stream' object!" << PP_ENDL;
 		}
         ostringstream ostr;
         
@@ -175,11 +191,6 @@ void PPTIndirectObj::Write(ostream &os)
         _document->_filePtDict[_filepos] = this;
         _document->_objDict[_objNum] = this;
     }
-}
-
-void PPTIndirectObj::AddRefObj(PPTIndirectRef *ref)
-{
-    _ref_list.push_back(ref);
 }
 
 void PPTIndirectObj::SetObjNum(int num)

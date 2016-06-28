@@ -23,8 +23,6 @@ public:
 	void CopyMembersTo(PPBase *);
 	void SetDocument(PPDocument *doc);
 
-	void SetFont(char *font_name, float font_size);
-
 	string CommandString();
 	string MakeCommandString();
     string XMLString(int level);
@@ -37,7 +35,10 @@ public:
     void AddCommand(PPTCommand *cmd);
 	PPElementType Type() {return PPET_TEXT;}
 
-	void DrawText(char *text);
+	void SetString(string str);
+	string String();
+	void SetFont(string font_name, float font_size);
+
 };
 
 

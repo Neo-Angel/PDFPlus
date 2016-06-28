@@ -4,6 +4,8 @@
 #include "PPGState.h"
 #include "PPContext.h"
 #include "PPTName.h"
+#include "PPTString.h"
+#include "PPCommandParser.h"
 
 /* Example
 /F0 120 Tf
@@ -143,13 +145,50 @@ string PPEText::ResourceKeyFor(const char *rsc_type)
 	return ret_key;
 }
 
+string PPEText::String()
+{
+	string retstr;
+    size_t i, icnt = _cmdList.size();
+    for (i=0; i<icnt; i++) {
+        PPTCommand *cmd = _cmdList.at(i);
+		if(cmd->_cmdInfo->code == PPC_ShowText) {
+			retstr += cmd->StringValueAt(0);
+		}
+		else if(cmd->_cmdInfo->code == PPC_ShowMultiText) {
+			PPTArray *str_arr = (PPTArray *)cmd->TokenValueAt(0);
+			size_t j, jcnt = str_arr->_array.size();
+			for(j=0;j<jcnt;j++) {
+				PPToken *token = str_arr->ObjectAtIndex(j);
+				if(token->ClassType() == PPTN_STRING) {
+					PPTString *str_token = (PPTString *)token;
+					retstr += *(str_token->_string);
+				}
+			}
+		}
+    }
 
-void PPEText::SetFont(char *font_name, float font_size)
+
+	return retstr;
+}
+
+void PPEText::SetFont(string font_name, float font_size)
 {
 
 }
 
-void PPEText::DrawText(char *text)
+void PPEText::SetString(string str)
 {
-
+    size_t i, icnt = _cmdList.size();
+    for (i=0; i<icnt; i++) {
+		size_t idx = icnt - i - 1;
+        PPTCommand *cmd = _cmdList.at(idx);
+		if(cmd->_cmdInfo->group == PPCG_Text) {
+			_cmdList.erase(_cmdList.begin() + idx);
+		}
+	}
+	PPTCommand *new_txt_cmd = new PPTCommand;
+	new_txt_cmd->_cmdInfo = &PPCommandList[PPC_ShowText];
+	PPTString *str_token = new PPTString(_parentForm->_document, &str);
+	new_txt_cmd->_operands.push_back(str_token);
+	_cmdList.push_back(new_txt_cmd);
 }

@@ -32,6 +32,13 @@ typedef unsigned short  word;
 // String Constants
 static const char	*PP_ENDL = "\x0a";
 
+
+// #define macros
+#define PP_DBG cout << "PP_DBG:"
+#define PP_ERR cout << "PP_ERR:"
+#define PP_WRN cout << "PP_WRN:"
+
+
 //
 // Utility Fuctions
 //

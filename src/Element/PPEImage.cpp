@@ -103,7 +103,9 @@ void PPEImage::WillAddToParent(PPFormBase *form)
     PPElement::WillAddToParent(form);
 	if (_image_path.length()) {
 		PPDocument *doc = form->_document;
-		_xobj = doc->ImageFromPath(_image_path);
+
+		//해당 경로에 PPImage가 없으면 생성한 후 doc에 추가하고 PPIndirObj를 리턴한다.
+		_xobj = doc->ImageFromPath(_image_path); 
 		if(_xobj) {
 			_name = form->NameFromResourceObj(_xobj, "XObject");
 			
@@ -134,7 +136,7 @@ void PPEImage::WillAddToParent(PPFormBase *form)
         cout << "Shading IndirectRef not found..." << PP_ENDL;
         return;
     }
-	_xobj = (PPTIndirectObj *)xobj_ref->TargetObject();
+	_xobj = (PPTIndirectObj *)xobj_ref->TargetObject(); //  <==
     if (!_xobj) {
         cout << "Shading Resource Object not found..." << PP_ENDL;
         return;

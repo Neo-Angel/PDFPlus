@@ -71,6 +71,16 @@ bool isNumberRange(char ch)
     return false;
 }
 
+bool isMiddleNumberRange(char ch)
+{
+    if (ch >= '0' && ch <= '9') {
+        return true;
+    }
+    else if(ch == '+' || ch == '-' || ch == '.' || ch == 'e') {
+        return true;
+    }
+    return false;
+}
 // str을 ch를 기준으로 문자열들을 나누어 줌
 // 나누어진 문자열들은 components에 담아서 넘겨줌.
 size_t PPComponentsSepratedByChar(string &str, char ch, vector<string> &components)
@@ -260,11 +270,11 @@ PPTNumber *PPParser::parseNumber(PPParserSource &source, char start_ch)
     string *strbuf = new string;
     *strbuf += ch;
     source.get(ch);
-    while(!source.eof() && isNumberRange(ch)){
+    while(!source.eof() && isMiddleNumberRange(ch)){
         *strbuf += ch;
         source.get(ch);
     }
-    if (!isNumberRange(ch)) { //(ch == '/' || ch == ']'|| ch == '>') {
+    if (!isMiddleNumberRange(ch)) { //(ch == '/' || ch == ']'|| ch == '>') {
         size_t filept = source.tellg();
         source.seekg(filept-1);
     }
@@ -519,11 +529,13 @@ PPTStream *PPParser::parseStream(PPParserSource &source)
 //////////////////////////////////////////////////////////////////////////////
 PPTIndirectObj *PPParser::parseIndirectObj(PPParserSource &source, PPTNumber *num1, PPTNumber *num2)
 {
-    vector<PPToken *> token_list;
-    if(!ParseSource(source, token_list))
+    PPTIndirectObj *ret_obj = new PPTIndirectObj(_document, num1->intValue(), num2->intValue());
+
+	if(!ParseSource(source, ret_obj->_array, ret_obj)) {
+		delete ret_obj;
         return NULL;
-    PPTIndirectObj *ret = new PPTIndirectObj(_document, token_list, num1->intValue(), num2->intValue());
-    return ret;
+	}
+    return ret_obj;
 }
 
 
@@ -597,6 +609,9 @@ bool isKindOfXRefIndirectObjType(PPToken *token)
     }
     PPTIndirectObj *indir = (PPTIndirectObj *)token;
     PPTDictionary *dict = indir->FirstDictionary();
+	if(dict == NULL) {
+		return false;
+	}
     PPTName *type = (PPTName *)dict->ValueObjectForKey("Type");
     if (type != NULL && *type->_name == "XRef") {
         return true;
@@ -626,7 +641,7 @@ bool canSourceParseString(PPParserSource &source, string curstr)
 //  Main Parsing Function
 //
 //////////////////////////////////////////////////////////////////////////////////
-bool PPParser::ParseSource(PPParserSource &source, vector<PPToken *> &token_list)
+bool PPParser::ParseSource(PPParserSource &source, vector<PPToken *> &token_list, PPToken *parent_token)
 {
     PPTXRef *XRef = NULL;
     size_t filept = 0;
@@ -772,18 +787,21 @@ bool PPParser::ParseSource(PPParserSource &source, vector<PPToken *> &token_list
                     PPTStream *stream = (PPTStream *)token_obj;
                     stream->_infoDict = dict;
                     PPTName *filter = (PPTName *)dict->NameForKey("Filter");
-                    bool stream_parsed = false;
+                    bool obj_stream_parsed = false;
                     if (filter != NULL && *filter->_name == "FlateDecode") {
                         stream->FlateDecodeStream();
                         PPTName *type = (PPTName *)dict->ObjectForKey("Type");
                         if (type != NULL && *type->_name == "ObjStm") {
+							if(parent_token != NULL && parent_token->ClassType() == PPTN_INDIRECTOBJ) {
+								stream->_parentObj = (PPTIndirectObj *)parent_token;
+							}
                             if(stream->ParseObjStm(token_list, this) == false) {
                                 return false;
                             }
-                            stream_parsed = true;
+                            obj_stream_parsed = true;
                         }
                     }
-                    if (!stream_parsed) {
+                    if (!obj_stream_parsed) {
                         token_list.push_back(token_obj);
                     }
                 }
@@ -812,10 +830,13 @@ bool PPParser::ParseSource(PPParserSource &source, vector<PPToken *> &token_list
                     _document->_filePtDict[token_obj->_filepos] = token_obj;
                     token_list.erase(token_list.begin() + (cnt-1));
                     token_list.erase(token_list.begin() + (cnt-2));
-                    token_list.push_back(token_obj);
+					PPTIndirectObj *ind_obj = (PPTIndirectObj *)token_obj;
+					if(ind_obj->IsObjStream() == false) {
+						token_list.push_back(token_obj);
+					}
                     _document->_objDict[num1->intValue()] = (PPTIndirectObj *)token_obj;
-                    if (_document->_last_obj_idx < (unsigned)num1->intValue()) {
-                        _document->_last_obj_idx = num1->intValue();
+                    if (_document->_objNumber < (unsigned)num1->intValue()) {
+                        _document->_objNumber = num1->intValue();
                     }
                 }
                 else {

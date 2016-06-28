@@ -38,6 +38,7 @@ public:
     void EOFill();
     void Clip();
     void EOClip();
+//	void SetNoPaint() {_paintingType = PPC_NoPaint;}
 
 	inline bool IsFilled() { return (_fillType != PPEP_NonFill);}
 	inline bool IsStroked() { return (_strokeType != PPEP_NonStroke);}

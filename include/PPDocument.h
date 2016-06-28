@@ -20,6 +20,7 @@
 using namespace std;
 
 class PPLayer;
+class PPImage;
 
 
 /* Document의 현재 상태를 나타내는 enum 목록들 */
@@ -41,9 +42,9 @@ class PPDocument : public PPParserSource { /* PPParserSource 는 virtual class�
     
 public:  //protected:
 	int										_docID; /* 여러개의 도큐먼트가 열렸을 때 각 도큐먼트들을 구분하기위한 ID */
-    int										_objNumber;  /* 마지막에 사용된 오브젝 넘버. 오브젝이 생길 때마다 1씩 증가하며 번호가 할당된다.*/
-	int										_xobjNumber; 
-    unsigned int							_last_obj_idx;  /*  사용되어진 오브젝 넘버들 중 가징 큰 수 */
+    unsigned int										_objNumber;  /* 마지막에 사용된 오브젝 넘버. 오브젝이 생길 때마다 1씩 증가하며 번호가 할당된다.*/
+	unsigned int										_xobjNumber; 
+//    unsigned int							_last_obj_idx;  /*  사용되어진 오브젝 넘버들 중 가징 큰 수 */
 
     PPDocumentState							_state;
 
@@ -172,11 +173,12 @@ public:
     bool 									IsBuiltElements();
     map <int, PPTIndirectObj *> &			ObjectsDictionary(); // return _objDict
 	PPToken *								ObjectForNumber(int num); // _objDict를 이용한 함수.
+	int										NextObjectNumber();
     PPToken *								ObjectAtFilePosition(unsigned long long pos);//_filePtDict를 이용한 함수
 	int										NumberOfPages() {return _pages.size();}
 	size_t									GetPageCount() {return _pages.size();}
 	PPPage *								PageAtIndex(int idx){return _pages.at(idx);}
-	PPPage *								GetPage(int page_no) {return _pages.at(page_no-1);}
+	PPPage *								GetPage(int page_no);// {return _pages.at(page_no-1);}
 	PPTDictionary *							PagesDictionary();
 	PPTArray *								PageArray();
 	PPTDictionary *							RootDict();
@@ -210,9 +212,12 @@ public:
 	PPTIndirectObj *						AddResource(PPToken *rcs,  int num) ;
 	PPTIndirectObj *						WriteResource(PPToken *rsc, int obj_num); // return copied resource.
 
+	//  Image Related Methods   
+	PPTIndirectObj *						ImageFromPath(string path);
+	PPTIndirectObj *						AddImage(PPImage *image);
+
 	// Utility Methods
 	void									ApplyTokenToList(PPToken *token);
-	PPTIndirectObj *						ImageFromPath(string path);
 	void									RemoveRelatedObjects(PPTIndirectRef *ref);
     void 									SaveXObjectsToFolder(const char *folder); // Currently just Images
     void 									SaveFontsToFolder(const char *folder);

@@ -28,7 +28,7 @@ protected:
 public:
 	// stream 에 대한 기본적인 정보(Filter 명등..)를 담고있는 dictionary
     PPTDictionary *_infoDict; 
-
+	PPTIndirectObj *_parentObj;
     char *_streamData;
     unsigned long _streamSize;
 	string _filterName; // 인코딩 방식 이름
