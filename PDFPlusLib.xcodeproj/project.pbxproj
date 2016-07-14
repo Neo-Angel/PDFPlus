@@ -53,7 +53,6 @@
 		427D355F1D36682700E71DA2 /* PPTString.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427D35311D36682700E71DA2 /* PPTString.cpp */; };
 		427D35601D36682700E71DA2 /* PPTTrailer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427D35321D36682700E71DA2 /* PPTTrailer.cpp */; };
 		427D35611D36682700E71DA2 /* PPTXRef.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427D35331D36682700E71DA2 /* PPTXRef.cpp */; };
-		427D35631D36696300E71DA2 /* libz.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 427D35621D36696300E71DA2 /* libz.a */; };
 		427D35651D36697200E71DA2 /* zlib.h in Headers */ = {isa = PBXBuildFile; fileRef = 427D35641D36697200E71DA2 /* zlib.h */; };
 		427D35991D3673E700E71DA2 /* jpeglib.h in Headers */ = {isa = PBXBuildFile; fileRef = 427D35981D3673E700E71DA2 /* jpeglib.h */; };
 /* End PBXBuildFile section */
@@ -106,7 +105,6 @@
 		427D35311D36682700E71DA2 /* PPTString.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PPTString.cpp; sourceTree = "<group>"; };
 		427D35321D36682700E71DA2 /* PPTTrailer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PPTTrailer.cpp; sourceTree = "<group>"; };
 		427D35331D36682700E71DA2 /* PPTXRef.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PPTXRef.cpp; sourceTree = "<group>"; };
-		427D35621D36696300E71DA2 /* libz.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libz.a; path = "../zlib-1.2.8/libz.a"; sourceTree = "<group>"; };
 		427D35641D36697200E71DA2 /* zlib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = zlib.h; path = "../zlib-1.2.8/zlib.h"; sourceTree = "<group>"; };
 		427D35671D3671BB00E71DA2 /* PDFPlus.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PDFPlus.h; sourceTree = "<group>"; };
 		427D35681D3671BB00E71DA2 /* PPBase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PPBase.h; sourceTree = "<group>"; };
@@ -156,7 +154,6 @@
 		427D35941D3671BB00E71DA2 /* PPTString.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PPTString.h; sourceTree = "<group>"; };
 		427D35951D3671BB00E71DA2 /* PPTTrailer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PPTTrailer.h; sourceTree = "<group>"; };
 		427D35961D3671BB00E71DA2 /* PPTXRef.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PPTXRef.h; sourceTree = "<group>"; };
-		427D35971D3673CA00E71DA2 /* libjpeg.la */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = libjpeg.la; path = "../jpeg-9a/libjpeg.la"; sourceTree = "<group>"; };
 		427D35981D3673E700E71DA2 /* jpeglib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = jpeglib.h; path = "../jpeg-9a/jpeglib.h"; sourceTree = "<group>"; };
 		42DD145A1A4E964700DAE75C /* DevNote.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = DevNote.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -166,7 +163,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				427D35631D36696300E71DA2 /* libz.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -177,7 +173,6 @@
 			isa = PBXGroup;
 			children = (
 				427D35981D3673E700E71DA2 /* jpeglib.h */,
-				427D35971D3673CA00E71DA2 /* libjpeg.la */,
 				427D35661D3671BB00E71DA2 /* include */,
 				42DD145A1A4E964700DAE75C /* DevNote.txt */,
 				427D35031D36682700E71DA2 /* Element */,
@@ -209,7 +204,6 @@
 			isa = PBXGroup;
 			children = (
 				427D35641D36697200E71DA2 /* zlib.h */,
-				427D35621D36696300E71DA2 /* libz.a */,
 			);
 			name = zlib;
 			sourceTree = "<group>";
