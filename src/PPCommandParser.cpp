@@ -89,16 +89,16 @@ PPCommandInfo PPCommandList[PP_NUM_OF_OPS] = {
     
     {"Td",PPC_NextLine, PPCG_Text, 2,"NextLine"},
     {"TD",PPC_NextLine2, PPCG_Text, 2,"NextLine2"},
-    {"Tm",PPC_TextMatrix, PPCG_Text, 6,"TextMatrix"},
-    {"T*",PPC_NextLine3, PPCG_Text, 0,"extLine3"},
+    {"Tm",PPC_TextMatrix, PPCG_TextState, 6,"TextMatrix"},
+    {"T*",PPC_NextLine3, PPCG_Text, 0,"NextLine3"},
     
     {"Tj",PPC_ShowText, PPCG_Text, 1,"ShowText"},
     {"TJ",PPC_ShowMultiText, PPCG_Text, 1,"ShowMultiText"},
     {"'",PPC_ShowTextNextLine, PPCG_Text, 3,"ShowTextNextLine"},
     {"\"",PPC_ShowTextNextLine2, PPCG_Text, 1,"ShowTextNextLine2"},
     
-    {"d0",PPC_GlyphWidth, PPCG_Text, 2,"GlyphWidth"},
-    {"d1",PPC_GlyphWidthAndBox, PPCG_Text, 6,"GlyphWidthAndBox"},
+    {"d0",PPC_GlyphWidth, PPCG_TextState, 2,"GlyphWidth"},
+    {"d1",PPC_GlyphWidthAndBox, PPCG_TextState, 6,"GlyphWidthAndBox"},
     
     {"CS",PPC_StrokeColorSpace, PPCG_GState, 1,"StrokeColorSpace"},
     {"cs",PPC_NonStrokeColorSpace, PPCG_GState, 1,"NonStrokeColorSpace"},

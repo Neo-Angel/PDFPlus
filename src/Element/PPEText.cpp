@@ -188,7 +188,8 @@ void PPEText::SetString(string str)
 	}
 	PPTCommand *new_txt_cmd = new PPTCommand;
 	new_txt_cmd->_cmdInfo = &PPCommandList[PPC_ShowText];
-	PPTString *str_token = new PPTString(_parentForm->_document, &str);
+	string *new_str = new string(str);
+	PPTString *str_token = new PPTString(_parentForm->_document, new_str);
 	new_txt_cmd->_operands.push_back(str_token);
 	_cmdList.push_back(new_txt_cmd);
 }

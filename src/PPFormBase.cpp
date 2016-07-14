@@ -984,36 +984,22 @@ void PPFormBase::AddText(PPRect rect, string text)
 
 void PPFormBase::ReplaceString(string org_str, string new_str)
 {
-    size_t i, icnt = _commands.size();
-    for (i=0; i<icnt; i++) {
-		size_t idx = icnt - i - 1;
-        PPTCommand *cmd = _commands.at(idx);
-		string str;
-		if(cmd->_cmdInfo->code == PPC_ShowText) {
-			str = cmd->StringValueAt(0);
-		}
-		else if(cmd->_cmdInfo->code == PPC_ShowMultiText) {
-			PPTArray *str_arr = (PPTArray *)cmd->TokenValueAt(0);
-			size_t j, jcnt = str_arr->_array.size();
-			for(j=0;j<jcnt;j++) {
-				PPToken *token = str_arr->ObjectAtIndex(j);
-				if(token->ClassType() == PPTN_STRING) {
-					PPTString *str_token = (PPTString *)token;
-					str += *(str_token->_string);
-				}
-			}
-		}
-		if(str.length() > 0) {
-			if(str == org_str) {
-				_commands.erase(_commands.begin() + idx);
-				PPTCommand *new_txt_cmd = new PPTCommand;
-				new_txt_cmd->_cmdInfo = &PPCommandList[PPC_ShowText];
-				PPTString *str_token = new PPTString(_document, &str);
-				new_txt_cmd->_operands.push_back(str_token);
-				_commands.insert(_commands.begin() + idx, new_txt_cmd);
+	unsigned int slen = org_str.length();
+	size_t i, icnt = NumberOfElements(); //_elements.size();
+	for(i=0;i<icnt;i++) {
+		PPElement *element = ElementAtIndex(i); //_elements.at(i);
+		if(element->Type() == PPET_TEXT) {
+			PPEText *text_el = (PPEText *)element;
+			string str = text_el->String();
 
+			string::size_type offset = 0;
+			offset = str.find(org_str, offset);
+
+			if(offset != string::npos) {
+				str.replace(offset, slen, new_str);
+				text_el->SetString(str);
 			}
 		}
-    }
+	}
 
 }
