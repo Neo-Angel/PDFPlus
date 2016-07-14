@@ -7,53 +7,158 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		420C9F2C19C1C585000F6B35 /* PPDocument.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 420C9F2A19C1C585000F6B35 /* PPDocument.cpp */; };
-		420C9F2D19C1C585000F6B35 /* PPDocument.h in Headers */ = {isa = PBXBuildFile; fileRef = 420C9F2B19C1C585000F6B35 /* PPDocument.h */; };
-		420C9F3019C1C5A1000F6B35 /* PPPage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 420C9F2E19C1C5A1000F6B35 /* PPPage.cpp */; };
-		420C9F3119C1C5A1000F6B35 /* PPPage.h in Headers */ = {isa = PBXBuildFile; fileRef = 420C9F2F19C1C5A1000F6B35 /* PPPage.h */; };
-		420C9F3419C1C5AF000F6B35 /* PPElement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 420C9F3219C1C5AF000F6B35 /* PPElement.cpp */; };
-		420C9F3519C1C5AF000F6B35 /* PPElement.h in Headers */ = {isa = PBXBuildFile; fileRef = 420C9F3319C1C5AF000F6B35 /* PPElement.h */; };
-		420C9F3819C1C713000F6B35 /* PPBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 420C9F3619C1C713000F6B35 /* PPBase.cpp */; };
-		420C9F3919C1C713000F6B35 /* PPBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 420C9F3719C1C713000F6B35 /* PPBase.h */; };
-		420C9F4819C1D11F000F6B35 /* PPToken.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 420C9F4619C1D11F000F6B35 /* PPToken.cpp */; };
-		420C9F4919C1D11F000F6B35 /* PPToken.h in Headers */ = {isa = PBXBuildFile; fileRef = 420C9F4719C1D11F000F6B35 /* PPToken.h */; };
-		420C9F5119C4B7CC000F6B35 /* PPParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 420C9F4F19C4B7CC000F6B35 /* PPParser.cpp */; };
-		420C9F5219C4B7CC000F6B35 /* PPParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 420C9F5019C4B7CC000F6B35 /* PPParser.h */; };
-		4249C64A19FE9D1D00892AFA /* libz.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4249C64919FE9D1D00892AFA /* libz.a */; };
-		4249C64D19FE9D5700892AFA /* zlib.h in Headers */ = {isa = PBXBuildFile; fileRef = 4249C64C19FE9D5700892AFA /* zlib.h */; };
-		428EC8CE1A0F8B7D003AD285 /* PPTStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 428EC8CC1A0F8B7D003AD285 /* PPTStream.cpp */; };
-		428EC8CF1A0F8B7D003AD285 /* PPTStream.h in Headers */ = {isa = PBXBuildFile; fileRef = 428EC8CD1A0F8B7D003AD285 /* PPTStream.h */; };
-		42D6619E1A1124EB00E1D653 /* PPCommandParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 42D6619C1A1124EB00E1D653 /* PPCommandParser.cpp */; };
-		42D6619F1A1124EB00E1D653 /* PPCommandParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 42D6619D1A1124EB00E1D653 /* PPCommandParser.h */; };
-		42E3B7A319F3FF3A004A57DB /* PPCoord.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 42E3B7A119F3FF3A004A57DB /* PPCoord.cpp */; };
-		42E3B7A419F3FF3A004A57DB /* PPCoord.h in Headers */ = {isa = PBXBuildFile; fileRef = 42E3B7A219F3FF3A004A57DB /* PPCoord.h */; };
+		427D35341D36682700E71DA2 /* PPColor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427D35051D36682700E71DA2 /* PPColor.cpp */; };
+		427D35351D36682700E71DA2 /* PPContext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427D35061D36682700E71DA2 /* PPContext.cpp */; };
+		427D35361D36682700E71DA2 /* PPDash.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427D35071D36682700E71DA2 /* PPDash.cpp */; };
+		427D35371D36682700E71DA2 /* PPGState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427D35081D36682700E71DA2 /* PPGState.cpp */; };
+		427D35381D36682700E71DA2 /* PPImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427D35091D36682700E71DA2 /* PPImage.cpp */; };
+		427D35391D36682700E71DA2 /* PPMatrix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427D350A1D36682700E71DA2 /* PPMatrix.cpp */; };
+		427D353A1D36682700E71DA2 /* PPPath.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427D350B1D36682700E71DA2 /* PPPath.cpp */; };
+		427D353B1D36682700E71DA2 /* PPPathItem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427D350C1D36682700E71DA2 /* PPPathItem.cpp */; };
+		427D353C1D36682700E71DA2 /* PPEBeginCompatibility.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427D350D1D36682700E71DA2 /* PPEBeginCompatibility.cpp */; };
+		427D353D1D36682700E71DA2 /* PPEBeginMarkedContent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427D350E1D36682700E71DA2 /* PPEBeginMarkedContent.cpp */; };
+		427D353E1D36682700E71DA2 /* PPEEndCompatibility.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427D350F1D36682700E71DA2 /* PPEEndCompatibility.cpp */; };
+		427D353F1D36682700E71DA2 /* PPEEndMarkedContent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427D35101D36682700E71DA2 /* PPEEndMarkedContent.cpp */; };
+		427D35401D36682700E71DA2 /* PPEForm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427D35111D36682700E71DA2 /* PPEForm.cpp */; };
+		427D35411D36682700E71DA2 /* PPEGRestore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427D35121D36682700E71DA2 /* PPEGRestore.cpp */; };
+		427D35421D36682700E71DA2 /* PPEGSave.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427D35131D36682700E71DA2 /* PPEGSave.cpp */; };
+		427D35431D36682700E71DA2 /* PPEImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427D35141D36682700E71DA2 /* PPEImage.cpp */; };
+		427D35441D36682700E71DA2 /* PPEInlineImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427D35151D36682700E71DA2 /* PPEInlineImage.cpp */; };
+		427D35451D36682700E71DA2 /* PPElement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427D35161D36682700E71DA2 /* PPElement.cpp */; };
+		427D35461D36682700E71DA2 /* PPEMarkedContent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427D35171D36682700E71DA2 /* PPEMarkedContent.cpp */; };
+		427D35471D36682700E71DA2 /* PPEPath.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427D35181D36682700E71DA2 /* PPEPath.cpp */; };
+		427D35481D36682700E71DA2 /* PPEShading.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427D35191D36682700E71DA2 /* PPEShading.cpp */; };
+		427D35491D36682700E71DA2 /* PPEText.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427D351A1D36682700E71DA2 /* PPEText.cpp */; };
+		427D354A1D36682700E71DA2 /* PPBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427D351B1D36682700E71DA2 /* PPBase.cpp */; };
+		427D354B1D36682700E71DA2 /* PPCommandParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427D351C1D36682700E71DA2 /* PPCommandParser.cpp */; };
+		427D354C1D36682700E71DA2 /* PPCoord.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427D351D1D36682700E71DA2 /* PPCoord.cpp */; };
+		427D354D1D36682700E71DA2 /* PPDocument.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427D351E1D36682700E71DA2 /* PPDocument.cpp */; };
+		427D354E1D36682700E71DA2 /* PPETextState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427D351F1D36682700E71DA2 /* PPETextState.cpp */; };
+		427D354F1D36682700E71DA2 /* PPFormBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427D35201D36682700E71DA2 /* PPFormBase.cpp */; };
+		427D35501D36682700E71DA2 /* PPLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427D35211D36682700E71DA2 /* PPLayer.cpp */; };
+		427D35511D36682700E71DA2 /* PPPage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427D35221D36682700E71DA2 /* PPPage.cpp */; };
+		427D35521D36682700E71DA2 /* PPParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427D35231D36682700E71DA2 /* PPParser.cpp */; };
+		427D35531D36682700E71DA2 /* PPStreamBuf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427D35241D36682700E71DA2 /* PPStreamBuf.cpp */; };
+		427D35541D36682700E71DA2 /* PPTArray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427D35261D36682700E71DA2 /* PPTArray.cpp */; };
+		427D35551D36682700E71DA2 /* PPTBool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427D35271D36682700E71DA2 /* PPTBool.cpp */; };
+		427D35561D36682700E71DA2 /* PPTComment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427D35281D36682700E71DA2 /* PPTComment.cpp */; };
+		427D35571D36682700E71DA2 /* PPTDictionary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427D35291D36682700E71DA2 /* PPTDictionary.cpp */; };
+		427D35581D36682700E71DA2 /* PPTIndirectObj.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427D352A1D36682700E71DA2 /* PPTIndirectObj.cpp */; };
+		427D35591D36682700E71DA2 /* PPTIndirectRef.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427D352B1D36682700E71DA2 /* PPTIndirectRef.cpp */; };
+		427D355A1D36682700E71DA2 /* PPTName.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427D352C1D36682700E71DA2 /* PPTName.cpp */; };
+		427D355B1D36682700E71DA2 /* PPTNull.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427D352D1D36682700E71DA2 /* PPTNull.cpp */; };
+		427D355C1D36682700E71DA2 /* PPTNumber.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427D352E1D36682700E71DA2 /* PPTNumber.cpp */; };
+		427D355D1D36682700E71DA2 /* PPToken.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427D352F1D36682700E71DA2 /* PPToken.cpp */; };
+		427D355E1D36682700E71DA2 /* PPTStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427D35301D36682700E71DA2 /* PPTStream.cpp */; };
+		427D355F1D36682700E71DA2 /* PPTString.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427D35311D36682700E71DA2 /* PPTString.cpp */; };
+		427D35601D36682700E71DA2 /* PPTTrailer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427D35321D36682700E71DA2 /* PPTTrailer.cpp */; };
+		427D35611D36682700E71DA2 /* PPTXRef.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 427D35331D36682700E71DA2 /* PPTXRef.cpp */; };
+		427D35631D36696300E71DA2 /* libz.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 427D35621D36696300E71DA2 /* libz.a */; };
+		427D35651D36697200E71DA2 /* zlib.h in Headers */ = {isa = PBXBuildFile; fileRef = 427D35641D36697200E71DA2 /* zlib.h */; };
+		427D35991D3673E700E71DA2 /* jpeglib.h in Headers */ = {isa = PBXBuildFile; fileRef = 427D35981D3673E700E71DA2 /* jpeglib.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		420C9F1D19C1C520000F6B35 /* libPDFPlusLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPDFPlusLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		420C9F2A19C1C585000F6B35 /* PPDocument.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PPDocument.cpp; sourceTree = "<group>"; };
-		420C9F2B19C1C585000F6B35 /* PPDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPDocument.h; sourceTree = "<group>"; };
-		420C9F2E19C1C5A1000F6B35 /* PPPage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PPPage.cpp; sourceTree = "<group>"; };
-		420C9F2F19C1C5A1000F6B35 /* PPPage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPPage.h; sourceTree = "<group>"; };
-		420C9F3219C1C5AF000F6B35 /* PPElement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = PPElement.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
-		420C9F3319C1C5AF000F6B35 /* PPElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPElement.h; sourceTree = "<group>"; };
-		420C9F3619C1C713000F6B35 /* PPBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PPBase.cpp; sourceTree = "<group>"; };
-		420C9F3719C1C713000F6B35 /* PPBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPBase.h; sourceTree = "<group>"; };
-		420C9F4619C1D11F000F6B35 /* PPToken.cpp */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PPToken.cpp; sourceTree = "<group>"; };
-		420C9F4719C1D11F000F6B35 /* PPToken.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPToken.h; sourceTree = "<group>"; };
-		420C9F4A19C3225B000F6B35 /* PPDefines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PPDefines.h; sourceTree = "<group>"; };
-		420C9F4F19C4B7CC000F6B35 /* PPParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PPParser.cpp; sourceTree = "<group>"; };
-		420C9F5019C4B7CC000F6B35 /* PPParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPParser.h; sourceTree = "<group>"; };
-		4249C64919FE9D1D00892AFA /* libz.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libz.a; path = "zlib-1.2.8/libz.a"; sourceTree = "<group>"; };
-		4249C64C19FE9D5700892AFA /* zlib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = zlib.h; path = "zlib-1.2.8/zlib.h"; sourceTree = "<group>"; };
-		428EC8CC1A0F8B7D003AD285 /* PPTStream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PPTStream.cpp; sourceTree = "<group>"; };
-		428EC8CD1A0F8B7D003AD285 /* PPTStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPTStream.h; sourceTree = "<group>"; };
-		42D6619C1A1124EB00E1D653 /* PPCommandParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = PPCommandParser.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
-		42D6619D1A1124EB00E1D653 /* PPCommandParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = PPCommandParser.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		42D661A01A162E5500E1D653 /* PDFPlus.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PDFPlus.h; sourceTree = "<group>"; };
+		427D35051D36682700E71DA2 /* PPColor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PPColor.cpp; sourceTree = "<group>"; };
+		427D35061D36682700E71DA2 /* PPContext.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PPContext.cpp; sourceTree = "<group>"; };
+		427D35071D36682700E71DA2 /* PPDash.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PPDash.cpp; sourceTree = "<group>"; };
+		427D35081D36682700E71DA2 /* PPGState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PPGState.cpp; sourceTree = "<group>"; };
+		427D35091D36682700E71DA2 /* PPImage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PPImage.cpp; sourceTree = "<group>"; };
+		427D350A1D36682700E71DA2 /* PPMatrix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PPMatrix.cpp; sourceTree = "<group>"; };
+		427D350B1D36682700E71DA2 /* PPPath.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PPPath.cpp; sourceTree = "<group>"; };
+		427D350C1D36682700E71DA2 /* PPPathItem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PPPathItem.cpp; sourceTree = "<group>"; };
+		427D350D1D36682700E71DA2 /* PPEBeginCompatibility.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PPEBeginCompatibility.cpp; sourceTree = "<group>"; };
+		427D350E1D36682700E71DA2 /* PPEBeginMarkedContent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PPEBeginMarkedContent.cpp; sourceTree = "<group>"; };
+		427D350F1D36682700E71DA2 /* PPEEndCompatibility.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PPEEndCompatibility.cpp; sourceTree = "<group>"; };
+		427D35101D36682700E71DA2 /* PPEEndMarkedContent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PPEEndMarkedContent.cpp; sourceTree = "<group>"; };
+		427D35111D36682700E71DA2 /* PPEForm.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PPEForm.cpp; sourceTree = "<group>"; };
+		427D35121D36682700E71DA2 /* PPEGRestore.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PPEGRestore.cpp; sourceTree = "<group>"; };
+		427D35131D36682700E71DA2 /* PPEGSave.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PPEGSave.cpp; sourceTree = "<group>"; };
+		427D35141D36682700E71DA2 /* PPEImage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PPEImage.cpp; sourceTree = "<group>"; };
+		427D35151D36682700E71DA2 /* PPEInlineImage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PPEInlineImage.cpp; sourceTree = "<group>"; };
+		427D35161D36682700E71DA2 /* PPElement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PPElement.cpp; sourceTree = "<group>"; };
+		427D35171D36682700E71DA2 /* PPEMarkedContent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PPEMarkedContent.cpp; sourceTree = "<group>"; };
+		427D35181D36682700E71DA2 /* PPEPath.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PPEPath.cpp; sourceTree = "<group>"; };
+		427D35191D36682700E71DA2 /* PPEShading.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PPEShading.cpp; sourceTree = "<group>"; };
+		427D351A1D36682700E71DA2 /* PPEText.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PPEText.cpp; sourceTree = "<group>"; };
+		427D351B1D36682700E71DA2 /* PPBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PPBase.cpp; path = src/PPBase.cpp; sourceTree = "<group>"; };
+		427D351C1D36682700E71DA2 /* PPCommandParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PPCommandParser.cpp; path = src/PPCommandParser.cpp; sourceTree = "<group>"; };
+		427D351D1D36682700E71DA2 /* PPCoord.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PPCoord.cpp; path = src/PPCoord.cpp; sourceTree = "<group>"; };
+		427D351E1D36682700E71DA2 /* PPDocument.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PPDocument.cpp; path = src/PPDocument.cpp; sourceTree = "<group>"; };
+		427D351F1D36682700E71DA2 /* PPETextState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PPETextState.cpp; path = src/PPETextState.cpp; sourceTree = "<group>"; };
+		427D35201D36682700E71DA2 /* PPFormBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PPFormBase.cpp; path = src/PPFormBase.cpp; sourceTree = "<group>"; };
+		427D35211D36682700E71DA2 /* PPLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PPLayer.cpp; path = src/PPLayer.cpp; sourceTree = "<group>"; };
+		427D35221D36682700E71DA2 /* PPPage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PPPage.cpp; path = src/PPPage.cpp; sourceTree = "<group>"; };
+		427D35231D36682700E71DA2 /* PPParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PPParser.cpp; path = src/PPParser.cpp; sourceTree = "<group>"; };
+		427D35241D36682700E71DA2 /* PPStreamBuf.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PPStreamBuf.cpp; path = src/PPStreamBuf.cpp; sourceTree = "<group>"; };
+		427D35261D36682700E71DA2 /* PPTArray.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PPTArray.cpp; sourceTree = "<group>"; };
+		427D35271D36682700E71DA2 /* PPTBool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PPTBool.cpp; sourceTree = "<group>"; };
+		427D35281D36682700E71DA2 /* PPTComment.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PPTComment.cpp; sourceTree = "<group>"; };
+		427D35291D36682700E71DA2 /* PPTDictionary.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PPTDictionary.cpp; sourceTree = "<group>"; };
+		427D352A1D36682700E71DA2 /* PPTIndirectObj.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PPTIndirectObj.cpp; sourceTree = "<group>"; };
+		427D352B1D36682700E71DA2 /* PPTIndirectRef.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PPTIndirectRef.cpp; sourceTree = "<group>"; };
+		427D352C1D36682700E71DA2 /* PPTName.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PPTName.cpp; sourceTree = "<group>"; };
+		427D352D1D36682700E71DA2 /* PPTNull.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PPTNull.cpp; sourceTree = "<group>"; };
+		427D352E1D36682700E71DA2 /* PPTNumber.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PPTNumber.cpp; sourceTree = "<group>"; };
+		427D352F1D36682700E71DA2 /* PPToken.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PPToken.cpp; sourceTree = "<group>"; };
+		427D35301D36682700E71DA2 /* PPTStream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PPTStream.cpp; sourceTree = "<group>"; };
+		427D35311D36682700E71DA2 /* PPTString.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PPTString.cpp; sourceTree = "<group>"; };
+		427D35321D36682700E71DA2 /* PPTTrailer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PPTTrailer.cpp; sourceTree = "<group>"; };
+		427D35331D36682700E71DA2 /* PPTXRef.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PPTXRef.cpp; sourceTree = "<group>"; };
+		427D35621D36696300E71DA2 /* libz.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libz.a; path = "../zlib-1.2.8/libz.a"; sourceTree = "<group>"; };
+		427D35641D36697200E71DA2 /* zlib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = zlib.h; path = "../zlib-1.2.8/zlib.h"; sourceTree = "<group>"; };
+		427D35671D3671BB00E71DA2 /* PDFPlus.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PDFPlus.h; sourceTree = "<group>"; };
+		427D35681D3671BB00E71DA2 /* PPBase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PPBase.h; sourceTree = "<group>"; };
+		427D35691D3671BB00E71DA2 /* PPColor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PPColor.h; sourceTree = "<group>"; };
+		427D356A1D3671BB00E71DA2 /* PPCommandParser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PPCommandParser.h; sourceTree = "<group>"; };
+		427D356B1D3671BB00E71DA2 /* PPContext.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PPContext.h; sourceTree = "<group>"; };
+		427D356C1D3671BB00E71DA2 /* PPCoord.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PPCoord.h; sourceTree = "<group>"; };
+		427D356D1D3671BB00E71DA2 /* PPDash.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PPDash.h; sourceTree = "<group>"; };
+		427D356E1D3671BB00E71DA2 /* PPDefines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PPDefines.h; sourceTree = "<group>"; };
+		427D356F1D3671BB00E71DA2 /* PPDocument.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PPDocument.h; sourceTree = "<group>"; };
+		427D35701D3671BB00E71DA2 /* PPEBeginCompatibility.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PPEBeginCompatibility.h; sourceTree = "<group>"; };
+		427D35711D3671BB00E71DA2 /* PPEBeginMarkedContent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PPEBeginMarkedContent.h; sourceTree = "<group>"; };
+		427D35721D3671BB00E71DA2 /* PPEEndCompatibility.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PPEEndCompatibility.h; sourceTree = "<group>"; };
+		427D35731D3671BB00E71DA2 /* PPEEndMarkedContent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PPEEndMarkedContent.h; sourceTree = "<group>"; };
+		427D35741D3671BB00E71DA2 /* PPEForm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PPEForm.h; sourceTree = "<group>"; };
+		427D35751D3671BB00E71DA2 /* PPEGRestore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PPEGRestore.h; sourceTree = "<group>"; };
+		427D35761D3671BB00E71DA2 /* PPEGSave.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PPEGSave.h; sourceTree = "<group>"; };
+		427D35771D3671BB00E71DA2 /* PPEImage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PPEImage.h; sourceTree = "<group>"; };
+		427D35781D3671BB00E71DA2 /* PPEInlineImage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PPEInlineImage.h; sourceTree = "<group>"; };
+		427D35791D3671BB00E71DA2 /* PPElement.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PPElement.h; sourceTree = "<group>"; };
+		427D357A1D3671BB00E71DA2 /* PPEMarkedContent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PPEMarkedContent.h; sourceTree = "<group>"; };
+		427D357B1D3671BB00E71DA2 /* PPEPath.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PPEPath.h; sourceTree = "<group>"; };
+		427D357C1D3671BB00E71DA2 /* PPEShading.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PPEShading.h; sourceTree = "<group>"; };
+		427D357D1D3671BB00E71DA2 /* PPEText.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PPEText.h; sourceTree = "<group>"; };
+		427D357E1D3671BB00E71DA2 /* PPETextState.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PPETextState.h; sourceTree = "<group>"; };
+		427D357F1D3671BB00E71DA2 /* PPFormBase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PPFormBase.h; sourceTree = "<group>"; };
+		427D35801D3671BB00E71DA2 /* PPGState.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PPGState.h; sourceTree = "<group>"; };
+		427D35811D3671BB00E71DA2 /* PPImage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PPImage.h; sourceTree = "<group>"; };
+		427D35821D3671BB00E71DA2 /* PPLayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PPLayer.h; sourceTree = "<group>"; };
+		427D35831D3671BB00E71DA2 /* PPMatrix.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PPMatrix.h; sourceTree = "<group>"; };
+		427D35841D3671BB00E71DA2 /* PPPage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PPPage.h; sourceTree = "<group>"; };
+		427D35851D3671BB00E71DA2 /* PPParser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PPParser.h; sourceTree = "<group>"; };
+		427D35861D3671BB00E71DA2 /* PPPath.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PPPath.h; sourceTree = "<group>"; };
+		427D35871D3671BB00E71DA2 /* PPPathItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PPPathItem.h; sourceTree = "<group>"; };
+		427D35881D3671BB00E71DA2 /* PPStreamBuf.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PPStreamBuf.h; sourceTree = "<group>"; };
+		427D35891D3671BB00E71DA2 /* PPTArray.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PPTArray.h; sourceTree = "<group>"; };
+		427D358A1D3671BB00E71DA2 /* PPTBool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PPTBool.h; sourceTree = "<group>"; };
+		427D358B1D3671BB00E71DA2 /* PPTComment.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PPTComment.h; sourceTree = "<group>"; };
+		427D358C1D3671BB00E71DA2 /* PPTDictionary.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PPTDictionary.h; sourceTree = "<group>"; };
+		427D358D1D3671BB00E71DA2 /* PPTIndirectObj.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PPTIndirectObj.h; sourceTree = "<group>"; };
+		427D358E1D3671BB00E71DA2 /* PPTIndirectRef.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PPTIndirectRef.h; sourceTree = "<group>"; };
+		427D358F1D3671BB00E71DA2 /* PPTName.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PPTName.h; sourceTree = "<group>"; };
+		427D35901D3671BB00E71DA2 /* PPTNull.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PPTNull.h; sourceTree = "<group>"; };
+		427D35911D3671BB00E71DA2 /* PPTNumber.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PPTNumber.h; sourceTree = "<group>"; };
+		427D35921D3671BB00E71DA2 /* PPToken.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PPToken.h; sourceTree = "<group>"; };
+		427D35931D3671BB00E71DA2 /* PPTStream.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PPTStream.h; sourceTree = "<group>"; };
+		427D35941D3671BB00E71DA2 /* PPTString.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PPTString.h; sourceTree = "<group>"; };
+		427D35951D3671BB00E71DA2 /* PPTTrailer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PPTTrailer.h; sourceTree = "<group>"; };
+		427D35961D3671BB00E71DA2 /* PPTXRef.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PPTXRef.h; sourceTree = "<group>"; };
+		427D35971D3673CA00E71DA2 /* libjpeg.la */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = libjpeg.la; path = "../jpeg-9a/libjpeg.la"; sourceTree = "<group>"; };
+		427D35981D3673E700E71DA2 /* jpeglib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = jpeglib.h; path = "../jpeg-9a/jpeglib.h"; sourceTree = "<group>"; };
 		42DD145A1A4E964700DAE75C /* DevNote.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = DevNote.txt; sourceTree = "<group>"; };
-		42E3B7A119F3FF3A004A57DB /* PPCoord.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PPCoord.cpp; sourceTree = "<group>"; };
-		42E3B7A219F3FF3A004A57DB /* PPCoord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPCoord.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,7 +166,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4249C64A19FE9D1D00892AFA /* libz.a in Frameworks */,
+				427D35631D36696300E71DA2 /* libz.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -71,28 +176,23 @@
 		420C9F1419C1C520000F6B35 = {
 			isa = PBXGroup;
 			children = (
+				427D35981D3673E700E71DA2 /* jpeglib.h */,
+				427D35971D3673CA00E71DA2 /* libjpeg.la */,
+				427D35661D3671BB00E71DA2 /* include */,
 				42DD145A1A4E964700DAE75C /* DevNote.txt */,
-				42D661A01A162E5500E1D653 /* PDFPlus.h */,
+				427D35031D36682700E71DA2 /* Element */,
+				427D351B1D36682700E71DA2 /* PPBase.cpp */,
+				427D351C1D36682700E71DA2 /* PPCommandParser.cpp */,
+				427D351D1D36682700E71DA2 /* PPCoord.cpp */,
+				427D351E1D36682700E71DA2 /* PPDocument.cpp */,
+				427D351F1D36682700E71DA2 /* PPETextState.cpp */,
+				427D35201D36682700E71DA2 /* PPFormBase.cpp */,
+				427D35211D36682700E71DA2 /* PPLayer.cpp */,
+				427D35221D36682700E71DA2 /* PPPage.cpp */,
+				427D35231D36682700E71DA2 /* PPParser.cpp */,
+				427D35241D36682700E71DA2 /* PPStreamBuf.cpp */,
+				427D35251D36682700E71DA2 /* Token */,
 				4249C64B19FE9D3600892AFA /* zlib */,
-				42E3B7A119F3FF3A004A57DB /* PPCoord.cpp */,
-				42E3B7A219F3FF3A004A57DB /* PPCoord.h */,
-				420C9F4A19C3225B000F6B35 /* PPDefines.h */,
-				420C9F3619C1C713000F6B35 /* PPBase.cpp */,
-				420C9F3719C1C713000F6B35 /* PPBase.h */,
-				420C9F2E19C1C5A1000F6B35 /* PPPage.cpp */,
-				420C9F2F19C1C5A1000F6B35 /* PPPage.h */,
-				420C9F4F19C4B7CC000F6B35 /* PPParser.cpp */,
-				420C9F5019C4B7CC000F6B35 /* PPParser.h */,
-				420C9F2A19C1C585000F6B35 /* PPDocument.cpp */,
-				420C9F2B19C1C585000F6B35 /* PPDocument.h */,
-				420C9F3219C1C5AF000F6B35 /* PPElement.cpp */,
-				420C9F3319C1C5AF000F6B35 /* PPElement.h */,
-				420C9F4619C1D11F000F6B35 /* PPToken.cpp */,
-				420C9F4719C1D11F000F6B35 /* PPToken.h */,
-				428EC8CC1A0F8B7D003AD285 /* PPTStream.cpp */,
-				428EC8CD1A0F8B7D003AD285 /* PPTStream.h */,
-				42D6619C1A1124EB00E1D653 /* PPCommandParser.cpp */,
-				42D6619D1A1124EB00E1D653 /* PPCommandParser.h */,
 				420C9F1E19C1C520000F6B35 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -108,10 +208,125 @@
 		4249C64B19FE9D3600892AFA /* zlib */ = {
 			isa = PBXGroup;
 			children = (
-				4249C64C19FE9D5700892AFA /* zlib.h */,
-				4249C64919FE9D1D00892AFA /* libz.a */,
+				427D35641D36697200E71DA2 /* zlib.h */,
+				427D35621D36696300E71DA2 /* libz.a */,
 			);
 			name = zlib;
+			sourceTree = "<group>";
+		};
+		427D35031D36682700E71DA2 /* Element */ = {
+			isa = PBXGroup;
+			children = (
+				427D35041D36682700E71DA2 /* Graphic */,
+				427D350D1D36682700E71DA2 /* PPEBeginCompatibility.cpp */,
+				427D350E1D36682700E71DA2 /* PPEBeginMarkedContent.cpp */,
+				427D350F1D36682700E71DA2 /* PPEEndCompatibility.cpp */,
+				427D35101D36682700E71DA2 /* PPEEndMarkedContent.cpp */,
+				427D35111D36682700E71DA2 /* PPEForm.cpp */,
+				427D35121D36682700E71DA2 /* PPEGRestore.cpp */,
+				427D35131D36682700E71DA2 /* PPEGSave.cpp */,
+				427D35141D36682700E71DA2 /* PPEImage.cpp */,
+				427D35151D36682700E71DA2 /* PPEInlineImage.cpp */,
+				427D35161D36682700E71DA2 /* PPElement.cpp */,
+				427D35171D36682700E71DA2 /* PPEMarkedContent.cpp */,
+				427D35181D36682700E71DA2 /* PPEPath.cpp */,
+				427D35191D36682700E71DA2 /* PPEShading.cpp */,
+				427D351A1D36682700E71DA2 /* PPEText.cpp */,
+			);
+			name = Element;
+			path = src/Element;
+			sourceTree = "<group>";
+		};
+		427D35041D36682700E71DA2 /* Graphic */ = {
+			isa = PBXGroup;
+			children = (
+				427D35051D36682700E71DA2 /* PPColor.cpp */,
+				427D35061D36682700E71DA2 /* PPContext.cpp */,
+				427D35071D36682700E71DA2 /* PPDash.cpp */,
+				427D35081D36682700E71DA2 /* PPGState.cpp */,
+				427D35091D36682700E71DA2 /* PPImage.cpp */,
+				427D350A1D36682700E71DA2 /* PPMatrix.cpp */,
+				427D350B1D36682700E71DA2 /* PPPath.cpp */,
+				427D350C1D36682700E71DA2 /* PPPathItem.cpp */,
+			);
+			path = Graphic;
+			sourceTree = "<group>";
+		};
+		427D35251D36682700E71DA2 /* Token */ = {
+			isa = PBXGroup;
+			children = (
+				427D35261D36682700E71DA2 /* PPTArray.cpp */,
+				427D35271D36682700E71DA2 /* PPTBool.cpp */,
+				427D35281D36682700E71DA2 /* PPTComment.cpp */,
+				427D35291D36682700E71DA2 /* PPTDictionary.cpp */,
+				427D352A1D36682700E71DA2 /* PPTIndirectObj.cpp */,
+				427D352B1D36682700E71DA2 /* PPTIndirectRef.cpp */,
+				427D352C1D36682700E71DA2 /* PPTName.cpp */,
+				427D352D1D36682700E71DA2 /* PPTNull.cpp */,
+				427D352E1D36682700E71DA2 /* PPTNumber.cpp */,
+				427D352F1D36682700E71DA2 /* PPToken.cpp */,
+				427D35301D36682700E71DA2 /* PPTStream.cpp */,
+				427D35311D36682700E71DA2 /* PPTString.cpp */,
+				427D35321D36682700E71DA2 /* PPTTrailer.cpp */,
+				427D35331D36682700E71DA2 /* PPTXRef.cpp */,
+			);
+			name = Token;
+			path = src/Token;
+			sourceTree = "<group>";
+		};
+		427D35661D3671BB00E71DA2 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				427D35671D3671BB00E71DA2 /* PDFPlus.h */,
+				427D35681D3671BB00E71DA2 /* PPBase.h */,
+				427D35691D3671BB00E71DA2 /* PPColor.h */,
+				427D356A1D3671BB00E71DA2 /* PPCommandParser.h */,
+				427D356B1D3671BB00E71DA2 /* PPContext.h */,
+				427D356C1D3671BB00E71DA2 /* PPCoord.h */,
+				427D356D1D3671BB00E71DA2 /* PPDash.h */,
+				427D356E1D3671BB00E71DA2 /* PPDefines.h */,
+				427D356F1D3671BB00E71DA2 /* PPDocument.h */,
+				427D35701D3671BB00E71DA2 /* PPEBeginCompatibility.h */,
+				427D35711D3671BB00E71DA2 /* PPEBeginMarkedContent.h */,
+				427D35721D3671BB00E71DA2 /* PPEEndCompatibility.h */,
+				427D35731D3671BB00E71DA2 /* PPEEndMarkedContent.h */,
+				427D35741D3671BB00E71DA2 /* PPEForm.h */,
+				427D35751D3671BB00E71DA2 /* PPEGRestore.h */,
+				427D35761D3671BB00E71DA2 /* PPEGSave.h */,
+				427D35771D3671BB00E71DA2 /* PPEImage.h */,
+				427D35781D3671BB00E71DA2 /* PPEInlineImage.h */,
+				427D35791D3671BB00E71DA2 /* PPElement.h */,
+				427D357A1D3671BB00E71DA2 /* PPEMarkedContent.h */,
+				427D357B1D3671BB00E71DA2 /* PPEPath.h */,
+				427D357C1D3671BB00E71DA2 /* PPEShading.h */,
+				427D357D1D3671BB00E71DA2 /* PPEText.h */,
+				427D357E1D3671BB00E71DA2 /* PPETextState.h */,
+				427D357F1D3671BB00E71DA2 /* PPFormBase.h */,
+				427D35801D3671BB00E71DA2 /* PPGState.h */,
+				427D35811D3671BB00E71DA2 /* PPImage.h */,
+				427D35821D3671BB00E71DA2 /* PPLayer.h */,
+				427D35831D3671BB00E71DA2 /* PPMatrix.h */,
+				427D35841D3671BB00E71DA2 /* PPPage.h */,
+				427D35851D3671BB00E71DA2 /* PPParser.h */,
+				427D35861D3671BB00E71DA2 /* PPPath.h */,
+				427D35871D3671BB00E71DA2 /* PPPathItem.h */,
+				427D35881D3671BB00E71DA2 /* PPStreamBuf.h */,
+				427D35891D3671BB00E71DA2 /* PPTArray.h */,
+				427D358A1D3671BB00E71DA2 /* PPTBool.h */,
+				427D358B1D3671BB00E71DA2 /* PPTComment.h */,
+				427D358C1D3671BB00E71DA2 /* PPTDictionary.h */,
+				427D358D1D3671BB00E71DA2 /* PPTIndirectObj.h */,
+				427D358E1D3671BB00E71DA2 /* PPTIndirectRef.h */,
+				427D358F1D3671BB00E71DA2 /* PPTName.h */,
+				427D35901D3671BB00E71DA2 /* PPTNull.h */,
+				427D35911D3671BB00E71DA2 /* PPTNumber.h */,
+				427D35921D3671BB00E71DA2 /* PPToken.h */,
+				427D35931D3671BB00E71DA2 /* PPTStream.h */,
+				427D35941D3671BB00E71DA2 /* PPTString.h */,
+				427D35951D3671BB00E71DA2 /* PPTTrailer.h */,
+				427D35961D3671BB00E71DA2 /* PPTXRef.h */,
+			);
+			path = include;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -121,16 +336,8 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				42E3B7A419F3FF3A004A57DB /* PPCoord.h in Headers */,
-				428EC8CF1A0F8B7D003AD285 /* PPTStream.h in Headers */,
-				42D6619F1A1124EB00E1D653 /* PPCommandParser.h in Headers */,
-				420C9F3519C1C5AF000F6B35 /* PPElement.h in Headers */,
-				420C9F2D19C1C585000F6B35 /* PPDocument.h in Headers */,
-				420C9F3119C1C5A1000F6B35 /* PPPage.h in Headers */,
-				420C9F5219C4B7CC000F6B35 /* PPParser.h in Headers */,
-				4249C64D19FE9D5700892AFA /* zlib.h in Headers */,
-				420C9F3919C1C713000F6B35 /* PPBase.h in Headers */,
-				420C9F4919C1D11F000F6B35 /* PPToken.h in Headers */,
+				427D35991D3673E700E71DA2 /* jpeglib.h in Headers */,
+				427D35651D36697200E71DA2 /* zlib.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -185,15 +392,52 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				420C9F3819C1C713000F6B35 /* PPBase.cpp in Sources */,
-				420C9F4819C1D11F000F6B35 /* PPToken.cpp in Sources */,
-				42D6619E1A1124EB00E1D653 /* PPCommandParser.cpp in Sources */,
-				420C9F3419C1C5AF000F6B35 /* PPElement.cpp in Sources */,
-				420C9F3019C1C5A1000F6B35 /* PPPage.cpp in Sources */,
-				420C9F5119C4B7CC000F6B35 /* PPParser.cpp in Sources */,
-				420C9F2C19C1C585000F6B35 /* PPDocument.cpp in Sources */,
-				428EC8CE1A0F8B7D003AD285 /* PPTStream.cpp in Sources */,
-				42E3B7A319F3FF3A004A57DB /* PPCoord.cpp in Sources */,
+				427D35581D36682700E71DA2 /* PPTIndirectObj.cpp in Sources */,
+				427D35501D36682700E71DA2 /* PPLayer.cpp in Sources */,
+				427D35441D36682700E71DA2 /* PPEInlineImage.cpp in Sources */,
+				427D355E1D36682700E71DA2 /* PPTStream.cpp in Sources */,
+				427D35461D36682700E71DA2 /* PPEMarkedContent.cpp in Sources */,
+				427D353A1D36682700E71DA2 /* PPPath.cpp in Sources */,
+				427D353C1D36682700E71DA2 /* PPEBeginCompatibility.cpp in Sources */,
+				427D354C1D36682700E71DA2 /* PPCoord.cpp in Sources */,
+				427D35391D36682700E71DA2 /* PPMatrix.cpp in Sources */,
+				427D354F1D36682700E71DA2 /* PPFormBase.cpp in Sources */,
+				427D35361D36682700E71DA2 /* PPDash.cpp in Sources */,
+				427D35531D36682700E71DA2 /* PPStreamBuf.cpp in Sources */,
+				427D355A1D36682700E71DA2 /* PPTName.cpp in Sources */,
+				427D35541D36682700E71DA2 /* PPTArray.cpp in Sources */,
+				427D35591D36682700E71DA2 /* PPTIndirectRef.cpp in Sources */,
+				427D35471D36682700E71DA2 /* PPEPath.cpp in Sources */,
+				427D355D1D36682700E71DA2 /* PPToken.cpp in Sources */,
+				427D353E1D36682700E71DA2 /* PPEEndCompatibility.cpp in Sources */,
+				427D354B1D36682700E71DA2 /* PPCommandParser.cpp in Sources */,
+				427D354D1D36682700E71DA2 /* PPDocument.cpp in Sources */,
+				427D35521D36682700E71DA2 /* PPParser.cpp in Sources */,
+				427D35451D36682700E71DA2 /* PPElement.cpp in Sources */,
+				427D354E1D36682700E71DA2 /* PPETextState.cpp in Sources */,
+				427D35431D36682700E71DA2 /* PPEImage.cpp in Sources */,
+				427D353B1D36682700E71DA2 /* PPPathItem.cpp in Sources */,
+				427D35571D36682700E71DA2 /* PPTDictionary.cpp in Sources */,
+				427D35481D36682700E71DA2 /* PPEShading.cpp in Sources */,
+				427D35411D36682700E71DA2 /* PPEGRestore.cpp in Sources */,
+				427D35401D36682700E71DA2 /* PPEForm.cpp in Sources */,
+				427D355F1D36682700E71DA2 /* PPTString.cpp in Sources */,
+				427D355B1D36682700E71DA2 /* PPTNull.cpp in Sources */,
+				427D35381D36682700E71DA2 /* PPImage.cpp in Sources */,
+				427D35601D36682700E71DA2 /* PPTTrailer.cpp in Sources */,
+				427D35551D36682700E71DA2 /* PPTBool.cpp in Sources */,
+				427D353F1D36682700E71DA2 /* PPEEndMarkedContent.cpp in Sources */,
+				427D35611D36682700E71DA2 /* PPTXRef.cpp in Sources */,
+				427D354A1D36682700E71DA2 /* PPBase.cpp in Sources */,
+				427D35371D36682700E71DA2 /* PPGState.cpp in Sources */,
+				427D35511D36682700E71DA2 /* PPPage.cpp in Sources */,
+				427D35341D36682700E71DA2 /* PPColor.cpp in Sources */,
+				427D35351D36682700E71DA2 /* PPContext.cpp in Sources */,
+				427D35421D36682700E71DA2 /* PPEGSave.cpp in Sources */,
+				427D355C1D36682700E71DA2 /* PPTNumber.cpp in Sources */,
+				427D35561D36682700E71DA2 /* PPTComment.cpp in Sources */,
+				427D35491D36682700E71DA2 /* PPEText.cpp in Sources */,
+				427D353D1D36682700E71DA2 /* PPEBeginMarkedContent.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -273,16 +517,18 @@
 		420C9F2219C1C520000F6B35 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				COMBINE_HIDPI_IMAGES = YES;
 				EXECUTABLE_PREFIX = lib;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"zlib-1.2.8",
+					"../zlib-1.2.8",
+					include/,
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/zlib-1.2.8",
+					"$(PROJECT_DIR)/../zlib-1.2.8",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -291,16 +537,18 @@
 		420C9F2319C1C520000F6B35 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				COMBINE_HIDPI_IMAGES = YES;
 				EXECUTABLE_PREFIX = lib;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"zlib-1.2.8",
+					"../zlib-1.2.8",
+					include/,
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/zlib-1.2.8",
+					"$(PROJECT_DIR)/../zlib-1.2.8",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};

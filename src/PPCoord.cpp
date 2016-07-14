@@ -7,7 +7,7 @@
 //
 
 
-
+#include <math.h>
 #include "PPCoord.h"
 #include "PPToken.h"
 #include "PPTNumber.h"
@@ -108,8 +108,8 @@ PPRect::PPRect(PTRect ptrect)
 {
 		_origin._x = ptrect._x1;
 		_origin._y = ptrect._y1;
-		_size._width = abs(ptrect._x2 - ptrect._x1);
-		_size._height = abs(ptrect._y2 - ptrect._y1);
+		_size._width = fabs(ptrect._x2 - ptrect._x1);
+		_size._height = fabs(ptrect._y2 - ptrect._y1);
 }
 
 // this(PPRect)와 파라미터 rect가 겹치는 영역을 PPRect로 리턴

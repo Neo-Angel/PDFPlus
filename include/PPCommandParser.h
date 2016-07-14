@@ -71,7 +71,7 @@ struct PPCommandInfo {
     
 };
 
-PPCommandInfo PPCommandList[];
+extern PPCommandInfo  PPCommandList[];
 
 class PPDash;
 class PPContext;

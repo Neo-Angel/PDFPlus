@@ -85,7 +85,7 @@ public:
 	bool IntersectsRect(PPRect rect);
 
 	// 클래스 메소드로 rect1와 rect2가 겹치는 부분이 있으면 true 리턴
-	bool PPRect::IntersectsRect(PPRect rect1, PPRect rect2);
+	bool IntersectsRect(PPRect rect1, PPRect rect2);
 
 	// this(PPRect)와 파라미터 rect가 겹치는 영역을 PPRect로 리턴
 	PPRect IntersectRect(PPRect rect);

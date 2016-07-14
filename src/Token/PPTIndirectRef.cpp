@@ -18,7 +18,11 @@ PPTIndirectRef::PPTIndirectRef(PPDocument *doc, int num1, int num2):PPToken(doc)
 string PPTIndirectRef::Description()
 {
     string retstr = "";
+#ifdef _WIN32
     retstr += "IndirectRef("+to_string((_Longlong)_objNum)+","+to_string((_Longlong)_genNum)+")";
+#else
+    retstr += "IndirectRef("+to_string((long long)_objNum)+","+to_string((long long)_genNum)+")";
+#endif
     return retstr;
 }
 

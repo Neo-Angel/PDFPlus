@@ -283,7 +283,7 @@ float PPPage::Rotate()
 
 PPMatrix *PPPage::DefaultMatrix()
 {
-	return &_context->Matrix();
+	return _context->MatrixRef();
 }
 
 // Setting Methods

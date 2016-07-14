@@ -13,7 +13,11 @@
 
 #include <fstream>
 #include <sstream>
+#ifdef _WIN32
 #include <direct.h>
+#else
+#include <unistd.h>
+#endif
 
 #include "PPDocument.h"
 #include "PPToken.h"
@@ -335,7 +339,11 @@ bool PPDocument::open(string filepath)
     if (!_file.is_open()) {
         _state = PPDS_Cannot_Open;
 		char dirpath[1024];
+#ifdef _WIN32
 		_getcwd(dirpath, 1024);
+#else
+        getcwd(dirpath, 1024);
+#endif
 		PP_ERR << "Cannot open file '"<< filepath<< "'."<<PP_ENDL;
 		PP_ERR << "Current working dir is '"<< dirpath<< "'."<<PP_ENDL;
         return false;
