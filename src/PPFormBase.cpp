@@ -231,8 +231,8 @@ string PPFormBase::NameFromResourceObj(PPTIndirectObj *obj, string resource_type
 		}
 	}
 	
-	PPTIndirectRef *new_rsc_ref = new PPTIndirectRef(_document, obj->_objNum, obj->_genNum);
-	rsc_dict->SetRefTokenAndKey(obj, pname, obj->_objNum);
+//	PPTIndirectRef *new_rsc_ref = new PPTIndirectRef(_document, obj->_objNum, obj->_genNum);
+	rsc_dict->SetRefTokenAndKey(obj, pname/*"IM%d"*/, obj->_objNum);
 
 	return pname;
 }
@@ -1002,4 +1002,19 @@ void PPFormBase::ReplaceString(string org_str, string new_str)
 		}
 	}
 
+}
+
+void PPFormBase::ReplaceImage(PPRect area, string image_path)
+{
+	size_t i, icnt = NumberOfElements(); //_elements.size();
+	for(i=0;i<icnt;i++) {
+		PPElement *element = ElementAtIndex(i); //_elements.at(i);
+		if(element->Type() == PPET_IMAGE) {
+			PPEImage *img_el = (PPEImage *)element;
+			PPRect rect = img_el->BBox();
+			if(area.ContainsRect(rect) ) {
+				img_el->SetImagePath(image_path);
+			}
+		}
+	}
 }

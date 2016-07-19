@@ -2,3 +2,4 @@ Debug/
 PDFPlusLib_Win/PDFPlusLib_Win/Debug/*
 *.tlog
 PDFPlusLib_Win/PDFPlusLib_Win.opensdf
+*.opensdf

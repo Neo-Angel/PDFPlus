@@ -81,6 +81,11 @@ public:
 	inline float Width(){return _size._width;}
 	inline float Height(){return _size._height;}
 
+	float Left();
+	float Right();
+	float Top();
+	float Bottom();
+
 	// this(PPRect)와 파라미터 rect가 겹치는 부분이 있으면 true 리턴
 	bool IntersectsRect(PPRect rect);
 
@@ -89,6 +94,8 @@ public:
 
 	// this(PPRect)와 파라미터 rect가 겹치는 영역을 PPRect로 리턴
 	PPRect IntersectRect(PPRect rect);
+
+	bool ContainsRect(PPRect rect);
 };
 
 //    PTRect Class

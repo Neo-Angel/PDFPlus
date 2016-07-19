@@ -22,7 +22,7 @@ public:
 	string _image_path;
     
 public:
-	PPEImage(string name, PPContext *gcontext);
+	PPEImage(string image_path, PPContext *gcontext);
 	PPEImage(PPTName *name, PPContext *gcontext);
 	PPEImage(char *image_path, PPContext *gcontext);
     PPEImage(PPTDictionary *dict, PPContext *gcontext);
@@ -37,7 +37,7 @@ public:
 	PPElementType Type() {return PPET_IMAGE;}
 
 	void WillAddToParent(PPFormBase *form);
-
+	void SetImagePath(string new_path);
 	bool HasResource();
 
 	vector <const char *> ResourceTypeList();

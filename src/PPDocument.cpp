@@ -543,6 +543,16 @@ void PPDocument::PushObj(PPTIndirectObj *obj)
 	
 }
 
+void PPDocument::RemoveObj(PPTIndirectObj *obj)
+{
+	int i, icnt = _tokens.size();
+	for(i=0;i<icnt;i++) {
+		if(_tokens[i] == obj) {
+			_tokens.erase(_tokens.begin() + i);
+			return;
+		}
+	}
+}
 //////////////////////////////////////////////////////////////////////////////////////////
 // 신규 PDF를 생성할 때 기본 요소들을 세팅함 (PPDocument::PPDocument()에서 호출함)
 //////////////////////////////////////////////////////////////////////////////////////////

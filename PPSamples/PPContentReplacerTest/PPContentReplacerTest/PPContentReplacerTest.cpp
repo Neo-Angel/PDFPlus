@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
 	
 	PPPage *page = doc.GetPage(1);
 
-	//page->AddImage(page->MediaBox(), input_path + "peppers.jpg");
+	page->ReplaceImage(page->MediaBox(), input_path + "peppers.jpg");
 
 	page->ReplaceString("NAME", "John Smith");
 	page->ReplaceString("QUALIFICATIONS", "Philosophy Doctor"); 

@@ -112,6 +112,34 @@ PPRect::PPRect(PTRect ptrect)
 		_size._height = fabs(ptrect._y2 - ptrect._y1);
 }
 
+float PPRect::Left()
+{
+	if(_size._width > 0)
+		return _origin._x;
+	return (_origin._x+_size._width);
+}
+
+float PPRect::Right()
+{
+	if(_size._width > 0)
+		return (_origin._x + _size._width);
+	return _origin._x;
+}
+
+float PPRect::Top()
+{
+	if(_size._height > 0) 
+		return _origin._y;
+	return (_origin._y + _size._height);
+}
+
+float PPRect::Bottom()
+{
+	if(_size._height > 0) 
+		return (_origin._y + _size._height);
+	return _origin._y;
+}
+
 // this(PPRect)와 파라미터 rect가 겹치는 영역을 PPRect로 리턴
 PPRect PPRect::IntersectRect(PPRect rect)
 {
@@ -177,3 +205,11 @@ bool PPRect::IntersectsRect(PPRect rect)
 }
 
 
+bool PPRect::ContainsRect(PPRect rect)
+{
+	if(Left() <= rect.Left() && Right() >= rect.Right()
+		&& Top() <= rect.Top() && Bottom() >= rect.Bottom()) {
+			return true;
+	}
+	return false;
+}

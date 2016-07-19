@@ -142,6 +142,7 @@ public:
 	void									AddPage(PPPage *page);
 	void									PushObj(PPTIndirectObj *obj, int obj_num);
 	void									PushObj(PPTIndirectObj *obj);
+	void									RemoveObj(PPTIndirectObj *obj);
 
 	// Utils
 	////////////////////////////////////////////////////////////////////////////////////////////////

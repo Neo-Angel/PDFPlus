@@ -116,8 +116,7 @@ public:
 	void AddImage(PPRect rect, string path);
 	void AddText(PPRect rect, string text);
 	void ReplaceString(string org_str, string new_str);
-
-
+	void ReplaceImage(PPRect area, string image_path);
 };
 
 #endif /* defined(__PDFPlusLib__PPFormBase__) */
