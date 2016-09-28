@@ -52,7 +52,7 @@ PPFormBase::PPFormBase():_graphicParser((vector <PPToken *> *)&_commands) // _gr
 	PPLayer *layer = new PPLayer(); // 사실 레이어라기보다 OCG 임 
 	_layers.push_back(layer);
 
-	_context = new PPContext;
+	_context = new PPContext(this);
 
 }
 
@@ -70,7 +70,7 @@ PPFormBase::PPFormBase(PPFormBase *form_base):_graphicParser((vector <PPToken *>
 	PPLayer *layer = new PPLayer();
 	_layers.push_back(layer);
 
-	_context = new PPContext;
+	_context = new PPContext(this);
 }
 
 PPFormBase::PPFormBase(PPDocument *doc, PPTIndirectObj *indir):_graphicParser((vector <PPToken *> *)&_commands)
@@ -99,7 +99,7 @@ PPFormBase::PPFormBase(PPDocument *doc, PPTIndirectObj *indir):_graphicParser((v
 	}
 	_curLayer = NULL;
 
-	_context = new PPContext;
+	_context = new PPContext(this);
 }
 
 PPFormBase::~PPFormBase()
@@ -506,6 +506,18 @@ void PPFormBase::WriteElement(PPElement *src_element)
 	}
 }
 
+void PPFormBase::WritePlacedElement(PPElement *src_element)
+{
+	PPElement *gsave_element = new PPEGSave();
+	this->WriteElement(gsave_element);
+	this->WriteElement(src_element);
+
+	PPElement *grestore_element = new PPEGRestore();
+	this->WriteElement(grestore_element);
+
+}
+
+
 /* 여러 GState 의 값들 중에 cmd 내용에 부합하는 값을 변경한다. */
 /* PPContext는 PPGState의 서브클래스다. */
 void PPFormBase::SetValueToGState(PPTCommand *cmd, PPContext &gcontext)
@@ -708,7 +720,7 @@ string PPFormBase::SubtypeFor(string name)
 // 파싱된 _commands 로 elements 리스트(layer->_elements)를 구축한다.
 int PPFormBase::BuildElements()
 {
-    PPContext gcontext;
+    PPContext gcontext(this);
     PPPath *opened_path = NULL;
     PPEPath *path_element = NULL;
     PPEText *text_element = NULL;

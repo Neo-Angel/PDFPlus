@@ -8,3 +8,25 @@ To Do List
 - Trailer->_dict->_dict : PPTDictionary 랑 map <int, PPToken *> 이랑 똑같이 _dict. 개선 필요.
 
 - 
+
+To Make Sample Project
+=======================
+- 파일->새로 만들기->프로젝트...
+- Visual C++ -> 빈 프로젝트
+- 이름하고 위치 지정. 위치는 PDFPlus안 정해진 위치로... 예) C:\Work\PDFPlus\Lib\PPSamples\
+- '확인' 누르고 닫기.
+- 아래내용 복사 후 전체 선택, 붙여넣기
+////////////////////////////////////////////////////////////
+#include <PDFPlus.h>
+#include <iostream>
+
+int main(int argc, char* argv[])
+{
+	return 0;
+}
+////////////////////////////////////////////////////////////
+
+- 프로젝트 선택, 프로젝트 > 속성 > 구성 속성 > 
+- C/C++ > 일반 > 추가포함 디렉토리 : "..\..\..\include\"
+- 링커 > 일반 > 추가 라이브러리 디렉터리 : "..\..\..\PDFPlusLib_Win\Debug\"
+- 링커 > 입력 > 추가 종속성 : "PDFPlusLib_Win.lib", (x) 부모 또는 프로젝트 기본값에서 상속

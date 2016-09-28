@@ -27,6 +27,8 @@ public:
 
 	PPTIndirectObj *MakeIndirectObj(int obj_num);
 	string ImagePath(){return _path;}
+	float ImageWidth();
+	float ImageHeight();
 };
 
 

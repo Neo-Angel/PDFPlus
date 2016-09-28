@@ -60,34 +60,51 @@ PPImage::PPImage(string path, PPDocument *doc)
 	_image_obj = new PPTIndirectObj();
 	PPTName *color_space = nameFromColorSpace(&cinfo, doc);	
 
-	PPTDictionary *_dict = new PPTDictionary();
-	_dict->SetTokenAndKey(8, "BitsPerComponent");
-	_dict->SetTokenAndKey(color_space, "ColorSpace");  // "DeviceRGB"
-	_dict->SetTokenAndKey("DCTDecode", "Filter");
-	_dict->SetTokenAndKey(cinfo.X_density, "HRes");
-	_dict->SetTokenAndKey(cinfo.image_height, "Height");
-	_dict->SetTokenAndKey(file_length, "Length");
-	_dict->SetTokenAndKey("Image", "Subtype");
-	_dict->SetTokenAndKey("XObject", "Type");
-	_dict->SetTokenAndKey(cinfo.Y_density, "VRes");
-	_dict->SetTokenAndKey(cinfo.image_width, "Width"); 
+	PPTDictionary *dict = new PPTDictionary();
+	dict->SetTokenAndKey(8, "BitsPerComponent");
+	dict->SetTokenAndKey(color_space, "ColorSpace");  // "DeviceRGB"
+	dict->SetTokenAndKey("DCTDecode", "Filter");
+	dict->SetTokenAndKey(cinfo.X_density, "HRes");
+	dict->SetTokenAndKey(cinfo.image_height, "Height");
+	dict->SetTokenAndKey(file_length, "Length");
+	dict->SetTokenAndKey("Image", "Subtype");
+	dict->SetTokenAndKey("XObject", "Type");
+	dict->SetTokenAndKey(cinfo.Y_density, "VRes");
+	dict->SetTokenAndKey(cinfo.image_width, "Width"); 
 
-	_image_obj->_array.push_back(_dict);
+	_image_obj->_array.push_back(dict);
 
-	PPTStream *_stream = new PPTStream(doc, file_length);
-	_stream->SetDictionary(_dict);
+	PPTStream *stream = new PPTStream(doc, file_length);
+	stream->SetDictionary(dict);
 
 	fseek(infile, 0L, SEEK_SET);
-	fread(_stream->_streamData, file_length, 1, infile);
+	fread(stream->_streamData, file_length, 1, infile);
 
 	fclose(infile);
 
-	_image_obj->_array.push_back(_stream);
-	_stream->_parentObj = _image_obj;
+	_image_obj->_array.push_back(stream);
+	stream->_parentObj = _image_obj;
 }
 
 PPTIndirectObj *PPImage::MakeIndirectObj(int obj_num)
 {
 	_image_obj->_objNum = obj_num;
 	return _image_obj;
+}
+
+float PPImage::ImageWidth()
+{
+	PPTDictionary *dict = (PPTDictionary *)_image_obj->_array[0];
+	
+	float value = (float) dict->FloatForKey("Width");
+	return value;
+}
+
+float PPImage::ImageHeight()
+{
+	PPTDictionary *dict = (PPTDictionary *)_image_obj->_array[0];
+	
+	float value = (float) dict->FloatForKey("Height");
+	return value;
+
 }

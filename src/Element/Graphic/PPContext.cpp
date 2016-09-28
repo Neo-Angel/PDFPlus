@@ -9,8 +9,9 @@
 //////////////////////////////////////////////////////////
 // =========================================================== PPContext - B
 
-PPContext::PPContext()
+PPContext::PPContext(PPFormBase *form)
 {
+	_parentForm = form;
 }
 
 PPGState *PPContext::NewGState()

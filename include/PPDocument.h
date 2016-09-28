@@ -76,7 +76,8 @@ public:  //protected:
     map <int, PPToken *>					_fonts;  // PPToken => PPTIndirectObj
     map <int, PPToken *>					_xobjects; // images : PPToken => PPTIndirectObj
 	map <int, PPTIndirectObj *>				_srcIndirectObjs;
-	map <string, PPTIndirectObj *>			_images;
+	map <string, PPImage *>					_images;
+	map <string, PPTIndirectObj *>			_imageObjects;
 
 	//////////////////////////////////////////////////////
 
@@ -214,7 +215,8 @@ public:
 	PPTIndirectObj *						WriteResource(PPToken *rsc, int obj_num); // return copied resource.
 
 	//  Image Related Methods   
-	PPTIndirectObj *						ImageFromPath(string path);
+	PPTIndirectObj *						ImageObjFromPath(string path);
+	PPImage *								ImageFromPath(string path);
 	PPTIndirectObj *						AddImage(PPImage *image);
 
 	// Utility Methods

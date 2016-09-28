@@ -232,7 +232,7 @@ void PPTIndirectObj::CopyMembersTo(PPBase *obj)
 
 	PPTIndirectObj *indir_obj = (PPTIndirectObj *)obj;
 	indir_obj->_genNum = _genNum;
-	indir_obj->_objNum = _objNum;
+	indir_obj->_objNum = _document->NewObjNum(); //_objNum;
 
 	indir_obj->_array.clear();
 	int i, icnt = _array.size();

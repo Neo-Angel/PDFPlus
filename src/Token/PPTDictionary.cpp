@@ -157,6 +157,25 @@ PPToken *PPTDictionary::ValueObjectForKey(string &keyname)
     return ret;
 }
 
+PPTNumber *PPTDictionary::NumberForKey(string &keyname)
+{
+	PPTNumber *number = NULL;
+	PPToken *token = this->ValueObjectForKey(keyname);
+	if(token->ClassType() == PPTN_NUMBER) {
+		number = (PPTNumber *)token; 
+	}
+	return number;
+}
+
+float PPTDictionary::FloatForKey(string keyname)
+{
+	PPTNumber *number = this->NumberForKey(keyname);
+	if(number) {
+		return (number->floatValue());
+	}	
+	cout<< "Number For Key'" << keyname << "' returns Zero." << PP_ENDL;
+	return 0;
+}
 
 string PPTDictionary::Description()
 {

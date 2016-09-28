@@ -1073,15 +1073,30 @@ void PPDocument::SaveFontsToFolder(const char *folder)
 /////////////////////////////////////////////////////////////////////
 #include "PPImage.h"
 
-PPTIndirectObj *PPDocument::ImageFromPath(string path)
+PPImage *PPDocument::ImageFromPath(string path)
 {
-	PPTIndirectObj *ret_obj = _images[path];
+	PPImage *ret_img = _images[path];
+	if(ret_img == NULL) {
+		ImageObjFromPath(path);
+		ret_img = _images[path];
+		if(ret_img) {
+			return ret_img;
+		}
+	}
+	return ret_img;
+}
+
+PPTIndirectObj *PPDocument::ImageObjFromPath(string path)
+{
+	PPTIndirectObj *ret_obj = _imageObjects[path];
 	if(ret_obj == NULL) {
 		PPImage *image = new PPImage(path, this);
 		int obj_num = NewObjNum();
 		ret_obj = image->MakeIndirectObj(obj_num);
 		PushObj(ret_obj);
-		_images[path] = ret_obj;
+		_imageObjects[path] = ret_obj;
+		_images[path] = image;
+		_xobjects[obj_num] = ret_obj;
 	}
 	return ret_obj;
 }
@@ -1089,12 +1104,14 @@ PPTIndirectObj *PPDocument::ImageFromPath(string path)
 PPTIndirectObj *PPDocument::AddImage(PPImage *image)
 {
 	string path = image->ImagePath();
-	PPTIndirectObj *ret_obj = _images[path];
+	PPTIndirectObj *ret_obj = _imageObjects[path];
 	if(ret_obj == NULL) {
 		int obj_num = NewObjNum();
 		PPTIndirectObj *ret_obj = image->MakeIndirectObj(obj_num);
 		PushObj(ret_obj);
-		_images[path] = ret_obj;
+		_imageObjects[path] = ret_obj;
+		_images[path] = image;
+		_xobjects[obj_num] = ret_obj;
 	}
 	return ret_obj;
 }

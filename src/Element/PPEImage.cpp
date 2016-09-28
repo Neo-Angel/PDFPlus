@@ -34,7 +34,7 @@ PPEImage::PPEImage(string image_path, PPContext *gcontext) : PPElement(gcontext)
 //	_name = name;
 	_xobj = NULL;
 	_image = NULL;
-	_image_path = image_path;
+	this->SetImagePath(image_path);
 }
 
 
@@ -44,7 +44,19 @@ PPEImage::PPEImage(char *image_path, PPContext *gcontext) : PPElement(gcontext)
 	_image = NULL;
 	_xobj = NULL;
 	_image_path = image_path;
+	this->SetImagePath(image_path);
 }
+
+PPEImage::PPEImage(string image_path, PPFormBase *form) : PPElement(form->ContextRef())
+{
+//	_name = name;
+    _parentForm = form;
+	_xobj = NULL;
+	_image = NULL;
+//	_image_path = image_path;
+	this->SetImagePath(image_path);
+}
+
 
 PPEImage::PPEImage()
 {
@@ -132,11 +144,13 @@ void PPEImage::SetImagePath(string new_path)
 		}
 
 		//해당 경로에 PPImage가 없으면 생성한 후 doc에 추가하고 PPIndirObj를 리턴한다.
-		_xobj = doc->ImageFromPath(new_path); 
+		_xobj = doc->ImageObjFromPath(new_path); 
 		if(_xobj) {
 			_name = _parentForm->NameFromResourceObj(_xobj, "XObject");
 			
 			_subtype = "Image";
+
+			_image = doc->ImageFromPath(new_path);
 		}
 		_image_path = "";
 		return;
@@ -151,11 +165,12 @@ void PPEImage::WillAddToParent(PPFormBase *form)
 		PPDocument *doc = form->_document;
 
 		//해당 경로에 PPImage가 없으면 생성한 후 doc에 추가하고 PPIndirObj를 리턴한다.
-		_xobj = doc->ImageFromPath(_image_path); 
+		_xobj = doc->ImageObjFromPath(_image_path); 
 		if(_xobj) {
 			_name = form->NameFromResourceObj(_xobj, "XObject");
 			
 			_subtype = "Image";
+			_image = doc->ImageFromPath(_image_path);
 		}
 		_image_path = "";
 		return;

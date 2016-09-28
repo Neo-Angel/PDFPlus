@@ -11,6 +11,7 @@
 ///////////////////////////////////////// PPTDictionary
 class PPTIndirectObj;
 class PPTName;
+class PPTNumber;
 
 // hash map을 이용한 사전 형식의 자료 구조이다.
 // key/value 페어로 구성되어 있다.
@@ -50,11 +51,13 @@ public:
 	PPTIndirectObj *SetRefTokenAndKey(PPToken *token, string key, int obj_num);
     PPToken *ObjectForKey(string &keyname);
     PPToken *ObjectForKey(const char *keyname);
-	PPTName *NameForKey(const char *keyname);
-    PPTIndirectObj *IndirectObjectForKey(string &keyname);
+	PPTIndirectObj *IndirectObjectForKey(string &keyname);
     PPTIndirectObj *IndirectObjectForKey(const char *keyname){string str(keyname);return IndirectObjectForKey(str);}
     PPToken *ValueObjectForKey(string &keyname);
 	PPToken *ValueObjectForKey(const char *keyname){string key(keyname); return ValueObjectForKey(key);}
+	PPTName *NameForKey(const char *keyname);
+	PPTNumber *NumberForKey(string &keyname);
+	float FloatForKey(string keyname);    
 };
 /////////////////////////////////////////
 

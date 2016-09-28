@@ -3,6 +3,7 @@
 #define __PDFPlusLib__PPEImage__
 
 #include <PPElement.h>
+#include <PPImage.h>
 
 //
 //      PPEImage
@@ -11,7 +12,7 @@
 class PPTName;
 class PPTDictionary;
 class PPTStream;
-class PPImage;
+
 
 class PPEImage : public PPElement {
 public:
@@ -26,6 +27,7 @@ public:
 	PPEImage(PPTName *name, PPContext *gcontext);
 	PPEImage(char *image_path, PPContext *gcontext);
     PPEImage(PPTDictionary *dict, PPContext *gcontext);
+	PPEImage(string image_path, PPFormBase *form);
 	PPEImage();
 	PPBase *Create(){return new PPEImage;}
 
@@ -43,6 +45,9 @@ public:
 	vector <const char *> ResourceTypeList();
 	string ResourceKeyFor(const char *rsc_type);
 	PPToken *ResourceObjectFor(const char *rsc_type);
+
+	float ImageWidth(){return _image->ImageWidth();}
+	float ImageHeight() {return _image->ImageHeight();}
 
 };
 
