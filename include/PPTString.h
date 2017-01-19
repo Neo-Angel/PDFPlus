@@ -17,7 +17,7 @@ public:
     ~PPTString();
     string XMLString(int level);
     string utf8String();
-    inline const char *ClassType(){return PPTN_STRING;};
+    inline PPClassType ClassType(){return PPTN_STRING;};
     string PDFString();
 
 	PPBase *Create() {return new PPTString();}

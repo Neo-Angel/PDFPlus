@@ -36,7 +36,7 @@ public:
     string PDFString();
 	PPBase *Create() {return new PPTTrailer();}
 	void CopyMembersTo(PPBase *obj);
-    inline const char *ClassType(){return PPTN_TRAILER;};
+    inline PPClassType ClassType(){return PPTN_TRAILER;};
 
     PPTDictionary *Dictionary();
     void Write(std::ostream &os);

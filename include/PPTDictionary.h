@@ -20,7 +20,7 @@ class PPTNumber;
 //
 class PPTDictionary : public PPToken {
 
-public:
+private:
 	// _dict에 등록된 토큰들은 이 객체 외부에서 할당된 메모리를 사용하나
 	// 메모리 해제는 이 객체가 소멸될 때 같이 해제한다.
     map <string, PPToken *> _dict;
@@ -31,8 +31,11 @@ public:
     ~PPTDictionary();
 
 	// Inherited from super class (PPBase)
+	map <string, PPToken *> ::iterator Begin() {return _dict.begin();}
+	map <string, PPToken *> ::iterator End() {return _dict.end();}
+
     string Description();
-    inline const char *ClassType(){return PPTN_DICTIONARY;};
+    inline PPClassType ClassType(){return PPTN_DICTIONARY;};
 	PPBase *Create() {return new PPTDictionary();}
 	void CopyMembersTo(PPBase *obj) ;
 
@@ -41,6 +44,7 @@ public:
     string PDFString();
 	void SetDocument(PPDocument *doc);
 	void MoveInto(PPDocument *doc);
+	void Merge(PPTDictionary *other_dict);
 
 	// local methods
     void SetTokenAndKey(PPToken *token, string key);

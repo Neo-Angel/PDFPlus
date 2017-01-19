@@ -284,7 +284,7 @@ string PPTCommand::PDFString()
 void PPTCommand::CopyMembersTo(PPBase *obj)
 {
 	PPTCommand *tar_cmd = (PPTCommand *)obj;
-	int i, icnt = _operands.size();
+	size_t i, icnt = _operands.size();
 	for(i=0;i<icnt;i++) {
 		PPToken *token = (PPToken *)_operands[i]->Copy();
 		tar_cmd->_operands.push_back(token);
@@ -315,7 +315,7 @@ bool PPCommandParser::ParseStream(PPTStream &stream)
     return parser.ParseSource(*this, _operands);
 }
 
-const char *PPCommandParser::ClassType()
+PPClassType PPCommandParser::ClassType()
 {
     return PPTN_COMMAND_PARSER;
 }
@@ -393,7 +393,7 @@ PPToken *PPCommandParser::parseString(string str, vector <PPToken *> &tokens, PP
 			// 코멘드 토큰을 생성해서 코멘드 정보(cinfo)를 담고
             PPTCommand *cmd = new PPTCommand;
             cmd->_cmdInfo = cinfo;
-            int i, icnt = cinfo->numOfOperands;
+            size_t i, icnt = cinfo->numOfOperands;
 			if(icnt == -1) { // -1 은 오퍼랜드 갯수가 정해지지 않았음을 의미.
 				icnt = tokens.size();
 			}
@@ -443,13 +443,13 @@ size_t PPCommandParser::tellg()
 
 void PPCommandParser::seekg(size_t pos)
 {
-    _index = pos;
+    _index = (ulong)pos;
 }
 
 void PPCommandParser::read(char *buf,size_t size)
 {
     memcpy(buf, _streamData+_index, size);
-    _index += size;
+    _index += (ulong)size;
 }
 
 void PPCommandParser::getline(char *buf, size_t size)

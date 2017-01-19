@@ -28,7 +28,7 @@ public:
 
     string XMLString(int level);
     string PDFString();
-    inline const char *ClassType() {return PPTN_XREF;}
+    inline PPClassType ClassType() {return PPTN_XREF;}
     void Write(std::ostream &os);
     
 	PPBase *Create() {return new PPTXRef();}

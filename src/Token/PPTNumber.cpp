@@ -20,6 +20,12 @@ PPTNumber::PPTNumber(PPDocument *doc, int num)
     _number = (double)num;
 }
 
+PPTNumber::PPTNumber(PPDocument *doc, uint num)
+{
+    _numstr = PPNewStringFromInt(num);
+    _number = (double)num;
+}
+
 PPTNumber::PPTNumber(PPDocument *doc, float num)
 {
     _numstr = PPNewStringFromFloat(num);

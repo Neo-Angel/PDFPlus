@@ -23,7 +23,7 @@ public:
 //    string *getName();
     string Description();
     string XMLString(int level);
-    inline const char *ClassType(){return PPTN_NAME;};
+    inline PPClassType ClassType(){return PPTN_NAME;};
     string PDFString();
 
 	PPBase *Create() {return new PPTName();}

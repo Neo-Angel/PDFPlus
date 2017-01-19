@@ -82,7 +82,7 @@ public:
 	void WriteElement(PPElement *element);
 	void WritePlacedElement(PPElement *element);
 	size_t NumberOfElements();
-	PPElement *ElementAtIndex(int idx);
+	PPElement *ElementAtIndex(size_t idx);
 
 	void AddXObjRef(PPTIndirectObj *xobj, string key);
 	void AddFormObj(PPFormBase *form_obj);

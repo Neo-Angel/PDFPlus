@@ -126,7 +126,7 @@ void PPEImage::SetImagePath(string new_path)
 		}
 		if(_xobj && prev_img_ref) {
 			// _xobj 의 여러 ref들 중에 prev_img_ref를 찾아 지운다.
-			int icnt = _xobj->_ref_list.size();
+			size_t icnt = _xobj->_ref_list.size();
 			for(int i=0;i<icnt;i++) {
 				PPTIndirectRef *ref = _xobj->_ref_list[i];
 				if(ref == prev_img_ref) {

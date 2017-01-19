@@ -167,7 +167,7 @@ PPToken *PPTTrailer::InfoObject()
 void PPTTrailer::Build()
 {
     int obj_cnt = (int) _document->_objDict.size();
-    _dict->_dict["Size"] = new PPTNumber(_document, obj_cnt+1);
+    _dict->SetTokenAndKey(new PPTNumber(_document, obj_cnt+1), "Size");
 }
 
 void PPTTrailer::Merge(PPTTrailer *other_trailer)
@@ -195,29 +195,10 @@ void PPTTrailer::Merge(PPTTrailer *other_trailer)
     sprintf(buf, "%d", obj_cnt);
     
     string *numstr = new string(buf);
-    _dict->_dict["Size"] = new PPTNumber(_document, numstr);
+	_dict->SetTokenAndKey(new PPTNumber(_document, numstr), "Size");
     
+	_dict->Merge(other_trailer->Dictionary());
 
-    
-    map <string, PPToken *> other_dict = other_trailer->Dictionary()->_dict;
-    
-    map <string, PPToken *> ::iterator it_token_objs;
-    for(it_token_objs = other_dict.begin(); it_token_objs != other_dict.end(); it_token_objs++) {
-        string key = it_token_objs->first;
-        PPToken *mytoken = _dict->_dict[key];
-        if(mytoken) {
-        }
-        else {
-            _dict->_dict.erase(key);
-            if (key == "Prev") {
-                cout << "key is Prev..." << PP_ENDL;
-            }
-            else {
-                PPToken *other_token = it_token_objs->second;
-                _dict->_dict[key] = other_token;
-            }
-        }
-    }
 }
 
 void PPTTrailer::Write(std::ostream &os)

@@ -54,6 +54,11 @@ string PPTArray::PDFString()
     return retstr;
 }
 
+void PPTArray::AddToken(PPToken *token) 
+{
+	_array.push_back(token); 
+	token->_parentObj = _parentObj;
+}
 
 void PPTArray::AddToken(int num) 
 {
@@ -61,15 +66,25 @@ void PPTArray::AddToken(int num)
 }
 
 
+void PPTArray::Clear()
+{
+    int i, icnt = (int)_array.size();
+    for (i=0; i<icnt; i++) {
+        PPToken *token = _array.at(i);
+        delete token;
+    }
+	_array.clear();
+}
+
 void PPTArray::CopyMembersTo(PPBase *obj) 
 {
 	PPToken::CopyMembersTo(obj);
 
 	PPTArray *tar_arr =(PPTArray *)obj;
-	tar_arr->_array.clear();
-	int i, icnt = Size();
+	tar_arr->Clear();
+	uint i, icnt = (uint)Size();
 	for(i=0;i<icnt;i++) {
-		PPToken *org_token = ObjectAtIndex(i);
+		PPToken *org_token = TokenAtIndex(i);
 		PPToken *new_token = (PPToken *)org_token->Copy();
 		tar_arr->AddToken(new_token);
 	}
@@ -79,9 +94,10 @@ void PPTArray::SetDocument(PPDocument *doc)
 {
 	PPToken::SetDocument(doc);
 
-	int i, icnt = Size();
+	size_t icnt = Size();
+	uint i;
 	for(i=0;i<icnt;i++) {
-		PPToken *token = ObjectAtIndex(i);
+		PPToken *token = TokenAtIndex(i);
 		if(doc != token->_document)
 			token->SetDocument(doc);
 	}
@@ -90,14 +106,18 @@ void PPTArray::SetDocument(PPDocument *doc)
 
 void PPTArray::MoveInto(PPDocument *doc)
 {
-	int i, icnt = Size();
+
+	size_t icnt = Size();
+	uint i;
 	for(i=0;i<icnt;i++) {
-		PPToken *token = ObjectAtIndex(i);
+		PPToken *token = TokenAtIndex(i);
 		token->MoveInto(doc);
 	}
+
+	PPToken::MoveInto(doc);
 }
 
-void PPTArray::RemoveTokenAtIndex(int idx)
+void PPTArray::RemoveTokenAtIndex(uint idx)
 {
 	_array.erase(_array.begin() + idx);
 }

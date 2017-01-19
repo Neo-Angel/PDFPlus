@@ -101,7 +101,7 @@ public:
     string XMLString(int level);
 };
 
-static const char  *PPTN_COMMAND_PARSER = "PPCommandParser";
+//static const char  *PPTN_COMMAND_PARSER = "PPCommandParser";
 
 // 페이지나 폼내 스트림으로 저장되어있는 그래픽 명령어들을 파싱한다.
 // PPParser에게 스트림을 공급하고 기본적인 파싱의 범주에 벗어나는 문자열들을
@@ -130,7 +130,7 @@ public:
     void seekg(size_t pos);
     void read(char *buf, size_t size);
     void getline(char *buf, size_t size);
-    const char *ClassType();
+    PPClassType ClassType();
 
 public:
     PPCommandParser(vector <PPToken *> *tokens);

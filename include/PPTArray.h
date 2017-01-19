@@ -8,10 +8,12 @@
 // PDF 스펙 중 배열을 담당하는 클래스 
 ///////////////////////////////////////// PPTArray
 class PPTArray : public PPToken {
-public:
+private:
 	// _array에 등록된 토큰들은 이 객체 외부에서 할당된 메모리를 사용하나
 	// 메모리 해제는 이 객체가 소멸될 때 같이 해제한다.
     vector <PPToken *> _array; // 
+
+public:
     
 	PPTArray(PPDocument *doc) : PPToken(doc) {};
     PPTArray(PPDocument *doc, vector<PPToken *> token_list);
@@ -23,7 +25,7 @@ public:
     string PDFString(); // 실제 PDF에 기록될 문자열을 리턴한다.
 
 	// PPBase에서 계승된 함수들
-    inline const char *ClassType() {return PPTN_ARRAY;}
+    inline PPClassType ClassType() {return PPTN_ARRAY;}
 	PPBase *Create() {return new PPTArray;} 
 	void CopyMembersTo(PPBase *obj) ;
 
@@ -32,11 +34,13 @@ public:
 
 	// Manipulate _array
     inline size_t Size() {return _array.size();}
-    inline PPToken *ObjectAtIndex(int idx) {return _array.at(idx);}
-	void AddToken(PPToken *token) {_array.push_back(token);}
+	size_t NumberOfTokens() {return _array.size();}
+    inline PPToken *TokenAtIndex(uint idx) {return _array.at(idx);}
+	void AddToken(PPToken *token);
 	void AddToken(int num); // num을 PPTNumber으로 변환해서 _array에 push한다.
 	void Reorder(int from_idx, int to_idx); // from_idx에 있는 토큰을 to_idx 위치로 옮긴다.
-	void RemoveTokenAtIndex(int idx);
+	void RemoveTokenAtIndex(uint idx);
+	void Clear();
 };
 /////////////////////////////////////////
 

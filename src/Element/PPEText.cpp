@@ -156,9 +156,10 @@ string PPEText::String()
 		}
 		else if(cmd->_cmdInfo->code == PPC_ShowMultiText) {
 			PPTArray *str_arr = (PPTArray *)cmd->TokenValueAt(0);
-			size_t j, jcnt = str_arr->_array.size();
+			uint j;
+			size_t  jcnt = str_arr->NumberOfTokens();
 			for(j=0;j<jcnt;j++) {
-				PPToken *token = str_arr->ObjectAtIndex(j);
+				PPToken *token = str_arr->TokenAtIndex(j);
 				if(token->ClassType() == PPTN_STRING) {
 					PPTString *str_token = (PPTString *)token;
 					retstr += *(str_token->_string);

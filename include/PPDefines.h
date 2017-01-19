@@ -28,6 +28,14 @@ typedef unsigned char  byte;
 typedef unsigned short  word;
 #endif
 
+#ifndef uint
+typedef unsigned int  uint;
+#endif
+
+#ifndef ulong
+typedef unsigned long  ulong;
+#endif
+
 
 // String Constants
 static const char	*PP_ENDL = "\x0a";

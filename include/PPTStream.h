@@ -28,7 +28,6 @@ protected:
 public:
 	// stream 에 대한 기본적인 정보(Filter 명등..)를 담고있는 dictionary
     PPTDictionary *_infoDict; 
-	PPTIndirectObj *_parentObj;
     char *_streamData;
     unsigned long _streamSize;
 	string _filterName; // 인코딩 방식 이름
@@ -49,7 +48,7 @@ public:
 
 	PPBase *Create() {return new PPTStream();}
 	void CopyMembersTo(PPBase *obj) ;
-    inline const char *ClassType() {return PPTN_STREAM;}
+    inline PPClassType ClassType() {return PPTN_STREAM;}
 
     // PPParserSource overriding
     bool canParseString(string str);
@@ -66,7 +65,7 @@ public:
     void AppendData(char *data, unsigned long length);
     inline char *Buffer() { return _streamData;}
     string XMLString(int indent);
-    size_t GetReadPointer(unsigned char **ptr, size_t length);
+    size_t GetReadPointer(unsigned char **ptr, unsigned long length);
     void WriteTo(const char *tar_path);
     void FlateDecodeStream();
     unsigned long FlateEncodeStream(char **strm_dat);

@@ -7,7 +7,10 @@ To Do List
 
 - Trailer->_dict->_dict : PPTDictionary 랑 map <int, PPToken *> 이랑 똑같이 _dict. 개선 필요.
 
-- 
+- Page Copy 작업중 parentObj 문제로 중단. 
+	PPTDictionary *dict->new PPTDictionary();
+	dict->MoveInto(); // dict에 _parentObj 가 지정이 안되어 있음.
+
 
 To Make Sample Project
 =======================
@@ -15,6 +18,8 @@ To Make Sample Project
 - Visual C++ -> 빈 프로젝트
 - 이름하고 위치 지정. 위치는 PDFPlus안 정해진 위치로... 예) C:\Work\PDFPlus\Lib\PPSamples\
 - '확인' 누르고 닫기.
+- '솔루션 탐색기'에서 '소스파일' 선택 > 오른쪽 마우스 클릭 > 추가 > 새항목
+- 'Visual C++' > 'C++' 선택. '이름', '위치' 지정하고 '추가' 클릭
 - 아래내용 복사 후 전체 선택, 붙여넣기
 ////////////////////////////////////////////////////////////
 #include <PDFPlus.h>

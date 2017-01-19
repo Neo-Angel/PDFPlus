@@ -81,7 +81,7 @@ int PPColor::NumberOfComponents(bool &is_string)
 
 void PPColor::SetComponents(vector<PPToken *> &components) // &vector<PPToken *> _operands
 {
-	_num_of_components = components.size();
+	_num_of_components = (byte)components.size();
 	if(_num_of_components >= 1) {
 		PPTNumber *number = (PPTNumber *)components[0];
 		_c1 = number->floatValue();
@@ -170,7 +170,7 @@ string PPColor::UserColorName()
 {
 	string ret_str;
 	if(_colorInfo) {
-		PPTName *name = (PPTName *)_colorInfo->_array[1];
+		PPTName *name = (PPTName *)_colorInfo->TokenAtIndex(1);
 		ret_str = *name->_name;
 	}
 	return ret_str;

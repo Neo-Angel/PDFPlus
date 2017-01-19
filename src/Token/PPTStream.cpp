@@ -206,8 +206,10 @@ string PPTStream::MakePDFString(unsigned long &length)
     if (_decoded && filter && *filter->_name == "FlateDecode") {
         char *strm_buf;
         length = FlateEncodeStream(&strm_buf);
-        retstr.append(strm_buf, length);
-        delete[] strm_buf;
+		if(length > 0 ) {
+			retstr.append(strm_buf, length);
+			delete[] strm_buf;
+		}
     }
     else {
         retstr.append(_streamData, _streamSize);
@@ -345,9 +347,9 @@ int inf(PPTStream *source, PPStreamBuf *dest)
 
 
 
-size_t PPTStream::GetReadPointer(unsigned char **buf, size_t length)
+size_t PPTStream::GetReadPointer(unsigned char **buf, unsigned long length)
 {
-    size_t len = _streamSize > (_cur_pos + length) ? length : (_streamSize - _cur_pos);
+    unsigned long len = _streamSize > (_cur_pos + length) ? length : (_streamSize - _cur_pos);
     if (len <= 0) {
         return 0;
     }
@@ -385,14 +387,14 @@ void PPTStream::FlateDecodeStream()
         return;
     }
     delete[] _streamData;
-    _streamSize = stream_buf->TotalLength();
+    _streamSize = (ulong)stream_buf->TotalLength();
     _cur_pos = 0;
     _streamData = new char[_streamSize+1];
     
     // decoding 하면서 나눠졌던 데이터들을 하나로 모음
     stream_buf->Collect(_streamData);
 	_streamData[_streamSize] = NULL;
-	cout << "SteamData: " << _streamData << PP_ENDL;
+//	cout << "SteamData: " << _streamData << PP_ENDL;
     _decoded = true;
     
     delete stream_buf;
@@ -417,7 +419,7 @@ unsigned long PPTStream::FlateEncodeStream(char **strm_dat)
         delete stream_buf;
         return 0;
     }
-    unsigned long strm_size = stream_buf->TotalLength();
+    unsigned long strm_size = (ulong)stream_buf->TotalLength();
     *strm_dat = new char[strm_size];
     
     // decoding 하면서 나눠졌던 데이터들을 하나로 모음
@@ -470,7 +472,7 @@ bool PPTStream::ParseObjStm(vector<PPToken *> &token_list, PPParser *parser)
         PPTIndirectObj *indir_obj = new PPTIndirectObj(parser->_document, obj_num, 0);
         _cur_pos = first + obj_start;
 
-		if (parser->ParseSource(*this, indir_obj->_array, indir_obj) == false) {
+		if (parser->ParseSource(*this, indir_obj->TokenList(), indir_obj) == false) {
 			delete indir_obj;
             return false;
 		}
@@ -551,13 +553,13 @@ size_t PPTStream::tellg()
 
 void PPTStream::seekg(size_t pos)
 {
-    _cur_pos = pos;
+    _cur_pos = (ulong)pos;
 }
 
 void PPTStream::read(char *buf,size_t size)
 {
     memcpy(buf, _streamData+_cur_pos, size);
-    _cur_pos += size;
+    _cur_pos += (ulong)size;
 }
 
 void PPTStream::getline(char *buf, size_t size)

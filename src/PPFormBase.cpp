@@ -107,7 +107,7 @@ PPFormBase::~PPFormBase()
 //	PPBase::~PPBase();
 
 	// layer들은 이 클래스에서 new 로 생성 된 것들이라 지워줘야 함.
-	int i, icnt = _layers.size();
+	size_t i, icnt = _layers.size();
 	for(i=0;i<icnt;i++) {
 		PPLayer *layer = _layers[i];
 		delete layer;
@@ -119,12 +119,12 @@ PPFormBase::~PPFormBase()
 PPFormBase *PPFormBase::NewFormObj(PPFormBase *form_obj)
 {
 	PPTIndirectObj *indir = (PPTIndirectObj *)form_obj->_indirObj->Copy();
-	if(indir->_array.size() == 2) {
-		indir->_array.erase(indir->_array.begin()+1);
+	if(indir->NumberOfTokens() == 2) {
+		indir->Erase(indir->Begin()+1);
 	}
 
 	PPFormBase *ret_form = NULL;
-	if(indir->_array.size() == 1) {
+	if(indir->NumberOfTokens() == 1) {
 		indir->MoveInto(_document); // 검색되지 않토록 변형
 		int new_obj_num = _document->NewObjNum();
 		indir->_objNum = new_obj_num;
@@ -158,8 +158,8 @@ int PPFormBase::XObjectNumberFor(string name)
 	}
     PPTDictionary *xobject_dict = (PPTDictionary *)_resourceDict->ValueObjectForKey("XObject");
     if (xobject_dict) {
-        map <string, PPToken *> &dict = xobject_dict->_dict;
-        PPTIndirectRef *indir_ref = (PPTIndirectRef *)dict[name];
+        //map <string, PPToken *> &dict = xobject_dict->_dict;
+		PPTIndirectRef *indir_ref = (PPTIndirectRef *)xobject_dict->ObjectForKey(name);
         int obj_num = indir_ref->_objNum;
         return obj_num;
     }
@@ -198,11 +198,10 @@ string PPFormBase::NameFromResourceObj(PPTIndirectObj *obj, string resource_type
 		rsc_dict = new PPTDictionary(_document);
 		_resourceDict->SetTokenAndKey(rsc_dict, resource_type);
 	}
-	map <string, PPToken *> *map_dict = &rsc_dict->_dict;
     map <string, PPToken *>::iterator it_dict;
 	vector <string> namelist;
 
-	for(it_dict = map_dict->begin(); it_dict != map_dict->end(); it_dict++) {
+	for(it_dict = rsc_dict->Begin(); it_dict != rsc_dict->End(); it_dict++) {
         PPTIndirectRef *rsc_ref = (PPTIndirectRef *)it_dict->second;
 		string name = it_dict->first;
 		if(rsc_ref->_objNum == obj->_objNum) {
@@ -220,7 +219,7 @@ string PPFormBase::NameFromResourceObj(PPTIndirectObj *obj, string resource_type
 	}
 
 	int name_idx = 0;
-	int i, icnt = namelist.size();
+	size_t i, icnt = namelist.size();
 	for(i=0;i<icnt;i++) {
 		string name = namelist[i];
 		if(name == pname) {
@@ -293,7 +292,7 @@ PPLayer *PPFormBase::AddLayer(string layer_name)
 	// 새 properties key 만들기 
 	char pname[10] = "LP0";
 	int name_idx = 0;
-	int i, icnt = _layers.size();
+	size_t i, icnt = _layers.size();
 	for(i=0;i<icnt;i++) {
 		PPLayer *layer = _layers[i];
 		if(layer->_properties == pname) {
@@ -344,7 +343,8 @@ void PPFormBase::BeginReadLayer(char *layer_name)
 
 PPLayer *PPFormBase::LayerForName(string name, int *idx)
 {
-	int i, icnt = _layers.size();
+	size_t icnt = _layers.size();
+	uint i;
 	for(i=0;i<icnt;i++) {
 		PPLayer *layer = _layers[i];
 		if(layer->Name() == name) {
@@ -373,13 +373,13 @@ void PPFormBase::MergeLayer(string tar_name, string src_name)
 	PPLayer *tar = LayerForName(tar_name, &tar_idx);
 	PPLayer *src = LayerForName(src_name, &src_idx);
 
-	int i, icnt = src->_elements.size();
+	size_t i, icnt = src->_elements.size();
 	for(i=0;i<icnt;i++) {
 		PPElement *element = src->_elements[i];
 		if(element->Type() != PPET_MARKED_CONTENT
 			&& element->Type() != PPET_END_MARKED_CONTENT
 			&& element->Type() != PPET_BEGIN_MARKED_CONTENT) {
-				int tar_cnt = tar->_elements.size();
+				size_t tar_cnt = tar->_elements.size();
 				// src 레이어의 Marked Contents 관련 엘리먼트들을 제외하고
 				// tar 레이어의 마지막 바로 앞에 인서트를 한다.
 				// tar 레이어의 마지막에 있는 Marked content end  엘리먼트를 
@@ -418,25 +418,26 @@ void PPFormBase::AddElement(PPElement *element)
 size_t PPFormBase::NumberOfElements()
 {
 	size_t tot_cnt = 0;
-	int i, icnt = _layers.size();
+	size_t i, icnt = _layers.size();
 	for(i=0;i<icnt;i++) {
-		int el_cnt = _layers[i]->_elements.size();
+		size_t el_cnt = _layers[i]->_elements.size();
 		tot_cnt += el_cnt;
 	}
 	return tot_cnt;
 }
 
-PPElement *PPFormBase::ElementAtIndex(int idx)
+PPElement *PPFormBase::ElementAtIndex(size_t idx)
 {
-	int tot_cnt = 0;
-	int i, icnt = _layers.size();
+	uint i, tot_cnt = 0;
+	size_t icnt = _layers.size();
+
 	for(i=0;i<icnt;i++) {
-		int el_cnt = _layers[i]->_elements.size();
+		size_t el_cnt = _layers[i]->_elements.size();
 		if(idx < (tot_cnt+el_cnt)) {
-			int r_idx = idx - tot_cnt;
+			int r_idx = (uint)idx - tot_cnt;
 			return _layers[i]->_elements[r_idx];
 		}
-		tot_cnt += el_cnt;
+		tot_cnt += (uint)el_cnt;
 	}
 	return NULL;
 }
@@ -454,7 +455,7 @@ void PPFormBase::WriteElement(PPElement *src_element)
 	if(src_element->HasResource()) {
 		// src_element의 리소스 '타입'과 '키'로 this에 리소스가 있는지 체크
 		vector <const char *> type_list = src_element->ResourceTypeList();
-		int i, icnt = type_list.size();
+		size_t i, icnt = type_list.size();
 		// 한개의 엘리먼트에 여려 종류(icnt)의 리소스가 있을 수 있음.
 		for(i=0;i<icnt;i++) {
 			const char *rsc_type = type_list[i]; //src_element->ResourceType();
@@ -925,11 +926,11 @@ PPTStream *PPFormBase::BuildStream()
 	ostringstream ostr;
 	size_t i, icnt = NumberOfElements(); //_elements.size();
 	for(i=0;i<icnt;i++) {
-		PPElement *element = ElementAtIndex(i); //_elements.at(i);
+		PPElement *element = ElementAtIndex((uint)i); //_elements.at(i);
 		string cmdstr = element->CommandString();
 		retstr += cmdstr;
 	}
-	unsigned long size = retstr.size();
+	unsigned long size = (ulong)retstr.size();
 	PPTStream *stream = new PPTStream(_document, size);
 	const char *cstr = retstr.c_str();
 	memcpy(stream->_streamData, cstr, size);
@@ -965,10 +966,10 @@ void PPFormBase::AddFormObj(PPFormBase *form_obj)
 	PPTIndirectObj *xobj = form_obj->XObject();
 //	form_obj->_document = _document;
 	PPTStream *stream = form_obj->BuildStream();
-	stream->_infoDict = (PPTDictionary *)xobj->_array[0];
+	stream->_infoDict = (PPTDictionary *)xobj->TokenAtIndex(0);
 	stream->_infoDict->SetTokenAndKey(stream->_streamSize, "Length");
 	stream->_parentObj = xobj;
-	xobj->AddObj(stream);
+	xobj->AddToken(stream);
 	AddXObjRef(xobj, *form_obj->_form_key->_name);
 	delete form_obj;
 }
@@ -996,7 +997,7 @@ void PPFormBase::AddText(PPRect rect, string text)
 
 void PPFormBase::ReplaceString(string org_str, string new_str)
 {
-	unsigned int slen = org_str.length();
+	size_t slen = org_str.length();
 	size_t i, icnt = NumberOfElements(); //_elements.size();
 	for(i=0;i<icnt;i++) {
 		PPElement *element = ElementAtIndex(i); //_elements.at(i);

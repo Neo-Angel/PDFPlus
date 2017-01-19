@@ -39,7 +39,8 @@ string PPTName::XMLString(int level)
 string PPTName::PDFString()
 {
     string retstr = "/";
-	int i, icnt = _name->length();
+	uint i;
+	size_t icnt = _name->length();
 	for(i=0;i<icnt;i++) {
 		char ch = (*_name)[i];
 		if(ch == ' ') {

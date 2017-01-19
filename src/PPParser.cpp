@@ -531,7 +531,7 @@ PPTIndirectObj *PPParser::parseIndirectObj(PPParserSource &source, PPTNumber *nu
 {
     PPTIndirectObj *ret_obj = new PPTIndirectObj(_document, num1->intValue(), num2->intValue());
 
-	if(!ParseSource(source, ret_obj->_array, ret_obj)) {
+	if(!ParseSource(source, ret_obj->TokenList(), ret_obj)) {
 		delete ret_obj;
         return NULL;
 	}
@@ -596,7 +596,8 @@ bool isLastCharAlphabet(string str)
 
 bool isKindOfNumber(PPToken *token)
 {
-    if (token->ClassType() == PPTN_NUMBER) {
+	PPClassType token_type = token->ClassType();
+    if (token_type == PPTN_NUMBER) {
         return true;
     }
     return false;
@@ -643,6 +644,7 @@ bool canSourceParseString(PPParserSource &source, string curstr)
 //////////////////////////////////////////////////////////////////////////////////
 bool PPParser::ParseSource(PPParserSource &source, vector<PPToken *> &token_list, PPToken *parent_token)
 {
+	int result = 0;
     PPTXRef *XRef = NULL;
     size_t filept = 0;
     unsigned long long wordoffset = 0;
@@ -668,6 +670,7 @@ bool PPParser::ParseSource(PPParserSource &source, vector<PPToken *> &token_list
 			/* ParserSource 에서 파싱할 것들은 먼저 파싱함. */
             token_obj = source.parseString(tstr, token_list, this);
             if(!token_obj) {
+				result = 1;
                 return false;
             }
             ch = prev_ch;
@@ -687,9 +690,10 @@ bool PPParser::ParseSource(PPParserSource &source, vector<PPToken *> &token_list
             if(token_obj) {
                 token_list.push_back(token_obj);
             }
-            else
+            else {
+				result = 2;
                 return false;
-            
+			}
             continue;
         }
         else if((curstr.length() == 4 && curstr == "true")
@@ -697,8 +701,10 @@ bool PPParser::ParseSource(PPParserSource &source, vector<PPToken *> &token_list
             token_obj = new PPTBool(_document, curstr);
             if(token_obj)
                 token_list.push_back(token_obj);
-            else
+            else {
+				result = 3;
                 return false;
+			}
         }
         else if(isNumberRange(ch)) {
             token_obj = (PPToken *)parseNumber(source, ch);
@@ -723,16 +729,20 @@ bool PPParser::ParseSource(PPParserSource &source, vector<PPToken *> &token_list
                     token_list.push_back(token_obj);
                 }
             }
-            else
+            else {
+				result = 4;
                 return false;
+			}
         }
         else if(ch == '(') { // string
             // parse string
             token_obj = (PPToken *)parseStringObj(source);
             if(token_obj)
                 token_list.push_back(token_obj);
-            else
+            else {
+				result = 5;
                 return false;
+			}
         }
         else if(ch == '<') {
             source.get(ch);
@@ -742,6 +752,7 @@ bool PPParser::ParseSource(PPParserSource &source, vector<PPToken *> &token_list
                     token_list.push_back(token_obj);
                 else {
                     filept = source.tellg();
+					result = 6;
                     return false;
                 }
             }
@@ -750,8 +761,10 @@ bool PPParser::ParseSource(PPParserSource &source, vector<PPToken *> &token_list
                 token_obj = (PPToken *)parseHexString(source);
                 if(token_obj)
                     token_list.push_back(token_obj);
-                else
+                else {
+					result = 7;
                     return false;
+				}
             }
         }
         else if(ch == '/') {  // name
@@ -759,16 +772,20 @@ bool PPParser::ParseSource(PPParserSource &source, vector<PPToken *> &token_list
             if (token_obj) {
                 token_list.push_back(token_obj);
             }
-            else
+            else {
+				result = 8;
                 return false;
+			}
         }
         else if(ch == '[') { // array
             token_obj = (PPToken *)parseArray(source);
             if (token_obj) {
                 token_list.push_back(token_obj);
             }
-            else
+            else {
+				result = 9;
                 return false;
+			}
         }
         else if(curstr.length() == 4 && curstr == "null") {
             token_obj = new PPTNull();
@@ -796,6 +813,7 @@ bool PPParser::ParseSource(PPParserSource &source, vector<PPToken *> &token_list
 								stream->_parentObj = (PPTIndirectObj *)parent_token;
 							}
                             if(stream->ParseObjStm(token_list, this) == false) {
+								result = 10;
                                 return false;
                             }
                             obj_stream_parsed = true;
@@ -805,8 +823,10 @@ bool PPParser::ParseSource(PPParserSource &source, vector<PPToken *> &token_list
                         token_list.push_back(token_obj);
                     }
                 }
-                else
+                else {
+					result = 11;
                     return false;
+				}
             }
             else {
                 token_obj = (PPToken *)parseStream(source);
@@ -840,6 +860,7 @@ bool PPParser::ParseSource(PPParserSource &source, vector<PPToken *> &token_list
                     }
                 }
                 else {
+					result = 12;
                     return false;
                 }
             }
@@ -866,11 +887,13 @@ bool PPParser::ParseSource(PPParserSource &source, vector<PPToken *> &token_list
                 }
                 else {
                     filept = source.tellg();
+					result = 13;
                     return false;
                 }
             }
             else {
                 filept = source.tellg();
+				result = 14;
                 return false;
             }
 
@@ -921,7 +944,9 @@ bool PPParser::ParseSource(PPParserSource &source, vector<PPToken *> &token_list
         }
         prev_ch = ch;
     }
-
+	if(result > 0) {
+		return false;
+	}
     return true;
 }
 

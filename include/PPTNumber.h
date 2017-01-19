@@ -20,6 +20,7 @@ public:
 public:
     PPTNumber(PPDocument *doc, string *str);
     PPTNumber(PPDocument *doc, int num);
+    PPTNumber(PPDocument *doc, uint num);
 	PPTNumber(PPDocument *doc, float num);
 	PPTNumber() {_numstr = NULL; _number = 0.0;}
     ~PPTNumber();
@@ -30,7 +31,7 @@ public:
     string stringValue();
     string PDFString() {return stringValue();}
     string XMLString(int level);
-    inline const char *ClassType(){return PPTN_NUMBER;}
+    inline PPClassType ClassType(){return PPTN_NUMBER;}
 
 	PPBase *Create() {return new PPTNumber();}
 	void CopyMembersTo(PPBase *obj);

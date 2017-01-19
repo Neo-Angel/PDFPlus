@@ -22,7 +22,7 @@ public:
 
     string XMLString(int level);
     string PDFString();
-    inline const char *ClassType(){return PPTN_INDIRECTREF;};
+    inline PPClassType ClassType(){return PPTN_INDIRECTREF;};
 	void MoveInto(PPDocument *doc);
 	PPBase *Create() {return new PPTIndirectRef();}
 	void CopyMembersTo(PPBase *obj) ;

@@ -30,6 +30,7 @@ PPTDictionary::~PPTDictionary()
 
 void PPTDictionary::SetTokenAndKey(PPToken *token, string key)
 {
+	token->_parentObj = _parentObj;
     _dict[key] = token;
 }
 
@@ -81,7 +82,7 @@ PPTIndirectObj *PPTDictionary::SetRefTokenAndKey(PPToken *token, string key, int
 		else {
 			obj = new PPTIndirectObj(_document, obj_num, 0);
 		}
-		obj->AddObj(token);  // 이 부분은 바로 위 if문안으로 들어가야 되는거 아닌지...
+		obj->AddToken(token);  // 이 부분은 바로 위 if문안으로 들어가야 되는거 아닌지...
 	}
 	obj->AddRefObj(ref);
 	return obj;
@@ -114,12 +115,12 @@ PPTName *PPTDictionary::NameForKey(const char *keyname)
 		return NULL;
     }
 
-    if (ret_name->TypeName() == PPTN_ARRAY) {
+    if (ret_name->ClassType() == PPTN_ARRAY) {
 		PPTArray *arr = (PPTArray *)ret_name;
 		if(arr->Size() == 0) {
 			return NULL;
 		}
-		ret_name = (PPTName *) arr->ObjectAtIndex(0);
+		ret_name = (PPTName *) arr->TokenAtIndex(0);
     }
     return ret_name;
 }
@@ -147,7 +148,7 @@ PPToken *PPTDictionary::ValueObjectForKey(string &keyname)
         PPTIndirectRef *indref = (PPTIndirectRef *)ret;
         PPTIndirectObj *tar = indref->TargetObject();
         if (tar) {
-            return tar->_array.size() > 0 ? tar->_array[0] : NULL;
+            return tar->NumberOfTokens() > 0 ? tar->TokenAtIndex(0) : NULL;
         }
         return NULL;
     }
@@ -241,7 +242,7 @@ void PPTDictionary::CopyMembersTo(PPBase *obj)
         string key = it_token_objs->first;
         PPToken *token = (PPToken *)(it_token_objs->second);
 		PPToken *copied_token = (PPToken *)token->Copy();
-		tar_dict->_dict[key] = copied_token;
+		tar_dict->SetTokenAndKey(copied_token, key);
     }
 
 }
@@ -261,10 +262,38 @@ void PPTDictionary::SetDocument(PPDocument *doc)
 
 void PPTDictionary::MoveInto(PPDocument *doc)
 {
+
 	map <string, PPToken *> ::iterator it_token_objs;
     for(it_token_objs = _dict.begin(); it_token_objs != _dict.end(); it_token_objs++) {
+		string key = it_token_objs->first;
+		if(key == "Parent") {
+			continue;
+		}
         PPToken *token = (PPToken *)(it_token_objs->second);
 		token->MoveInto(doc);
     }
 
+	PPToken::MoveInto(doc);
+}
+
+
+void PPTDictionary::Merge(PPTDictionary *other_dict) 
+{   
+    map <string, PPToken *> ::iterator it_token_objs;
+    for(it_token_objs = other_dict->Begin(); it_token_objs != other_dict->End(); it_token_objs++) {
+        string key = it_token_objs->first;
+        PPToken *mytoken = _dict[key];
+        if(mytoken) {
+        }
+        else {
+            _dict.erase(key);
+            if (key == "Prev") {
+                cout << "key is Prev..." << PP_ENDL;
+            }
+            else {
+                PPToken *other_token = it_token_objs->second;
+                SetTokenAndKey(other_token,key);
+            }
+        }
+    }
 }

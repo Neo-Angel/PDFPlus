@@ -46,7 +46,7 @@ public:
     
 	// 하나의 페이지에는 다수의 contents(stream)가 존재할 수 있다.
     size_t ContentsCount();
-    PPTStream *ContentAt(size_t i);
+    PPTStream *ContentAt(uint i);
 	void BuildContents(); // contents를 스트림으로 변환한다.
 
 	// Getting Methods

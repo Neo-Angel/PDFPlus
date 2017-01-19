@@ -72,7 +72,7 @@ PPImage::PPImage(string path, PPDocument *doc)
 	dict->SetTokenAndKey(cinfo.Y_density, "VRes");
 	dict->SetTokenAndKey(cinfo.image_width, "Width"); 
 
-	_image_obj->_array.push_back(dict);
+	_image_obj->AddToken(dict);
 
 	PPTStream *stream = new PPTStream(doc, file_length);
 	stream->SetDictionary(dict);
@@ -82,7 +82,7 @@ PPImage::PPImage(string path, PPDocument *doc)
 
 	fclose(infile);
 
-	_image_obj->_array.push_back(stream);
+	_image_obj->AddToken(stream);
 	stream->_parentObj = _image_obj;
 }
 
@@ -94,7 +94,7 @@ PPTIndirectObj *PPImage::MakeIndirectObj(int obj_num)
 
 float PPImage::ImageWidth()
 {
-	PPTDictionary *dict = (PPTDictionary *)_image_obj->_array[0];
+	PPTDictionary *dict = (PPTDictionary *)_image_obj->TokenAtIndex(0);
 	
 	float value = (float) dict->FloatForKey("Width");
 	return value;
@@ -102,7 +102,7 @@ float PPImage::ImageWidth()
 
 float PPImage::ImageHeight()
 {
-	PPTDictionary *dict = (PPTDictionary *)_image_obj->_array[0];
+	PPTDictionary *dict = (PPTDictionary *)_image_obj->TokenAtIndex(0);
 	
 	float value = (float) dict->FloatForKey("Height");
 	return value;

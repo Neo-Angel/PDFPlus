@@ -18,12 +18,14 @@ PPTIndirectObj::PPTIndirectObj(PPDocument *doc, vector<PPToken *> token_list, in
     _objNum = num1;
     _genNum = num2;
     _array = token_list;
+	_parentObj = NULL;
 }
 
 PPTIndirectObj::PPTIndirectObj(PPDocument *doc, int num1, int num2):PPToken(doc)
 {
 	_objNum = num1;
 	_genNum = num2;
+	_parentObj = NULL;
 }
 
 void PPTIndirectObj::Clear()
@@ -84,12 +86,13 @@ PPTDictionary *PPTIndirectObj::FirstDictionary()
     return (PPTDictionary *)token;
 }
 
-void PPTIndirectObj::AddObj(PPToken *obj)
+void PPTIndirectObj::AddToken(PPToken *token)
 {
-	if(obj == this) {
+	if(token == this) {
 		PP_ERR << "obj == this" << PP_ENDL;
 	}
-	_array.push_back(obj);
+	token->_parentObj = this;
+	_array.push_back(token);
 }
 
 void PPTIndirectObj::AddRefObj(PPTIndirectRef *ref)
@@ -100,7 +103,7 @@ void PPTIndirectObj::AddRefObj(PPTIndirectRef *ref)
 void PPTIndirectObj::SetFirstObject(PPToken *obj) 
 {
 	this->Clear();
-	this->AddObj(obj);
+	this->AddToken(obj);
 }
 	
 PPTStream *PPTIndirectObj::Stream()
@@ -135,11 +138,36 @@ bool PPTIndirectObj::IsStream()
         return false;
     
     PPTName *filter = (PPTName *)dict->ObjectForKey("Filter");
-    if (filter != NULL && *filter->_name == "FlateDecode") {
-        return true;
+
+    if (filter != NULL) {
+		if(filter->ClassType() == PPTN_NAME && *filter->_name == "FlateDecode") {
+			return true;
+		}
+		else {
+			PPTArray *filter_list = (PPTArray *)filter;
+			uint i;
+			size_t icnt = filter_list->NumberOfTokens();
+			for(i=0;i<icnt;i++) {
+				PPTName *fname = (PPTName *)filter_list->TokenAtIndex(i);
+				if(*fname->_name == "FlateDecode") {
+					return true;
+				}
+			}
+
+		}
     }
     return false;
 }
+
+PPTIndirectObj *PPTIndirectObj::GetParentObj()
+{
+	if(_ref_list.size() != 1) 
+		return NULL;
+	PPTIndirectRef *pref = _ref_list[0];
+	PPTIndirectObj *parent = pref->_parentObj;
+	return parent;
+}
+
 
 void PPTIndirectObj::Write(ostream &os)
 {
@@ -234,17 +262,17 @@ void PPTIndirectObj::CopyMembersTo(PPBase *obj)
 	indir_obj->_genNum = _genNum;
 	indir_obj->_objNum = _document->NewObjNum(); //_objNum;
 
-	indir_obj->_array.clear();
-	int i, icnt = _array.size();
+	indir_obj->Clear();
+	size_t i, icnt = _array.size();
 	for(i=0;i<icnt;i++) {
 		PPToken *org_token = _array.at(i);
 		PPToken *new_token = (PPToken *)org_token->Copy();
 		if(i == 1 && new_token->ClassType() == PPTN_STREAM) {
-			PPTDictionary *dict = (PPTDictionary *)indir_obj->_array.at(0);
+			PPTDictionary *dict = (PPTDictionary *)indir_obj->TokenAtIndex(0);
 			PPTStream *stream = (PPTStream *)new_token;
 			stream->_infoDict = dict;
 		}
-		indir_obj->AddObj(new_token);
+		indir_obj->AddToken(new_token);
 	}
 }
 
@@ -252,7 +280,7 @@ void PPTIndirectObj::SetDocument(PPDocument *doc)
 {
 	PPToken::SetDocument(doc);
 
-	int i, icnt = _array.size();
+	size_t i, icnt = _array.size();
 	for(i=0;i<icnt;i++) {
 		PPToken *token = _array.at(i);
 		if(doc != token->_document)
@@ -264,13 +292,15 @@ void PPTIndirectObj::SetDocument(PPDocument *doc)
 //     _tokens 를 PPParser 클래스로 옮기기
 void PPTIndirectObj::MoveInto(PPDocument *doc)
 {
-	_document = doc;
-	int i, icnt = _array.size();
+
+	size_t i, icnt = _array.size();
 	for(i=0;i<icnt;i++) {
 		PPToken *token = _array.at(i);
 		if(doc != token->_document) {
 			token->MoveInto(doc);
 		}
 	}
-}
 
+
+	PPToken::MoveInto(doc);
+}

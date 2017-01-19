@@ -125,7 +125,7 @@ void PPGState::SetFillColorSpace(string name)
 void PPGState::SetUserStrokeColorSpace(string name, PPTArray *arr)
 {
     _strokeColor.SetUserColorSpaceName(name);
-	PPTName *cs_name = (PPTName *)arr->_array[0];
+	PPTName *cs_name = (PPTName *)arr->TokenAtIndex(0);
 	_strokeColor.SetColorSpaceName(*cs_name->_name);
 	_strokeColor._colorInfo = arr;
     _gflag |= PPGF_STROKECOLORSPC;
@@ -135,7 +135,7 @@ void PPGState::SetUserStrokeColorSpace(string name, PPTArray *arr)
 void PPGState::SetUserFillColorSpace(string name, PPTArray *arr)
 {
     _fillColor.SetUserColorSpaceName(name);
-	PPTName *cs_name = (PPTName *)arr->_array[0];
+	PPTName *cs_name = (PPTName *)arr->TokenAtIndex(0);
 	_fillColor.SetColorSpaceName(*cs_name->_name);
 	_fillColor._colorInfo = arr;
     _gflag |= PPGF_FILLCOLORSPC;

@@ -33,7 +33,7 @@ word haxFromByte(byte ch, byte &b1, byte &b2)
 string PPToHexStr(string &str)
 {
 	string ret;
-	int i, icnt = str.length();
+	int i, icnt = (int)str.length();
 	char twobytes[3];
 	twobytes[2] = NULL;
 	for(i=0;i<icnt;i++) {
@@ -125,12 +125,13 @@ void PPstringToUTF8String(string &src_str, string &dest_utf8str)
 PPToken::PPToken()
 {
     _document = NULL;
-
+	_parentObj = NULL;
 }
 
 PPToken::PPToken(PPDocument *doc)
 {
     _document = doc;
+	_parentObj = NULL;
 }
 
 void PPToken::Write(std::ostream &os)
@@ -156,4 +157,18 @@ void PPToken::CopyMembersTo(PPBase *obj)
 	// 외부에 의해서 _document가 다시 지정되기 전 까지는 
 	//이전 _document(출처)를 가지고 있는다.
 	token->_document = _document; 
+	token->_parentObj = _parentObj;
 }
+
+void PPToken::MoveInto(PPDocument *doc) 
+{
+	_document = doc;
+} 
+
+PPToken *PPToken::CopyInto(PPDocument *doc)
+{
+	PPToken *token = (PPToken *)this->Copy();
+	token->MoveInto(doc);
+	return token;
+}
+

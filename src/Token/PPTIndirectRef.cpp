@@ -48,7 +48,7 @@ PPToken *PPTIndirectRef::ValueObject()
 {
     PPTIndirectObj *tar = TargetObject();
     if (tar) {
-        return tar->_array.size() > 0 ? tar->_array[0] : NULL;
+        return tar->NumberOfTokens() > 0 ? tar->TokenAtIndex(0) : NULL;
     }
     return NULL;
     
@@ -74,21 +74,32 @@ void PPTIndirectRef::CopyMembersTo(PPBase *obj)
 // 객체넘버를 다시 적용함.
 void PPTIndirectRef::MoveInto(PPDocument *doc)
 {
+
 //	PPDocument *src_doc = (PPDocument *)_parser->_owner;
 	PPTIndirectObj *copied_obj = NULL;
 	int src_id = _document->_docID << 24;
 	src_id += _objNum;
 
-	if(_document) {
+//	if(_document) {
 		// 이전에 처리된 적이 있는 지 확인
 		copied_obj = doc->_srcIndirectObjs[src_id];
-	}
+//	}
 	if(!copied_obj) {
-		PPTIndirectObj *obj = (PPTIndirectObj *)_document->ObjectForNumber(_objNum);
-		if(!obj)
+		PPTIndirectObj *tar_obj = (PPTIndirectObj *)_document->ObjectForNumber(_objNum);
+		if(!tar_obj)
 			return;
-		copied_obj = (PPTIndirectObj *)obj->Copy();
+		PPToken *clone_token = (PPToken *)_clone;
+		PPTIndirectObj *clone_parent = clone_token->_parentObj;
+		if(clone_parent != NULL && tar_obj == clone_parent->_parentObj) {
+			PPTIndirectObj *pObj = _parentObj->GetParentObj();
+			if(pObj) {
+				_objNum = pObj->_objNum;
+			}
+			return;
+		}
+		copied_obj = (PPTIndirectObj *)tar_obj->Copy();
 		copied_obj->MoveInto(doc);
+
 		int new_obj_num = doc->NewObjNum();
 		doc->PushObj(copied_obj, new_obj_num);
 		copied_obj->_objNum = new_obj_num;
@@ -96,4 +107,7 @@ void PPTIndirectRef::MoveInto(PPDocument *doc)
 	}
 	_objNum = copied_obj->_objNum;
 	copied_obj->AddRefObj(this);
+
+	PPToken::MoveInto(doc);
+
 }

@@ -70,7 +70,7 @@ PPDocument::PPDocument(string filepath)
 	_layersOn = NULL;
 
 	// open 단계에서는 저수준의 오브젝트(Token)들을 읽어들인다.
-	// 주로 PPToken 의 서브 클래스 들이다.
+	// 주로 PPToken 의 서브 클래스들이다.
 	open(filepath);
 
 	// 읽어들인 토큰들을 가지고 도큐먼트를 구성한다.
@@ -239,9 +239,10 @@ bool PPDocument::IsBuiltDocument()
 void PPDocument::collectPages(PPTDictionary *pages_dict)
 {
     PPTArray *page_list = (PPTArray *)pages_dict->ObjectForKey("Kids");
-    size_t i, icnt = page_list->_array.size();
+    size_t icnt = page_list->NumberOfTokens();
+	uint i;
     for (i=0; i<icnt; i++) {
-        PPTIndirectRef *ref_obj = (PPTIndirectRef *)page_list->_array.at(i);
+        PPTIndirectRef *ref_obj = (PPTIndirectRef *)page_list->TokenAtIndex(i);
         PPTIndirectObj *page_obj = ref_obj->TargetObject();
         PPTDictionary *child_dict = page_obj->FirstDictionary();
         PPTName *type = (PPTName *)child_dict->ObjectForKey("Type");
@@ -302,7 +303,7 @@ bool PPDocument::IsBuiltElements()
 void PPDocument::decodeStreams(vector<PPToken *> &token_list)
 {
 	// _stream : 파싱중 발견된 스트림들만 모아놓음.	
-	int i, icnt = _stream_list.size();
+	size_t i, icnt = _stream_list.size();
 	for(i=0;i<icnt;i++) {
 		PPTStream *stream = (PPTStream *)_stream_list[i];
 		PPTDictionary *dict = stream->_infoDict;
@@ -449,7 +450,7 @@ PPPage *PPDocument::GetPage(int page_no)
 
 // Private Method :AddPage() 함수 안에서만 사용됨.
 ///////////////////////////////////////////////////////////////////
-void PPDocument::setPageCount(int cnt)
+void PPDocument::setPageCount(uint cnt)
 {
 	PPTDictionary *pages_dict = PagesDictionary();
 	PPTNumber *number = new PPTNumber(this, cnt);
@@ -459,27 +460,29 @@ void PPDocument::setPageCount(int cnt)
 
 // PDF 내의 파리미터로 주어진 페이지를 추가함.
 ///////////////////////////////////////////////////////////////////
-void PPDocument::AddPage(PPPage *page)
+void PPDocument::AddPage(PPPage *org_page)
 {
 	PPTArray *page_array = PageArray();
 	PPTIndirectRef *page_ref = new PPTIndirectRef(this, ++_objNumber, 0);
 	page_array->AddToken(page_ref);
 
-	setPageCount(page_array->_array.size());
+	setPageCount((uint)page_array->NumberOfTokens());
 
 	PPTIndirectObj *page_obj = new PPTIndirectObj(this, _objNumber, 0);
 	page_obj->AddRefObj(page_ref);
 	PushObj(page_obj, _objNumber);
-	PPTDictionary *page_dict = new PPTDictionary(this);
-	page_obj->AddObj(page_dict);
+	PPTDictionary *org_page_dict = org_page->_formDict;
+	PPTDictionary *new_page_dict = (PPTDictionary *)org_page_dict->Copy();// new PPTDictionary(this);
+	new_page_dict->MoveInto(this);
+	page_obj->AddToken(new_page_dict);
 
 	PPTDictionary *root_dict = RootDict();
 	PPTIndirectObj *pages = (PPTIndirectObj *)root_dict->IndirectObjectForKey("Pages");
 	PPTIndirectRef *parent_ref = new PPTIndirectRef(this, pages->_objNum, 0);
 	pages->AddRefObj(parent_ref);
-	page_dict->SetTokenAndKey(parent_ref, "Parent");
+	new_page_dict->SetTokenAndKey(parent_ref, "Parent");
 
-	page->WriteDictionary(page_dict);
+	org_page->WriteDictionary(new_page_dict);
 }
 
 // for generating
@@ -545,7 +548,7 @@ void PPDocument::PushObj(PPTIndirectObj *obj)
 
 void PPDocument::RemoveObj(PPTIndirectObj *obj)
 {
-	int i, icnt = _tokens.size();
+	size_t i, icnt = _tokens.size();
 	for(i=0;i<icnt;i++) {
 		if(_tokens[i] == obj) {
 			_tokens.erase(_tokens.begin() + i);
@@ -593,8 +596,8 @@ int PPDocument::preBuildPDF()
 			writeLoadedPages();
 			pages_dict->SetTokenAndKey("Pages", "Type");
 
-			pages_obj->AddObj(pages_dict);
-		root_obj->AddObj(root_dict);
+			pages_obj->AddToken(pages_dict);
+		root_obj->AddToken(root_dict);
 		
 	// End RootDict
 
@@ -615,7 +618,7 @@ int PPDocument::preBuildPDF()
 		info_dict->SetStringAndKey("D:20150719033247Z00'00'", PPKN_MODDATE);
 		info_dict->SetStringAndKey(PPVN_CREATOR, "Keywords");
 
-		info_obj->AddObj(info_dict);
+		info_obj->AddToken(info_dict);
 	//  End  InfoDict
 
 
@@ -629,7 +632,7 @@ int PPDocument::preBuildPDF()
 ///////////////////////////////////////////////////////////////////
 int PPDocument::postBuildPDF()
 {
-	int i, icnt = _pages.size();
+	size_t i, icnt = _pages.size();
 	for(i=0;i<icnt;i++) {
 		PPPage *page = _pages[i];
 		// 페이지의 내용을 스트림으로 빌드하고 페이지 정보를 정리한다
@@ -694,7 +697,7 @@ unsigned long long PPDocument::writeXRefs(std::ostream &os)
     unsigned long long ret_pos = os.tellp();
     os << "xref" << PP_ENDL;
     os << "0 " << obj_cnt << PP_ENDL;
-    size_t i;
+    int i;
     for(i=0;i<obj_cnt;i++) {
         PPTIndirectObj *obj = _objDict[i];
         char buf[30];
@@ -816,7 +819,10 @@ PPToken *PPDocument::parseString(string str, vector <PPToken *> &tokens, PPParse
         PPToken *token1 = tokens[cnt-2];
         PPToken *token2 = tokens[cnt-1];
         //            if (token1->isKindOfClass<PPTNumber *>() && token2->isKindOfClass<PPTNumber *>()) {
-        if (isKindOfNumber((PPTNumber *)token1) && isKindOfNumber((PPTNumber *)token2)) {
+		// because VS bug.
+		bool token1_is_num = isKindOfNumber((PPTNumber *)token1);
+		bool token2_is_num = isKindOfNumber((PPTNumber *)token2);
+        if (token1_is_num && token2_is_num) {
             PPTNumber *num1 = (PPTNumber *)token1;
             PPTNumber *num2 = (PPTNumber *)token2;
             PPToken *token_obj = (PPToken *)new PPTIndirectRef(this, num1->intValue(), num2->intValue());
@@ -839,8 +845,8 @@ void PPDocument::get(char &ch)
 
 bool PPDocument::eof()
 {
-	size_t curoff = tellg();
-	if(curoff >= _fsize) {
+	ulong curoff = (ulong)tellg();
+	if(curoff >= (ulong)_fsize) {
 		return true;
 	}
 	return false;
@@ -981,7 +987,7 @@ PPTIndirectObj *PPDocument::AddResource(PPToken *rsc, int num)
 	}
 	if(rsc->ClassType() != PPTN_INDIRECTOBJ) {
 		PPTIndirectObj *container_obj = new PPTIndirectObj(this, 0, 0);
-		container_obj->AddObj(rsc);
+		container_obj->AddToken(rsc);
 	//	PushObj(container_obj, _objNumber);
 		rsc = (PPToken *)container_obj;
 	}
@@ -1048,7 +1054,7 @@ void PPDocument::SaveXObjectsToFolder(const char *folder) // Currently just Imag
 #else
                 sprintf(filename, "%06d", obj_num);
 #endif
-				int bufsize = folder_len + 6 + 6;
+				size_t bufsize = folder_len + 6 + 6;
                 char *tar_path = new char[bufsize]; // 6 : '/' + '.jpg' + NULL
 #ifdef _WIN32
                 sprintf_s(tar_path, bufsize, "%s\\%s.jpg",folder, filename);
@@ -1125,19 +1131,19 @@ PPTIndirectObj *PPDocument::AddImage(PPImage *image)
 int PPDocument::NumberOfLayers()
 {
 	if(_layerOrders)
-		return _layerOrders->Size();
+		return (int)_layerOrders->Size();
 	return 0;
 }
 
 PPTDictionary *PPDocument::LayerInfoAtIndex(int idx)
 {
 	PPTDictionary *ret_dict = NULL;
-	PPToken *layer = _layerOrders->_array[idx];
-	if(layer->TypeName() == PPTN_INDIRECTREF) {
+	PPToken *layer = _layerOrders->TokenAtIndex(idx);
+	if(layer->ClassType() == PPTN_INDIRECTREF) {
 		PPTIndirectRef *layer_ref = (PPTIndirectRef *)layer;
 		ret_dict = (PPTDictionary *)layer_ref->ValueObject();
 	}
-	else if(layer->TypeName() == PPTN_DICTIONARY) {
+	else if(layer->ClassType() == PPTN_DICTIONARY) {
 		ret_dict = (PPTDictionary *)layer;
 	}
 	return ret_dict;
@@ -1146,8 +1152,8 @@ PPTDictionary *PPDocument::LayerInfoAtIndex(int idx)
 PPTIndirectObj *PPDocument::LayerObjAtIndex(int idx)
 {
 	PPTIndirectObj *ret_obj = NULL;
-	PPToken *layer = _layerOrders->_array[idx];
-	if(layer->TypeName() == PPTN_INDIRECTREF) {
+	PPToken *layer = _layerOrders->TokenAtIndex(idx); 
+	if(layer->ClassType() == PPTN_INDIRECTREF) {
 		PPTIndirectRef *layer_ref = (PPTIndirectRef *)layer;
 		ret_obj = (PPTIndirectObj *)layer_ref->TargetObject();
 	}
@@ -1223,7 +1229,7 @@ bool PPDocument::AddLayer(string name)
 	++_objNumber;
 	PPTIndirectRef *layer_ref = new PPTIndirectRef(this, _objNumber, 0);
 	PPTIndirectObj *layer_obj = new PPTIndirectObj(this, _objNumber, 0);
-	layer_obj->AddObj(layer_dict);
+	layer_obj->AddToken(layer_dict);
 
 	_layerOrders->AddToken(layer_ref);
 	layer_obj->AddRefObj(layer_ref);
@@ -1256,7 +1262,7 @@ bool PPDocument::RenameLayer(string org_name, string new_name)
 void PPDocument::ReorderLayer(int from_idx, int to_idx)
 {
 	_layerOrders->Reorder(from_idx, to_idx);
-	int i, icnt = _pages.size();
+	size_t i, icnt = _pages.size();
 	for(i=0;i<icnt;i++) {
 		PPPage *page = _pages[i];
 		page->ReorderLayer(from_idx, to_idx);
@@ -1278,12 +1284,13 @@ void PPDocument::MergeLayer(string layer1, string layer2)
 {
 	//PPTArray *_layerOrders;
 	PPTDictionary *layer_dict1 = NULL;
-	int l1 = -1;
-	int l2 = -1;
+	uint l1 = -1;
+	uint l2 = -1;
 	PPTDictionary *layer_dict2 = NULL;
-	int i, icnt = _layerOrders->_array.size();
+	size_t icnt = _layerOrders->NumberOfTokens();
+	uint i;
 	for(i=0;i<icnt;i++) {
-		PPTIndirectRef *indir_ref = (PPTIndirectRef *)_layerOrders->_array[i];
+		PPTIndirectRef *indir_ref = (PPTIndirectRef *)_layerOrders->TokenAtIndex(i);
 		PPTIndirectObj *indir_obj = indir_ref->TargetObject();
 		PPTDictionary *layer_dict = indir_obj->FirstDictionary();
 		PPTString *layer_name = (PPTString *)layer_dict->ObjectForKey("Name");
@@ -1308,9 +1315,9 @@ void PPDocument::MergeLayer(string layer1, string layer2)
 	_layerOrders->RemoveTokenAtIndex(l2);
 
 
-	icnt = _OCGs->_array.size();
+	icnt = _OCGs->NumberOfTokens();
 	for(i=0;i<icnt;i++) {
-		PPTIndirectRef *indir_ref = (PPTIndirectRef *)_OCGs->_array[i];
+		PPTIndirectRef *indir_ref = (PPTIndirectRef *)_OCGs->TokenAtIndex(i);
 		PPTIndirectObj *indir_obj = indir_ref->TargetObject();
 		PPTDictionary *layer_dict = indir_obj->FirstDictionary();
 		PPTString *layer_name = (PPTString *)layer_dict->ObjectForKey("Name");
@@ -1321,9 +1328,9 @@ void PPDocument::MergeLayer(string layer1, string layer2)
 		}
 	}
 
-	icnt = _layersOn->_array.size();
+	icnt = _layersOn->NumberOfTokens();
 	for(i=0;i<icnt;i++) {
-		PPTIndirectRef *indir_ref = (PPTIndirectRef *)_layersOn->_array[i];
+		PPTIndirectRef *indir_ref = (PPTIndirectRef *)_layersOn->TokenAtIndex(i);
 		PPTIndirectObj *indir_obj = indir_ref->TargetObject();
 		PPTDictionary *layer_dict = indir_obj->FirstDictionary();
 		PPTString *layer_name = (PPTString *)layer_dict->ObjectForKey("Name");

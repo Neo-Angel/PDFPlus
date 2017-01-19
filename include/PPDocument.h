@@ -121,7 +121,7 @@ protected:
 	void									makePageWith(PPTDictionary *page_dict);
     void									collectPages(PPTDictionary *pages);
 	void									writeLoadedPages();
-	void									setPageCount(int cnt);
+	void									setPageCount(uint cnt);
 
 public: 
 	// Constructors
@@ -177,7 +177,7 @@ public:
 	PPToken *								ObjectForNumber(int num); // _objDict를 이용한 함수.
 	int										NextObjectNumber();
     PPToken *								ObjectAtFilePosition(unsigned long long pos);//_filePtDict를 이용한 함수
-	int										NumberOfPages() {return _pages.size();}
+	size_t										NumberOfPages() {return _pages.size();}
 	size_t									GetPageCount() {return _pages.size();}
 	PPPage *								PageAtIndex(int idx){return _pages.at(idx);}
 	PPPage *								GetPage(int page_no);// {return _pages.at(page_no-1);}

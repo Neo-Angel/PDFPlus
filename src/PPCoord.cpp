@@ -24,14 +24,14 @@
 PPRect RectFromArray(PPTArray *array)
 {
     PPRect ret;
-    if (array->_array.size() == 4) {
-        PPTNumber *num = (PPTNumber *)array->_array.at(0);
+    if (array->NumberOfTokens() == 4) {
+        PPTNumber *num = (PPTNumber *)array->TokenAtIndex(0);
         ret._origin._x = num->floatValue();
-        num = (PPTNumber *)array->_array.at(1);
+        num = (PPTNumber *)array->TokenAtIndex(1);
         ret._origin._y = num->floatValue();
-        num = (PPTNumber *)array->_array.at(2);
+        num = (PPTNumber *)array->TokenAtIndex(2);
         ret._size._width = num->floatValue();
-        num = (PPTNumber *)array->_array.at(3);
+        num = (PPTNumber *)array->TokenAtIndex(3);
         ret._size._height = num->floatValue();
     }
     
@@ -43,13 +43,13 @@ void SetRectToArray(PPRect rect, PPTArray *array)
 {
 	PPTNumber *num;
 	num = new PPTNumber(array->_document, rect.X1());
-	array->_array.push_back(num);
+	array->AddToken(num);
 	num = new PPTNumber(array->_document, rect.Y1());
-	array->_array.push_back(num);
+	array->AddToken(num);
 	num = new PPTNumber(array->_document, rect.Width());
-	array->_array.push_back(num);
+	array->AddToken(num);
 	num = new PPTNumber(array->_document, rect.Height());
-	array->_array.push_back(num);
+	array->AddToken(num);
 }
 
 //    PPPoint Class

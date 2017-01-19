@@ -53,10 +53,10 @@ void PPPage::LoadDictionary(PPTDictionary *page_dict)
 
     PPTDictionary *font_dict = (PPTDictionary *)_resourceDict->ValueObjectForKey("Font");
     if (font_dict) {
-        map <string, PPToken *> &dict = font_dict->_dict;
+        //map <string, PPToken *> &dict = font_dict->_dict;
        
         map <string, PPToken *> ::iterator it_token_objs;
-        for(it_token_objs = dict.begin(); it_token_objs != dict.end(); it_token_objs++) {
+        for(it_token_objs = font_dict->Begin(); it_token_objs != font_dict->End(); it_token_objs++) {
             PPTIndirectRef *indir_ref = (PPTIndirectRef *)it_token_objs->second;
             int obj_num = indir_ref->_objNum;
             PPTIndirectObj *font_obj = (PPTIndirectObj *)_document->_fonts[obj_num];
@@ -69,9 +69,9 @@ void PPPage::LoadDictionary(PPTDictionary *page_dict)
 
     PPTDictionary *xobject_dict = (PPTDictionary *)_resourceDict->ValueObjectForKey("XObject");
     if (xobject_dict) {
-        map <string, PPToken *> &dict = xobject_dict->_dict;
+        //map <string, PPToken *> &dict = xobject_dict->_dict;
         map <string, PPToken *> ::iterator it_token_objs;
-        for(it_token_objs = dict.begin(); it_token_objs != dict.end(); it_token_objs++) {
+        for(it_token_objs = xobject_dict->Begin(); it_token_objs != xobject_dict->End(); it_token_objs++) {
             PPTIndirectRef *indir_ref = (PPTIndirectRef *)it_token_objs->second;
             int obj_num = indir_ref->_objNum;
             PPTIndirectObj *indir_obj = (PPTIndirectObj *)_document->_xobjects[obj_num];
@@ -84,7 +84,7 @@ void PPPage::LoadDictionary(PPTDictionary *page_dict)
     }
 
     size_t icnt = ContentsCount();
-    for (size_t i=0; i<icnt; i++) {
+    for (uint i=0; i<icnt; i++) {
         PPTStream *stream = ContentAt(i);
         if (!stream->_decodeFailed) {
             _graphicParser.ParseStream(*stream);
@@ -113,7 +113,18 @@ void PPPage::WriteDictionary(PPTDictionary *page_dict) // -> PreBuildPDF
 		proset_list->AddToken(new PPTName(_document, new string("ImageI")));
 		_resourceDict->SetTokenAndKey(proset_list, "ProcSet");
 	}
-	PPTIndirectObj *rcs_obj = _document->SetRefTokenForKey(page_dict, _resourceDict, PPKN_RESOURCES);
+//	PPTIndirectObj *rcs_obj = _document->SetRefTokenForKey(page_dict, _resourceDict, PPKN_RESOURCES);
+
+//	PPTDictionary *copied_resourceDict = (PPTDictionary *)_resourceDict->Copy();
+//	copied_resourceDict->MoveInto(page_dict->_document);
+
+	PPTDictionary *copied_resourceDict = (PPTDictionary *)page_dict->ObjectForKey(PPKN_RESOURCES);
+	if(!copied_resourceDict) {
+		copied_resourceDict = (PPTDictionary *)_resourceDict->Copy();
+		copied_resourceDict->MoveInto(page_dict->_document);
+	}
+
+	page_dict->_document->SetRefTokenForKey(page_dict, copied_resourceDict, PPKN_RESOURCES);
 }
 
 // 페이지의 내용을 스트림으로 빌드하고 페이지 정보를 정리한다.
@@ -129,7 +140,7 @@ void PPPage::BuildContents()
 	contents->SetDictionary(stream_dict);
 	contents->_decoded = true; 
 	contents->_parentObj = stream_obj;
-	stream_obj->AddObj(contents);
+	stream_obj->AddToken(contents);
 }
 
 PPTDictionary *PPPage::ResourcesDict()
@@ -186,7 +197,7 @@ void PPPage::appendRectXmlString(ostringstream &ostr, string keyname, int level)
 //
 //////////////////////////////////////////////////////////////////////
 
-PPTStream *PPPage::ContentAt(size_t i)
+PPTStream *PPPage::ContentAt(uint i)
 {
     PPTStream *ret_stream = NULL;
     
@@ -194,7 +205,7 @@ PPTStream *PPPage::ContentAt(size_t i)
     if (contents->ClassType() == PPTN_ARRAY) {
         PPTArray *array = (PPTArray *)contents;
         if (array->Size() > i) {
-            PPTIndirectRef *ref = (PPTIndirectRef *)array->ObjectAtIndex(i);
+            PPTIndirectRef *ref = (PPTIndirectRef *)array->TokenAtIndex(i);
             PPTIndirectObj *indirect = ref->TargetObject();
             ret_stream = indirect->Stream();
         }
@@ -364,7 +375,7 @@ string PPPage::ElementXmlString(int level)
     ostr << PPTabStr(level) << "<Page>\xa";
     size_t i, icnt = NumberOfElements();
     for (i= 0; i<icnt; i++) {
-        PPElement *element = ElementAtIndex(i);
+        PPElement *element = ElementAtIndex((uint)i);
         ostr << element->XMLString(level+1);
     }
     ostr << PPTabStr(level) << "</Page>\xa";

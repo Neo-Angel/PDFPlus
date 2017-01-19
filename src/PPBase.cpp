@@ -10,6 +10,25 @@
 #include <sstream>
 #include "PPBase.h"
 
+
+
+
+const char *PPClassTypeName[] = {
+	"PPTN_BASE",
+	"PPToken",
+	"PPTNumber",
+	"PPTName",
+	"PPTString",
+	"PPTIndirectObj",
+	"PPTIndirectRef",
+	"PPTDictionary",
+	"PPTArray",
+	"PPTStream",
+	"PPTTrailer",
+	"PPTXRef",
+	"PPTN_COMMAND_PARSER"
+};
+
 ///////////////////////////////
 //
 //    Utility Functions
@@ -77,7 +96,7 @@ string PPBase::Description()
 // class type 을 C string으로 변환해서 리턴
 // C++에서 클래스 타입을 알아낼 수 있는 표준화된 방법이 마땅치 않아 
 // 궁여지책으로 생각해 낸 방법
-const char *PPBase::ClassType()
+PPClassType PPBase::ClassType()
 {
     return PPTN_BASE;
 }
@@ -85,7 +104,7 @@ const char *PPBase::ClassType()
 // class type 을 string으로 변환해서 리턴
 string PPBase::TypeName()
 {
-    return string(ClassType());
+    return string(PPClassTypeName[ClassType()]);
 }
 
 // 객체를 복사하기 위한 실제 함수
@@ -99,6 +118,7 @@ void PPBase::CopyMembersTo(PPBase *obj)
 PPBase *PPBase::Copy()
 {
 	PPBase *new_obj = this->Create();
+	new_obj->_clone = this;
 	CopyMembersTo(new_obj);
 
 	return new_obj;

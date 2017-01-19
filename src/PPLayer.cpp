@@ -47,7 +47,7 @@ string PPLayer::Name()
 
 void PPLayer::Merge(PPLayer *layer)
 {
-	int i, icnt = layer->_elements.size();
+	size_t i, icnt = layer->_elements.size();
 	for(i=0;i<icnt;i++) {
 		PPElement *element = layer->_elements.at(i);
 		PPElement *copied_element = (PPElement *)element->Copy();

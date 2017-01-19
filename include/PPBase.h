@@ -14,22 +14,42 @@
 
 using namespace std;
 
+extern const char *PPClassTypeName[];
+
+typedef enum _PPClassType{
+	PPTN_BASE = 0,
+	PPTN_TOKEN,
+	PPTN_NUMBER,
+	PPTN_NAME,
+	PPTN_STRING,
+	PPTN_INDIRECTOBJ,
+	PPTN_INDIRECTREF,
+	PPTN_DICTIONARY,
+	PPTN_ARRAY,
+	PPTN_STREAM,
+	PPTN_TRAILER,
+	PPTN_XREF,
+	PPTN_COMMAND_PARSER
+} PPClassType;
+
 
 // PPTN_XXXX : 'XXXX'는 클래스명(대문자) 
 // 각 클래스 마다 정의되는 Class Type Name
 
 
-static const char	*PPTN_BASE = "PPBase";
+//static const char	*PPTN_BASE = "PPBase";
 
 
 // 모든 클래스의 기반(Root) 클래스
 // 주위 : '클래스'라는 한글 단어 바로 아래 'class' 문이 오면 컴파일 에러 발생
 class PPBase {
-
 public:
+	PPBase *_clone;
+public:
+	PPBase() {_clone = NULL;}
     virtual string Description(); // 클래스에 대한 설명을 리턴
     virtual string TypeName();   // class type 을 string으로 변환해서 리턴 
-    virtual const char *ClassType();  // return PPTN_BASE;
+    virtual PPClassType ClassType();  // return PPTN_BASE;
 
 	// 모든 하위 클래스들이 반드시 구현해 줘야 하는 함수.
 	// C++ 특성상 크래스 타입에 대한 조작이 유연하지 않아서 필요한 함수.
