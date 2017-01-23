@@ -8,7 +8,7 @@ PPTNumber::PPTNumber(PPDocument *doc, string *str):PPToken(doc)
 {
     _numstr = str;
 	long double v = stod(*str);;
-	long long i = (long long)v * 10000;
+	long long i = (long long)(v * 10000);
 	v = i / 10000.0;
     _number = (double)v;
 

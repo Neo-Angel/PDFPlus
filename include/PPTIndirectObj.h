@@ -63,6 +63,10 @@ public:
 	void SetFirstObject(PPToken *obj);
     PPTStream *Stream();
 	PPTIndirectObj *GetParentObj();
+
+	// OCG related
+	bool IsOCG();
+	string OCGName();
     
     void AddRefObj(PPTIndirectRef *ref);
     void SetObjNum(int num);

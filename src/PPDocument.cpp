@@ -68,6 +68,8 @@ PPDocument::PPDocument(string filepath)
 	_layerOrders = NULL;
 	_OCGs = NULL;
 	_layersOn = NULL;
+	_layersOff = NULL;
+	_pageLabels = NULL;
 
 	// open 단계에서는 저수준의 오브젝트(Token)들을 읽어들인다.
 	// 주로 PPToken 의 서브 클래스들이다.
@@ -106,6 +108,9 @@ PPDocument::PPDocument()
 	_layerOrders = NULL;
 	_OCGs = NULL;
 	_layersOn = NULL;
+	_layersOff = NULL;
+
+	_pageLabels = NULL;
 
 	// 빈 도큐먼트에 기본적인(Default) 셋팅을 한다.
     preBuildPDF();
@@ -219,6 +224,7 @@ int PPDocument::buildDocument()
 		if(d_dict) {
 			_layerOrders = (PPTArray *)d_dict->ValueObjectForKey("Order");
 			_layersOn = (PPTArray *)d_dict->ValueObjectForKey("ON");
+			_layersOff = (PPTArray *)d_dict->ValueObjectForKey("OFF");
 		}
 		_OCGs = (PPTArray *)_OCProperties->ValueObjectForKey("OCGs");
 	}
@@ -460,7 +466,35 @@ void PPDocument::setPageCount(uint cnt)
 
 // PDF 내의 파리미터로 주어진 페이지를 추가함.
 ///////////////////////////////////////////////////////////////////
-void PPDocument::AddPage(PPPage *org_page)
+PPPage *PPDocument::AddExternalPage(PPPage *ext_page)
+{
+	PPTArray *page_array = PageArray();
+	PPTIndirectRef *page_ref = new PPTIndirectRef(this, ++_objNumber, 0);
+	page_array->AddToken(page_ref);
+
+	setPageCount((uint)page_array->NumberOfTokens());
+
+	PPTIndirectObj *new_page_obj = new PPTIndirectObj(this, _objNumber, 0);
+	new_page_obj->AddRefObj(page_ref);
+	PushObj(new_page_obj, _objNumber);
+	PPTDictionary *ext_page_dict = ext_page->_formDict;
+	PPTDictionary *new_page_dict = (PPTDictionary *)ext_page_dict->Copy();// new PPTDictionary(this);
+	new_page_dict->MoveInto(this);
+	new_page_obj->AddToken(new_page_dict);
+
+	PPTDictionary *root_dict = RootDict();
+	PPTIndirectObj *pages = (PPTIndirectObj *)root_dict->IndirectObjectForKey("Pages");
+	PPTIndirectRef *parent_ref = new PPTIndirectRef(this, pages->_objNum, 0);
+	pages->AddRefObj(parent_ref);
+	new_page_dict->SetTokenAndKey(parent_ref, "Parent");
+
+	ext_page->WriteDictionaryForExternalPage(new_page_dict);
+	PPPage *new_page = new PPPage(this);
+	new_page->PutIndirectObj(new_page_obj);
+	return new_page;
+}
+
+void PPDocument::AddInternalPage(PPPage *page)
 {
 	PPTArray *page_array = PageArray();
 	PPTIndirectRef *page_ref = new PPTIndirectRef(this, ++_objNumber, 0);
@@ -471,18 +505,34 @@ void PPDocument::AddPage(PPPage *org_page)
 	PPTIndirectObj *page_obj = new PPTIndirectObj(this, _objNumber, 0);
 	page_obj->AddRefObj(page_ref);
 	PushObj(page_obj, _objNumber);
-	PPTDictionary *org_page_dict = org_page->_formDict;
-	PPTDictionary *new_page_dict = (PPTDictionary *)org_page_dict->Copy();// new PPTDictionary(this);
-	new_page_dict->MoveInto(this);
-	page_obj->AddToken(new_page_dict);
+	PPTDictionary *page_dict = new PPTDictionary(this);
+	page_obj->AddToken(page_dict);
 
 	PPTDictionary *root_dict = RootDict();
 	PPTIndirectObj *pages = (PPTIndirectObj *)root_dict->IndirectObjectForKey("Pages");
 	PPTIndirectRef *parent_ref = new PPTIndirectRef(this, pages->_objNum, 0);
 	pages->AddRefObj(parent_ref);
-	new_page_dict->SetTokenAndKey(parent_ref, "Parent");
+	page_dict->SetTokenAndKey(parent_ref, "Parent");
 
-	org_page->WriteDictionary(new_page_dict);
+	page->WriteDictionary(page_dict);
+}
+
+
+PPPage *PPDocument::AddPage(PPPage *page)
+{
+	PPPage *ret_page = page;
+	if(page->_document != this) {
+		if(!this->IsMergedDoc(page->_document)) {
+			this->ImportOCGsFrom(page->_document);
+		}
+		PPPage *new_page = AddExternalPage(page);
+		_pages.push_back(new_page);
+		ret_page = new_page;
+	}
+	else {
+		AddInternalPage(page);
+	}
+	return ret_page;
 }
 
 // for generating
@@ -528,7 +578,10 @@ void PPDocument::PushObj(PPTIndirectObj *obj, int obj_num)
 
 	_tokens.push_back(obj);
 	obj->SetDocument(this);
-	
+	if(obj->IsOCG()) {
+		string layer_name = obj->OCGName();
+		_OCGObjects[layer_name] = obj;
+	}
 }
 
 void PPDocument::PushObj(PPTIndirectObj *obj)
@@ -542,8 +595,10 @@ void PPDocument::PushObj(PPTIndirectObj *obj)
 
 	_tokens.push_back(obj);
 	obj->SetDocument(this);
-
-	
+	if(obj->IsOCG()) {
+		string layer_name = obj->OCGName();
+		_OCGObjects[layer_name] = obj;
+	}	
 }
 
 void PPDocument::RemoveObj(PPTIndirectObj *obj)
@@ -958,15 +1013,20 @@ PPTName *PPDocument::AddFormObject(PPPage *page)
 PPTIndirectObj *PPDocument::SetRefTokenForKey(PPTDictionary *dict, PPToken *new_token, string key)
 {
 	PPToken *old_token = dict->ObjectForKey(key);
-	if(old_token) { // 기존에 key해당하는 객체가 있으면
-		if(old_token->ClassType() == PPTN_INDIRECTREF) { // 그리고 그 객체가 PPTIndirectRef라면
+	do {
+		if(old_token) { // 기존에 key해당하는 객체가 있으면
+			if(old_token->ClassType() == PPTN_INDIRECTREF) { // 그리고 그 객체가 PPTIndirectRef라면
 			// PPTIndirectObj를 알아내서 내용물을 new_token으로 대체한다.
-			PPTIndirectRef *old_ref = (PPTIndirectRef *)old_token;
-			PPTIndirectObj *old_obj = (PPTIndirectObj *)ObjectForNumber(old_ref->_objNum);
-			old_obj->SetFirstObject(new_token);
-			return old_obj;
+				PPTIndirectRef *old_ref = (PPTIndirectRef *)old_token;
+				PPTIndirectObj *old_obj = (PPTIndirectObj *)ObjectForNumber(old_ref->_objNum);
+				if(old_obj == NULL) {
+					break;
+				}
+				old_obj->SetFirstObject(new_token);
+				return old_obj;
+			}
 		}
-	}
+	} while(0);
 	PPTIndirectObj *obj = dict->SetRefTokenAndKey(new_token, key, ++_objNumber);  // return new PPTIndirectObj
 	PushObj(obj, _objNumber);
 //	_tokens.push_back(obj);
@@ -1205,8 +1265,13 @@ void PPDocument::BuildOCProperties() {
 
 	_layerOrders = new PPTArray();
 	d_dict->SetTokenAndKey(_layerOrders, "Order");
+
+	_layersOff = new PPTArray();
+	d_dict->SetTokenAndKey(_layersOff, "OFF");
+
 	_layersOn = new PPTArray();
 	d_dict->SetTokenAndKey(_layersOn, "ON");
+
 	_OCProperties->SetTokenAndKey(d_dict, "D");
 
 	_OCGs = new PPTArray();
@@ -1340,6 +1405,19 @@ void PPDocument::MergeLayer(string layer1, string layer2)
 		}
 	}
 
+	icnt = _layersOff->NumberOfTokens();
+	for(i=0;i<icnt;i++) {
+		PPTIndirectRef *indir_ref = (PPTIndirectRef *)_layersOff->TokenAtIndex(i);
+		PPTIndirectObj *indir_obj = indir_ref->TargetObject();
+		PPTDictionary *layer_dict = indir_obj->FirstDictionary();
+		PPTString *layer_name = (PPTString *)layer_dict->ObjectForKey("Name");
+		if(*layer_name->_string == layer2) {
+			_layersOff->RemoveTokenAtIndex(i);
+			break;
+		}
+	}
+
+
 	icnt = _pages.size();
 	for(i=0;i<icnt;i++) {
 		PPPage *page = _pages[i];
@@ -1359,6 +1437,81 @@ void PPDocument::WriteOCProperties(PPTDictionary *properties)
 	
 	_OCProperties->MoveInto(this);
 }
+
+
+bool PPDocument::IsMergedDoc(PPDocument *doc)
+{
+	uint i;
+	size_t icnt = _merged_docs.size();
+	for(i=0;i<icnt;i++) {
+		int adocid = _merged_docs[i];
+		if(adocid == doc->_docID) 
+			return true;
+	}
+	return false;
+}
+
+void PPDocument::ImportOCGsFrom(PPDocument *doc)
+{
+	if(_OCProperties == NULL) {
+		this->BuildOCProperties();
+	}
+	map <int, int> obj_num_map;
+
+	uint i;
+	size_t icnt = doc->_OCGs->NumberOfTokens();
+	for(i=0;i<icnt;i++) {
+		PPTIndirectRef *org_layer_ref = (PPTIndirectRef *)doc->_OCGs->TokenAtIndex(i);
+		PPTIndirectObj *org_layer_obj = org_layer_ref->TargetObject();
+		int src_id = (doc->_docID << 24) + org_layer_obj->_objNum;
+
+		PPTIndirectObj *layer_obj = (PPTIndirectObj *)org_layer_obj->Copy();
+		int new_obj_num = this->NewObjNum();
+		layer_obj->_objNum = new_obj_num;
+		PushObj(layer_obj, new_obj_num);
+		_srcIndirectObjs[src_id] = layer_obj;// 여기에 이렇게 등록해 놔야 페이지 추가할 때 
+												// 중복추가 하지 않음.
+		layer_obj->MoveInto(this);
+		obj_num_map[org_layer_ref->_objNum] = new_obj_num;
+
+		PPTIndirectRef *layer_ref = new PPTIndirectRef(this, new_obj_num, 0);
+		_OCGs->AddToken(layer_ref);
+		layer_obj->AddRefObj(layer_ref);
+	}
+
+	icnt = doc->_layersOn->NumberOfTokens();
+	for(i=0;i<icnt;i++) {
+		PPTIndirectRef *org_layer_ref = (PPTIndirectRef *)doc->_layersOn->TokenAtIndex(i);
+		int new_obj_num = obj_num_map[org_layer_ref->_objNum];
+		PPTIndirectRef *layer_ref = new PPTIndirectRef(this, new_obj_num, 0);
+		PPTIndirectObj *layer_obj = (PPTIndirectObj *)this->ObjectForNumber(new_obj_num);
+		_layersOn->AddToken(layer_ref);
+		layer_obj->AddRefObj(layer_ref);
+	}
+
+	icnt = doc->_layersOff->NumberOfTokens();
+	for(i=0;i<icnt;i++) {
+		PPTIndirectRef *org_layer_ref = (PPTIndirectRef *)doc->_layersOff->TokenAtIndex(i);
+		int new_obj_num = obj_num_map[org_layer_ref->_objNum];
+		PPTIndirectRef *layer_ref = new PPTIndirectRef(this, new_obj_num, 0);
+		PPTIndirectObj *layer_obj = (PPTIndirectObj *)this->ObjectForNumber(new_obj_num);
+		_layersOff->AddToken(layer_ref);
+		layer_obj->AddRefObj(layer_ref);
+	}
+
+
+	icnt = doc->_layerOrders->NumberOfTokens();
+	for(i=0;i<icnt;i++) {
+		PPTIndirectRef *org_layer_ref = (PPTIndirectRef *)doc->_layerOrders->TokenAtIndex(i);
+		int new_obj_num = obj_num_map[org_layer_ref->_objNum];
+		PPTIndirectRef *layer_ref = new PPTIndirectRef(this, new_obj_num, 0);
+		PPTIndirectObj *layer_obj = (PPTIndirectObj *)this->ObjectForNumber(new_obj_num);
+		_layerOrders->AddToken(layer_ref);
+		layer_obj->AddRefObj(layer_ref);
+	}
+	_merged_docs.push_back(doc->_docID);
+}
+
 ////////////////////////////////// End of Layer(OC) Related Methods
 /////////////////////////////////////////////////////////////////////
 
@@ -1562,4 +1715,75 @@ string PPDocument::RawDataXML()
     }
     xml_str += "</pdf-raw>\xa";
     return xml_str;
+}
+
+
+void PPDocument::CreatePageLabel()
+{
+	if(_pageLabels == NULL) {
+		PPTDictionary *root_dict = RootDict();
+		PPTDictionary *page_label_dict = new PPTDictionary(this);
+		_pageLabels = new PPTArray(this);
+		page_label_dict->SetTokenAndKey(_pageLabels, "Nums");
+
+		root_dict->SetTokenAndKey(page_label_dict, "PageLabels");
+	}
+}
+
+PPTArray *PPDocument::PageLabel()
+{
+	return _pageLabels;
+}
+
+void PPDocument::ClearPageLabel()
+{
+	PPTDictionary *root_dict = RootDict();
+//	root_dict->RemoveObjectForKey("PageLabels");
+
+}
+
+char *PLTypes[3] = {"S", "P", "St"};
+char *PLNames[5] = {"D", "R", "r", "A", "a"};
+
+void PPDocument::AddPageLabel(uint start, PPPageLabelType type, PPToken *token)
+{
+	CreatePageLabel();
+	uint i;
+	size_t icnt = _pageLabels->NumberOfTokens() / 2;
+	for(i=0;i<icnt;i++) {
+		PPTNumber *num = (PPTNumber *)_pageLabels->TokenAtIndex(i*2);
+		if(num->intValue() == start) {
+			PPTDictionary *dict = (PPTDictionary *)_pageLabels->TokenAtIndex(i*2+1);
+			dict->SetTokenAndKey(token, PLTypes[type]);
+			return;
+		}
+	}
+	PPTDictionary *dict = new PPTDictionary(this);
+	dict->SetTokenAndKey(token, PLTypes[type]);
+	_pageLabels->AddToken(start);
+	_pageLabels->AddToken(dict);
+}
+
+void PPDocument::AddPageLabel(uint start, PPPageLabelName name)
+{
+	PPTName *name_token = new PPTName(this, PLNames[name]);
+
+	this->AddPageLabel(start, PPPL_Name, name_token);
+}
+
+
+void PPDocument::AddPageLabel(uint start, std::string string)
+{
+	std::string *str = new std::string(string);
+
+	PPTString *str_token = new PPTString(this, str);
+
+	this->AddPageLabel(start, PPPL_String, str_token);
+}
+
+void PPDocument::AddPageLabel(uint start, uint num)
+{
+	PPTNumber *num_token = new PPTNumber(this, num);
+
+	this->AddPageLabel(start, PPPL_BaseNumber, num_token);
 }

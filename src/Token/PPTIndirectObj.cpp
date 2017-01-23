@@ -6,6 +6,7 @@
 
 #include "PPTIndirectObj.h"
 
+#include "PPTString.h"
 #include "PPTName.h"
 #include "PPTNumber.h"
 #include "PPTDictionary.h"
@@ -158,6 +159,40 @@ bool PPTIndirectObj::IsStream()
     }
     return false;
 }
+
+// OCG Related Methods
+bool PPTIndirectObj::IsOCG()
+{
+	PPTDictionary *dict = this->FirstDictionary();
+	if(dict == NULL) 
+		return false;
+	PPTName *type = (PPTName *)dict->ObjectForKey("Type");
+	if(type == NULL)
+		return false;
+	if(*type->_name != "OCG") 
+		return false;
+	PPTString *name = (PPTString *)dict->ObjectForKey("Name");
+	if(name == NULL)
+		return false;
+	return true;
+}
+	
+string PPTIndirectObj::OCGName()
+{
+	string name;
+	do {
+		PPTDictionary *dict = this->FirstDictionary();
+		if(dict == NULL) 
+			break;
+		PPTString *name_token = (PPTString *)dict->ObjectForKey("Name");
+		if(name_token == NULL)
+			break;
+		name = *name_token->_string;
+
+	} while(0);
+	return name;
+}
+
 
 PPTIndirectObj *PPTIndirectObj::GetParentObj()
 {

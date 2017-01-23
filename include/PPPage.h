@@ -36,7 +36,9 @@ public:
 	PPPage(PPPage *page);
     PPPage(PPDocument *doc);
     void LoadDictionary(PPTDictionary *page_dict);
+	void PutIndirectObj(PPTIndirectObj *page_obj); //from External Page
 	void WriteDictionary(PPTDictionary *page_dict);
+	void WriteDictionaryForExternalPage(PPTDictionary *page_dict);
 
 	// 페이지에 사용되어지는 리소스들의 정보.
 	// contents 내에서 사용되어지는 리소스 키는 

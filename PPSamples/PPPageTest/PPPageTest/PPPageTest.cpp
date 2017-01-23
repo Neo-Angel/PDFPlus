@@ -17,6 +17,7 @@ int main(int argc, char* argv[])
 	
 	PPDocument src_pdf1(src_pdf_path1);
 
+	
 	int i, icnt = (int)src_pdf1.NumberOfPages();
 	for(i=0;i<icnt;i++) {
 		PPPage *page = src_pdf1.PageAtIndex(i);
@@ -34,9 +35,20 @@ int main(int argc, char* argv[])
 /*
 	PPRect page_rect(0, 0, 595, 842); // A4
 	PPPage *page = doc.NewPage(page_rect);
-	*/
+	*/                                                                                                             
+	string pdf_path = output_path + "new_page3.pdf";
+	//src_pdf1.Save(pdf_path);
 
-	string pdf_path = output_path + "new_page.pdf";
+	doc.AddPageLabel(0, PPPLN_DecimalArabic);
+	doc.AddPageLabel(0, "AAA-");
+	doc.AddPageLabel(0, 1);
+	doc.AddPageLabel(2, PPPLN_DecimalArabic);
+	doc.AddPageLabel(2, "BBB-");
+	doc.AddPageLabel(2, 1);
+
+
+
 	doc.Save(pdf_path);
-	return 0;
+ 	return 0;
 }
+ 

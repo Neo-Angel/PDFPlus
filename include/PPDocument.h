@@ -33,6 +33,22 @@ typedef enum {
     PPDS_Built_Elements
 } PPDocumentState;
 
+// Page Label Contant
+typedef enum {
+    PPPL_Name,
+    PPPL_String,
+    PPPL_BaseNumber
+} PPPageLabelType;
+
+typedef enum {
+    PPPLN_DecimalArabic,
+    PPPLN_UppercaseRoman,
+    PPPLN_LowercaseRoman,
+	PPPLN_UppercaseLetters,
+	PPPLN_LowercaseLetters
+} PPPageLabelName;
+
+
 class PPParser;
 class PPTTrailer;
 class PPTXRef;
@@ -79,6 +95,13 @@ public:  //protected:
 	map <string, PPImage *>					_images;
 	map <string, PPTIndirectObj *>			_imageObjects;
 
+	// OCG(Layer)처리를 위한...
+											
+	map <string, PPTIndirectObj *>			_OCGObjects;  // PDF Merge 시 Layer 처리용. 같은 이름이
+														  // 있을 경우 리네임하기 위해서 필요.
+
+	vector <int>					_merged_docs;
+
 	//////////////////////////////////////////////////////
 
 	// 파서 밖에서 _tokens 분석을 통해 알아낸 객체들
@@ -91,6 +114,10 @@ public:  //protected:
 	PPTArray *								_layerOrders;
 	PPTArray *								_OCGs;
 	PPTArray *								_layersOn;
+	PPTArray *								_layersOff;
+
+	// Page Label
+	PPTArray *								_pageLabels;
     
     // Metadata
     PPTString *								_author;
@@ -140,7 +167,9 @@ public:
 	PPPage *								NewPage(PPRect &rect);
 	PPPage *								PageCreate(PPRect &rect){return NewPage(rect);}
 	PPPage *								AddNewPage(PPRect &rect){return NewPage(rect);}
-	void									AddPage(PPPage *page);
+	PPPage *								AddPage(PPPage *page);
+	void									AddInternalPage(PPPage *page);
+	PPPage *								AddExternalPage(PPPage *ext_page);
 	void									PushObj(PPTIndirectObj *obj, int obj_num);
 	void									PushObj(PPTIndirectObj *obj);
 	void									RemoveObj(PPTIndirectObj *obj);
@@ -152,6 +181,7 @@ public:
     inline vector <PPToken *> &				TokenList() {return _tokens;}
     PPToken *								XObjectForKey(int key);
 	PPTIndirectObj *						SetRefTokenForKey(PPTDictionary *dict, PPToken *token, string key);
+
 	// Layer(OCG) Related Methods
 	////////////////////////////////////////////////////////////////////////////////////////////////
 	int										NumberOfLayers();
@@ -167,6 +197,9 @@ public:
 	void 									MergeLayer(PPTDictionary *layer_dict1, PPTDictionary *layer_dict2);
 	void 									WriteOCProperties(PPTDictionary *properties);
 	void 									BuildOCProperties();
+	bool									IsMergedDoc(PPDocument *doc);
+	void									ImportOCGsFrom(PPDocument *doc);
+
 
 	// Query methods
 	////////////////////////////////////////////////////////////////////////////////////////////////
@@ -224,6 +257,16 @@ public:
 	void									RemoveRelatedObjects(PPTIndirectRef *ref);
     void 									SaveXObjectsToFolder(const char *folder); // Currently just Images
     void 									SaveFontsToFolder(const char *folder);
+
+	// Add PageLabel
+	void									CreatePageLabel();
+	PPTArray *								PageLabel();
+	void									ClearPageLabel();
+	void									AddPageLabel(uint start, PPPageLabelType type, PPToken *token);
+	void									AddPageLabel(uint start, PPPageLabelName name);
+	void									AddPageLabel(uint start, string string);
+	void									AddPageLabel(uint start, uint num);
+
 };
 
 #endif /* defined(__PDFPlusLib__PPDocument__) */

@@ -18,6 +18,7 @@
 #include "PPTName.h"
 #include "PPTDictionary.h"
 #include "PPTIndirectRef.h"
+#include "PPLayer.h"
 
 string PPTabStr(int cnt);
 
@@ -40,6 +41,12 @@ PPPage::PPPage(PPPage *page)
 //void PPPage::StoreResources()
 //{
 //}
+void PPPage::PutIndirectObj(PPTIndirectObj *page_obj)
+{
+	_indirObj = page_obj;
+	_formDict = page_obj->FirstDictionary();
+    _resourceDict = (PPTDictionary *)_formDict->ValueObjectForKey("Resources");
+}
 
 void PPPage::LoadDictionary(PPTDictionary *page_dict)
 {
@@ -91,7 +98,6 @@ void PPPage::LoadDictionary(PPTDictionary *page_dict)
         }
     }
 }
-
 // Invoked by PPDocument::AddPage()
 void PPPage::WriteDictionary(PPTDictionary *page_dict) // -> PreBuildPDF
 {
@@ -113,10 +119,29 @@ void PPPage::WriteDictionary(PPTDictionary *page_dict) // -> PreBuildPDF
 		proset_list->AddToken(new PPTName(_document, new string("ImageI")));
 		_resourceDict->SetTokenAndKey(proset_list, "ProcSet");
 	}
-//	PPTIndirectObj *rcs_obj = _document->SetRefTokenForKey(page_dict, _resourceDict, PPKN_RESOURCES);
+	PPTIndirectObj *rcs_obj = _document->SetRefTokenForKey(page_dict, _resourceDict, PPKN_RESOURCES);
+}
+// Invoked by PPDocument::AddExternalPage()
+void PPPage::WriteDictionaryForExternalPage(PPTDictionary *page_dict) // -> PreBuildPDF
+{
+	_formDict = page_dict;
+	page_dict->SetTokenAndKey("Page", "Type");
+	page_dict->SetTokenAndKey(0, "Rotate");
+	
+	if(_resourceDict == NULL) {
+		_resourceDict = new PPTDictionary(_document);
 
-//	PPTDictionary *copied_resourceDict = (PPTDictionary *)_resourceDict->Copy();
-//	copied_resourceDict->MoveInto(page_dict->_document);
+		PPTArray *proset_list = new PPTArray(_document);
+
+		PPTName *pname = new PPTName(_document, new string("PDF"));
+		proset_list->AddToken(pname);
+		pname = new PPTName(_document, new string("Test"));
+		proset_list->AddToken(pname);
+		proset_list->AddToken(new PPTName(_document, new string("ImageB")));
+		proset_list->AddToken(new PPTName(_document, new string("ImageC")));
+		proset_list->AddToken(new PPTName(_document, new string("ImageI")));
+		_resourceDict->SetTokenAndKey(proset_list, "ProcSet");
+	}
 
 	PPTDictionary *copied_resourceDict = (PPTDictionary *)page_dict->ObjectForKey(PPKN_RESOURCES);
 	if(!copied_resourceDict) {
@@ -130,6 +155,13 @@ void PPPage::WriteDictionary(PPTDictionary *page_dict) // -> PreBuildPDF
 // 페이지의 내용을 스트림으로 빌드하고 페이지 정보를 정리한다.
 void PPPage::BuildContents()
 {
+	
+	PPToken *contents_token = _formDict->ObjectForKey(PPKN_CONTENTS);
+	if(contents_token) {
+		// copied page from other document.
+		if(_layers.size() == 1 && _layers[0]->_elements.size() == 0) 
+			return;
+	}
 	PPTDictionary *stream_dict = new PPTDictionary(_document);
 
 	// stream_dict로 IndirectObj와 IndirectRef 를 만들어서 _formDict 에 PPKN_CONTENTS 키로 셋한다.
