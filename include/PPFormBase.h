@@ -50,7 +50,7 @@ public:
 
 	// _layers에 두개 이상의 레이어가 있을 경우 사용자(개발자)는 현재 레이어를 지정할 수 있다.
 	// AddElement등의 함수는 이 _curLayer에 적용된다.
-	// _curLayer 가 null일 경우 첫번째 레이어가 
+	// _curLayer 가 null일 경우 첫번째 레이어가... 
 	PPLayer *_curLayer;
     
 public:
@@ -68,16 +68,17 @@ public:
 	virtual PPToken *WriteResource(PPToken *rcs, int obj_num);
 
 	// Layer Related Methods
+	////////////////////////////////////////////////////////////////////////////////////////////////
 	PPLayer *AddLayerWithProperties(string property_name);
-	PPLayer *AddLayer(string layer_name);
+	PPLayer *AddLayer(string layer_name, PPLayer *layer = NULL);
 	PPLayer *LayerForName(string name, int *idx = NULL);
 	PPLayer *BeginLayer(char *layerName);
 	void EndLayer();
-	void BeginReadLayer(char *layer_name);
 	void ReorderLayer(int from_idx, int to_idx);
 	void MergeLayer(string tar, string src);
 
 	// Element Related Methods
+	////////////////////////////////////////////////////////////////////////////////////////////////
     void AddElement(PPElement *element);
 	void WriteElement(PPElement *element);
 	void WritePlacedElement(PPElement *element);

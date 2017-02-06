@@ -271,7 +271,7 @@ PPLayer *PPFormBase::AddLayerWithProperties(string property_name)
 // 현재의 폼 안에 레이어를 추가하는 함수
 // 그러나 도큐먼트 레이어 정보 리스트에 없는 레이어를 추가할 경우
 // 오류가 날 것으로 예상됨. 수정 바람.
-PPLayer *PPFormBase::AddLayer(string layer_name)
+PPLayer *PPFormBase::AddLayer(string layer_name, PPLayer *layer)
 {
 	// this 객체 안에 layer_name의 레이어가 없다고 간주하고 시작함.
 	PPTIndirectObj *layer_obj = _document->LayerObjForName(layer_name); // 도큐먼트의 레이어 정보 리스트에서
@@ -307,11 +307,15 @@ PPLayer *PPFormBase::AddLayer(string layer_name)
 	properties_dict->SetTokenAndKey(layer_ref, pname);
 	layer_obj->AddRefObj(layer_ref);  // IndirectObj는 항상 자신을 참조한 ref를 저장해서 관리한다.
 	PPTDictionary *layer_dict = (PPTDictionary *)layer_ref->ValueObject();
-
-	ret_layer = new PPLayer();
+	if(layer == NULL) { 
+		ret_layer = new PPLayer();
+	}
+	else {
+		ret_layer = layer;
+	}
 	ret_layer->_layer_dict = layer_dict; // 
-	ret_layer->_properties = pname;
 	ret_layer->_parent = this;
+	ret_layer->ChangeProperties(pname);
 	_layers.push_back(ret_layer);
 
 	return ret_layer;
@@ -336,18 +340,13 @@ void PPFormBase::EndLayer()
 	_curLayer = NULL;
 }
 
-void PPFormBase::BeginReadLayer(char *layer_name)
-{
-
-}
-
 PPLayer *PPFormBase::LayerForName(string name, int *idx)
 {
 	size_t icnt = _layers.size();
 	uint i;
 	for(i=0;i<icnt;i++) {
 		PPLayer *layer = _layers[i];
-		if(layer->Name() == name) {
+		if(layer->IsEqualName(name)) {
 			if (idx)
 				*idx = i;
 			return layer;
@@ -864,7 +863,7 @@ int PPFormBase::BuildElements()
 						properties = (PPToken *)cmd->TokenValueAt(1);
 						if(properties->ClassType() == PPTN_NAME) {
 							PPTName *property_name = (PPTName *)properties;
-							AddLayerWithProperties(*property_name->_name);
+							_curLayer = AddLayerWithProperties(*property_name->_name);
 						}
 					}
 					PPEBeginMarkedContent *marked_content_element = new PPEBeginMarkedContent(tag, properties, &gcontext);;

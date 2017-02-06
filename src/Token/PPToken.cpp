@@ -120,6 +120,95 @@ void PPstringToUTF8String(string &src_str, string &dest_utf8str)
     PPwstrToUtf8(wstr, dest_utf8str);
 }
 
+#define PP_NOENDIAN			0
+#define PP_BIGENDIAN		1
+#define PP_LITTLEENDIAN		2
+
+
+bool PPCompareUnicodeString(string str1, string str2)
+{
+	uint endian1 = PP_NOENDIAN; // bigendian
+	uint endian2 = PP_NOENDIAN;
+	uint start1 = 0;
+	uint start2 = 0;
+	uint length1 = (uint)str1.length();
+	uint length2 = (uint)str2.length();
+
+	if(length1 < 2)
+		return false;
+	if(length2 < 2)
+		return false;
+
+	byte ch1_0 = str1[0], ch1_1 = str1[1];
+	byte ch2_0 = str2[0], ch2_1 = str2[1];
+
+	if(ch1_0 == 0xfe && ch1_1 == 0xff) {
+		endian1 = PP_BIGENDIAN;
+		start1 = 2;
+
+	}
+	else if(ch1_0 == 0xff && ch1_1 == 0xef) {
+		endian1 = PP_LITTLEENDIAN;
+		start1 = 2;
+	}
+
+	if(ch2_0 == 0xfe && ch2_1 == 0xff) {
+		endian2 = PP_BIGENDIAN;
+		start2 = 2;
+	}
+	else if(ch2_0 == 0xff && ch2_1 == 0xef) {
+		endian2 = PP_LITTLEENDIAN;
+		start2 = 2;
+	}
+
+	length1 -= start1;
+	length2 -= start2;
+
+	if(length1 != length2)
+		return false;
+
+	if(length1 % 2 != 0)
+		return false;
+
+	uint icnt = length1 / 2;
+
+	for(uint i = 0;i < icnt;i++) {
+		uint idx = i * 2;
+		char ch1, ch2;
+		///////////////////////////////////////////
+		if(endian1 == PP_LITTLEENDIAN) {
+			ch1 = str1[idx+start1+1];
+		}
+		else {
+			ch1 = str1[idx+start1];
+		}
+		if(endian2 == PP_LITTLEENDIAN) {
+			ch2 = str2[idx+start2+1];
+		}
+		else {
+			ch2 = str2[idx+start2];
+		}
+		if(ch1 != ch2)
+			return false;
+		///////////////////////////////////////////
+		if(endian1 == PP_LITTLEENDIAN) {
+			ch1 = str1[idx+start1];
+		}
+		else {
+			ch1 = str1[idx+start1+1];
+		}
+		if(endian2 == PP_LITTLEENDIAN) {
+			ch2 = str2[idx+start2];
+		}
+		else {
+			ch2 = str2[idx+start2+1];
+		}
+		if(ch1 != ch2)
+			return false;
+	}
+	return true;
+}
+
 
 //////////////////////////////////// PPToken
 PPToken::PPToken()

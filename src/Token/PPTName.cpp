@@ -61,3 +61,18 @@ void PPTName::CopyMembersTo(PPBase *obj)
 	PPTName *name = (PPTName *)obj;
 	name->_name = new string(*_name);
 }
+
+
+bool PPTName::IsEqualToString(string str)
+{
+	if(_name == &str) 
+		return true;
+
+	if (*_name == str)
+		return true;
+
+	bool ret = PPCompareUnicodeString(*_name, str);
+	return ret;
+
+	return ret;
+}

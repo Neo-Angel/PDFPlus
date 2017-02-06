@@ -5,7 +5,7 @@
 
 #include <PPBase.h>
 
-class PPLayer : PPBase {
+class PPLayer : public PPBase {
 
 public:
 	PPTDictionary *_layer_dict;
@@ -17,13 +17,21 @@ public:
 public:
 	PPLayer();
 	PPLayer(PPTDictionary *layer_dict);
+
+	bool IsEqualName(string other);
 	void AddElement(PPElement *element);
 	PPElement *ElementAtIndex(int idx);
 	void RemoveElementAtIndex(int idx);
+	void ChangeProperties(string str);
 
 	string Name();
 
 	void Merge(PPLayer *layer);
+
+	void CopyMembersTo(PPBase *obj) ;
+	PPClassType ClassType() {return PPTN_LAYER;}
+	PPBase *Create() {return new PPLayer();}
+
 };
 
 

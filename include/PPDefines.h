@@ -83,6 +83,7 @@ void PPwstrToUtf8(const wstring& src, string& dest);
 string PPwstrToUtf8(const wstring& str);
 void PPstringToWString(string &src_str, wstring &dest_wstr);
 void PPstringToUTF8String(string &src_str, string &dest_utf8str);
+bool PPCompareUnicodeString(string str1, string str2);
 
 #endif  // PDFPlusLib_PPDefines_h
 

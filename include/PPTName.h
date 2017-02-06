@@ -28,6 +28,7 @@ public:
 
 	PPBase *Create() {return new PPTName();}
 	void CopyMembersTo(PPBase *obj) ;
+	bool IsEqualToString(string str);
 
 };
 /////////////////////////////////////////

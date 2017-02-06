@@ -5,7 +5,7 @@
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LocalDebuggerCommand>C:\Work\PDFPlus\Lib\PPSamples\PPPageTest\x64\Debug\PPPageTest.exe</LocalDebuggerCommand>
+    <LocalDebuggerCommand>C:\Work\PDFPlus\C#\ConsoleApplication1\ConsoleApplication1\bin\x64\Debug\ConsoleApplication1.exe</LocalDebuggerCommand>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
 </Project>

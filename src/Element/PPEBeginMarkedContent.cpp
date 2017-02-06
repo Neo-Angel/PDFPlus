@@ -57,6 +57,12 @@ void PPEBeginMarkedContent::SetDocument(PPDocument *doc)
 		_tag->_document = doc;
 }
 
+void PPEBeginMarkedContent::SetPropertiesName(string *str)
+{
+	PPTName *name_properties = (PPTName *)_properties;
+	name_properties->_name = str;
+}
+
 string PPEBeginMarkedContent::MakeCommandString()
 {
     string retstr;

@@ -60,3 +60,16 @@ void PPTString::AppendString(PPTString *str)
 {
 	_string->append(*str->_string);
 }
+
+
+bool PPTString::IsEqualToString(string str)
+{
+	if(_string == &str) 
+		return true;
+
+	if (*_string == str)
+		return true;
+
+	bool ret = PPCompareUnicodeString(*_string, str);
+	return ret;
+}

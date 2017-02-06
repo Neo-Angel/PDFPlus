@@ -19,6 +19,7 @@
 #include <unistd.h>
 #endif
 
+#include "PDFPlus.h"
 #include "PPDocument.h"
 #include "PPToken.h"
 #include "PPTStream.h"
@@ -35,6 +36,7 @@
 #include "PPLayer.h"
 
 
+extern bool _PP_Initialized;
 static unsigned int DOC_COUNT = 0;
 
 ///////////////////////////////////////////////////////////////////
@@ -42,6 +44,9 @@ static unsigned int DOC_COUNT = 0;
 ///////////////////////////////////////////////////////////////////
 PPDocument::PPDocument(string filepath)
 {
+	if(_PP_Initialized == false) {
+		PDFPlusInit();
+	}
 	// 도큐먼트가 오픈 될 때마다 1씩 증가시켜서 ID를 만듦
 	_docID = ++DOC_COUNT;
 
@@ -86,6 +91,10 @@ PPDocument::PPDocument(string filepath)
 // 신규 도큐먼트(PDF)를 만들기 위해 빈 PDF 도큐먼트를 생성한다.
 PPDocument::PPDocument()
 {
+	if(_PP_Initialized == false) {
+		PDFPlusInit();
+	}
+
 	_docID = ++DOC_COUNT;
 	_objNumber = 0;
     _version = NULL;
@@ -963,9 +972,11 @@ int PPDocument::NewObjNum()
 PPTName *PPDocument::AddFormObject(PPPage *page)
 {
 	PPTName *ret_name;
-	string name_str;
+	char name_str[1024];
+	// string name_str;
 	_xobjNumber ++;
-	name_str = "form" + _xobjNumber;
+	sprintf(name_str, "form%d",_xobjNumber);
+//	name_str = "form" + _xobjNumber; /clr 모드에서는 에러가 남
 
 	vector <PPToken *> token_list;
 	PPTDictionary *dict = new PPTDictionary(this);
@@ -1249,6 +1260,13 @@ PPTIndirectObj *PPDocument::LayerObjForName(string name)
 	return NULL;
 }
 
+string PPDocument::LayerNameAtIndex(int idx)
+{
+	PPTDictionary *layer_dict = this->LayerInfoAtIndex(idx);
+	PPTString *str = (PPTString *)layer_dict->ValueObjectForKey("Name");
+	return *(str->_string);
+}
+
 
 PPLayer *PPDocument::NewLayerForName(string name)
 {
@@ -1451,6 +1469,12 @@ bool PPDocument::IsMergedDoc(PPDocument *doc)
 	return false;
 }
 
+/*
+void PPDocument::MoveIndirectObjTo(PPDocument *doc)
+{
+}
+*/
+
 void PPDocument::ImportOCGsFrom(PPDocument *doc)
 {
 	if(_OCProperties == NULL) {
@@ -1466,6 +1490,13 @@ void PPDocument::ImportOCGsFrom(PPDocument *doc)
 		int src_id = (doc->_docID << 24) + org_layer_obj->_objNum;
 
 		PPTIndirectObj *layer_obj = (PPTIndirectObj *)org_layer_obj->Copy();
+		PPTDictionary *layer_dict = layer_obj->FirstDictionary();
+
+		// 추후에는 Token 클레스에서부터 IndirectObj 를 도큐먼트 사이를 이동시킬 수 있는
+		// 메카니즘을 recursive하게 구현해야 함.
+		layer_dict->RemoveObjectForKey("Intent");
+		layer_dict->RemoveObjectForKey("Usage");
+
 		int new_obj_num = this->NewObjNum();
 		layer_obj->_objNum = new_obj_num;
 		PushObj(layer_obj, new_obj_num);
@@ -1510,6 +1541,32 @@ void PPDocument::ImportOCGsFrom(PPDocument *doc)
 		layer_obj->AddRefObj(layer_ref);
 	}
 	_merged_docs.push_back(doc->_docID);
+}
+
+// *** editing
+
+void PPDocument::CopyLayerToDocument(string layer_name, PPDocument *doc)
+{
+	PPTIndirectObj *layer_obj = doc->LayerObjForName(layer_name);
+	if(layer_obj == NULL) {
+		doc->AddLayer(layer_name);
+		layer_obj = doc->LayerObjForName(layer_name);
+	}
+	uint page_cnt = (uint)this->NumberOfPages();
+	uint i;
+	for(i=0;i<page_cnt;i++) {
+		PPPage *src_page = this->PageAtIndex(i);
+		PPLayer *layer = src_page->LayerForName(layer_name);
+		if(layer != NULL) {
+			if(doc->NumberOfPages() <= i) {
+				doc->AddNewPage(src_page->MediaBox());
+			}
+			PPPage *tar_page = doc->PageAtIndex(i);
+			PPLayer *new_layer = (PPLayer *)layer->Copy();
+			tar_page->AddLayer(layer_name, new_layer);
+		}
+
+	}
 }
 
 ////////////////////////////////// End of Layer(OC) Related Methods

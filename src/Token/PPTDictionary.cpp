@@ -62,6 +62,11 @@ void PPTDictionary::SetTokenAndKey(int num, string key)
 	SetTokenAndKey(num_obj, key);
 }
 
+void PPTDictionary::RemoveObjectForKey(string key)
+{
+	_dict.erase(key);
+}
+
 // IndirectObj를 만들고 token을 넣고 IndirectRef를 만들고 key로 Set 함.
 PPTIndirectObj *PPTDictionary::SetRefTokenAndKey(PPToken *token, string key, int obj_num)
 {

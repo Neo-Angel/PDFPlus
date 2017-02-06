@@ -148,6 +148,8 @@ string PPTabStr(int cnt);
 
 // PDF Plus 라이브러리를 사용하기 위해선 프로그램이 시작할 때
 // 반드시 호출해 줘야하는 초기화 함수.
+
+bool _PP_Initialized = false;
 void PDFPlusInit()
 {
 	// CommandDict에 PPCommandList의 모든 내용들을 담는다.
@@ -156,6 +158,7 @@ void PDFPlusInit()
         PPCommandInfo *cmdinfo = &PPCommandList[i];
         CommandDict[cmdinfo->command] = cmdinfo; // PPCommandInfo->command를 키로 한다.
     }
+	_PP_Initialized = true;
 }
 
 

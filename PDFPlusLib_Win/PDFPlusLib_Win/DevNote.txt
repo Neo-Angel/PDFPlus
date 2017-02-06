@@ -4,7 +4,9 @@
 
 To Do List
 ==========
-
+- IndirectObj를 도큐먼트 간 이동시 PPToken 수준에서 Recursive하게 처리할 수 있는 함수 구현
+- IndirectObj와 IndirectRef 처리를 쉽게 하기 위한 장치 구현
+- 포인터형 인스탄스 변수들을 처리를 위힌 property 개념 도입
 - Trailer->_dict->_dict : PPTDictionary 랑 map <int, PPToken *> 이랑 똑같이 _dict. 개선 필요.
 
 - Page Copy 작업중 parentObj 문제로 중단. 

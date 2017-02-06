@@ -24,6 +24,7 @@ public:
 
 	void CopyMembersTo(PPBase *);
 	void SetDocument(PPDocument *doc);
+	void SetPropertiesName(string *str);
 
     string MakeCommandString();
     string XMLString(int Slevel);

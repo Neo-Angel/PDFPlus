@@ -62,6 +62,7 @@ public:
 	PPTName *NameForKey(const char *keyname);
 	PPTNumber *NumberForKey(string &keyname);
 	float FloatForKey(string keyname);    
+	void RemoveObjectForKey(string key);
 };
 /////////////////////////////////////////
 

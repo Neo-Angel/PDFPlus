@@ -53,6 +53,7 @@ class PPParser;
 class PPTTrailer;
 class PPTXRef;
 class PPPage;
+class PPDocument;
 
 class PPDocument : public PPParserSource { /* PPParserSource 는 virtual class로 PPParser.h에 정의 되어 있음*/
     
@@ -187,6 +188,7 @@ public:
 	int										NumberOfLayers();
 	PPTDictionary *							LayerInfoAtIndex(int idx);
 	PPTIndirectObj *						LayerObjAtIndex(int idx);
+	string									LayerNameAtIndex(int idx);
 	PPTDictionary *							LayerDictForName(string name);
 	PPTIndirectObj *						LayerObjForName(string name);
 	PPLayer *								NewLayerForName(string name);
@@ -199,6 +201,7 @@ public:
 	void 									BuildOCProperties();
 	bool									IsMergedDoc(PPDocument *doc);
 	void									ImportOCGsFrom(PPDocument *doc);
+	void									CopyLayerToDocument(string layer_name, PPDocument *doc);
 
 
 	// Query methods
@@ -210,7 +213,7 @@ public:
 	PPToken *								ObjectForNumber(int num); // _objDict를 이용한 함수.
 	int										NextObjectNumber();
     PPToken *								ObjectAtFilePosition(unsigned long long pos);//_filePtDict를 이용한 함수
-	size_t										NumberOfPages() {return _pages.size();}
+	size_t									NumberOfPages() {return _pages.size();}
 	size_t									GetPageCount() {return _pages.size();}
 	PPPage *								PageAtIndex(int idx){return _pages.at(idx);}
 	PPPage *								GetPage(int page_no);// {return _pages.at(page_no-1);}

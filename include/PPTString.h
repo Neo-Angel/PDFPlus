@@ -23,6 +23,7 @@ public:
 	PPBase *Create() {return new PPTString();}
 	void CopyMembersTo(PPBase *obj);
 
+	bool IsEqualToString(string str);
 	void AppendString(PPTString *str);
 
 };
