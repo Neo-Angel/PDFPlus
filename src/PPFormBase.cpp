@@ -180,6 +180,15 @@ PPTDictionary *PPFormBase::ResourceDictForKey(string key)
 	return ret;
 }
 
+PPTIndirectRef *PPFormBase::ResourceForKey(string key)
+{
+	if (_resourceDict == NULL)
+		return NULL;
+
+	PPTIndirectRef *ret = (PPTIndirectRef *)_resourceDict->ObjectForKey(key);
+	return ret;
+}
+
 PPTIndirectObj *PPFormBase::ResourceObjForName(string name, string resource_type)
 {
 	PPTDictionary *dict = ResourceDictForKey(resource_type);
@@ -234,15 +243,6 @@ string PPFormBase::NameFromResourceObj(PPTIndirectObj *obj, string resource_type
 	rsc_dict->SetRefTokenAndKey(obj, pname/*"IM%d"*/, obj->_objNum);
 
 	return pname;
-}
-
-PPTIndirectRef *PPFormBase::ResourceForKey(string key)
-{
-	if (_resourceDict == NULL)
-		return NULL;
-
-	PPTIndirectRef *ret = (PPTIndirectRef *)_resourceDict->ObjectForKey(key);
-	return ret;
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -395,6 +395,22 @@ void PPFormBase::MergeLayer(string tar_name, string src_name)
 // Element 관련 함수들
 ///////////////////////////////////////////////////////////////////////
 
+void PPFormBase::InsertElement(PPElement *element, int dir)
+{
+    element->WillAddToParent(this);
+	element->SetParser(&_document->_parser);
+
+	PPLayer *layer;
+	if(_curLayer != NULL) {
+		layer = _curLayer;
+	}
+	else {
+		layer = _layers[0];
+	}
+	//layer->_elements.push_back(element);
+	layer->_elements.insert(layer->_elements.end() + dir, element);
+}
+
 void PPFormBase::AddElement(PPElement *element)
 {
     element->WillAddToParent(this);
@@ -411,8 +427,6 @@ void PPFormBase::AddElement(PPElement *element)
 
 	// update _commands list from element 
 }
-
-
 
 size_t PPFormBase::NumberOfElements()
 {
@@ -727,8 +741,8 @@ int PPFormBase::BuildElements()
 	PPETextState *textstate_element = NULL;
     PPEInlineImage *inline_img_element = NULL;
 
-    size_t i, icnt = _commands.size();
-    for (i=0; i<icnt; i++) {
+    size_t i = 0, icnt = _commands.size();
+    while (i<icnt) {
         PPTCommand *cmd = _commands[i];
         if(textstate_element != NULL) {
 			switch (cmd->_cmdInfo->group) {
@@ -863,7 +877,21 @@ int PPFormBase::BuildElements()
 						properties = (PPToken *)cmd->TokenValueAt(1);
 						if(properties->ClassType() == PPTN_NAME) {
 							PPTName *property_name = (PPTName *)properties;
-							_curLayer = AddLayerWithProperties(*property_name->_name);
+							PPLayer *layer = AddLayerWithProperties(*property_name->_name);
+							if(i < icnt-1) {
+								PPTCommand *next_cmd = _commands[i+1];
+								PPCommandGroup next_group = next_cmd->_cmdInfo->group;
+								// because illustrator has a bug.
+								if(next_group == PPCG_RestoreGState && _curLayer) {
+				                    gcontext.RestoreGState();
+								    PPEGRestore *grestore = new PPEGRestore(&gcontext);
+									this->InsertElement(grestore, -1);
+//				                    AddElement(grestore);
+									gcontext.ClearGFlags();
+									i++;
+								}
+							}
+							_curLayer = layer;
 						}
 					}
 					PPEBeginMarkedContent *marked_content_element = new PPEBeginMarkedContent(tag, properties, &gcontext);;
@@ -881,6 +909,20 @@ int PPFormBase::BuildElements()
                 break;
             case PPCG_EndMarkedContent:
                 {
+							if(i < icnt-1) {
+								PPTCommand *next_cmd = _commands[i+1];
+								PPCommandGroup next_group = next_cmd->_cmdInfo->group;
+								// because illustrator has a bug.
+								if(next_group == PPCG_RestoreGState && _curLayer) {
+				                    gcontext.RestoreGState();
+								    PPEGRestore *grestore = new PPEGRestore(&gcontext);
+									this->AddElement(grestore);
+//				                    AddElement(grestore);
+									gcontext.ClearGFlags();
+									i++;
+								}
+							}
+
                     PPEEndMarkedContent *marked_content_element = new PPEEndMarkedContent(&gcontext);
                     AddElement(marked_content_element);
 					gcontext.ClearGFlags();
@@ -914,6 +956,7 @@ int PPFormBase::BuildElements()
 				cout << " Unprocessed Command " << cmd->PDFString() << PP_ENDL;
                 break;
         }
+		i++;
     }
     return 0;
 }

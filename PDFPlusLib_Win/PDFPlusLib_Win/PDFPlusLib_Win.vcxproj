@@ -117,17 +117,17 @@
     <TargetName>PDFPlus64</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>C:\Work\PDFPlus\zlib-x86;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Work\PDFPlus\jpeg-9a;C:\Work\PDFPlus\zlib-x86;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>C:\Work\PDFPlus\zlib-x86;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Work\PDFPlus\jpeg-9a;C:\Work\PDFPlus\zlib-x86;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LibraryPath>C:\Work\PDFPlus\zlib-x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LibraryPath>C:\Work\PDFPlus\zlib-x86;$(LibraryPath)</LibraryPath>
-    <TargetName>$(ProjectName)64</TargetName>
+    <TargetName>PDFPlus64</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -256,7 +256,8 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>ZLib64.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ZLib64.lib;;jpeg_64.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)PDFPlus64$(TargetExt)</OutputFile>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>

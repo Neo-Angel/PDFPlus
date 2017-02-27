@@ -1556,11 +1556,11 @@ void PPDocument::CopyLayerToDocument(string layer_name, PPDocument *doc)
 	uint i;
 	for(i=0;i<page_cnt;i++) {
 		PPPage *src_page = this->PageAtIndex(i);
+		if(doc->NumberOfPages() <= i) {
+			doc->AddNewPage(src_page->MediaBox());
+		}
 		PPLayer *layer = src_page->LayerForName(layer_name);
 		if(layer != NULL) {
-			if(doc->NumberOfPages() <= i) {
-				doc->AddNewPage(src_page->MediaBox());
-			}
 			PPPage *tar_page = doc->PageAtIndex(i);
 			PPLayer *new_layer = (PPLayer *)layer->Copy();
 			tar_page->AddLayer(layer_name, new_layer);
@@ -1569,6 +1569,34 @@ void PPDocument::CopyLayerToDocument(string layer_name, PPDocument *doc)
 	}
 }
 
+void PPDocument::CopyAndAddLayerToDocument(string layer_name, uint idx, uint req_cnt, PPDocument *doc)
+{
+	PPTIndirectObj *layer_obj = doc->LayerObjForName(layer_name);
+	if(layer_obj == NULL) {
+		doc->AddLayer(layer_name);
+		layer_obj = doc->LayerObjForName(layer_name);
+	}
+	uint page_cnt = (uint)this->NumberOfPages();
+	if(page_cnt < idx+req_cnt) {
+		req_cnt = page_cnt - idx;
+		if(req_cnt <= 0) {
+			// Page Number Bounding Error
+			return;
+		}
+	}
+	uint i;
+	for(i=0;i<req_cnt;i++) {
+		PPPage *src_page = this->PageAtIndex(idx+i);
+		doc->AddNewPage(src_page->MediaBox());
+		PPLayer *layer = src_page->LayerForName(layer_name);
+		if(layer != NULL) {
+			uint lastpage_idx = (uint)doc->NumberOfPages() - 1;
+			PPPage *tar_page = doc->PageAtIndex(lastpage_idx);
+			PPLayer *new_layer = (PPLayer *)layer->Copy();
+			tar_page->AddLayer(layer_name, new_layer);
+		}
+	}
+}
 ////////////////////////////////// End of Layer(OC) Related Methods
 /////////////////////////////////////////////////////////////////////
 

@@ -80,6 +80,7 @@ public:
 	// Element Related Methods
 	////////////////////////////////////////////////////////////////////////////////////////////////
     void AddElement(PPElement *element);
+	void InsertElement(PPElement *element, int dir);
 	void WriteElement(PPElement *element);
 	void WritePlacedElement(PPElement *element);
 	size_t NumberOfElements();

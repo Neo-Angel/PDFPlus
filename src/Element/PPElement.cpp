@@ -41,6 +41,7 @@ const char *PPRT_PROPERTIES = "Properties";
 PPElement::PPElement(PPContext *gcontext)
 {
     _gstate = gcontext->NewGState();
+	_gstate->_parent = this;
 	_parentForm = gcontext->_parentForm;
 	_gflag = PPGF_NONE;
 	_bounds = PPRect(0,0,0,0);
@@ -49,6 +50,7 @@ PPElement::PPElement(PPContext *gcontext)
 PPElement::PPElement(PPGState *gstate)
 {
 	_gstate = (PPGState *)gstate->Copy();
+	_gstate->_parent = this;
 	_parentForm = NULL;
 	_gflag = PPGF_NONE;
 	_bounds = PPRect(0,0,0,0);
@@ -90,8 +92,17 @@ void PPElement::CopyMembersTo(PPBase *obj)
 	PPBase::CopyMembersTo(obj);
 	PPElement *ret_el = (PPElement *)obj;
 
-	if(_gstate)
+	if(_gstate) {
 		ret_el->_gstate = (PPGState *)_gstate->Copy();
+		ret_el->_gstate->_parent = ret_el;
+		PPDocument *tar_doc = ret_el->Document();
+		if(tar_doc != this->Document()) {
+			if(_gstate->_dictName.length() > 0) {
+				PPIndirectObj *obj = _parentForm->ResourceObjForName(_gstate->_dictName, "ExtGState");
+
+			}
+		}
+	}
     ret_el->_gflag = _gflag;
 	ret_el->_bounds = _bounds;
 }

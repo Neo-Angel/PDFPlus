@@ -92,6 +92,7 @@ void PPEText::AddCommand(PPTCommand *cmd)
 void PPEText::SetGContext(PPContext *gcontext)
 {
 	_gstate = gcontext->NewGState();
+	_gstate->_parent = this;
 }
 
 string PPEText::XMLString(int level)

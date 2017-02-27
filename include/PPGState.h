@@ -37,9 +37,14 @@ enum PPGStateFlag {
     PPGF_SETSTROKECOLORN    = 0x00040000
 };
 
+class PPElement;
+
+
 // Graphic Context의 상태정보를 담고있다.
 class PPGState : public PPBase {
 public:
+	PPElement *	_parent;
+
     float       _lineWidth;
     string       _intent;
     float       _flatness;

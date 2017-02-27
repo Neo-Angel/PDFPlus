@@ -457,9 +457,9 @@ bool PPTStream::ParseObjStm(vector<PPToken *> &token_list, PPParser *parser)
     nums_cstr[first] = '\0';
     
     string nums_str = nums_cstr;
-    
+     
     vector<string> str_list;
-    PPComponentsSepratedByChar(nums_str, ' ', str_list);
+    PPComponentsSepratedByChar(nums_str, ' ', '\n',  str_list);
     size_t num_idx = 0;
     _cur_pos = first_num->intValue();
     for (int i=0; i<cnt; i++) {
