@@ -1092,6 +1092,28 @@ PPToken *PPDocument::ResourceForExtObjNum(int num)
 	return ret_token;
 }
 
+PPTIndirectObj *PPDocument::MoveObjFrom(PPTIndirectObj *org_obj, PPDocument *src_doc)
+{
+	PPTIndirectObj *copied_obj = NULL;
+	int src_id = src_doc->_docID << 24;
+	src_id += org_obj->_objNum;
+
+	// 이전에 처리된 적이 있는 지 확인
+	copied_obj = this->_srcIndirectObjs[src_id];
+
+	if(!copied_obj) {
+		copied_obj = (PPTIndirectObj *)org_obj->Copy();
+		copied_obj->MoveInto(this);
+
+		int new_obj_num = this->NewObjNum();
+		this->PushObj(copied_obj, new_obj_num);
+		copied_obj->_objNum = new_obj_num;
+		this->_srcIndirectObjs[src_id] = copied_obj;
+	}
+	return copied_obj;
+}
+
+
 // Query Methods
 ///////////////////////////////////////////////////////////////////
 PPToken *PPDocument::XObjectForKey(int key)
@@ -1562,7 +1584,7 @@ void PPDocument::CopyLayerToDocument(string layer_name, PPDocument *doc)
 		PPLayer *layer = src_page->LayerForName(layer_name);
 		if(layer != NULL) {
 			PPPage *tar_page = doc->PageAtIndex(i);
-			PPLayer *new_layer = (PPLayer *)layer->Copy();
+			PPLayer *new_layer = (PPLayer *)layer->Copy(tar_page);
 			tar_page->AddLayer(layer_name, new_layer);
 		}
 
@@ -1592,7 +1614,7 @@ void PPDocument::CopyAndAddLayerToDocument(string layer_name, uint idx, uint req
 		if(layer != NULL) {
 			uint lastpage_idx = (uint)doc->NumberOfPages() - 1;
 			PPPage *tar_page = doc->PageAtIndex(lastpage_idx);
-			PPLayer *new_layer = (PPLayer *)layer->Copy();
+			PPLayer *new_layer = (PPLayer *)layer->Copy(tar_page);
 			tar_page->AddLayer(layer_name, new_layer);
 		}
 	}

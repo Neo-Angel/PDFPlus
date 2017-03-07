@@ -49,7 +49,7 @@ PPElement::PPElement(PPContext *gcontext)
 
 PPElement::PPElement(PPGState *gstate)
 {
-	_gstate = (PPGState *)gstate->Copy();
+	_gstate = (PPGState *)gstate->Copy(this);
 	_gstate->_parent = this;
 	_parentForm = NULL;
 	_gflag = PPGF_NONE;
@@ -87,19 +87,35 @@ void PPElement::WillAddToParent(PPFormBase *form)
     
 }
 
+PPBase *PPElement::Copy(PPFormBase *tar_form)
+{
+	PPElement *new_obj = (PPElement *)this->Create();
+	new_obj->_parentForm = tar_form;
+	new_obj->_clone = this;
+	CopyMembersTo(new_obj);
+
+	return new_obj;
+}
+
 void PPElement::CopyMembersTo(PPBase *obj)
 {
 	PPBase::CopyMembersTo(obj);
 	PPElement *ret_el = (PPElement *)obj;
 
 	if(_gstate) {
-		ret_el->_gstate = (PPGState *)_gstate->Copy();
+		ret_el->_gstate = (PPGState *)_gstate->Copy(ret_el);
 		ret_el->_gstate->_parent = ret_el;
 		PPDocument *tar_doc = ret_el->Document();
 		if(tar_doc != this->Document()) {
 			if(_gstate->_dictName.length() > 0) {
-				PPIndirectObj *obj = _parentForm->ResourceObjForName(_gstate->_dictName, "ExtGState");
-
+				PPTIndirectObj *rsc_obj = _parentForm->ResourceObjForName(_gstate->_dictName, "ExtGState");
+				if(rsc_obj) {
+					PPTIndirectObj *new_obj = tar_doc->MoveObjFrom(rsc_obj, this->Document());
+					PPTIndirectRef *new_ref = ret_el->_parentForm->AddResourceRef(new_obj->_objNum, _gstate->_dictName, "ExtGState");
+					if(new_ref) {
+						new_obj->AddRefObj(new_ref);
+					}
+				}
 			}
 		}
 	}
@@ -225,3 +241,4 @@ void PPElement::SetTransform(PPMatrix *mtx)
 {
 	_gstate->SetMatrix(*mtx);
 }
+

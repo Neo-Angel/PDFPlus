@@ -9,11 +9,13 @@
 PPLayer::PPLayer()
 {
 	_layer_dict = NULL;
+	_parent = NULL;
 }
 
 PPLayer::PPLayer(PPTDictionary *layer_dict)
 {
 	_layer_dict = layer_dict;
+	_parent = NULL;
 }
 
 
@@ -91,12 +93,19 @@ void PPLayer::CopyMembersTo(PPBase *obj)
 	//이전 _document(출처)를 가지고 있는다.
 	layer->_properties = _properties; 
 	layer->_layer_dict = _layer_dict;
-	layer->_parent = _parent;
+//	layer->_parent = _parent;
 
 	uint icnt = (uint)_elements.size();
 	for(uint i=0;i<icnt;i++) {
 		PPElement *el = _elements[i];
-		PPElement *new_el = (PPElement *)el->Copy();
+		PPElement *new_el;
+		if(layer->_parent != NULL) {
+			new_el = (PPElement *)el->Copy(layer->_parent);
+		}
+		else {
+			new_el = (PPElement *)el->Copy();
+		}
+		 
 		if(new_el->Type() == PPET_BEGIN_MARKED_CONTENT) {
 			PPEBeginMarkedContent *begin_mark_el = (PPEBeginMarkedContent *)new_el;
 			string *new_name = new string(_properties);
@@ -105,4 +114,15 @@ void PPLayer::CopyMembersTo(PPBase *obj)
 		layer->_elements.push_back(new_el);
 	}
 
+}
+
+// 객체를 복사하기위한 기반함수. 상속할 팔요는 없음
+PPBase *PPLayer::Copy(PPFormBase *tar_form)
+{
+	PPLayer *new_obj = (PPLayer *)this->Create();
+	new_obj->_parent = tar_form;
+	new_obj->_clone = this;
+	CopyMembersTo(new_obj);
+
+	return new_obj;
 }

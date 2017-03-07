@@ -85,19 +85,19 @@ void PPTIndirectRef::MoveInto(PPDocument *doc)
 		copied_obj = doc->_srcIndirectObjs[src_id];
 //	}
 	if(!copied_obj) {
-		PPTIndirectObj *tar_obj = (PPTIndirectObj *)_document->ObjectForNumber(_objNum);
-		if(!tar_obj)
+		PPTIndirectObj *org_obj = (PPTIndirectObj *)_document->ObjectForNumber(_objNum);
+		if(!org_obj)
 			return;
 		PPToken *clone_token = (PPToken *)_clone;
 		PPTIndirectObj *clone_parent = clone_token->_parentObj;
-		if(clone_parent != NULL && tar_obj == clone_parent->_parentObj) {
+		if(clone_parent != NULL && org_obj == clone_parent->_parentObj) {
 			PPTIndirectObj *pObj = _parentObj->GetParentObj();
 			if(pObj) {
 				_objNum = pObj->_objNum;
 			}
 			return;
 		}
-		copied_obj = (PPTIndirectObj *)tar_obj->Copy();
+		copied_obj = (PPTIndirectObj *)org_obj->Copy();
 		copied_obj->MoveInto(doc);
 
 		int new_obj_num = doc->NewObjNum();

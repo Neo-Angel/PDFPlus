@@ -102,6 +102,7 @@ public:
 	PPTDictionary *ResourceDictForKey(string key);
 	PPTIndirectObj *ResourceObjForName(string name, string resource_type);
 	string NameFromResourceObj(PPTIndirectObj *obj, string resource_type);
+	PPTIndirectRef *AddResourceRef(int ref_num, string name, string resource_type);
 
 	bool HasElements() {return (NumberOfElements() > 0 ? true : false);}
 

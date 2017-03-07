@@ -245,6 +245,22 @@ string PPFormBase::NameFromResourceObj(PPTIndirectObj *obj, string resource_type
 	return pname;
 }
 
+PPTIndirectRef *PPFormBase::AddResourceRef(int ref_num, string name, string resource_type)
+{
+	PPTDictionary *rsc_dict = ResourceDictForKey(resource_type);
+	if(rsc_dict == NULL) {
+		rsc_dict = new PPTDictionary(_document);
+		_resourceDict->SetTokenAndKey(rsc_dict, resource_type);
+	}
+	PPTIndirectRef *rsc_ref = (PPTIndirectRef *)rsc_dict->ObjectForKey(name);
+	if(rsc_ref == NULL) {
+		rsc_ref = new PPTIndirectRef(_document, ref_num, 0);
+		rsc_dict->SetTokenAndKey(rsc_ref, name);
+		return rsc_ref;
+	}
+	return NULL;
+}
+
 ///////////////////////////////////////////////////////////////////////
 // Layer 관련 함수들
 ///////////////////////////////////////////////////////////////////////

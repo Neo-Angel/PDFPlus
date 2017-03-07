@@ -28,6 +28,7 @@ public:
 
 	void Merge(PPLayer *layer);
 
+	PPBase *Copy(PPFormBase *tar_form);
 	void CopyMembersTo(PPBase *obj) ;
 	PPClassType ClassType() {return PPTN_LAYER;}
 	PPBase *Create() {return new PPLayer();}
