@@ -1092,6 +1092,50 @@ PPToken *PPDocument::ResourceForExtObjNum(int num)
 	return ret_token;
 }
 
+PPTIndirectObj *PPDocument::MoveObjFrom(PPTIndirectObj *org_obj, PPDocument *src_doc)
+{
+	PPTIndirectObj *copied_obj = NULL;
+	int src_id = src_doc->_docID << 24;
+	src_id += org_obj->_objNum;
+
+	// 이전에 처리된 적이 있는 지 확인
+	copied_obj = this->_srcIndirectObjs[src_id];
+
+	if(!copied_obj) {
+		copied_obj = (PPTIndirectObj *)org_obj->Copy();
+		copied_obj->MoveInto(this);
+
+		int new_obj_num = this->NewObjNum();
+		this->PushObj(copied_obj, new_obj_num);
+		copied_obj->_objNum = new_obj_num;
+		this->_srcIndirectObjs[src_id] = copied_obj;
+	}
+	return copied_obj;
+}
+
+// 재귀호출 방식으로 동작함으로서 org_obj 하부의 모든 IndirectObj들을 처리함
+/*
+PPTIndirectObj *PPDocument::MoveObjFromRe(PPTIndirectObj *org_obj, PPDocument *src_doc)
+{
+	PPTIndirectObj *copied_obj = NULL;
+	int src_id = src_doc->_docID << 24;
+	src_id += org_obj->_objNum;
+
+	// 이전에 처리된 적이 있는 지 확인
+	copied_obj = this->_srcIndirectObjs[src_id];
+
+	if(!copied_obj) {
+		copied_obj = (PPTIndirectObj *)org_obj->Copy(); //org_obj는 src_doc 소속임
+		copied_obj->MoveInto(this);
+
+		int new_obj_num = this->NewObjNum();
+		this->PushObj(copied_obj, new_obj_num);
+		copied_obj->_objNum = new_obj_num;
+		this->_srcIndirectObjs[src_id] = copied_obj;
+	}
+	return copied_obj;
+}
+*/
 // Query Methods
 ///////////////////////////////////////////////////////////////////
 PPToken *PPDocument::XObjectForKey(int key)
@@ -1556,20 +1600,48 @@ void PPDocument::CopyLayerToDocument(string layer_name, PPDocument *doc)
 	uint i;
 	for(i=0;i<page_cnt;i++) {
 		PPPage *src_page = this->PageAtIndex(i);
+		if(doc->NumberOfPages() <= i) {
+            PPRect prect = src_page->MediaBox();
+            doc->AddNewPage(prect);
+        }
 		PPLayer *layer = src_page->LayerForName(layer_name);
 		if(layer != NULL) {
-			if(doc->NumberOfPages() <= i) {
-                PPRect prect = src_page->MediaBox();
-				doc->AddNewPage(prect);
-			}
 			PPPage *tar_page = doc->PageAtIndex(i);
-			PPLayer *new_layer = (PPLayer *)layer->Copy();
+			PPLayer *new_layer = (PPLayer *)layer->Copy(tar_page);
 			tar_page->AddLayer(layer_name, new_layer);
 		}
 
 	}
 }
 
+void PPDocument::CopyAndAddLayerToDocument(string layer_name, uint idx, uint req_cnt, PPDocument *doc)
+{
+	PPTIndirectObj *layer_obj = doc->LayerObjForName(layer_name);
+	if(layer_obj == NULL) {
+		doc->AddLayer(layer_name);
+		layer_obj = doc->LayerObjForName(layer_name);
+	}
+	uint page_cnt = (uint)this->NumberOfPages();
+	if(page_cnt < idx+req_cnt) {
+		req_cnt = page_cnt - idx;
+		if(req_cnt <= 0) {
+			// Page Number Bounding Error
+			return;
+		}
+	}
+	uint i;
+	for(i=0;i<req_cnt;i++) {
+		PPPage *src_page = this->PageAtIndex(idx+i);
+		doc->AddNewPage(src_page->MediaBox());
+		PPLayer *layer = src_page->LayerForName(layer_name);
+		if(layer != NULL) {
+			uint lastpage_idx = (uint)doc->NumberOfPages() - 1;
+			PPPage *tar_page = doc->PageAtIndex(lastpage_idx);
+			PPLayer *new_layer = (PPLayer *)layer->Copy(tar_page);
+			tar_page->AddLayer(layer_name, new_layer);
+		}
+	}
+}
 ////////////////////////////////// End of Layer(OC) Related Methods
 /////////////////////////////////////////////////////////////////////
 

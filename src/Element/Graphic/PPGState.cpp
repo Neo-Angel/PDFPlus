@@ -6,6 +6,7 @@
 #include "PPMatrix.h"
 #include "PPCommandParser.h"
 #include "PPTName.h"
+#include "PPElement.h"
 
 extern PPCommandInfo PPCommandList[];
 string PPTabStr(int cnt);
@@ -306,6 +307,45 @@ string PPGState::MakeCommandString()
     retstr = ostr.str();
     return retstr;
 }
+
+void PPGState::MoveColorTo(PPColor *color, PPFormBase *tar_form)
+{
+//	if(color->_colorSpaceName != "DeviceCMYK") {
+//		cout << "ColorSpaceName is not DeviceCMYK" << PP_ENDL;
+//	}
+
+	PPFormBase *parent_form = this->_parent->_parentForm;
+	PPTIndirectObj *rsc_obj = parent_form->ResourceObjForName(color->_userColorSpaceName, "ColorSpace");
+	if(rsc_obj) {
+		PPDocument *tar_doc = tar_form->_document;
+		PPTIndirectObj *new_obj = tar_doc->MoveObjFrom(rsc_obj, parent_form->_document);
+		PPTIndirectRef *new_ref = tar_form->AddResourceRef(new_obj->_objNum, color->_userColorSpaceName, "ColorSpace");
+		if(new_ref) {
+			new_obj->AddRefObj(new_ref);
+		}
+	}
+}
+
+PPBase *PPGState::Copy()
+{
+	PPGState *new_obj = (PPGState *)this->Create();
+	new_obj->_parent = NULL;
+	new_obj->_clone = this;
+	CopyMembersTo(new_obj);
+
+	return new_obj;
+}
+
+PPBase *PPGState::Copy(PPElement *tar_element)
+{
+	PPGState *new_obj = (PPGState *)this->Create();
+	new_obj->_parent = tar_element;
+	new_obj->_clone = this;
+	CopyMembersTo(new_obj);
+
+	return new_obj;
+}
+
 void PPGState::CopyMembersTo(PPBase *obj)
 {
 	PPBase::CopyMembersTo(obj);
@@ -322,7 +362,22 @@ void PPGState::CopyMembersTo(PPBase *obj)
     // needs to delete
     ret_gstate->SetDash(_dash);
     ret_gstate->SetMatrix(_matrix);
+	if(ret_gstate->_parent != NULL && _strokeColor._userColorSpaceName.length() > 0) {
+		PPDocument *tar_doc = ret_gstate->_parent->_parentForm->_document;
+		PPDocument *this_doc = this->_parent->_parentForm->_document;
+		if(tar_doc != this_doc) {
+			this->MoveColorTo(&_strokeColor, ret_gstate->_parent->_parentForm);
+		}
+	}
     ret_gstate->SetStrokeColor(_strokeColor);
+
+	if(ret_gstate->_parent != NULL && _fillColor._userColorSpaceName.length() > 0) {
+		PPDocument *tar_doc = ret_gstate->_parent->_parentForm->_document;
+		PPDocument *this_doc = this->_parent->_parentForm->_document;
+		if(tar_doc != this_doc) {
+			this->MoveColorTo(&_fillColor, ret_gstate->_parent->_parentForm);
+		}
+	}
     ret_gstate->SetFillColor(_fillColor);
     
     ret_gstate->SetGFlags(_gflag);

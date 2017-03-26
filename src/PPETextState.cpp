@@ -24,9 +24,25 @@ void PPETextState::CopyMembersTo(PPBase *obj)
 
 	icnt = _fontKeyList.size();
 	for(i=0;i<icnt;i++) {
-		string *src_obj = _fontKeyList.at(i);
-		string *new_obj = new string(*src_obj);
-		tar_obj->_fontKeyList.push_back(new_obj);
+		string *src_fkey = _fontKeyList.at(i);
+		string *new_fkey = new string(*src_fkey);
+		tar_obj->_fontKeyList.push_back(new_fkey);
+
+		PPDocument *tar_doc = tar_obj->_parentForm->_document;
+		PPDocument *this_doc = this->_parentForm->_document;
+		if(tar_doc !=  this_doc && new_fkey->length() > 0) {
+			PPTIndirectObj *rsc_obj = _parentForm->ResourceObjForName(*new_fkey, "Font");
+			if(rsc_obj) {
+				// this->Document() 에 있는 rsc_obj를 tar_doc에 복사해 넣음
+				// 복사할 때 rsc_obj의 objNum를 tar_doc에 맞춰서 변경함.
+				PPTIndirectObj *new_obj = tar_doc->MoveObjFrom(rsc_obj, this->Document());
+				PPTIndirectRef *new_ref = tar_obj->_parentForm->AddResourceRef(new_obj->_objNum, *new_fkey, "Font");
+				if(new_ref) {
+					new_obj->AddRefObj(new_ref);
+				}
+			}
+		}
+
 	}
 
 }
@@ -74,6 +90,7 @@ void PPETextState::AddCommand(PPTCommand *cmd)
 void PPETextState::SetGContext(PPContext *gcontext)
 {
 	_gstate = gcontext->NewGState();
+	_gstate->_parent = this;
 }
 
 string PPETextState::XMLString(int level)

@@ -98,6 +98,8 @@ public:
 	virtual string CommandString();
 
 	PPBase *Create() {return new PPElement();}
+	PPBase *Copy(PPFormBase *tar_form);
+	PPBase *Copy(){return PPBase::Copy();}
 	void CopyMembersTo(PPBase *obj);
 
 	PPGState *GetGState(){return _gstate;}

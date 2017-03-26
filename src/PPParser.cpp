@@ -81,8 +81,38 @@ bool isMiddleNumberRange(char ch)
     }
     return false;
 }
+ 
+int strfind(string &str, char ch1, char ch2, int start = 0) {
+	size_t slen = str.length();
+	int i;
+	for(i=start;i<slen;i++) {
+		char ch = str[i];
+		if(ch == ch1 || ch == ch2) {
+			return i;
+		}
+	}
+	return (int)string::npos;
+}
+
 // str을 ch를 기준으로 문자열들을 나누어 줌
 // 나누어진 문자열들은 components에 담아서 넘겨줌.
+size_t PPComponentsSepratedByChar(string &str, char ch1, char ch2, vector<string> &components)
+{
+    int start = 0;
+    int idx = strfind(str, ch1, ch2);
+    while (idx != string::npos) {
+        string substr = str.substr(start, idx - start);
+        components.push_back(substr);
+        start = idx+1;
+        idx = strfind(str, ch1, ch2, start);
+    }
+    size_t end = str.size();
+    string substr = str.substr(start, end - start);
+    components.push_back(substr);
+    
+    return components.size();
+}
+
 size_t PPComponentsSepratedByChar(string &str, char ch, vector<string> &components)
 {
     size_t start = 0;
@@ -99,7 +129,6 @@ size_t PPComponentsSepratedByChar(string &str, char ch, vector<string> &componen
     
     return components.size();
 }
-
 
 //////////////////////////////////////////////////////////////////////////////
 // PPParser 클래스의 메소드들

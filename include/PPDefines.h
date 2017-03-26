@@ -76,12 +76,13 @@ string PPToHexStr(string &str);
 // str 을 ch를 기준으로 분리하여 components에 나눈다. 리턴값은 components.size() 이다.
 // (PPParser.cpp)
 size_t PPComponentsSepratedByChar(string &str, char ch, vector<string> &components);
-
+size_t PPComponentsSepratedByChar(string &str, char ch1, char ch2, vector<string> &components);
 
 // UTF8 Converting
 void PPwstrToUtf8(const wstring& src, string& dest);
 string PPwstrToUtf8(const wstring& str);
 void PPstringToWString(string &src_str, wstring &dest_wstr);
+void PPstringToWString2(string &src_str, wstring &dest_wstr);
 void PPstringToUTF8String(string &src_str, string &dest_utf8str);
 bool PPCompareUnicodeString(string str1, string str2);
 

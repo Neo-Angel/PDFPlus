@@ -141,8 +141,17 @@ bool PPTIndirectObj::IsStream()
     PPTName *filter = (PPTName *)dict->ObjectForKey("Filter");
 
     if (filter != NULL) {
-		if(filter->ClassType() == PPTN_NAME && *filter->_name == "FlateDecode") {
-			return true;
+		if(filter->ClassType() == PPTN_NAME) {
+			if(*filter->_name == "FlateDecode") {
+				return true;
+			}
+			else if(*filter->_name == "DCTDecode") {
+				return true;
+			}
+			else {
+				cout << "Unknown stream type '" << *filter->_name << "'." << PP_ENDL;
+				return false;
+			}
 		}
 		else {
 			PPTArray *filter_list = (PPTArray *)filter;

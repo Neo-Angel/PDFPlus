@@ -37,9 +37,15 @@ enum PPGStateFlag {
     PPGF_SETSTROKECOLORN    = 0x00040000
 };
 
+class PPElement;
+class PPFormBase;
+
+
 // Graphic Context의 상태정보를 담고있다.
 class PPGState : public PPBase {
 public:
+	PPElement *	_parent;
+
     float       _lineWidth;
     string       _intent;
     float       _flatness;
@@ -62,7 +68,10 @@ public:
     PPGState();
 	PPBase *Create() {return new PPGState();}
 
+	PPBase *Copy();
+	PPBase *Copy(PPElement *tar_element);
 	void CopyMembersTo(PPBase *obj);
+	void MoveColorTo(PPColor *color, PPFormBase *tar_form);
 
 	void SetLineWidth(float v);
     float LineWidth(){return _lineWidth;}

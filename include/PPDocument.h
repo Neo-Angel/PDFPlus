@@ -202,7 +202,7 @@ public:
 	bool									IsMergedDoc(PPDocument *doc);
 	void									ImportOCGsFrom(PPDocument *doc);
 	void									CopyLayerToDocument(string layer_name, PPDocument *doc);
-
+	void									CopyAndAddLayerToDocument(string layer_name, uint idx, uint req_cnt, PPDocument *doc);
 
 	// Query methods
 	////////////////////////////////////////////////////////////////////////////////////////////////
@@ -249,6 +249,7 @@ public:
 	PPToken *								ResourceForExtObjNum(int num);
 	PPTIndirectObj *						AddResource(PPToken *rcs,  int num) ;
 	PPTIndirectObj *						WriteResource(PPToken *rsc, int obj_num); // return copied resource.
+	PPTIndirectObj *						MoveObjFrom(PPTIndirectObj *src_obj, PPDocument *src_doc);
 
 	//  Image Related Methods   
 	PPTIndirectObj *						ImageObjFromPath(string path);
