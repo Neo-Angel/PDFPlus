@@ -273,16 +273,26 @@ PPLayer *PPFormBase::AddLayerWithProperties(string property_name)
 	PPTDictionary *layer_dict = (PPTDictionary *)properties_dict->ValueObjectForKey(property_name);
 	if(layer_dict) {
 		PPTString *str_obj = (PPTString *)layer_dict->ObjectForKey("Name");
-		string *layer_name = str_obj->_string;
-		PPLayer *layer = this->LayerForName(*layer_name);
-		if(layer == NULL) {
-			layer = new PPLayer();
-			layer->_layer_dict = layer_dict;
-			layer->_properties = property_name;
-			layer->_parent = this;
-			_layers.push_back(layer);
-		}
-		return layer;
+        if(str_obj) {
+            string *layer_name = str_obj->_string;
+            PPLayer *layer = this->LayerForName(*layer_name);
+            if(layer == NULL) {
+                layer = new PPLayer();
+                layer->_layer_dict = layer_dict;
+                layer->_properties = property_name;
+                layer->_parent = this;
+                _layers.push_back(layer);
+            }
+            return layer;
+        }
+        PPTDictionary *meta_dict = (PPTDictionary *)layer_dict->ValueObjectForKey("Metadata");
+        if(meta_dict) {
+            PPTIndirectObj *meta_obj = (PPTIndirectObj *)meta_dict->ValueObjectForKey("Metadata");
+            if(meta_obj) {
+                cout << "'" << property_name << "' has Metadata!" << PP_ENDL;
+            }
+        }
+        
 	}
 	return NULL;
 }
