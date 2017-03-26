@@ -1559,7 +1559,8 @@ void PPDocument::CopyLayerToDocument(string layer_name, PPDocument *doc)
 		PPLayer *layer = src_page->LayerForName(layer_name);
 		if(layer != NULL) {
 			if(doc->NumberOfPages() <= i) {
-				doc->AddNewPage(src_page->MediaBox());
+                PPRect prect = src_page->MediaBox();
+				doc->AddNewPage(prect);
 			}
 			PPPage *tar_page = doc->PageAtIndex(i);
 			PPLayer *new_layer = (PPLayer *)layer->Copy();
