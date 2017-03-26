@@ -110,6 +110,8 @@ void PPElement::CopyMembersTo(PPBase *obj)
 			if(_gstate->_dictName.length() > 0) {
 				PPTIndirectObj *rsc_obj = _parentForm->ResourceObjForName(_gstate->_dictName, "ExtGState");
 				if(rsc_obj) {
+					// this->Document() 에 있는 rsc_obj를 tar_doc에 복사해 넣음
+					// 복사할 때 rsc_obj의 objNum를 tar_doc에 맞춰서 변경함.
 					PPTIndirectObj *new_obj = tar_doc->MoveObjFrom(rsc_obj, this->Document());
 					PPTIndirectRef *new_ref = ret_el->_parentForm->AddResourceRef(new_obj->_objNum, _gstate->_dictName, "ExtGState");
 					if(new_ref) {

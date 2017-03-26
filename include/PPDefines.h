@@ -82,6 +82,7 @@ size_t PPComponentsSepratedByChar(string &str, char ch1, char ch2, vector<string
 void PPwstrToUtf8(const wstring& src, string& dest);
 string PPwstrToUtf8(const wstring& str);
 void PPstringToWString(string &src_str, wstring &dest_wstr);
+void PPstringToWString2(string &src_str, wstring &dest_wstr);
 void PPstringToUTF8String(string &src_str, string &dest_utf8str);
 bool PPCompareUnicodeString(string str1, string str2);
 

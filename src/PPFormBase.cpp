@@ -42,6 +42,7 @@
 ////////////////////////////////////////////////////////////////////////////
 PPFormBase::PPFormBase():_graphicParser((vector <PPToken *> *)&_commands) // _graphicParser 초기화
 {
+	_parentForm = NULL;
 	_document = NULL;
 	_cur_element_idx = 0; // iterating 용 
 	_indirObj = NULL;
@@ -58,6 +59,7 @@ PPFormBase::PPFormBase():_graphicParser((vector <PPToken *> *)&_commands) // _gr
 
 PPFormBase::PPFormBase(PPFormBase *form_base):_graphicParser((vector <PPToken *> *)&_commands)
 {
+	_parentForm = NULL;
     _document = NULL; //  : this will be set when this added to document
 
 	_cur_element_idx = 0; // size_t 
@@ -79,6 +81,7 @@ PPFormBase::PPFormBase(PPDocument *doc, PPTIndirectObj *indir):_graphicParser((v
 	PPLayer *layer = new PPLayer();
 	_layers.push_back(layer);
 
+	_parentForm = NULL;
 	_document = doc;
 	_indirObj = indir; 
 	_formDict = _indirObj->FirstDictionary();

@@ -1,4 +1,4 @@
-
+﻿
 #include <sstream>
 #include "PPEForm.h"
 #include "PPTName.h"
@@ -32,8 +32,25 @@ void PPEForm::CopyMembersTo(PPBase *obj)
 	PPEForm *tar_obj = (PPEForm *)obj;
 	if(_name)
 		tar_obj->_name = (PPTName *)_name->Copy();
-	if(_xobj)
-		tar_obj->_xobj = (PPTIndirectObj *)_xobj->Copy();
+//	if(_xobj)
+//		tar_obj->_xobj = (PPTIndirectObj *)_xobj->Copy();
+
+	PPDocument *tar_doc = tar_obj->_parentForm->_document;
+	PPDocument *this_doc = this->_parentForm->_document;
+	if(tar_doc !=  this_doc && _name->_name->length() > 0) {
+		PPTIndirectObj *rsc_obj = _parentForm->ResourceObjForName(*_name->_name, "XObject");
+		if(rsc_obj) {
+			// this->Document() 에 있는 rsc_obj를 tar_doc에 복사해 넣음
+			// 복사할 때 rsc_obj의 objNum를 tar_doc에 맞춰서 변경함.
+			PPTIndirectObj *new_obj = tar_doc->MoveObjFrom(rsc_obj, this->Document());
+			PPTIndirectRef *new_ref = tar_obj->_parentForm->AddResourceRef(new_obj->_objNum, *_name->_name, "XObject");
+			if(new_ref) {
+				new_obj->AddRefObj(new_ref);
+			}
+			tar_obj->_xobj = new_obj;
+		}
+	}
+
 }
 
 void PPEForm::SetDocument(PPDocument *doc)
@@ -115,7 +132,7 @@ void PPEForm::WillAddToParent(PPFormBase *form)
 	if(xobj_ref->ClassType() == PPTN_INDIRECTREF) {
 		xobj_dict = (PPTDictionary *)xobj_ref->ValueObject();
 		if (!xobj_dict) {
-			cout << "Shading Dictionary not found..." << PP_ENDL;
+			cout << "Form Dictionary not found..." << PP_ENDL;
 			return;
 		}
 	}
@@ -124,12 +141,12 @@ void PPEForm::WillAddToParent(PPFormBase *form)
 	}
     xobj_ref = (PPTIndirectRef *)xobj_dict->ObjectForKey(*_name->_name);
     if (!xobj_ref) {
-        cout << "Shading IndirectRef not found..." << PP_ENDL;
+        cout << "Form IndirectRef not found..." << PP_ENDL;
         return;
     }
 	_xobj = (PPTIndirectObj *)xobj_ref->TargetObject();
     if (!_xobj) {
-        cout << "Shading Resource Object not found..." << PP_ENDL;
+        cout << "Form Resource Object not found..." << PP_ENDL;
         return;
 	}
 	xobj_dict = _xobj->FirstDictionary();

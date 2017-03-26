@@ -32,7 +32,7 @@ protected:
 	PPContext *_context;
 public:
 	PPTName *_form_key;
-
+	PPFormBase * _parentForm;
     PPDocument *_document;
     PPCommandParser _graphicParser;  // form 마다 있는 그래픽 스트림을 파싱하기 위함.
 

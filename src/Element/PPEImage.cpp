@@ -72,8 +72,27 @@ void PPEImage::CopyMembersTo(PPBase *obj)
 
 
 	tar_obj->_name = _name;
-	if(_xobj)
-		tar_obj->_xobj = (PPTIndirectObj *)_xobj->Copy();
+//	if(_xobj)
+//		tar_obj->_xobj = (PPTIndirectObj *)_xobj->Copy();
+
+
+	PPDocument *tar_doc = tar_obj->_parentForm->_document;
+	PPDocument *this_doc = this->_parentForm->_document;
+	if(tar_doc !=  this_doc && _name.length() > 0) {
+		PPTIndirectObj *rsc_obj = _parentForm->ResourceObjForName(_name, "XObject");
+		if(rsc_obj) {
+			// this->Document() 에 있는 rsc_obj를 tar_doc에 복사해 넣음
+			// 복사할 때 rsc_obj의 objNum를 tar_doc에 맞춰서 변경함.
+			PPTIndirectObj *new_obj = tar_doc->MoveObjFrom(rsc_obj, this->Document());
+			PPTIndirectRef *new_ref = tar_obj->_parentForm->AddResourceRef(new_obj->_objNum, _name, "XObject");
+			if(new_ref) {
+				new_obj->AddRefObj(new_ref);
+			}
+			tar_obj->_xobj = new_obj;
+		}
+	}
+
+
 //	if(_dict)
 //		tar_obj->_dict = (PPTDictionary *)_dict->Copy();
 //	if(_stream)

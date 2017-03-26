@@ -5,5 +5,7 @@ ipch
 PDFPlusLib_Win/PDFPlusLib_Win/Debug/*
 *.tlog
 PDFPlusLib_Win/PDFPlusLib_Win.opensdf
+PDFPlusLib_Win/PDFPlusLib_Win.sdf
 *.opensdf
 *.sdf
+

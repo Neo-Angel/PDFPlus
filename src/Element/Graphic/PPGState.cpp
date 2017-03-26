@@ -166,11 +166,11 @@ string PPGState::MakeCommandString()
     }
     if(_gflag & PPGF_LINECAP) {
         cinfo = &PPCommandList[PPC_LineCap];
-        ostr << _lineCap << " " << cinfo->command << PP_ENDL;
+        ostr << (int)_lineCap << " " << cinfo->command << PP_ENDL;
     }
     if(_gflag & PPGF_LINEJOIN) {
         cinfo = &PPCommandList[PPC_LineJoin];
-        ostr << _lineJoin << " " << cinfo->command << PP_ENDL;
+        ostr << (int)_lineJoin << " " << cinfo->command << PP_ENDL;
     }
     if(_gflag & PPGF_DICTNAME) {
         cinfo = &PPCommandList[PPC_DictName];

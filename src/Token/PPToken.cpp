@@ -111,6 +111,16 @@ void PPstringToWString(string &src_str, wstring &dest_wstr)
         dest_wstr.push_back(wch);
     }
 }
+void PPstringToWString2(string &src_str, wstring &dest_wstr)
+{
+    size_t i;
+    size_t icnt = src_str.size();
+    for (i=0; i<icnt; i++) {
+        wchar_t wch = (unsigned char)src_str[i];
+        dest_wstr.push_back(wch);
+    }
+}
+
 
 // 일반 string 을 utf8 string으로 변환함.
 void PPstringToUTF8String(string &src_str, string &dest_utf8str)

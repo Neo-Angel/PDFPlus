@@ -1113,7 +1113,29 @@ PPTIndirectObj *PPDocument::MoveObjFrom(PPTIndirectObj *org_obj, PPDocument *src
 	return copied_obj;
 }
 
+// 재귀호출 방식으로 동작함으로서 org_obj 하부의 모든 IndirectObj들을 처리함
+/*
+PPTIndirectObj *PPDocument::MoveObjFromRe(PPTIndirectObj *org_obj, PPDocument *src_doc)
+{
+	PPTIndirectObj *copied_obj = NULL;
+	int src_id = src_doc->_docID << 24;
+	src_id += org_obj->_objNum;
 
+	// 이전에 처리된 적이 있는 지 확인
+	copied_obj = this->_srcIndirectObjs[src_id];
+
+	if(!copied_obj) {
+		copied_obj = (PPTIndirectObj *)org_obj->Copy(); //org_obj는 src_doc 소속임
+		copied_obj->MoveInto(this);
+
+		int new_obj_num = this->NewObjNum();
+		this->PushObj(copied_obj, new_obj_num);
+		copied_obj->_objNum = new_obj_num;
+		this->_srcIndirectObjs[src_id] = copied_obj;
+	}
+	return copied_obj;
+}
+*/
 // Query Methods
 ///////////////////////////////////////////////////////////////////
 PPToken *PPDocument::XObjectForKey(int key)
