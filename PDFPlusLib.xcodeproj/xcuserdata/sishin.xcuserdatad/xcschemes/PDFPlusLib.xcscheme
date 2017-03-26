@@ -44,7 +44,7 @@
       allowLocationSimulation = "YES">
       <PathRunnable
          runnableDebuggingMode = "0"
-         FilePath = "/Users/sishin/pdftest/pdfplus">
+         FilePath = "/Users/sishin/Library/Developer/Xcode/DerivedData/pdfplus-fbyinqayulgolnarxrzbskflaghf/Build/Products/Debug/pdfplus">
       </PathRunnable>
       <MacroExpansion>
          <BuildableReference
@@ -57,7 +57,7 @@
       </MacroExpansion>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "/Users/sishin/bc.pdf"
+            argument = "/Users/sishin/PDF2/33/clone.pdf"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>

@@ -139,6 +139,49 @@ PPDocument::~PPDocument()
 /////////////////////////////////////////////////////////////////
 // Build Tokens
 /////////////////////////////////////////////////////////////////
+// *****
+
+void GatherLayerOrdersFromArray(PPTArray *token_array, PPTArray *layerOrders) 
+{
+	int i, icnt = (int)token_array->NumberOfTokens();
+	for(i=0;i<icnt;i++) {
+		PPToken *token = token_array->TokenAtIndex(i);
+		if(token->ClassType() == PPTN_INDIRECTREF) {
+			PPTIndirectRef *ref = (PPTIndirectRef *)token;
+			token = ref->ValueObject();
+			if(token->ClassType() == PPTN_DICTIONARY) {
+				PPTDictionary *dict = (PPTDictionary *)token;
+				PPTName *lname = (PPTName *)dict->ObjectForKey("Name");
+				if(lname != NULL) {
+					layerOrders->AddToken(ref);
+				}
+			}
+			else if(token->ClassType() == PPTN_ARRAY){
+				GatherLayerOrdersFromArray((PPTArray *)token, layerOrders);
+			}
+		}
+		else if(token->ClassType() == PPTN_STRING) {
+			PPTName *gname = (PPTName *)token;
+			cout << "OCG Group Name is '" << gname->_name << PP_ENDL;
+		}
+	}
+
+}
+
+PPTArray *GatherLayerOrders(PPTDictionary *d_dict)
+{
+	PPTArray *retArray = new PPTArray();
+
+	//retArray = (PPTArray *)d_dict->ValueObjectForKey("Order");
+	PPTIndirectObj *indir_obj = (PPTIndirectObj *)d_dict->IndirectObjectForKey("Order");
+	PPTArray *org_array = (PPTArray *)indir_obj->TokenAtIndex(0);
+	GatherLayerOrdersFromArray(org_array, retArray);
+	indir_obj->Clear();
+	indir_obj->AddToken(retArray);
+	return retArray;
+}
+
+
 
 // 기존 PDF 를 읽어서 읽어들인 토큰들로 도큐먼트를 구성함
 // 도큐먼트는 Document > Page(s) > Stream 구조가 된다. 
@@ -231,7 +274,8 @@ int PPDocument::buildDocument()
 	if(_OCProperties) {
 		PPTDictionary *d_dict = (PPTDictionary *)_OCProperties->ValueObjectForKey("D");
 		if(d_dict) {
-			_layerOrders = (PPTArray *)d_dict->ValueObjectForKey("Order");
+			//_layerOrders = (PPTArray *)d_dict->ValueObjectForKey("Order");
+			_layerOrders = GatherLayerOrders(d_dict);
 			_layersOn = (PPTArray *)d_dict->ValueObjectForKey("ON");
 			_layersOff = (PPTArray *)d_dict->ValueObjectForKey("OFF");
 		}

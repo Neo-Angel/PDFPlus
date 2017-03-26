@@ -273,16 +273,26 @@ PPLayer *PPFormBase::AddLayerWithProperties(string property_name)
 	PPTDictionary *layer_dict = (PPTDictionary *)properties_dict->ValueObjectForKey(property_name);
 	if(layer_dict) {
 		PPTString *str_obj = (PPTString *)layer_dict->ObjectForKey("Name");
-		string *layer_name = str_obj->_string;
-		PPLayer *layer = this->LayerForName(*layer_name);
-		if(layer == NULL) {
-			layer = new PPLayer();
-			layer->_layer_dict = layer_dict;
-			layer->_properties = property_name;
-			layer->_parent = this;
-			_layers.push_back(layer);
-		}
-		return layer;
+        if(str_obj) {
+            string *layer_name = str_obj->_string;
+            PPLayer *layer = this->LayerForName(*layer_name);
+            if(layer == NULL) {
+                layer = new PPLayer();
+                layer->_layer_dict = layer_dict;
+                layer->_properties = property_name;
+                layer->_parent = this;
+                _layers.push_back(layer);
+            }
+            return layer;
+        }
+        PPTDictionary *meta_dict = (PPTDictionary *)layer_dict->ValueObjectForKey("Metadata");
+        if(meta_dict) {
+            PPTIndirectObj *meta_obj = (PPTIndirectObj *)meta_dict->ValueObjectForKey("Metadata");
+            if(meta_obj) {
+                cout << "'" << property_name << "' has Metadata!" << PP_ENDL;
+            }
+        }
+        
 	}
 	return NULL;
 }
@@ -760,6 +770,8 @@ int PPFormBase::BuildElements()
 	PPETextState *textstate_element = NULL;
     PPEInlineImage *inline_img_element = NULL;
 
+	stack<PPElement *> mark_stack;
+
     size_t i = 0, icnt = _commands.size();
     while (i<icnt) {
         PPTCommand *cmd = _commands[i];
@@ -897,25 +909,28 @@ int PPFormBase::BuildElements()
 						if(properties->ClassType() == PPTN_NAME) {
 							PPTName *property_name = (PPTName *)properties;
 							PPLayer *layer = AddLayerWithProperties(*property_name->_name);
-							if(i < icnt-1) {
-								PPTCommand *next_cmd = _commands[i+1];
-								PPCommandGroup next_group = next_cmd->_cmdInfo->group;
-								// because illustrator has a bug.
-								if(next_group == PPCG_RestoreGState && _curLayer) {
-				                    gcontext.RestoreGState();
-								    PPEGRestore *grestore = new PPEGRestore(&gcontext);
-									this->InsertElement(grestore, -1);
-//				                    AddElement(grestore);
-									gcontext.ClearGFlags();
-									i++;
+							if(layer != NULL) {
+								if(i < icnt-1) {
+									PPTCommand *next_cmd = _commands[i+1];
+									PPCommandGroup next_group = next_cmd->_cmdInfo->group;
+									// because illustrator has a bug.
+									if(next_group == PPCG_RestoreGState && _curLayer) {
+									  gcontext.RestoreGState();
+									  PPEGRestore *grestore = new PPEGRestore(&gcontext);
+										this->InsertElement(grestore, -1);
+//										AddElement(grestore);
+										gcontext.ClearGFlags();
+										i++;
+									}
 								}
+								_curLayer = layer;
 							}
-							_curLayer = layer;
 						}
 					}
 					PPEBeginMarkedContent *marked_content_element = new PPEBeginMarkedContent(tag, properties, &gcontext);;
 					AddElement(marked_content_element);
 					gcontext.ClearGFlags();
+					mark_stack.push(marked_content_element);
                 }
                 break;
             case PPCG_MarkedContent:
@@ -928,19 +943,19 @@ int PPFormBase::BuildElements()
                 break;
             case PPCG_EndMarkedContent:
                 {
-							if(i < icnt-1) {
-								PPTCommand *next_cmd = _commands[i+1];
-								PPCommandGroup next_group = next_cmd->_cmdInfo->group;
-								// because illustrator has a bug.
-								if(next_group == PPCG_RestoreGState && _curLayer) {
-				                    gcontext.RestoreGState();
-								    PPEGRestore *grestore = new PPEGRestore(&gcontext);
-									this->AddElement(grestore);
-//				                    AddElement(grestore);
-									gcontext.ClearGFlags();
-									i++;
-								}
-							}
+					if(i < icnt-1) {
+						PPTCommand *next_cmd = _commands[i+1];
+						PPCommandGroup next_group = next_cmd->_cmdInfo->group;
+						// because illustrator has a bug.
+						if(next_group == PPCG_RestoreGState && _curLayer) {
+							gcontext.RestoreGState();
+							PPEGRestore *grestore = new PPEGRestore(&gcontext);
+							this->AddElement(grestore);
+//							AddElement(grestore);
+							gcontext.ClearGFlags();
+							i++;
+						}
+					}
 
                     PPEEndMarkedContent *marked_content_element = new PPEEndMarkedContent(&gcontext);
                     AddElement(marked_content_element);
