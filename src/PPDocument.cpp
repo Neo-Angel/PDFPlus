@@ -1601,7 +1601,8 @@ void PPDocument::CopyLayerToDocument(string layer_name, PPDocument *doc)
 	for(i=0;i<page_cnt;i++) {
 		PPPage *src_page = this->PageAtIndex(i);
 		if(doc->NumberOfPages() <= i) {
-			doc->AddNewPage(src_page->MediaBox());
+            PPRect prect = src_page->MediaBox();
+            doc->AddNewPage(prect);
 		}
 		PPLayer *layer = src_page->LayerForName(layer_name);
 		if(layer != NULL) {
@@ -1631,7 +1632,8 @@ void PPDocument::CopyAndAddLayerToDocument(string layer_name, uint idx, uint req
 	uint i;
 	for(i=0;i<req_cnt;i++) {
 		PPPage *src_page = this->PageAtIndex(idx+i);
-		doc->AddNewPage(src_page->MediaBox());
+        PPRect prect = src_page->MediaBox();
+        doc->AddNewPage(prect);
 		PPLayer *layer = src_page->LayerForName(layer_name);
 		if(layer != NULL) {
 			uint lastpage_idx = (uint)doc->NumberOfPages() - 1;
