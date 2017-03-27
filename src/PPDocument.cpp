@@ -174,10 +174,10 @@ PPTArray *GatherLayerOrders(PPTDictionary *d_dict)
 
 	//retArray = (PPTArray *)d_dict->ValueObjectForKey("Order");
 	PPTIndirectObj *indir_obj = (PPTIndirectObj *)d_dict->IndirectObjectForKey("Order");
-	PPTArray *org_array = (PPTArray *)indir_obj->TokenAtIndex(0);
-	GatherLayerOrdersFromArray(org_array, retArray);
-	indir_obj->Clear();
-	indir_obj->AddToken(retArray);
+    PPTArray *org_array = (PPTArray *)indir_obj->TokenAtIndex(0);
+    GatherLayerOrdersFromArray(org_array, retArray);
+    indir_obj->Clear();
+    indir_obj->AddToken(retArray);
 	return retArray;
 }
 

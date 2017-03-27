@@ -57,7 +57,7 @@
       </MacroExpansion>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "/Users/sishin/PDF2/33/clone.pdf"
+            argument = "/Users/sishin/PDF2/aa.pdf"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>
