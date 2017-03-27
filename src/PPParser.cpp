@@ -561,7 +561,8 @@ PPTStream *PPParser::parseStream(PPParserSource &source)
 //////////////////////////////////////////////////////////////////////////////
 PPTIndirectObj *PPParser::parseIndirectObj(PPParserSource &source, PPTNumber *num1, PPTNumber *num2)
 {
-    PPTIndirectObj *ret_obj = new PPTIndirectObj(_document, num1->intValue(), num2->intValue());
+	int int_num1 = num1->intValue();
+    PPTIndirectObj *ret_obj = new PPTIndirectObj(_document, int_num1, num2->intValue());
 
 	if(!ParseSource(source, ret_obj->TokenList(), ret_obj)) {
 		delete ret_obj;
