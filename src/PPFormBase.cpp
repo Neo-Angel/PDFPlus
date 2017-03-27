@@ -783,8 +783,11 @@ string PPFormBase::SubtypeFor(string name)
 PPTCommand *PPFormBase::NextGCommand2(size_t idx, size_t *ret_idx)
 {
 	PPTCommand *cmd = _commands[idx];
+	size_t max_idx = _commands.size();
 	while(cmd->_cmdInfo->code == PPC_EndMarkedContent) {
 		idx ++;
+		if(idx >= max_idx)
+			return NULL;
 		cmd = _commands[idx];
 	}
 	*ret_idx = idx;
@@ -795,8 +798,11 @@ PPTCommand *PPFormBase::NextGCommand2(size_t idx, size_t *ret_idx)
 PPTCommand *PPFormBase::NextGCommand(size_t idx, size_t *ret_idx)
 {
 	PPTCommand *cmd = _commands[idx];
+	size_t max_idx = _commands.size();
 	while(cmd->_cmdInfo->code == PPC_BeginMarkedContentP) {
 		idx ++;
+		if(idx >= max_idx)
+			return NULL;
 		cmd = _commands[idx];
 	}
 	*ret_idx = idx;
@@ -957,16 +963,18 @@ int PPFormBase::BuildElements()
 								if(i < icnt-1) {
 									size_t next_idx;
 									PPTCommand *next_cmd = NextGCommand(i+1,&next_idx); //_commands[i+1];
-									PPCommandGroup next_group = next_cmd->_cmdInfo->group;
-									// because illustrator has a bug.
-									if(next_group == PPCG_RestoreGState && _curLayer) {
-										gcontext.RestoreGState();
-										PPEGRestore *grestore = new PPEGRestore(&gcontext);
-										this->InsertElement(grestore, -1);
-//										AddElement(grestore);
-										gcontext.ClearGFlags();
-										_commands.erase(_commands.begin() + next_idx);
+									if(next_cmd) {
+										PPCommandGroup next_group = next_cmd->_cmdInfo->group;
+										// because illustrator has a bug.
+										if(next_group == PPCG_RestoreGState && _curLayer) {
+											gcontext.RestoreGState();
+											PPEGRestore *grestore = new PPEGRestore(&gcontext);
+											this->InsertElement(grestore, -1);
+//											AddElement(grestore);
+											gcontext.ClearGFlags();
+											_commands.erase(_commands.begin() + next_idx);
 										//i++;
+										}
 									}
 								}
 								_curLayer = layer;
@@ -992,16 +1000,18 @@ int PPFormBase::BuildElements()
 					if(i < icnt-1) {
 						size_t next_idx;
 						PPTCommand *next_cmd = NextGCommand2(i+1, &next_idx);//_commands[i+1];
-						PPCommandGroup next_group = next_cmd->_cmdInfo->group;
-						// because illustrator has a bug.
-						if(next_group == PPCG_RestoreGState && _curLayer) {
-							gcontext.RestoreGState();
-							PPEGRestore *grestore = new PPEGRestore(&gcontext);
-							this->AddElement(grestore);
-//							AddElement(grestore);
-							gcontext.ClearGFlags();
-							_commands.erase(_commands.begin() + next_idx);
-							//i++;
+						if(next_cmd) {
+							PPCommandGroup next_group = next_cmd->_cmdInfo->group;
+							// because illustrator has a bug.
+							if(next_group == PPCG_RestoreGState && _curLayer) {
+								gcontext.RestoreGState();
+								PPEGRestore *grestore = new PPEGRestore(&gcontext);
+								this->AddElement(grestore);
+//								AddElement(grestore);
+								gcontext.ClearGFlags();
+								_commands.erase(_commands.begin() + next_idx);
+								//i++;
+							}
 						}
 					}
 
