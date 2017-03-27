@@ -228,6 +228,9 @@ string PPTDictionary::PDFString()
         PPToken *token = (PPToken *)(it_token_objs->second);
 		if(name == "Length") {
 			cout << "Length = " << token->PDFString() << ";" << PP_ENDL;
+			if(token->PDFString() == "0") {
+				cout << "Error : Length is zero!!!" << PP_ENDL;
+			}
 		}
         retstr += token->PDFString();
         retstr += "\xa";

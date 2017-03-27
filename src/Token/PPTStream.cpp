@@ -220,6 +220,10 @@ string PPTStream::MakePDFString(unsigned long &length)
 				delete[] strm_buf;
 			}
 		}
+		else {
+			retstr.append(_streamData, _streamSize);
+			length = _streamSize;
+		}
 	}
     else {
         retstr.append(_streamData, _streamSize);

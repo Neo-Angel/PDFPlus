@@ -460,7 +460,7 @@ bool PPDocument::open(string filepath)
 			// 업데이트 해 주기 위해서 쓰인다.
             indir_obj->AddRefObj(indir_ref);
         else
-            cout << "Cannot fount IndirectRef of " << objnum << PP_ENDL;
+            cout << "Cannot fount IndirectObj of " << objnum << PP_ENDL;
     }
 
 	// 도큐먼트의 상태를 '오픈됨' 상태로
