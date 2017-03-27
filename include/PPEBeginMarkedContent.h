@@ -11,7 +11,7 @@
 //
 ///////////////////////////////////////////////////////////////
 class PPEBeginMarkedContent : public PPElement {
-    PPToken *_properties;
+    PPTName *_properties;
     PPTName * _tag;
     PPTIndirectObj *_OCGInfo;
 public:

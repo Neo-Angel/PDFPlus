@@ -105,12 +105,13 @@ void PPLayer::CopyMembersTo(PPBase *obj)
 		else {
 			new_el = (PPElement *)el->Copy();
 		}
-		 
+		 /*
 		if(new_el->Type() == PPET_BEGIN_MARKED_CONTENT) {
 			PPEBeginMarkedContent *begin_mark_el = (PPEBeginMarkedContent *)new_el;
 			string *new_name = new string(_properties);
 			begin_mark_el->SetPropertiesName(new_name);
 		}
+		*/
 		layer->_elements.push_back(new_el);
 	}
 

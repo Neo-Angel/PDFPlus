@@ -202,15 +202,25 @@ string PPTStream::XMLString(int level)
 string PPTStream::MakePDFString(unsigned long &length)
 {
     string retstr = "stream\xa";
-    PPTName *filter = (PPTName *)_infoDict->ObjectForKey("Filter");
-    if (_decoded && filter && *filter->_name == "FlateDecode") {
-        char *strm_buf;
-        length = FlateEncodeStream(&strm_buf);
-		if(length > 0 ) {
-			retstr.append(strm_buf, length);
-			delete[] strm_buf;
+    PPToken *filter_obj = _infoDict->ObjectForKey("Filter");
+	if(filter_obj) {
+		PPTName *filter = NULL;
+		if(filter_obj->ClassType() == PPTN_ARRAY) {
+			PPTArray *filter_arr = (PPTArray *)filter_obj;
+			filter = (PPTName *)filter_arr->TokenAtIndex(0);
 		}
-    }
+		else {
+			filter = (PPTName *)filter_obj;
+		}
+		if (_decoded && filter && *filter->_name == "FlateDecode") {
+			char *strm_buf;
+			length = FlateEncodeStream(&strm_buf);
+			if(length > 0 ) {
+				retstr.append(strm_buf, length);
+				delete[] strm_buf;
+			}
+		}
+	}
     else {
         retstr.append(_streamData, _streamSize);
 		length = _streamSize;
