@@ -92,6 +92,8 @@ public:
 	void ResetCurrentIndex() {_cur_element_idx = 0;}
 	PPElement *Next();
 	PPElement *First() {ResetCurrentIndex(); return Next();} 
+	PPTCommand *NextGCommand(size_t idx, size_t *next_idx);
+	PPTCommand *NextGCommand2(size_t idx, size_t *next_idx);
 
 	int ObjectNumber(){return _indirObj != NULL ? _indirObj->ObjNum() : 0;}
     int XObjectNumberFor(string name);

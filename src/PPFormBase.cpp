@@ -1,4 +1,4 @@
-
+ï»¿
 
 
 #include <vector>
@@ -40,17 +40,17 @@
 //  FormBase
 //
 ////////////////////////////////////////////////////////////////////////////
-PPFormBase::PPFormBase():_graphicParser((vector <PPToken *> *)&_commands) // _graphicParser ÃÊ±âÈ­
+PPFormBase::PPFormBase():_graphicParser((vector <PPToken *> *)&_commands) // _graphicParser ì´ˆê¸°í™”
 {
 	_parentForm = NULL;
 	_document = NULL;
-	_cur_element_idx = 0; // iterating ¿ë 
+	_cur_element_idx = 0; // iterating ìš© 
 	_indirObj = NULL;
 	_resourceDict = NULL;
 	_curLayer = NULL;
 
-	// ±âº»ÀûÀ¸·Î ÃÖ¼ÒÇÑ 1°³ÀÇ ·¹ÀÌ¾î°¡ ÀÖ¾î¾ß ÇÑ´Ù.
-	PPLayer *layer = new PPLayer(); // »ç½Ç ·¹ÀÌ¾î¶ó±âº¸´Ù OCG ÀÓ 
+	// ê¸°ë³¸ì ìœ¼ë¡œ ìµœì†Œí•œ 1ê°œì˜ ë ˆì´ì–´ê°€ ìˆì–´ì•¼ í•œë‹¤.
+	PPLayer *layer = new PPLayer(); // ì‚¬ì‹¤ ë ˆì´ì–´ë¼ê¸°ë³´ë‹¤ OCG ì„ 
 	_layers.push_back(layer);
 
 	_context = new PPContext(this);
@@ -68,7 +68,7 @@ PPFormBase::PPFormBase(PPFormBase *form_base):_graphicParser((vector <PPToken *>
     _resourceDict = NULL; //PPTDictionary *
 	_curLayer = NULL;
 
-	// ±âº»ÀûÀ¸·Î ÃÖ¼ÒÇÑ 1°³ÀÇ ·¹ÀÌ¾î°¡ ÀÖ¾î¾ß ÇÑ´Ù.
+	// ê¸°ë³¸ì ìœ¼ë¡œ ìµœì†Œí•œ 1ê°œì˜ ë ˆì´ì–´ê°€ ìˆì–´ì•¼ í•œë‹¤.
 	PPLayer *layer = new PPLayer();
 	_layers.push_back(layer);
 
@@ -77,7 +77,7 @@ PPFormBase::PPFormBase(PPFormBase *form_base):_graphicParser((vector <PPToken *>
 
 PPFormBase::PPFormBase(PPDocument *doc, PPTIndirectObj *indir):_graphicParser((vector <PPToken *> *)&_commands)
 {
-	// ±âº»ÀûÀ¸·Î ÃÖ¼ÒÇÑ 1°³ÀÇ ·¹ÀÌ¾î°¡ ÀÖ¾î¾ß ÇÑ´Ù.
+	// ê¸°ë³¸ì ìœ¼ë¡œ ìµœì†Œí•œ 1ê°œì˜ ë ˆì´ì–´ê°€ ìˆì–´ì•¼ í•œë‹¤.
 	PPLayer *layer = new PPLayer();
 	_layers.push_back(layer);
 
@@ -109,7 +109,7 @@ PPFormBase::~PPFormBase()
 {
 //	PPBase::~PPBase();
 
-	// layerµéÀº ÀÌ Å¬·¡½º¿¡¼­ new ·Î »ı¼º µÈ °ÍµéÀÌ¶ó Áö¿öÁà¾ß ÇÔ.
+	// layerë“¤ì€ ì´ í´ë˜ìŠ¤ì—ì„œ new ë¡œ ìƒì„± ëœ ê²ƒë“¤ì´ë¼ ì§€ì›Œì¤˜ì•¼ í•¨.
 	size_t i, icnt = _layers.size();
 	for(i=0;i<icnt;i++) {
 		PPLayer *layer = _layers[i];
@@ -118,7 +118,7 @@ PPFormBase::~PPFormBase()
 	delete _context;
 }
 
-// form_obj¸¦ ±â¹İÀ¸·Î »õ·Î¿î Form °´Ã¼¸¦ ¸¸µç´Ù. 
+// form_objë¥¼ ê¸°ë°˜ìœ¼ë¡œ ìƒˆë¡œìš´ Form ê°ì²´ë¥¼ ë§Œë“ ë‹¤. 
 PPFormBase *PPFormBase::NewFormObj(PPFormBase *form_obj)
 {
 	PPTIndirectObj *indir = (PPTIndirectObj *)form_obj->_indirObj->Copy();
@@ -128,7 +128,7 @@ PPFormBase *PPFormBase::NewFormObj(PPFormBase *form_obj)
 
 	PPFormBase *ret_form = NULL;
 	if(indir->NumberOfTokens() == 1) {
-		indir->MoveInto(_document); // °Ë»öµÇÁö ¾ÊÅä·Ï º¯Çü
+		indir->MoveInto(_document); // ê²€ìƒ‰ë˜ì§€ ì•Ší† ë¡ ë³€í˜•
 		int new_obj_num = _document->NewObjNum();
 		indir->_objNum = new_obj_num;
 		_document->PushObj(indir, new_obj_num);
@@ -144,7 +144,7 @@ PPParser *PPFormBase::DocumentParser()
 }
 
 ///////////////////////////////////////////////////////////////////////
-// Resource °ü·Ã ÇÔ¼öµé
+// Resource ê´€ë ¨ í•¨ìˆ˜ë“¤
 ///////////////////////////////////////////////////////////////////////
 PPToken *PPFormBase::ResourceForKey( int obj_num){
 	return _document->ResourceForExtObjNum( obj_num);
@@ -265,7 +265,7 @@ PPTIndirectRef *PPFormBase::AddResourceRef(int ref_num, string name, string reso
 }
 
 ///////////////////////////////////////////////////////////////////////
-// Layer °ü·Ã ÇÔ¼öµé
+// Layer ê´€ë ¨ í•¨ìˆ˜ë“¤
 ///////////////////////////////////////////////////////////////////////
 PPLayer *PPFormBase::AddLayerWithProperties(string property_name)
 {
@@ -297,28 +297,48 @@ PPLayer *PPFormBase::AddLayerWithProperties(string property_name)
 	return NULL;
 }
 
-// ÇöÀçÀÇ Æû ¾È¿¡ ·¹ÀÌ¾î¸¦ Ãß°¡ÇÏ´Â ÇÔ¼ö
-// ±×·¯³ª µµÅ¥¸ÕÆ® ·¹ÀÌ¾î Á¤º¸ ¸®½ºÆ®¿¡ ¾ø´Â ·¹ÀÌ¾î¸¦ Ãß°¡ÇÒ °æ¿ì
-// ¿À·ù°¡ ³¯ °ÍÀ¸·Î ¿¹»óµÊ. ¼öÁ¤ ¹Ù¶÷.
+// í˜„ì¬ì˜ í¼ ì•ˆì— ë ˆì´ì–´ë¥¼ ì¶”ê°€í•˜ëŠ” í•¨ìˆ˜
+// ê·¸ëŸ¬ë‚˜ ë„íë¨¼íŠ¸ ë ˆì´ì–´ ì •ë³´ ë¦¬ìŠ¤íŠ¸ì— ì—†ëŠ” ë ˆì´ì–´ë¥¼ ì¶”ê°€í•  ê²½ìš°
+// ì˜¤ë¥˜ê°€ ë‚  ê²ƒìœ¼ë¡œ ì˜ˆìƒë¨. ìˆ˜ì • ë°”ëŒ.
+
 PPLayer *PPFormBase::AddLayer(string layer_name, PPLayer *layer)
 {
-	// this °´Ã¼ ¾È¿¡ layer_nameÀÇ ·¹ÀÌ¾î°¡ ¾ø´Ù°í °£ÁÖÇÏ°í ½ÃÀÛÇÔ.
-	PPTIndirectObj *layer_obj = _document->LayerObjForName(layer_name); // µµÅ¥¸ÕÆ®ÀÇ ·¹ÀÌ¾î Á¤º¸ ¸®½ºÆ®¿¡¼­
-	/* layer_obj°¡ NULLÀÏ °æ¿ì¿¡ ´ëÇÑ Ã³¸®°¡ ¾øÀ½(¿À·ù). */				// layer_name ÀÇ ·¹ÀÌ¾î Á¤º¸¸¦ Ã£À½
+	PPLayer *ret_layer = NULL;
+	PPTIndirectObj *layer_obj = _document->LayerObjForName(layer_name); // ë„íë¨¼íŠ¸ì˜ ë ˆì´ì–´ ì •ë³´ ë¦¬ìŠ¤íŠ¸ì—ì„œ
+
+	PPTDictionary *layer_dict = (PPTDictionary *)layer_obj->FirstDictionary();
+	if(layer == NULL) { 
+		ret_layer = new PPLayer();
+	}
+	else {
+		ret_layer = layer;
+	}
+	ret_layer->_layer_dict = layer_dict; // 
+	ret_layer->_parent = this;
+	_layers.push_back(ret_layer);
+
+	return ret_layer;
+}
+/*
+PPLayer *PPFormBase::AddLayer(string layer_name, PPLayer *layer)
+{
+	// this ê°ì²´ ì•ˆì— layer_nameì˜ ë ˆì´ì–´ê°€ ì—†ë‹¤ê³  ê°„ì£¼í•˜ê³  ì‹œì‘í•¨.
+	PPTIndirectObj *layer_obj = _document->LayerObjForName(layer_name); // ë„íë¨¼íŠ¸ì˜ ë ˆì´ì–´ ì •ë³´ ë¦¬ìŠ¤íŠ¸ì—ì„œ
+	// layer_objê°€ NULLì¼ ê²½ìš°ì— ëŒ€í•œ ì²˜ë¦¬ê°€ ì—†ìŒ(ì˜¤ë¥˜). 				// layer_name ì˜ ë ˆì´ì–´ ì •ë³´ë¥¼ ì°¾ìŒ
 																		
 
 	PPTIndirectRef *layer_ref = new PPTIndirectRef(_document, layer_obj->_objNum, layer_obj->_genNum);
 
 	PPLayer *ret_layer = NULL;
-	// Properties ¸®¼Ò½º°¡ ÇÊ¿äÇÏ´Ù.
+	// Properties ë¦¬ì†ŒìŠ¤ê°€ í•„ìš”í•˜ë‹¤.
 	PPTDictionary *properties_dict = (PPTDictionary *)_resourceDict->ValueObjectForKey("Properties");
 	if(properties_dict == NULL) {
-		// ¾øÀ¸¸é ¸¸µé¾î ÁÖ°í...
+		// ì—†ìœ¼ë©´ ë§Œë“¤ì–´ ì£¼ê³ ...
 		properties_dict = new PPTDictionary(_document);
 		_resourceDict->SetTokenAndKey(properties_dict, "Properties");
 	}
 
-	// »õ properties key ¸¸µé±â 
+	// ìƒˆ properties key ë§Œë“¤ê¸° 
 	char pname[10] = "LP0";
 	int name_idx = 0;
 	size_t i, icnt = _layers.size();
@@ -332,9 +352,9 @@ PPLayer *PPFormBase::AddLayer(string layer_name, PPLayer *layer)
 		}
 	}
 
-	// properties_dict ¿¡ properties key ·¹ÀÌ¾î Á¤º¸ÀÇ ÂüÁ¶¸¦ pnameÀ» Å°·ÎÇØ¼­ ÀúÀå.
+	// properties_dict ì— properties key ë ˆì´ì–´ ì •ë³´ì˜ ì°¸ì¡°ë¥¼ pnameì„ í‚¤ë¡œí•´ì„œ ì €ì¥.
 	properties_dict->SetTokenAndKey(layer_ref, pname);
-	layer_obj->AddRefObj(layer_ref);  // IndirectObj´Â Ç×»ó ÀÚ½ÅÀ» ÂüÁ¶ÇÑ ref¸¦ ÀúÀåÇØ¼­ °ü¸®ÇÑ´Ù.
+	layer_obj->AddRefObj(layer_ref);  // IndirectObjëŠ” í•­ìƒ ìì‹ ì„ ì°¸ì¡°í•œ refë¥¼ ì €ì¥í•´ì„œ ê´€ë¦¬í•œë‹¤.
 	PPTDictionary *layer_dict = (PPTDictionary *)layer_ref->ValueObject();
 	if(layer == NULL) { 
 		ret_layer = new PPLayer();
@@ -349,7 +369,7 @@ PPLayer *PPFormBase::AddLayer(string layer_name, PPLayer *layer)
 
 	return ret_layer;
 }
-
+*/
 PPLayer *PPFormBase::BeginLayer(char *lname) 
 {
 	_curLayer = this->LayerForName(lname);
@@ -393,7 +413,7 @@ void PPFormBase::ReorderLayer(int from_idx, int to_idx)
 	_layers.insert(_layers.begin()+to_idx, layer);
 }
 
-// ·¹ÀÌ¾î ³»ÀÇ ¿ä¼ÒµéÀ» ÀÌµ¿½ÃÅ°´Â ¿¹Á¦·Îµµ È°¿ë °¡´É
+// ë ˆì´ì–´ ë‚´ì˜ ìš”ì†Œë“¤ì„ ì´ë™ì‹œí‚¤ëŠ” ì˜ˆì œë¡œë„ í™œìš© ê°€ëŠ¥
 void PPFormBase::MergeLayer(string tar_name, string src_name)
 {
 	int src_idx;
@@ -408,10 +428,10 @@ void PPFormBase::MergeLayer(string tar_name, string src_name)
 			&& element->Type() != PPET_END_MARKED_CONTENT
 			&& element->Type() != PPET_BEGIN_MARKED_CONTENT) {
 				size_t tar_cnt = tar->_elements.size();
-				// src ·¹ÀÌ¾îÀÇ Marked Contents °ü·Ã ¿¤¸®¸ÕÆ®µéÀ» Á¦¿ÜÇÏ°í
-				// tar ·¹ÀÌ¾îÀÇ ¸¶Áö¸· ¹Ù·Î ¾Õ¿¡ ÀÎ¼­Æ®¸¦ ÇÑ´Ù.
-				// tar ·¹ÀÌ¾îÀÇ ¸¶Áö¸·¿¡ ÀÖ´Â Marked content end  ¿¤¸®¸ÕÆ®¸¦ 
-				// À¯ÁöÇØ Áà¾ß ÇÏ±â ¶§¹®ÀÌ´Ù.
+				// src ë ˆì´ì–´ì˜ Marked Contents ê´€ë ¨ ì—˜ë¦¬ë¨¼íŠ¸ë“¤ì„ ì œì™¸í•˜ê³ 
+				// tar ë ˆì´ì–´ì˜ ë§ˆì§€ë§‰ ë°”ë¡œ ì•ì— ì¸ì„œíŠ¸ë¥¼ í•œë‹¤.
+				// tar ë ˆì´ì–´ì˜ ë§ˆì§€ë§‰ì— ìˆëŠ” Marked content end  ì—˜ë¦¬ë¨¼íŠ¸ë¥¼ 
+				// ìœ ì§€í•´ ì¤˜ì•¼ í•˜ê¸° ë•Œë¬¸ì´ë‹¤.
 				tar->_elements.insert(tar->_elements.begin() + tar_cnt - 1, element);
 		}
 	}
@@ -421,7 +441,7 @@ void PPFormBase::MergeLayer(string tar_name, string src_name)
 }
 
 ///////////////////////////////////////////////////////////////////////
-// Element °ü·Ã ÇÔ¼öµé
+// Element ê´€ë ¨ í•¨ìˆ˜ë“¤
 ///////////////////////////////////////////////////////////////////////
 
 void PPFormBase::InsertElement(PPElement *element, int dir)
@@ -486,19 +506,19 @@ PPElement *PPFormBase::ElementAtIndex(size_t idx)
 
 void PPFormBase::WriteElement(PPElement *src_element)
 {
-	if(src_element->_parentForm == NULL) { // ½Å±Ô ¿¤¸®¸ÕÆ®·Î °£ÁÖ
+	if(src_element->_parentForm == NULL) { // ì‹ ê·œ ì—˜ë¦¬ë¨¼íŠ¸ë¡œ ê°„ì£¼
 		AddElement(src_element);
 	}
-	else { // ´Ù¸¥°÷¿¡ ¼ÓÇØÀÖ´ø ¿¤¸®¸ÕÆ®·Î °£ÁÖÇÏ°í °´Ã¼¸¦ º¹»çÇÔ.
+	else { // ë‹¤ë¥¸ê³³ì— ì†í•´ìˆë˜ ì—˜ë¦¬ë¨¼íŠ¸ë¡œ ê°„ì£¼í•˜ê³  ê°ì²´ë¥¼ ë³µì‚¬í•¨.
 		PPElement *copied = (PPElement *)src_element->Copy();
 		AddElement(copied);
 	}
-	// src_element ¿¡ ¸®¼Ò½º Á¤º¸°¡ ÀÖÀ¸¸é
+	// src_element ì— ë¦¬ì†ŒìŠ¤ ì •ë³´ê°€ ìˆìœ¼ë©´
 	if(src_element->HasResource()) {
-		// src_elementÀÇ ¸®¼Ò½º 'Å¸ÀÔ'°ú 'Å°'·Î this¿¡ ¸®¼Ò½º°¡ ÀÖ´ÂÁö Ã¼Å©
+		// src_elementì˜ ë¦¬ì†ŒìŠ¤ 'íƒ€ì…'ê³¼ 'í‚¤'ë¡œ thisì— ë¦¬ì†ŒìŠ¤ê°€ ìˆëŠ”ì§€ ì²´í¬
 		vector <const char *> type_list = src_element->ResourceTypeList();
 		size_t i, icnt = type_list.size();
-		// ÇÑ°³ÀÇ ¿¤¸®¸ÕÆ®¿¡ ¿©·Á Á¾·ù(icnt)ÀÇ ¸®¼Ò½º°¡ ÀÖÀ» ¼ö ÀÖÀ½.
+		// í•œê°œì˜ ì—˜ë¦¬ë¨¼íŠ¸ì— ì—¬ë ¤ ì¢…ë¥˜(icnt)ì˜ ë¦¬ì†ŒìŠ¤ê°€ ìˆì„ ìˆ˜ ìˆìŒ.
 		for(i=0;i<icnt;i++) {
 			const char *rsc_type = type_list[i]; //src_element->ResourceType();
 			if(rsc_type == PPRT_PROPERTIES) {
@@ -526,13 +546,13 @@ void PPFormBase::WriteElement(PPElement *src_element)
 						rsc_dict->SetRefTokenAndKey(obj, rsc_key, obj->_objNum);
 					}
 					else  {
-						// ¾øÀ¸¸é ¸®¼Ò½º º¹»ç
+						// ì—†ìœ¼ë©´ ë¦¬ì†ŒìŠ¤ ë³µì‚¬
 						PPToken *src_rsc = src_element->ResourceObjectFor(rsc_type);
 						if(src_rsc) {
 							rsc = WriteResource(src_rsc, src_obj_num);  // _resources
 							if(rsc) {
 								_document->SetRefTokenForKey(rsc_dict,rsc,rsc_key); //rsc_dict, _tokens, parser->_objDict
-								// PPElement::willAddToParent ¿¡¼­ ÇØ°áÇÒ ¼ö ¾ø¾úÀ»±î? ÃßÈÄ °ËÅä.
+								// PPElement::willAddToParent ì—ì„œ í•´ê²°í•  ìˆ˜ ì—†ì—ˆì„ê¹Œ? ì¶”í›„ ê²€í† .
 								if(rsc_type == PPRT_PROPERTIES && _document->_OCProperties == NULL) { // OCG(Layer)
 									PPDocument *src_doc = src_element->_parentForm->_document;
 									PPTDictionary *src_ocproperties = src_doc->_OCProperties;
@@ -561,8 +581,8 @@ void PPFormBase::WritePlacedElement(PPElement *src_element)
 }
 
 
-/* ¿©·¯ GState ÀÇ °ªµé Áß¿¡ cmd ³»¿ë¿¡ ºÎÇÕÇÏ´Â °ªÀ» º¯°æÇÑ´Ù. */
-/* PPContext´Â PPGStateÀÇ ¼­ºêÅ¬·¡½º´Ù. */
+/* ì—¬ëŸ¬ GState ì˜ ê°’ë“¤ ì¤‘ì— cmd ë‚´ìš©ì— ë¶€í•©í•˜ëŠ” ê°’ì„ ë³€ê²½í•œë‹¤. */
+/* PPContextëŠ” PPGStateì˜ ì„œë¸Œí´ë˜ìŠ¤ë‹¤. */
 void PPFormBase::SetValueToGState(PPTCommand *cmd, PPContext &gcontext)
 {
 	PPCommandInfo *cmdinfo = cmd->_cmdInfo;
@@ -686,7 +706,7 @@ void PPFormBase::SetValueToGState(PPTCommand *cmd, PPContext &gcontext)
     }
 }
 
-// path °´Ã¼¿¡ cmd ¿¡ ÀÖ´Â ÆĞ½º Á¤º¸¸¦ ´õÇÑ´Ù.
+// path ê°ì²´ì— cmd ì— ìˆëŠ” íŒ¨ìŠ¤ ì •ë³´ë¥¼ ë”í•œë‹¤.
 void PPFormBase::AddCommandToPath(PPTCommand *cmd, PPPath *path)
 {
     switch (cmd->_cmdInfo->code) {
@@ -760,7 +780,30 @@ string PPFormBase::SubtypeFor(string name)
 	return subtype;
 }
 
-// ÆÄ½ÌµÈ _commands ·Î elements ¸®½ºÆ®(layer->_elements)¸¦ ±¸ÃàÇÑ´Ù.
+PPTCommand *PPFormBase::NextGCommand2(size_t idx, size_t *ret_idx)
+{
+	PPTCommand *cmd = _commands[idx];
+	while(cmd->_cmdInfo->code == PPC_EndMarkedContent) {
+		idx ++;
+		cmd = _commands[idx];
+	}
+	*ret_idx = idx;
+	return cmd;
+}
+
+
+PPTCommand *PPFormBase::NextGCommand(size_t idx, size_t *ret_idx)
+{
+	PPTCommand *cmd = _commands[idx];
+	while(cmd->_cmdInfo->code == PPC_BeginMarkedContentP) {
+		idx ++;
+		cmd = _commands[idx];
+	}
+	*ret_idx = idx;
+	return cmd;
+}
+
+// íŒŒì‹±ëœ _commands ë¡œ elements ë¦¬ìŠ¤íŠ¸(layer->_elements)ë¥¼ êµ¬ì¶•í•œë‹¤.
 int PPFormBase::BuildElements()
 {
     PPContext gcontext(this);
@@ -773,7 +816,8 @@ int PPFormBase::BuildElements()
 	stack<PPElement *> mark_stack;
 
     size_t i = 0, icnt = _commands.size();
-    while (i<icnt) {
+    while (i < _commands.size()) {
+		icnt = _commands.size();
         PPTCommand *cmd = _commands[i];
         if(textstate_element != NULL) {
 			switch (cmd->_cmdInfo->group) {
@@ -911,16 +955,18 @@ int PPFormBase::BuildElements()
 							PPLayer *layer = AddLayerWithProperties(*property_name->_name);
 							if(layer != NULL) {
 								if(i < icnt-1) {
-									PPTCommand *next_cmd = _commands[i+1];
+									size_t next_idx;
+									PPTCommand *next_cmd = NextGCommand(i+1,&next_idx); //_commands[i+1];
 									PPCommandGroup next_group = next_cmd->_cmdInfo->group;
 									// because illustrator has a bug.
 									if(next_group == PPCG_RestoreGState && _curLayer) {
-									  gcontext.RestoreGState();
-									  PPEGRestore *grestore = new PPEGRestore(&gcontext);
+										gcontext.RestoreGState();
+										PPEGRestore *grestore = new PPEGRestore(&gcontext);
 										this->InsertElement(grestore, -1);
 //										AddElement(grestore);
 										gcontext.ClearGFlags();
-										i++;
+										_commands.erase(_commands.begin() + next_idx);
+										//i++;
 									}
 								}
 								_curLayer = layer;
@@ -944,7 +990,8 @@ int PPFormBase::BuildElements()
             case PPCG_EndMarkedContent:
                 {
 					if(i < icnt-1) {
-						PPTCommand *next_cmd = _commands[i+1];
+						size_t next_idx;
+						PPTCommand *next_cmd = NextGCommand2(i+1, &next_idx);//_commands[i+1];
 						PPCommandGroup next_group = next_cmd->_cmdInfo->group;
 						// because illustrator has a bug.
 						if(next_group == PPCG_RestoreGState && _curLayer) {
@@ -953,7 +1000,8 @@ int PPFormBase::BuildElements()
 							this->AddElement(grestore);
 //							AddElement(grestore);
 							gcontext.ClearGFlags();
-							i++;
+							_commands.erase(_commands.begin() + next_idx);
+							//i++;
 						}
 					}
 
@@ -995,7 +1043,7 @@ int PPFormBase::BuildElements()
     return 0;
 }
 
-// element ¸®½ºÆ®ÀÇ ³»¿ëÀ» ½ºÆ®¸µÀ¸·Î ¸ğ¾Æ¼­ ½ºÆ®¸²À¸·Î ÀÎÄÚµùÇÑ´Ù.
+// element ë¦¬ìŠ¤íŠ¸ì˜ ë‚´ìš©ì„ ìŠ¤íŠ¸ë§ìœ¼ë¡œ ëª¨ì•„ì„œ ìŠ¤íŠ¸ë¦¼ìœ¼ë¡œ ì¸ì½”ë”©í•œë‹¤.
 PPTStream *PPFormBase::BuildStream()
 {
 	string retstr; 

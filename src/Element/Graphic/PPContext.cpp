@@ -46,8 +46,14 @@ void PPContext::SaveGState()
 // 스택의 값을 가져와 현재의 값을 대치시킨다.
 void PPContext::RestoreGState()
 {
-    PPGState *new_gstate = _gstats.top();
-    SetGState(new_gstate);
-    _gstats.pop();
-    delete new_gstate;
+	if(_gstats.size() > 0) {
+		PPGState *new_gstate = _gstats.top();
+		SetGState(new_gstate);
+		_gstats.pop();
+	
+		delete new_gstate;
+	}
+	else {
+		cout << "Error : GState stack pairing error." << PP_ENDL;
+	}
 }

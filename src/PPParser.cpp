@@ -405,6 +405,9 @@ PPTDictionary *PPParser::parseDictionary(PPParserSource &source)
     if(!ParseSource(source, token_list))  // recursive function call
         return NULL;
     int i, icnt = (int)token_list.size();
+    if(icnt == 0) {
+        cout << "Empty Dictionary..." << PP_ENDL;
+    }
     if (icnt % 2 != 0) {
         return NULL;
     }
