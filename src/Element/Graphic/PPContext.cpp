@@ -27,6 +27,8 @@ void PPContext::SetGState(PPGState *gstate)
     _intent = gstate->Intent();
     _flatness = gstate->Flatness();
     _miterLimit = gstate->MiterLimit();
+	_stroke_opacity = gstate->StrokeOpacity();
+	_fill_opacity = gstate->FillOpacity();
     _lineCap = gstate->LineCap();
     _lineJoin = gstate->LineJoin();
     _dictName = gstate->DictName();
@@ -34,6 +36,7 @@ void PPContext::SetGState(PPGState *gstate)
     _matrix = gstate->Matrix();
     _strokeColor = gstate->StrokeColor();
     _fillColor = gstate->FillColor();
+	_gflag = gstate->GFlags();
 }
 
 // 현재의 gstate값을 복사해 스택에 저장한다.

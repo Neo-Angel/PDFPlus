@@ -63,6 +63,7 @@ public:
     PPColor     _fillColor;
     
     unsigned long _gflag; // 수정된 상태 정보들을 bit mask 형태로 보관한다.
+	unsigned long _gflag_save;
 
 public:
     PPGState();
@@ -122,6 +123,7 @@ public:
     void ClearGFlags(){_gflag = PPGF_NONE;}
     unsigned long GFlags(){return _gflag;}
     void SetGFlags(unsigned long flag){_gflag = flag;}
+    void RestoreGFlags(){_gflag = _gflag_save;}
     
     string MakeCommandString();
     string XMLString(int level);
