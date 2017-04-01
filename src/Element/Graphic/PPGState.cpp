@@ -370,17 +370,17 @@ void PPGState::CopyMembersTo(PPBase *obj)
 	PPBase::CopyMembersTo(obj);
     PPGState *ret_gstate = (PPGState *)obj;
 
-    ret_gstate->SetLineWidth(_lineWidth);
-    ret_gstate->SetIntent(_intent);
-    ret_gstate->SetFlatness(_flatness);
-    ret_gstate->SetMiterLimit(_miterLimit);
-    ret_gstate->SetLineCap(_lineCap);
-    ret_gstate->SetLineJoin(_lineJoin);
-    ret_gstate->SetDictName(_dictName);
+    ret_gstate->_lineWidth = _lineWidth; //ret_gstate->SetLineWidth(_lineWidth);
+    ret_gstate->_intent = _intent; //SetIntent(_intent);
+    ret_gstate->_flatness = _flatness; //SetFlatness(_flatness);
+    ret_gstate->_miterLimit = _miterLimit; //SetMiterLimit(_miterLimit);
+    ret_gstate->_lineCap = _lineCap; //SetLineCap(_lineCap);
+    ret_gstate->_lineJoin = _lineJoin; //SetLineJoin(_lineJoin);
+    ret_gstate->_dictName = _dictName; //SetDictName(_dictName);
     
     // needs to delete
-    ret_gstate->SetDash(_dash);
-    ret_gstate->SetMatrix(_matrix);
+    ret_gstate->_dash = _dash; //SetDash(_dash);
+    ret_gstate->_matrix = _matrix; //SetMatrix(_matrix);
 	if(ret_gstate->_parent != NULL && _strokeColor._userColorSpaceName.length() > 0) {
 		PPDocument *tar_doc = ret_gstate->_parent->_parentForm->_document;
 		PPDocument *this_doc = this->_parent->_parentForm->_document;
@@ -388,7 +388,7 @@ void PPGState::CopyMembersTo(PPBase *obj)
 			this->MoveColorTo(&_strokeColor, ret_gstate->_parent->_parentForm);
 		}
 	}
-    ret_gstate->SetStrokeColor(_strokeColor);
+    ret_gstate->_strokeColor = _strokeColor; //SetStrokeColor(_strokeColor);
 
 	if(ret_gstate->_parent != NULL && _fillColor._userColorSpaceName.length() > 0) {
 		PPDocument *tar_doc = ret_gstate->_parent->_parentForm->_document;
@@ -397,9 +397,11 @@ void PPGState::CopyMembersTo(PPBase *obj)
 			this->MoveColorTo(&_fillColor, ret_gstate->_parent->_parentForm);
 		}
 	}
-    ret_gstate->SetFillColor(_fillColor);
+    ret_gstate->_fillColor = _fillColor; //(_fillColor);
     
-    ret_gstate->SetGFlags(_gflag);
+    ret_gstate->_gflag = _gflag; //SetGFlags(_gflag);
+    ret_gstate->_gflag_save = _gflag_save; //SetGFlags(_gflag);
+
 //    clearGFlags();
     
 }

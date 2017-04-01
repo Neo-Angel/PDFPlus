@@ -9,7 +9,7 @@
 //////////////////////////////////////////////////////////
 // =========================================================== PPContext - B
 
-PPContext::PPContext(PPFormBase *form)
+PPContext::PPContext(PPFormBase *form):PPGState()
 {
 	_parentForm = form;
 }
@@ -37,6 +37,7 @@ void PPContext::SetGState(PPGState *gstate)
     _strokeColor = gstate->StrokeColor();
     _fillColor = gstate->FillColor();
 	_gflag = gstate->GFlags();
+	_gflag_save = gstate->_gflag_save;
 }
 
 // 현재의 gstate값을 복사해 스택에 저장한다.
