@@ -280,13 +280,17 @@ string PPTIndirectObj::PDFString()
     ostringstream ostr;
     ostr << _objNum << " " << _genNum << " obj" << PP_ENDL;
     size_t i, icnt = _array.size();
+	string pdfstr;
     for(i=0;i<icnt;i++) {
         PPToken *token = _array[i];
-        string pdfstr = token->PDFString();
+        pdfstr = token->PDFString();
         if (pdfstr.length() == 0) {
             cout << "Zero PDF string for token " << token->TypeName() << PP_ENDL;
         }
         ostr << pdfstr;
+    }
+    if(pdfstr.length() > 0 && pdfstr[pdfstr.length()-1] != '\n') {
+        ostr << "\n";
     }
     ostr << "endobj";// << PP_ENDL;
     string retstr = ostr.str();
