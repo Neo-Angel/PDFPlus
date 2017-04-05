@@ -35,7 +35,7 @@ public:
 
     bool _decoded; // 현재 스트림이 상태가 디코드된 상태인지.
     bool _decodeFailed; //디코딩에 실패했는지...
-
+    bool _sizeUpdated;
 
 public:
     PPTStream(PPDocument *doc);

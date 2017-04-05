@@ -839,9 +839,9 @@ bool PPParser::ParseSource(PPParserSource &source, vector<PPToken *> &token_list
                     PPTName *filter = (PPTName *)dict->NameForKey("Filter");
                     bool obj_stream_parsed = false;
                     if (filter != NULL && *filter->_name == "FlateDecode") {
-                        stream->FlateDecodeStream();
                         PPTName *type = (PPTName *)dict->ObjectForKey("Type");
                         if (type != NULL && *type->_name == "ObjStm") {
+                            stream->FlateDecodeStream();
 							if(parent_token != NULL && parent_token->ClassType() == PPTN_INDIRECTOBJ) {
 								stream->_parentObj = (PPTIndirectObj *)parent_token;
 							}
@@ -864,7 +864,7 @@ bool PPParser::ParseSource(PPParserSource &source, vector<PPToken *> &token_list
             else {
                 token_obj = (PPToken *)parseStream(source);
                 PPTStream *stream = (PPTStream *)token_obj;
-                stream->_infoDict = dict;
+                stream->SetDictionary(dict); //  _infoDict = dict;
                 token_list.push_back(token_obj);
 				_document->_stream_list.push_back(token_obj);
             }

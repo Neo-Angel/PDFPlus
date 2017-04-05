@@ -28,6 +28,7 @@ public:
     long long longlongValue();
     long longValue();
 	int intValue();
+    void SetInteger(int num);
     string stringValue();
     string PDFString() {return stringValue();}
     string XMLString(int level);

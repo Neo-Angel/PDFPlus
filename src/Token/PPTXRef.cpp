@@ -68,14 +68,14 @@ string PPTXRef::PDFString()
         PPTIndirectObj *obj = _document->_objDict[i];
         char buf[20];
         if (i == 0) {
-            sprintf(buf, "%010d %05d %c",0, 65535, 'f' );
+            sprintf(buf, "%010d %05d %c ",0, 65535, 'f' );
         }
         else if (obj == NULL) {
             cout << "Unexpected Error : IndirectObj not exists at " << i << PP_ENDL;
-            sprintf(buf, "%010d %05d %c",0, 65535, 'f' );
+            sprintf(buf, "%010d %05d %c ",0, 65535, 'f' );
         }
         else {
-            sprintf(buf, "%010d %05d %c",obj->_objNum, obj->_genNum, 'n' );
+            sprintf(buf, "%010d %05d %c ",obj->_objNum, obj->_genNum, 'n' );
         }
         ostr << buf << PP_ENDL;
     }
