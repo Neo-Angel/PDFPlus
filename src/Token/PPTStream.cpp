@@ -98,6 +98,7 @@ PPTStream::PPTStream()
     _decoded = false;
     _decodeFailed = false;
 	_filterName = "None";
+    _sizeUpdated = false;
 }
 
 PPTStream::PPTStream(PPDocument *doc) : PPToken(doc)
@@ -108,6 +109,7 @@ PPTStream::PPTStream(PPDocument *doc) : PPToken(doc)
     _decoded = false;
     _decodeFailed = false;
 	_filterName = "None";
+    _sizeUpdated = false;
 }
 
 PPTStream::PPTStream(PPDocument *doc, unsigned long length) : PPToken(doc)
@@ -119,6 +121,7 @@ PPTStream::PPTStream(PPDocument *doc, unsigned long length) : PPToken(doc)
     _decoded = false;
     _decodeFailed = false;
 	_filterName = "None";
+    _sizeUpdated = false;
 }
 
 PPTStream::~PPTStream()
@@ -129,6 +132,13 @@ PPTStream::~PPTStream()
 void PPTStream::SetDictionary(PPTDictionary *dict)
 {
 	_infoDict = dict;
+    if(_infoDict) {
+        PPTNumber *len_num = (PPTNumber *)_infoDict->ValueObjectForKey("Length");
+        if(len_num) {
+            _streamSize = len_num->longValue();
+            _sizeUpdated = true;
+        }
+    }
 }
 
 void PPTStream::AppendData(char *data, unsigned long length)
@@ -201,7 +211,17 @@ string PPTStream::XMLString(int level)
 
 string PPTStream::MakePDFString(unsigned long &length)
 {
-    string retstr = "stream\xa";
+    if(_sizeUpdated == false && _decoded == false) {
+        if(_infoDict) {
+            PPTNumber *len_num = (PPTNumber *)_infoDict->ValueObjectForKey("Length");
+            if(len_num) {
+                _streamSize = len_num->longValue();
+                _sizeUpdated = true;
+            }
+        }
+    }
+    
+    string retstr = "stream\x0a";
     PPToken *filter_obj = _infoDict->ObjectForKey("Filter");
 	if(filter_obj) {
 		PPTName *filter = NULL;
@@ -229,7 +249,10 @@ string PPTStream::MakePDFString(unsigned long &length)
         retstr.append(_streamData, _streamSize);
 		length = _streamSize;
     }
-    retstr += "endstream\xa";
+    if(retstr[retstr.length()-1] != '\x0a') {
+        retstr += "\x0a";
+    }
+    retstr += "endstream\x0a";
     return retstr;
 }
 
@@ -239,7 +262,16 @@ string PPTStream::PDFString()
     string retstr = MakePDFString(length);
     
     PPTNumber *len_num = new PPTNumber(_document, (int)length);
-    _infoDict->SetTokenAndKey(len_num, "Length");
+    
+    int obj_num = _document->NewObjNum();
+    
+    PPTIndirectObj *indir_obj = new PPTIndirectObj(_document, obj_num, 0);
+    indir_obj->AddToken(len_num);
+    PPTIndirectRef *indir_ref = new PPTIndirectRef(_document, obj_num, 0);
+    indir_obj->AddRefObj(indir_ref);
+    _document->PushObj(indir_obj);
+    
+    _infoDict->SetTokenAndKey(indir_ref, "Length");
     return retstr;
 }
 
@@ -386,7 +418,7 @@ bool PPTStream::IsZipEOF() // for zlip
 /////////////////////////////////////////////////////////////
 void PPTStream::FlateDecodeStream()
 {
-    if (_streamSize == 0) {
+    if (_streamSize == 0 || _decoded == true) {
         return;
     }
     PPStreamBuf *stream_buf = new PPStreamBuf();

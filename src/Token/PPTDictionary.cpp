@@ -218,13 +218,15 @@ string PPTDictionary::XMLString(int level)
 
 string PPTDictionary::PDFString()
 {
-    string retstr = "<<";
+    string retstr = ""; //"<<";
+
     map <string, PPToken *> ::iterator it_token_objs;
     for(it_token_objs = _dict.begin(); it_token_objs != _dict.end(); it_token_objs++) {
-        retstr += "/";
+        string itemstr = "";
+        itemstr += "/";
         string name = it_token_objs->first;
-        retstr += name;
-        retstr += " ";
+        itemstr += name;
+        itemstr += " ";
         PPToken *token = (PPToken *)(it_token_objs->second);
 		if(name == "Length") {
 			cout << "Length = " << token->PDFString() << ";" << PP_ENDL;
@@ -232,9 +234,11 @@ string PPTDictionary::PDFString()
 				cout << "Error : Length is zero!!!" << PP_ENDL;
 			}
 		}
-        retstr += token->PDFString();
-        retstr += "\xa";
+        itemstr += token->PDFString();
+        itemstr += " "; // "\xa";
+        retstr = itemstr + retstr;
     }
+    retstr = "<< " + retstr;
     retstr += ">>\xa";
     return retstr;
 }

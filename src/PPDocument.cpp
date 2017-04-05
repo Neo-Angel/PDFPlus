@@ -186,7 +186,6 @@ PPTArray *GatherLayerOrders(PPTDictionary *d_dict)
         indir_obj->Clear();
         indir_obj->AddToken(retArray);
     }
-
 	return retArray;
 }
 
@@ -382,11 +381,11 @@ void PPDocument::decodeStreams(vector<PPToken *> &token_list)
             PPTName *filter = (PPTName *)dict->NameForKey("Filter");
 			// FlateDecode 방식들만 디코딩 함.
             if (filter != NULL && *filter->_name == "FlateDecode") {
-                stream->FlateDecodeStream();
                 PPTName *type = (PPTName *)dict->ObjectForKey("Type");
                 if (type != NULL && *type->_name == "ObjStm") {
 					// 디코딩 한 스트림의 타입이 '오브젝 스트림'이면 도큐먼트의 _parser를 이용해 파싱을 함 
-					if(stream->ParseObjStm(token_list, &_parser) == false) {
+                    stream->FlateDecodeStream();
+                    if(stream->ParseObjStm(token_list, &_parser) == false) {
                         return;
                     }
                  }
@@ -822,24 +821,24 @@ unsigned long long PPDocument::writeXRefs(std::ostream &os)
             _objDict.erase(i);
         if (i == 0) {
 #ifdef _WIN32
-            sprintf_s(buf, "%010d %05d %c",0, 65535, 'f' );
+            sprintf_s(buf, "%010d %05d %c ",0, 65535, 'f' );
 #else
-            sprintf(buf, "%010d %05d %c",0, 65535, 'f' );
+            sprintf(buf, "%010d %05d %c ",0, 65535, 'f' );
 #endif
         }
         else if (obj == NULL) {
             cout << "Unexpected Error : IndirectObj not exists at " << i << PP_ENDL;
 #ifdef _WIN32
-            sprintf_s(buf, "%010d %05d %c",0, 65535, 'f' );
+            sprintf_s(buf, "%010d %05d %c ",0, 65535, 'f' );
 #else
-            sprintf(buf, "%010d %05d %c",0, 65535, 'f' );
+            sprintf(buf, "%010d %05d %c ",0, 65535, 'f' );
 #endif
         }
         else {
 #ifdef _WIN32
-            sprintf_s(buf, "%010llu %05d %c",obj->_filepos, (unsigned int)obj->_genNum, 'n' );
+            sprintf_s(buf, "%010llu %05d %c ",obj->_filepos, (unsigned int)obj->_genNum, 'n' );
 #else
-            sprintf(buf, "%010llu %05d %c",obj->_filepos, (unsigned int)obj->_genNum, 'n' );
+            sprintf(buf, "%010llu %05d %c ",obj->_filepos, (unsigned int)obj->_genNum, 'n' );
 #endif
         }
         os << buf << PP_ENDL;
@@ -866,8 +865,9 @@ int PPDocument::Save(string out_path)
     vector<PPTTrailer *> trailers;
     PPTTrailer *master_trailer = new PPTTrailer(this);
     
-    size_t i, icnt = _tokens.size();
-    for (i=0; i<icnt; i++) {
+    size_t i = 0, icnt = _tokens.size();
+    while(i < _tokens.size()) {
+//    for (i=0; i<icnt; i++) {
         PPToken *token = _tokens[i];
         if (token->ClassType() == PPTN_TRAILER) {// trailer 는 하나로 모아서 별도로 처리
             trailers.push_back((PPTTrailer *)token);
@@ -902,6 +902,7 @@ int PPDocument::Save(string out_path)
             }
             token->Write(os);
         }
+        i++;
     }
     unsigned long long xref_pos = writeXRefs(os);
 

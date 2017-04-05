@@ -245,9 +245,22 @@ void PPTIndirectObj::Write(ostream &os)
         PPTStream *stream = (PPTStream *)_array[1];
         unsigned long len;
         string stream_pdfstr = stream->MakePDFString(len);
-        PPTNumber *len_num = new PPTNumber(_document, (int)len);
-        dict->SetTokenAndKey(len_num, "Length");
-        
+        PPToken *length_token = dict->ObjectForKey("Length");
+        if(length_token->ClassType() == PPTN_INDIRECTREF) {
+            PPTIndirectObj *length_obj = dict->IndirectObjectForKey("Length");
+            PPTNumber *length_num = (PPTNumber *)length_obj->TokenAtIndex(0);
+            length_num->SetInteger((int)len);
+        }
+        else {
+            PPTNumber *len_num = new PPTNumber(_document, (int)len);
+            int obj_num = _document->NewObjNum();
+            PPTIndirectObj *indir_obj = new PPTIndirectObj(_document, obj_num, 0);
+            indir_obj->AddToken(len_num);
+            PPTIndirectRef *indir_ref = new PPTIndirectRef(_document, obj_num, 0);
+            indir_obj->AddRefObj(indir_ref);
+            _document->PushObj(indir_obj);
+            dict->SetTokenAndKey(indir_ref, "Length");
+        }
         ostr << dict->PDFString();
         ostr << stream_pdfstr;
 

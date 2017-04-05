@@ -309,6 +309,9 @@ bool PPCommandParser::ParseStream(PPTStream &stream)
 {
     PPParser parser;
     _index = 0;
+	if(stream._decoded == false) {
+		stream.FlateDecodeStream();
+	}
     _streamSize = stream._streamSize;
     _streamData = stream._streamData;
 

@@ -66,6 +66,12 @@ long PPTNumber::longValue()
     return (long)_number;
 }
 
+void PPTNumber::SetInteger(int num)
+{
+    _numstr = PPNewStringFromInt(num);
+    _number = (double)num;
+}
+
 string PPTNumber::XMLString(int level)
 {
     string retstr;
