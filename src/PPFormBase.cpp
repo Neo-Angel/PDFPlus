@@ -370,7 +370,7 @@ PPLayer *PPFormBase::AddLayer(string layer_name, PPLayer *layer)
 	return ret_layer;
 }
 */
-PPLayer *PPFormBase::BeginLayer(char *lname) 
+PPLayer *PPFormBase::BeginLayer(char *lname) // not used
 {
 	_curLayer = this->LayerForName(lname);
 	if(_curLayer == NULL) {
@@ -382,7 +382,7 @@ PPLayer *PPFormBase::BeginLayer(char *lname)
 	return _curLayer;
 }
 
-void PPFormBase::EndLayer()
+void PPFormBase::EndLayer() // not used
 {
 	PPEEndMarkedContent *end_mark = new PPEEndMarkedContent(ContextRef());
 	WriteElement(end_mark);
@@ -861,7 +861,7 @@ int PPFormBase::BuildElements()
                     gcontext.RestoreGState();
                     PPEGRestore *grestore = new PPEGRestore(&gcontext);
                     AddElement(grestore);
-					gcontext.ClearGFlags();
+//					gcontext.ClearGFlags();
                 }
                 break;
             case PPCG_DrawPath:
@@ -981,6 +981,7 @@ int PPFormBase::BuildElements()
 							}
 						}
 					}
+					gcontext.RestoreGFlags();
 					PPEBeginMarkedContent *marked_content_element = new PPEBeginMarkedContent(tag, properties, &gcontext);;
 					AddElement(marked_content_element);
 					gcontext.ClearGFlags();
