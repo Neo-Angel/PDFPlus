@@ -29,7 +29,7 @@ class PPColor : public PPBase {
     
 public:
 	string _userColorSpaceName;
-    string _colorSpaceName;
+    string _colorSpaceName; // actualy color type
     string _alterColorSpaceName;
     float _c1, _c2, _c3, _c4;
     string _colorName;
@@ -42,7 +42,7 @@ public:
 
     void SetColorSpaceName(string name);
 	void SetUserColorSpaceName(string name);
-	void SetColorName(string name) {_colorName = name;}
+	void SetColorName(string name);
 	void SetAlterColorSpaceName(string name) {_alterColorSpaceName = name;}
 	void SetCMYKColor(float c, float m, float y, float k) {_c1 = c; _c2 = m; _c3 = y; _c4 = k;}
 	void SetRGBColor(float r, float g, float b, float a);

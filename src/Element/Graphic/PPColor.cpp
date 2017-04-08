@@ -7,6 +7,7 @@
 #include "PPTNumber.h"
 #include "PPTName.h"
 
+
 using namespace std;
 
 
@@ -23,20 +24,30 @@ const char *PPCSN_Separation = "Separation";
 const char *PPCSN_DeviceN = "DeviceN";
 const char *PPCSN_Pattern = "Pattern";
 
+void PPColor::SetColorName(string name)
+{
+	_colorName = name;
+}
 
 void PPColor::SetColorSpaceName(string name)
 {
-    _c1 = _c2 = _c3 = _c4 = 0;
-    _colorName = "";
-    if (name == PPCSN_DeviceCMYK) {
-        _c4 = 1.0;
-    }
-    else if (name == PPCSN_Separation || name == PPCSN_DeviceN) {
-        _c1 = _c2 = _c3 = _c4 = 1.0;
-    }
-    _colorSpaceName = name;
-	_alterColorSpaceName = "";
-	_colorName = "";
+	if(name == PPCSN_Pattern) {
+		_c1 = _c2 = _c3 = _c4 = 0;
+		_colorSpaceName = name;
+	}
+	else  {
+		_c1 = _c2 = _c3 = _c4 = 0;
+		_colorName = "";
+		if (name == PPCSN_DeviceCMYK) {
+		  _c4 = 1.0;
+		 }
+		else if (name == PPCSN_Separation || name == PPCSN_DeviceN) {
+		   _c1 = _c2 = _c3 = _c4 = 1.0;
+		}
+		_colorSpaceName = name;
+		_alterColorSpaceName = "";
+		_colorName = "";
+	}
 }
 
 void PPColor::SetUserColorSpaceName(string name)
@@ -83,8 +94,15 @@ void PPColor::SetComponents(vector<PPToken *> &components) // &vector<PPToken *>
 {
 	_num_of_components = (byte)components.size();
 	if(_num_of_components >= 1) {
-		PPTNumber *number = (PPTNumber *)components[0];
-		_c1 = number->floatValue();
+		PPToken *comp = components[0];
+		if(comp->ClassType() == PPTN_NUMBER) {
+			PPTNumber *number = (PPTNumber *)components[0];
+			_c1 = number->floatValue();
+		}
+		else if(comp->ClassType() == PPTN_NAME) {
+			PPTName *col_name = (PPTName *)comp;
+			_colorName = *col_name->_name;
+		}
 	}
 	if(_num_of_components >= 2) {
 		_c2 = ((PPTNumber *)components[1])->floatValue();
@@ -101,6 +119,11 @@ void PPColor::SetComponents(vector<PPToken *> &components) // &vector<PPToken *>
 
 string PPColor::StringValue()
 {
+	if(_colorName.length() > 0) {
+		string retstr = "/"+_colorName;
+		return retstr;
+	}
+
 	ostringstream ostr;
 	string retstr = "";
 	if(_num_of_components >= 1) {

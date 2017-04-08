@@ -59,7 +59,7 @@ PPElement::PPElement(PPGState *gstate)
 
 PPElement::PPElement()
 {
-	 _gstate = NULL;
+	 _gstate = new PPGState();
 	_parentForm = NULL;
 	_gflag = PPGF_NONE;
 	_bounds = PPRect(0,0,0,0);

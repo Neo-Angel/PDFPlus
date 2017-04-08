@@ -77,8 +77,21 @@ void PPGState::SetMatrix(PPMatrix m)
     _gflag_save |= PPGF_MATRIX;
 }
 
+void PPGState::SetFillColorFlag(uint mask) 
+{
+	_gflag &= ~(PPGF_FILLCOLOR | PPGF_SETFILLCOLOR | PPGF_SETFILLCOLORN);  // clear fill color flags
+	_gflag |= mask;
+	_gflag_save &= ~(PPGF_FILLCOLOR | PPGF_SETFILLCOLOR | PPGF_SETFILLCOLORN);
+	_gflag_save |= mask;
+}
 
-
+void PPGState::SetStrokeColorFlag(uint mask)
+{
+	_gflag &= ~(PPGF_STROKECOLOR | PPGF_SETSTROKECOLOR | PPGF_SETSTROKECOLORN);  // clear fill color flags
+	_gflag |= mask;
+	_gflag_save &= ~(PPGF_STROKECOLOR | PPGF_SETSTROKECOLOR | PPGF_SETSTROKECOLORN);
+	_gflag_save |= mask;
+}
 
 int PPGState::NumberOfStrokeColorComponents()
 {
@@ -95,9 +108,7 @@ int PPGState::NumberOfNonStrokeColorComponents()
 void PPGState::SetStrokeColor(PPColor c)
 {
     _strokeColor = c;
-    _gflag |= PPGF_STROKECOLOR;
-    _gflag_save |= PPGF_STROKECOLOR;
-//    _gflag |= PPGF_FILLCOLORSPC;
+	this->SetStrokeColorFlag(PPGF_STROKECOLOR);
 }
 
 void PPGState::SetStrokeColor(float c1, float c2, float c3, float c4)
@@ -106,16 +117,13 @@ void PPGState::SetStrokeColor(float c1, float c2, float c3, float c4)
     _strokeColor._c2 = c2;
     _strokeColor._c3 = c3;
     _strokeColor._c4 = c4;
-	_gflag |= PPGF_STROKECOLOR;
-	_gflag_save |= PPGF_STROKECOLOR;
+	this->SetStrokeColorFlag(PPGF_STROKECOLOR);
 }
 
 void PPGState::SetFillColor(PPColor c)
 {
     _fillColor = c;
-    _gflag |= PPGF_FILLCOLOR;
-    _gflag_save |= PPGF_FILLCOLOR;
-//    _gflag |= PPGF_FILLCOLORSPC;
+	this->SetFillColorFlag(PPGF_FILLCOLOR);
 }
 
 void PPGState::SetFillColor(float c1, float c2, float c3, float c4)
@@ -124,8 +132,7 @@ void PPGState::SetFillColor(float c1, float c2, float c3, float c4)
     _fillColor._c2 = c2;
     _fillColor._c3 = c3;
     _fillColor._c4 = c4;
-    _gflag |= PPGF_FILLCOLOR;
-    _gflag_save |= PPGF_FILLCOLOR;
+	this->SetFillColorFlag(PPGF_FILLCOLOR);
 }
 
 void PPGState::SetStrokeColorSpace(string name)
@@ -203,7 +210,25 @@ string PPGState::MakeCommandString()
         cinfo = &PPCommandList[PPC_Matrix];
         ostr << _matrix.PDFString() << " " << cinfo->command << PP_ENDL;
     }
-    if(_gflag & PPGF_STROKECOLOR) {
+
+	if(_gflag & PPGF_STROKECOLORSPC) {
+		cinfo = &PPCommandList[PPC_StrokeColorSpace];
+		ostr <<"/" <<  _strokeColor.UserColorSpaceName()  << " " << cinfo->command << PP_ENDL;
+	}
+	if(_gflag & PPGF_FILLCOLORSPC) {
+		cinfo = &PPCommandList[PPC_NonStrokeColorSpace];
+		ostr << "/" << _fillColor.UserColorSpaceName()  << " " << cinfo->command << PP_ENDL;
+	}
+
+	if(_gflag & PPGF_SETSTROKECOLOR) {
+		cinfo = &PPCommandList[PPC_SetColor];
+		ostr << _strokeColor.StringValue()  << " " << cinfo->command << PP_ENDL;
+	}
+	else if(_gflag & PPGF_SETSTROKECOLORN) {
+		cinfo = &PPCommandList[PPC_SetColorN];
+		ostr << _strokeColor.StringValue()  << " " << cinfo->command << PP_ENDL;
+	}
+    else if(_gflag & PPGF_STROKECOLOR) {
         if (_strokeColor._colorSpaceName == PPCSN_DeviceGray) {
             cinfo = &PPCommandList[PPC_DeviceGray];
             ostr << _strokeColor._c1 << " " << cinfo->command << PP_ENDL;
@@ -250,7 +275,16 @@ string PPGState::MakeCommandString()
         }
     }
     
-    if(_gflag & PPGF_FILLCOLOR) {
+	// Set Color (N)
+	if(_gflag & PPGF_SETFILLCOLOR) {
+		cinfo = &PPCommandList[PPC_SetNonStrokeColor];
+		ostr << _fillColor.StringValue()  << " " << cinfo->command << PP_ENDL;
+	}
+	else if(_gflag & PPGF_SETFILLCOLORN) {
+		cinfo = &PPCommandList[PPC_SetNonStrokeColorN];
+		ostr << _fillColor.StringValue()  << " " << cinfo->command << PP_ENDL;
+	}
+    else if(_gflag & PPGF_FILLCOLOR) {
         if (_fillColor._colorSpaceName == PPCSN_DeviceGray) {
             cinfo = &PPCommandList[PPC_NonStrokeDeviceGray];
             ostr << _fillColor._c1 << " " << cinfo->command << PP_ENDL;
@@ -296,38 +330,13 @@ string PPGState::MakeCommandString()
             }
         }
     }
-	if(_gflag & PPGF_STROKECOLORSPC) {
-		cinfo = &PPCommandList[PPC_StrokeColorSpace];
-		ostr <<"/" <<  _strokeColor.UserColorSpaceName()  << " " << cinfo->command << PP_ENDL;
-	}
-	if(_gflag & PPGF_FILLCOLORSPC) {
-		cinfo = &PPCommandList[PPC_NonStrokeColorSpace];
-		ostr << "/" << _fillColor.UserColorSpaceName()  << " " << cinfo->command << PP_ENDL;
-	}
 
-	// Set Color (N)
-	if(_gflag & PPGF_SETSTROKECOLOR) {
-		cinfo = &PPCommandList[PPC_SetColor];
-		ostr << _strokeColor.StringValue()  << " " << cinfo->command << PP_ENDL;
-	}
-	if(_gflag & PPGF_SETSTROKECOLORN) {
-		cinfo = &PPCommandList[PPC_SetColorN];
-		ostr << _strokeColor.StringValue()  << " " << cinfo->command << PP_ENDL;
-	}
-	if(_gflag & PPGF_SETFILLCOLOR) {
-		cinfo = &PPCommandList[PPC_SetNonStrokeColor];
-		ostr << _fillColor.StringValue()  << " " << cinfo->command << PP_ENDL;
-	}
-	if(_gflag & PPGF_SETFILLCOLORN) {
-		cinfo = &PPCommandList[PPC_SetNonStrokeColorN];
-		ostr << _fillColor.StringValue()  << " " << cinfo->command << PP_ENDL;
-	}
 
     retstr = ostr.str();
     return retstr;
 }
 
-void PPGState::MoveColorTo(PPColor *color, PPFormBase *tar_form)
+void PPGState::MoveColorSpaceTo(PPColor *color, PPFormBase *tar_form)
 {
 //	if(color->_colorSpaceName != "DeviceCMYK") {
 //		cout << "ColorSpaceName is not DeviceCMYK" << PP_ENDL;
@@ -339,6 +348,24 @@ void PPGState::MoveColorTo(PPColor *color, PPFormBase *tar_form)
 		PPDocument *tar_doc = tar_form->_document;
 		PPTIndirectObj *new_obj = tar_doc->MoveObjFrom(rsc_obj, parent_form->_document);
 		PPTIndirectRef *new_ref = tar_form->AddResourceRef(new_obj->_objNum, color->_userColorSpaceName, "ColorSpace");
+		if(new_ref) {
+			new_obj->AddRefObj(new_ref);
+		}
+	}
+}
+
+void PPGState::MoveColorPatternTo(PPColor *color, PPFormBase *tar_form)
+{
+//	if(color->_colorSpaceName != "DeviceCMYK") {
+//		cout << "ColorSpaceName is not DeviceCMYK" << PP_ENDL;
+//	}
+
+	PPFormBase *parent_form = this->_parent->_parentForm;
+	PPTIndirectObj *rsc_obj = parent_form->ResourceObjForName(color->_colorName, "Pattern");
+	if(rsc_obj) {
+		PPDocument *tar_doc = tar_form->_document;
+		PPTIndirectObj *new_obj = tar_doc->MoveObjFrom(rsc_obj, parent_form->_document);
+		PPTIndirectRef *new_ref = tar_form->AddResourceRef(new_obj->_objNum, color->_colorName, "Pattern");
 		if(new_ref) {
 			new_obj->AddRefObj(new_ref);
 		}
@@ -381,22 +408,40 @@ void PPGState::CopyMembersTo(PPBase *obj)
     // needs to delete
     ret_gstate->_dash = _dash; //SetDash(_dash);
     ret_gstate->_matrix = _matrix; //SetMatrix(_matrix);
-	if(ret_gstate->_parent != NULL && _strokeColor._userColorSpaceName.length() > 0) {
-		PPDocument *tar_doc = ret_gstate->_parent->_parentForm->_document;
-		PPDocument *this_doc = this->_parent->_parentForm->_document;
-		if(tar_doc != this_doc) {
-			this->MoveColorTo(&_strokeColor, ret_gstate->_parent->_parentForm);
+	if(ret_gstate->_parent != NULL) {
+		if(_strokeColor._userColorSpaceName.length() > 0) {
+			PPDocument *tar_doc = ret_gstate->_parent->_parentForm->_document;
+			PPDocument *this_doc = this->_parent->_parentForm->_document;
+			if(tar_doc != this_doc) {
+				this->MoveColorSpaceTo(&_strokeColor, ret_gstate->_parent->_parentForm);
+			}
 		}
-	}
-    ret_gstate->_strokeColor = _strokeColor; //SetStrokeColor(_strokeColor);
+		if(_strokeColor._colorName.length() > 0) {
+			PPDocument *tar_doc = ret_gstate->_parent->_parentForm->_document;
+			PPDocument *this_doc = this->_parent->_parentForm->_document;
+			if(tar_doc != this_doc) {
+				this->MoveColorPatternTo(&_strokeColor, ret_gstate->_parent->_parentForm);
+			}
+		}
 
-	if(ret_gstate->_parent != NULL && _fillColor._userColorSpaceName.length() > 0) {
-		PPDocument *tar_doc = ret_gstate->_parent->_parentForm->_document;
-		PPDocument *this_doc = this->_parent->_parentForm->_document;
-		if(tar_doc != this_doc) {
-			this->MoveColorTo(&_fillColor, ret_gstate->_parent->_parentForm);
+		if(_fillColor._userColorSpaceName.length() > 0) {
+			PPDocument *tar_doc = ret_gstate->_parent->_parentForm->_document;
+			PPDocument *this_doc = this->_parent->_parentForm->_document;
+			if(tar_doc != this_doc) {
+				this->MoveColorSpaceTo(&_fillColor, ret_gstate->_parent->_parentForm);
+			}
+		}
+		if(_fillColor._colorName.length() > 0) {
+			PPDocument *tar_doc = ret_gstate->_parent->_parentForm->_document;
+			PPDocument *this_doc = this->_parent->_parentForm->_document;
+			if(tar_doc != this_doc) {
+				this->MoveColorPatternTo(&_fillColor, ret_gstate->_parent->_parentForm);
+			}
 		}
 	}
+
+
+    ret_gstate->_strokeColor = _strokeColor; //SetStrokeColor(_strokeColor);
     ret_gstate->_fillColor = _fillColor; //(_fillColor);
     
     ret_gstate->_gflag = _gflag; //SetGFlags(_gflag);
@@ -420,28 +465,28 @@ string PPGState::XMLString(int level)
 
 void  PPGState::SetStrokeColor(vector<PPToken *> &_operands)
 {
-	_gflag |= PPGF_SETSTROKECOLOR;
 	_strokeColor.SetComponents(_operands);
-	_gflag_save |= PPGF_SETSTROKECOLOR;
+	this->SetStrokeColorFlag(PPGF_SETSTROKECOLOR);
 }
 
 void  PPGState::SetStrokeColorN(vector<PPToken *> &_operands)
 {
-	_gflag |= PPGF_SETSTROKECOLORN;
 	_strokeColor.SetComponents(_operands);
-	_gflag_save |= PPGF_SETSTROKECOLORN;
+	this->SetStrokeColorFlag(PPGF_SETSTROKECOLORN);
+	if(_strokeColor.ColorName().size() > 0) {
+		_strokeColor.SetColorSpaceName(PPCSN_Pattern);
+	}
 }
 
 void  PPGState::SetFillColor(vector<PPToken *> &_operands)
 {
-	_gflag |= PPGF_SETFILLCOLOR;
 	_fillColor.SetComponents(_operands);
-	_gflag_save |= PPGF_SETFILLCOLOR;
+	this->SetFillColorFlag(PPGF_SETFILLCOLOR);
 }
 
 void  PPGState::SetFillColorN(vector<PPToken *> &_operands)
 {
-	_gflag |= PPGF_SETFILLCOLORN;
+
 	_fillColor.SetComponents(_operands);
-	_gflag_save |= PPGF_SETFILLCOLORN;
+	this->SetFillColorFlag(PPGF_SETFILLCOLORN);
 }

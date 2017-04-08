@@ -72,7 +72,9 @@ public:
 	PPBase *Copy();
 	PPBase *Copy(PPElement *tar_element);
 	void CopyMembersTo(PPBase *obj);
-	void MoveColorTo(PPColor *color, PPFormBase *tar_form);
+	void MoveColorSpaceTo(PPColor *color, PPFormBase *tar_form);
+	void MoveColorPatternTo(PPColor *color, PPFormBase *tar_form);
+
 
 	void SetLineWidth(float v);
     float LineWidth(){return _lineWidth;}
@@ -100,6 +102,8 @@ public:
 	PPMatrix *CTMRef(){return &_matrix;}
 	PPMatrix *MatrixRef(){return &_matrix;}
     
+	void SetFillColorFlag(uint mask);
+	void SetStrokeColorFlag(uint mask);
     int NumberOfStrokeColorComponents();
     int NumberOfNonStrokeColorComponents();
     void SetStrokeColorSpace(string name);

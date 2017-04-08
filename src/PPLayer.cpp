@@ -1,10 +1,12 @@
-
+ï»¿
 
 #include "PPElement.h"
 #include "PPLayer.h"
 #include "PPTDictionary.h"
 #include "PPTString.h"
 #include "PPEBeginMarkedContent.h"
+#include "PPEGRestore.h"
+#include "PPEGSave.h"
 
 PPLayer::PPLayer()
 {
@@ -89,12 +91,15 @@ void PPLayer::CopyMembersTo(PPBase *obj)
 	PPBase::CopyMembersTo(obj);
 	PPLayer *layer = (PPLayer *)obj;
 
-	// ¿ÜºÎ¿¡ ÀÇÇØ¼­ _document°¡ ´Ù½Ã ÁöÁ¤µÇ±â Àü ±îÁö´Â 
-	//ÀÌÀü _document(ÃâÃ³)¸¦ °¡Áö°í ÀÖ´Â´Ù.
+	// ì™¸ë¶€ì— ì˜í•´ì„œ _documentê°€ ë‹¤ì‹œ ì§€ì •ë˜ê¸° ì „ ê¹Œì§€ëŠ” 
+	//ì´ì „ _document(ì¶œì²˜)ë¥¼ ê°€ì§€ê³  ìˆëŠ”ë‹¤.
 	layer->_properties = _properties; 
 	layer->_layer_dict = _layer_dict;
 //	layer->_parent = _parent;
 
+	// Contents ë‚´ì—ì„œ ì„ì˜ë¡œ ë ˆì´ì–´ë¥¼ ë‚˜ëˆ„ë‹¤ ë³´ë©´ 
+	// gstateì˜ save, restore ì§ì´ ì•ˆ ë§ëŠ” ê²½ìš°ê°€ ìˆë‹¤.
+	int stack_cnt = 0;
 	uint icnt = (uint)_elements.size();
 	for(uint i=0;i<icnt;i++) {
 		PPElement *el = _elements[i];
@@ -104,6 +109,12 @@ void PPLayer::CopyMembersTo(PPBase *obj)
 		}
 		else {
 			new_el = (PPElement *)el->Copy();
+		}
+		if(el->Type() == PPET_GSAVE) {
+			stack_cnt ++;
+		}
+		else if(el->Type() == PPET_GRESTORE) {
+			stack_cnt --;
 		}
 		 /*
 		if(new_el->Type() == PPET_BEGIN_MARKED_CONTENT) {
@@ -115,9 +126,40 @@ void PPLayer::CopyMembersTo(PPBase *obj)
 		layer->_elements.push_back(new_el);
 	}
 
+	// gstateì˜ save, restore ì§ì´ ì•ˆ ë§ëŠ” ê²½ìš° ë³´ì™„í•´ ì¤€ë‹¤.
+	if(stack_cnt > 0) { // restore ë¶€ì¡±
+		icnt = (uint)layer->_elements.size();
+		for(uint i=0;i<icnt;i++) {
+			uint idx = icnt - i - 1;
+			PPElement *el = _elements[idx];
+			if(el->Type() == PPET_END_MARKED_CONTENT) {
+				uint jcnt = stack_cnt;
+				for(uint j=0;j<jcnt;j++) {
+					PPEGRestore *grestore = new PPEGRestore();
+					layer->_elements.insert(layer->_elements.begin() + idx, grestore);
+				}
+				break;
+			}
+		}
+
+	}
+	else if(stack_cnt < 0) {
+		icnt = (uint)layer->_elements.size();
+		for(uint i=0;i<icnt;i++) {
+			PPElement *el = _elements[i];
+			if(el->Type() == PPET_BEGIN_MARKED_CONTENT) {
+				uint jcnt = - stack_cnt;
+				for(uint j=0;j<jcnt;j++) {
+					PPEGSave *gsave = new PPEGSave();
+					layer->_elements.insert(layer->_elements.begin() +i+1, gsave);
+				}
+				break;
+			}
+		}
+	}
 }
 
-// °´Ã¼¸¦ º¹»çÇÏ±âÀ§ÇÑ ±â¹İÇÔ¼ö. »ó¼ÓÇÒ ÆÈ¿ä´Â ¾øÀ½
+// ê°ì²´ë¥¼ ë³µì‚¬í•˜ê¸°ìœ„í•œ ê¸°ë°˜í•¨ìˆ˜. ìƒì†í•  íŒ”ìš”ëŠ” ì—†ìŒ
 PPBase *PPLayer::Copy(PPFormBase *tar_form)
 {
 	PPLayer *new_obj = (PPLayer *)this->Create();

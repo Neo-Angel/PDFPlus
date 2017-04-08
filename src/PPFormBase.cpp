@@ -859,9 +859,9 @@ int PPFormBase::BuildElements()
                 {
                     // make RestoreGStateElement and add to element list
                     gcontext.RestoreGState();
+					gcontext.ClearGFlags();
                     PPEGRestore *grestore = new PPEGRestore(&gcontext);
                     AddElement(grestore);
-//					gcontext.ClearGFlags();
                 }
                 break;
             case PPCG_DrawPath:
